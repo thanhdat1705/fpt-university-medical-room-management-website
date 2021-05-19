@@ -13,22 +13,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NbThemeModule, NbLayoutModule } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { SharedModule } from './shared/shared.module';
+import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
+import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 
 registerLocaleData(en);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CommonLayoutComponent,
+    FullLayoutComponent
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
+    BrowserModule,       
     HttpClientModule,
-    BrowserAnimationsModule,
-    IconsProviderModule,
-    NzLayoutModule,
-    NzMenuModule
+    BrowserAnimationsModule, 
+    AppRoutingModule, 
+    SharedModule.forRoot(),
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]
