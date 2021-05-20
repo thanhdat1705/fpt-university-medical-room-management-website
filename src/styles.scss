@@ -1,6 +1,8 @@
 @import 'themes';
 
 @import '~@nebular/theme/styles/globals';
+@import "~bootstrap/scss/bootstrap.scss";
+@import './assets/scss/app.scss';
 
 @include nb-install() {
   @include nb-theme-global();
