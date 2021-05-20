@@ -7,23 +7,19 @@ import { CommonLayout_ROUTES } from './shared/routes/common-layout.routes';
 import { FullLayout_ROUTES } from './shared/routes/full-layout.routes';
 
 const routes: Routes = [
-  { path: '', component: AppComponent },
   {
     path: '',
-    redirectTo: '/dashboard/default',
+    redirectTo: '/authentication/login',
     pathMatch: 'full',
   },
+  // { 
+  //   path: 'thanhdat',
+  //   loadChildren: () => import('./thanhdat/thanhdat.module').then((m) => m.ThanhdatModule)
+  // },
   {
-    path: '',
-    component: CommonLayoutComponent,
-    children: CommonLayout_ROUTES
+    path: 'authentication',
+    loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule)
   },
-  {
-    path: '',
-    component: FullLayoutComponent,
-    children: FullLayout_ROUTES
-  },
-  // { path: 'thanhdat',loadChildren: () => import('./thanhdat/thanhdat.module').then((m) => m.ThanhdatModule)}  
 ];
 
 @NgModule({

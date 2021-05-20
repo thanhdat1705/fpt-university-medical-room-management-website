@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
+const MATERIAL_MODULES = [
+
+];
+
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: []
+  exports: [...MATERIAL_MODULES],
 })
 export class MaterialModule { }
