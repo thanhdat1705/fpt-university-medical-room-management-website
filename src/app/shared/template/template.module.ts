@@ -5,13 +5,16 @@ import { TemplateRoutingModule } from './template-routing.module';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared.module';
+import { SideNavComponent } from './side-nav/side-nav.component';
 
 
 
 @NgModule({
-  declarations: [FooterComponent],
+  declarations: [FooterComponent, SideNavComponent,HeaderComponent],
   exports: [
-     FooterComponent
+     FooterComponent,
+     SideNavComponent,
+     HeaderComponent
   ],
   imports: [
     CommonModule,
@@ -20,4 +23,5 @@ import { SharedModule } from '../shared.module';
   ],
 
 })
+
 export class TemplateModule { }

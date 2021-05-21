@@ -3,6 +3,7 @@
 @import '~@nebular/theme/styles/globals';
 @import "~bootstrap/scss/bootstrap.scss";
 @import './assets/scss/app.scss';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 @include nb-install() {
   @include nb-theme-global();

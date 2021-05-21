@@ -19,7 +19,6 @@ import { SharedModule } from './shared/shared.module';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { TemplateModule } from './shared/template/template.module';
-import { HeaderComponent } from './shared/template/header/header.component';
 
 
 registerLocaleData(en);
@@ -29,9 +28,8 @@ registerLocaleData(en);
     AppComponent,
     CommonLayoutComponent,
     FullLayoutComponent,
-    HeaderComponent
   ],
-  exports: [HeaderComponent, TemplateModule],
+  exports: [TemplateModule],
   imports: [
     BrowserModule,
     HttpClientModule,
