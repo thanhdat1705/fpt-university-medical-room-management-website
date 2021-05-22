@@ -1,8 +1,17 @@
-<mat-drawer-container class="example-container">
-    <mat-drawer class="sidenav" mode="side" opened>content</mat-drawer>
+ <mat-drawer-container class="example-container">
+
+    <mat-drawer #drawer class="sidenav" mode="{{ToggleMode}}" opened>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Clients</a>
+      <a href="#">Contact</a>
+    </mat-drawer>
+    <!-- <div class="example-sidenav-content">
+   b
+    </div> -->
     <mat-drawer-content class="content">
-      <!-- <div class="bread-scrumb">bread-scrumb</div> -->
-      <h1>aaaaaaaaaaaaaaaaaa</h1>
-   
-    </mat-drawer-content>
+      <button type="button" mat-button (click)="selectMode()">
+        Toggle sidenav
+      </button>
+    </mat-drawer-content> 
   </mat-drawer-container>

@@ -1,10 +1,11 @@
 .example-container {
         position: relative;
-        height: 90%;
+        height: 100%;
         display: block;
-        width: 100%;
+        
   }
   .sidenav{
+    display: flex;
     position: absolute;
     height: 100%;
     width: 20%;
@@ -27,3 +28,32 @@ z-index: 0;
   width: 100%;
 }
 
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+@media only screen and (max-width: 415px) {
+  a {
+    display: block;
+    color: red;
+    padding: 20px;
+    text-decoration: none;
+  }
+
+  .sidenav{
+    display: flex;
+    position: absolute;
+    height: 100%;
+    width: 35%;
+}
+}
