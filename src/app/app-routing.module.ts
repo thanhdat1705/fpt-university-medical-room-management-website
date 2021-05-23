@@ -17,8 +17,9 @@ const routes: Routes = [
   //   loadChildren: () => import('./thanhdat/thanhdat.module').then((m) => m.ThanhdatModule)
   // },
   {
-    path: 'authentication',
-    loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule)
+    path: '',
+    component: FullLayoutComponent,
+    children: FullLayout_ROUTES
   },
 ];
 

@@ -1,3 +1,70 @@
-<div>
-    <p>login</p>
+<div class="container-fluid p-10 p-v-20 h-100 bg" style="background-image: url('assets/others/login-background.png');">
+    <div class="d-flex flex-column justify-content-between h-100">
+        <div class="d-none d-md-block"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-5 m-h-auto">
+                    <nz-card class="m-b-100 shadow-lg">
+                        <div class="d-flex align-items-center justify-content-between m-b-40">
+                            <img class="img-fuild" src="assets/images/logo/logo.png" alt="logo" width="260px">
+                            <h2 class="font-size-26 m-b-0">Sign in</h2>
+                        </div>
+                        <form nz-form [formGroup]="loginForm" nzLayout="vertical" class="login-form"
+                            (ngSubmit)="submitForm()">
+                            <nz-form-item class="m-b-20">
+                                <nz-form-label nzRequired nzFor="userName" style="font-weight: 500;">Username
+                                </nz-form-label>
+                                <nz-form-control nzErrorTip="Please input your username!">
+                                    <nz-input-group class="p-10 rounded" nzPrefixIcon="user">
+                                        <input type="text" nz-input formControlName="userName" placeholder="Username" />
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item class="m-b-20 relative">
+                                <nz-form-label nzRequired nzFor="password" style="font-weight: 500;">Password
+                                </nz-form-label>
+                                <a class="text-link-forget font-size-13 text-muted"
+                                    style="position: absolute; right: 0;">Forget password?</a>
+                                <nz-form-control nzErrorTip="Please input your Password!">
+                                    <nz-input-group class="p-10 rounded" nzPrefixIcon="lock">
+                                        <input type="password" nz-input formControlName="password"
+                                            placeholder="Password" />
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-control>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="col-md-4 col-lg-7 p-2c5 border-radius button-link" style="background-color: #0f9c89;">
+                                            <div class="d-flex align-items-center justify-content-start">
+                                                <img src="/assets/others/google.svg" alt="Google" width="40px">
+                                                <h2 class="font-size-15 m-b-0 flex-grow-1 text-center" style="color: white;">Login email @fpt.edi.vn</h2>
+                                            </div>
+                                        </div>
+                                        
+                                        <button class="button-link btn rounded font-size-15 p-h-20 p-v-10"
+                                            style="background-color: #0f9c89; color: white;">
+                                            Log in
+                                        </button>
+                                    </div>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </form>
+                    </nz-card>
+                </div>
+            </div>
+        </div>
+        <div class="d-none d-md-flex p-h-40 justify-content-between font-size-15">
+            <span class="text-dark">© 2019 ThemeNate</span>
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <a class="text-dark text-link" href="">Legal</a>
+                </li>
+                <li class="list-inline-item">
+                    <a class="text-dark text-link" href="">Privacy</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

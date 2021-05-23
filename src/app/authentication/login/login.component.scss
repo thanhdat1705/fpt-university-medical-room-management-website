@@ -1,0 +1,38 @@
+.text-dark {
+    color: #585858 !important;
+}
+
+.text-link {
+
+    &:hover {
+        text-decoration: underline !important;
+        color: rgb(60, 60, 255) !important;
+    }
+}
+
+.text-link-forget {
+ &:hover {
+     text-decoration: none !important;
+     color: #14b19c !important;
+ }
+}
+
+.login-form {
+    max-width: auto;
+}
+
+.button-link {
+    &:hover {
+        background-color: #14b19c !important;
+    }
+   
+}
+
+.border-radius {
+    border-radius: 2px;
+    
+}
+
+.p-2c5 {
+    padding: 2.5px;
+}
