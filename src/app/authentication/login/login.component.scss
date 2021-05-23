@@ -1,5 +1,5 @@
 .text-dark {
-    color: #585858 !important;
+    color: #585858d2 !important;
 }
 
 .text-link {
@@ -13,17 +13,17 @@
 .text-link-forget {
  &:hover {
      text-decoration: none !important;
-     color: #14b19c !important;
+     color: black !important;
  }
 }
 
 .login-form {
     max-width: auto;
 }
-
+//#3AC3DC#14b19c
 .button-link {
     &:hover {
-        background-color: #14b19c !important;
+        background-color: #39d3ee !important;
     }
    
 }

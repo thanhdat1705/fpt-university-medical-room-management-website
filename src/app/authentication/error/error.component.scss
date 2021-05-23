@@ -1,0 +1,11 @@
+.text-dark {
+    color: #585858d2 !important;
+}
+
+.text-link {
+
+    &:hover {
+        text-decoration: underline !important;
+        color: rgb(60, 60, 255) !important;
+    }
+}

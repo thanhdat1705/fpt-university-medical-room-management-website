@@ -1999,6 +1999,9 @@
 // 		padding-top: 30px !important
 // 	}
 // }
+.p-b-1 {
+    padding-bottom: 1px !important;
+}
 
 .p-b-5 {
     padding-bottom: 5px !important;
@@ -3265,10 +3268,22 @@
 // }
 
 /* text */
-.text-muted { 
-    color: $gray-light !important; 
+// .text-muted { 
+//     color: $gray-light !important; 
+// }
+
+.text-jade-green {
+    color: $jade-green !important;
 }
 
+.ligt-dark {
+    color: $gray-light !important;
+}
+
+/* shadow */
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(77, 84, 124, 0.09)!important;
+}
 
 /* color */
 
