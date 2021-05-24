@@ -11,12 +11,13 @@
     width: 20%;
 }
 
+mat-drawer-container { flex: 1 1 auto; }
+
 .content{
+  flex: 1 1 auto;
   height: 100%;
   width: 100%;
-  background-color: gray;
   white-space: nowrap;
-z-index: 0;
 
 }
 
@@ -42,12 +43,14 @@ a {
   text-decoration: none;
 }
 
+mat-drawer-container { flex: 1 1 auto; }
+
 @media only screen and (max-width: 415px) {
   a {
-    display: block;
-    color: red;
-    padding: 20px;
-    text-decoration: none;
+    padding: 5px;
+    text-align: left;
+    float: left;
+    text-decoration: underline;
   }
 
   .sidenav{
@@ -57,3 +60,4 @@ a {
     width: 35%;
 }
 }
+
