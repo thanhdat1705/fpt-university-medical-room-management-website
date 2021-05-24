@@ -18,6 +18,8 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SharedModule } from './shared/shared.module';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
+import { TemplateModule } from './shared/template/template.module';
+
 
 registerLocaleData(en);
 
@@ -25,16 +27,18 @@ registerLocaleData(en);
   declarations: [
     AppComponent,
     CommonLayoutComponent,
-    FullLayoutComponent
+    FullLayoutComponent,
   ],
+  exports: [TemplateModule],
   imports: [
-    BrowserModule,       
+    BrowserModule,
     HttpClientModule,
-    BrowserAnimationsModule, 
-    AppRoutingModule, 
+    BrowserAnimationsModule,
+    AppRoutingModule,
     SharedModule.forRoot(),
+    TemplateModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [{ provide: NZ_I18N, useValue: en_US}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
