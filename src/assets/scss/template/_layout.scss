@@ -1,0 +1,86 @@
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.trigger:hover {
+    color: #1890ff;
+}
+
+.logo {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+}
+
+.header {
+    width: 100%;
+    z-index: 2;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    border-bottom: 1px solid #eaf8fa;
+}
+
+.main-content {
+    margin: 0px 16px;
+    margin-top: 70px;
+    .inner-content {
+        margin: 15px 0px;
+        padding: 24px;
+        background: #fff;
+        min-height: 360px;
+    }
+}
+
+nz-breadcrumb {
+    margin: 50px 0;
+}
+
+.footer {
+    text-align: center;
+}
+
+.app-layout {
+    min-height: 100vh;
+}
+
+.sidebar-logo {
+    position: relative;
+    height: 64px;
+    padding-left: 24px;
+    overflow: hidden;
+    line-height: 64px;
+    background: #fff;
+    transition: all 0.3s;
+    border-bottom: 1px solid #eaf8fa;
+
+    img {
+        display: inline-block;
+        height: 40px;
+        width: 40px;
+        vertical-align: middle;
+    }
+
+    h1 {
+        display: inline-block;
+        margin: 0 0 0 20px;
+        color: #333333;
+        font-weight: 600;
+        font-size: 30px;
+        font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+        vertical-align: middle;
+    }
+}
+
+.menu-sidebar {
+    border-right: 1px solid #eaf8fa;
+    .sider-menu {
+        height: 90%;
+        border-right: 0;
+        font-weight: 500;
+    }
+}

@@ -19,6 +19,8 @@ import { SharedModule } from './shared/shared.module';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { TemplateModule } from './shared/template/template.module';
+import { FirebaseService } from './shared/services/firebase.service';
+import { AuthService } from './shared/services/auth-service/auth.service';
 
 
 registerLocaleData(en);
@@ -38,7 +40,9 @@ registerLocaleData(en);
     SharedModule.forRoot(),
     TemplateModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US}],
+  providers: [AuthService, FirebaseService,
+    { provide: NZ_I18N, useValue: en_US}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

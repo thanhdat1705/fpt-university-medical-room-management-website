@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { SideNavComponent } from '../side-nav/side-nav.component';
-import { SideNavService } from '../side-nav/side-nav.service';
+import { SideNavService } from '../../services/side-nav.service';
 
 
 
@@ -14,8 +13,8 @@ import { SideNavService } from '../side-nav/side-nav.service';
 
 export class HeaderComponent implements OnInit {
 
-	toggleActive:boolean = false;
-
+  toggleActive: boolean = false;
+  isCollapsed: boolean;
   constructor(private sidenav: SideNavService) {
   }
 
@@ -26,7 +25,12 @@ export class HeaderComponent implements OnInit {
 
     console.log('Clicked');
     this.toggleActive = !this.toggleActive;
-		this.sidenav.toggle();
-	}
+    this.sidenav.toggle();
+  }
+
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+    this.sidenav.toggleCollapse(this.isCollapsed);
+  }
 
 }

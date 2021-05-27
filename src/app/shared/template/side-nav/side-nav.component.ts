@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { SideNavService } from './side-nav.service';
+import { SideNavService } from '../../services/side-nav.service';
+import { ROUTES } from './side-nav.routing';
 
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss']
 })
 export class SideNavComponent implements OnInit {
   @ViewChild('drawer', {static: true}) sidenav: MatSidenav;
@@ -14,8 +14,10 @@ export class SideNavComponent implements OnInit {
   isMobile = null;
   ToggleMode = "side";
 
+  public menuItems: any[]
+
   constructor(private sidenavService: SideNavService, private deviceService: DeviceDetectorService) {
-    this.selectMode();
+    // this.selectMode();
 
   }
 
@@ -33,7 +35,8 @@ export class SideNavComponent implements OnInit {
 
   ngOnInit(): void {
 		this.sidenavService.setSidenav(this.sidenav);
-    
+    this.menuItems = ROUTES.filter(menuItem => menuItem);
+    console.log(this.menuItems);
   }
   
   Toggle(){

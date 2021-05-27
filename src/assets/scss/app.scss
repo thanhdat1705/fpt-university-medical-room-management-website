@@ -2,6 +2,10 @@
 @import 'mixins';
 
 
+/*** Template ****/
+@import 'template/layout.scss';
+@import 'template/side-nav.scss';
+
 /*** Utilities ***/
 // @import 'utilities/utilities-bs.scss';
 @import 'utilities/utilities-customs.scss';
