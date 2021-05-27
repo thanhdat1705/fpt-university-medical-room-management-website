@@ -19,6 +19,9 @@ import { SharedModule } from './shared/shared.module';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { TemplateModule } from './shared/template/template.module';
+import { AccountModule } from './account/account.module';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { ErrorComponent } from './account/create-account/create-account.component';
 
 
 registerLocaleData(en);
@@ -29,16 +32,17 @@ registerLocaleData(en);
     CommonLayoutComponent,
     FullLayoutComponent,
   ],
-  exports: [TemplateModule],
+  exports: [TemplateModule, AccountModule],
   imports: [
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule.forRoot(),
-    TemplateModule
+    TemplateModule,
+    AccountModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US}],
+  providers: [{ provide: NZ_I18N, useValue: en_US},  {provide: ErrorStateMatcher, useClass: ErrorComponent}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

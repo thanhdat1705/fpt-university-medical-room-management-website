@@ -6,6 +6,8 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared.module';
 import { SideNavComponent } from './side-nav/side-nav.component';
+import { CreateAccountComponent } from 'src/app/account/create-account/create-account.component';
+import { AccountModule } from 'src/app/account/account.module';
 
 
 
@@ -14,12 +16,13 @@ import { SideNavComponent } from './side-nav/side-nav.component';
   exports: [
      FooterComponent,
      SideNavComponent,
-     HeaderComponent
+     HeaderComponent,
   ],
   imports: [
     CommonModule,
     TemplateRoutingModule,
     SharedModule.forChild(),
+    AccountModule,
   ],
 
 })

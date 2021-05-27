@@ -4,6 +4,7 @@ import { AntModule, NebularModule, MaterialModule } from "./modules";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TestComponent } from './components/test/test.component';
 
+
 const SHARE_MODULES = [
   AntModule,
   MaterialModule,
@@ -11,7 +12,7 @@ const SHARE_MODULES = [
 ]
 
 const COMPONENTS = [
-  TestComponent
+  TestComponent,
 ];
 
 export const ANGULAR_MODULES = [
