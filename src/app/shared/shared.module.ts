@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { AntModule, NebularModule, MaterialModule } from "./modules";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TestComponent } from './components/test/test.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { firebaseConfig } from 'src/environments/environment';
 
 
 const SHARE_MODULES = [
@@ -18,9 +22,13 @@ const COMPONENTS = [
 export const ANGULAR_MODULES = [
   FormsModule,
   ReactiveFormsModule,
+  PerfectScrollbarModule,
+  
 ]
 @NgModule({
   imports: [
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireAuthModule,
     ...ANGULAR_MODULES,
     ...SHARE_MODULES
   ],

@@ -1,2 +1,70 @@
-<app-header></app-header>
-<app-side-nav></app-side-nav>
+<!-- <div>
+    <app-header></app-header>
+    <app-side-nav></app-side-nav>
+    <router-outlet></router-outlet>
+    <div class="page-container">
+        <div class="main-content">
+
+        </div>
+        <p>app-footer</p>
+    </div>
+</div> -->
+<!-- <div class="common-layout">
+    <app-header></app-header>
+    <app-side-nav></app-side-nav>
+    <div class="page-container">
+        <div class="main-container">
+            
+            <div class="">
+                Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. Bill is a cat. 
+            </div>
+            <router-outlet></router-outlet>
+        </div>
+        <app-footer></app-footer>
+    </div>
+</div> -->
+<div>
+    <nz-layout class="app-layout">
+        <nz-sider class="menu-sidebar" [(nzCollapsed)]="isCollapsed" nzWidth="{{siderWidth}}%" nzTheme="light">
+            <div class="sidebar-logo">
+                <a href="main">
+                    <img src="/assets/images/logo/logo-browser.png" alt="logo" />
+                    <h1>FHCS</h1>
+                </a>
+            </div>
+            <ul nz-menu nzTheme="light" nzMode="inline" class="sider-menu">
+                <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+                    <ul>
+                        <li nz-menu-item>
+                            <a>Default</a>
+                        </li>
+                    </ul>
+                </li>
+                <li nz-submenu nzTitle="Medicine management" nzIcon="dollar">
+                    <ul>
+                        <li nz-menu-item>
+                            <a>Medicine</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a>Medical supplies</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout>
+            <app-header></app-header>
+            <nz-content class="main-content">
+                <nz-breadcrumb>
+                    <nz-breadcrumb-item>User</nz-breadcrumb-item>
+                    <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
+                </nz-breadcrumb>
+                <div class="inner-content">
+                    <!-- <app-insert-account></app-insert-account> -->
+                    <!-- <router-outlet></router-outlet> -->
+                </div>
+            </nz-content>
+            <app-footer></app-footer>
+        </nz-layout>
+    </nz-layout>
+</div>

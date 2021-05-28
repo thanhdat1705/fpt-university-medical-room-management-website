@@ -1,0 +1,76 @@
+<form class="example-form" [formGroup]="accountForm" (ngSubmit)="insertAccount(accountForm.value)" >
+
+  <!-- Username -->
+  <mat-form-field class="example-full-width">
+
+    <mat-label>Username</mat-label>
+    <input name="username" type="text" matInput formControlName="username" [errorStateMatcher]="matcher"
+      placeholder="username">
+    <mat-error *ngIf="f.username.hasError('required')">
+      Username is required
+    </mat-error>
+    <mat-error *ngIf="f.username.hasError('minlength') || f.username.hasError('maxlength')">
+      Username must be between 8 and 30 characters
+    </mat-error>
+    <mat-error *ngIf="f.username.hasError('pattern')">
+      Username should not contain any special character
+    </mat-error>
+  </mat-form-field>
+  <br>
+  <!-- Email -->
+  <mat-form-field class="example-full-width">
+
+    <mat-label>Email</mat-label>
+    <input name="email" type="text" matInput formControlName="email" [errorStateMatcher]="matcher"
+      placeholder="ex: thamlam@fpt.edu.vn">
+    <mat-error *ngIf="f.email.hasError('required')">
+      Email is required
+    </mat-error>
+    <mat-error *ngIf="f.email.hasError('minlength') || f.email.hasError('maxlength')">
+      Email must be between ? and ? characters
+    </mat-error>
+  </mat-form-field>
+  <br>
+    <!-- Name -->
+    <mat-form-field class="example-full-width">
+
+      <mat-label>Name</mat-label>
+      <input name="displayName" type="text" matInput formControlName="displayName" [errorStateMatcher]="matcher"
+        placeholder="Name">
+      <mat-error *ngIf="f.displayName.hasError('required')">
+        Name is required
+      </mat-error>
+      <mat-error *ngIf="f.displayName.hasError('pattern')">
+        Name should not contain any special character
+      </mat-error>
+    </mat-form-field>
+  <!-- Password -->
+  <br>
+  <mat-form-field class="example-full-width">
+
+    <mat-label>Password</mat-label>
+    <input name="password" type="password" matInput formControlName="password" [errorStateMatcher]="matcher"
+      placeholder="password">
+    <mat-error *ngIf="f.password.hasError('required')">
+      Password is required
+    </mat-error>
+    <mat-error *ngIf="f.password.hasError('minlength') || f.password.hasError('maxlength')">
+      Password must be between 8 and 30 characters
+    </mat-error>
+    <mat-error *ngIf="f.password.hasError('pattern')">
+      Password should not contain any special character
+    </mat-error>
+  </mat-form-field>
+  <br>
+  
+  Select role:
+  <mat-button-toggle-group class="button-role-toggle" name="fontStyle" formControlName="roleId" aria-label="Font Style">
+    <mat-button-toggle value="1">Admin</mat-button-toggle>
+    <mat-button-toggle value="2">Medical staff</mat-button-toggle>
+  </mat-button-toggle-group>
+  <mat-error *ngIf="f.roleId.hasError('required')">Select account role</mat-error>
+  <br>
+  <button type="submit" mat-raised-button color="primary">Create</button>
+
+
+</form>

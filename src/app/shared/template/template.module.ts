@@ -6,17 +6,16 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared.module';
 import { SideNavComponent } from './side-nav/side-nav.component';
-import { CreateAccountComponent } from 'src/app/account/create-account/create-account.component';
 import { AccountModule } from 'src/app/account/account.module';
 
 
 
 @NgModule({
-  declarations: [FooterComponent, SideNavComponent,HeaderComponent],
+  declarations: [FooterComponent, SideNavComponent, HeaderComponent],
   exports: [
-     FooterComponent,
-     SideNavComponent,
-     HeaderComponent,
+    FooterComponent,
+    SideNavComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,

@@ -5,7 +5,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { SideNavService } from './side-nav.service';
+import { SideNavService } from '../../services/side-nav.service';
+import { ROUTES } from './side-nav.routing';
 
 export interface UserData {
   id: string;
@@ -27,7 +28,6 @@ const NAMES: string[] = [
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss']
 })
 export class SideNavComponent implements OnInit {
 
@@ -42,10 +42,13 @@ export class SideNavComponent implements OnInit {
   ToggleMode = "side";
   
 
+  public menuItems: any[]
+
   constructor(private sidenavService: SideNavService, private deviceService: DeviceDetectorService) {
     this.selectMode();
       // Create 100 users
       const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
+    // this.selectMode();
 
       // Assign the data to the data source for the table to render
       this.dataSource = new MatTableDataSource(users);
@@ -64,7 +67,8 @@ export class SideNavComponent implements OnInit {
 
   ngOnInit(): void {
 		this.sidenavService.setSidenav(this.sidenav);
-    
+    this.menuItems = ROUTES.filter(menuItem => menuItem);
+    console.log(this.menuItems);
   }
   
   Toggle(){

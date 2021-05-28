@@ -35,14 +35,15 @@
                             <nz-form-item>
                                 <nz-form-control>
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <div class="col-sm-7 col-md-7 col-lg- col-xl-7 p-2c5 border-radius button-link"
-                                            style="background-color: #3AC3DC;">
+                                        <button
+                                            class="col-sm-7 col-md-7 col-lg- col-xl-7 p-2c5 btn border-radius button-link"
+                                            (click)="authService.loginWithGmail()" style="background-color: #3AC3DC;">
                                             <div class="d-flex align-items-center justify-content-start">
                                                 <img src="/assets/others/google.svg" alt="Google" width="40px">
                                                 <h2 class="font-size-15 m-b-0 flex-grow-1 text-center"
                                                     style="color: white;">Login email @fpt.edu.vn</h2>
                                             </div>
-                                        </div>
+                                        </button>
                                         <button
                                             class="button-link btn border-radius font-size-15 p-v-10 col-sm-3 col-md-3 col-lg-3"
                                             style="background-color: #3AC3DC; color: white; font-weight: 500;"

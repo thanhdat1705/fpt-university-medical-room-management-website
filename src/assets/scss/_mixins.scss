@@ -21,3 +21,19 @@
         @content;
     }
 }
+
+@mixin transition($transition) {
+    transition: $transition;
+    -webkit-transition: $transition;
+    -moz-transition: $transition;
+    -o-transition: $transition;
+    -ms-transition: $transition;
+}
+
+@mixin transform($transforms) {
+    transform: $transforms;
+    -webkit-transform: $transforms;
+    -moz-transform: $transforms;
+    -o-transform: $transforms;
+    -ms-transform: $transforms;
+}

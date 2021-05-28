@@ -21,7 +21,11 @@ import { FullLayoutComponent } from './layouts/full-layout/full-layout.component
 import { TemplateModule } from './shared/template/template.module';
 import { AccountModule } from './account/account.module';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { ErrorComponent } from './account/create-account/create-account.component';
+import { AuthService } from './shared/services/auth-service/auth.service';
+import { FirebaseService } from './shared/services/firebase.service';
+import { MyErrorStateMatcher } from './shared/my-error-state-matcher';
+import { GeneralHelperService } from './shared/services/general-helper.service';
+
 
 
 registerLocaleData(en);
@@ -42,7 +46,11 @@ registerLocaleData(en);
     TemplateModule,
     AccountModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US},  {provide: ErrorStateMatcher, useClass: ErrorComponent}],
+  providers: [AuthService, FirebaseService,
+    { provide: NZ_I18N, useValue: en_US},
+    { provide: ErrorStateMatcher, useClass: MyErrorStateMatcher},
+    GeneralHelperService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
