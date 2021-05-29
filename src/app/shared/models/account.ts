@@ -5,5 +5,7 @@ export interface Account {
   phoneNumber: string;
   photoUrl: string;
   token: string;
+  description: string;
   role: string;
+
 }
