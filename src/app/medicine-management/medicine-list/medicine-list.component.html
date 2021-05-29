@@ -1,0 +1,39 @@
+<nz-spin [nzSpinning]="detailLoading" nzTip="Loading...">
+    <nz-table #nzTable nzShowQuickJumper [nzFrontPagination]="false" [nzData]="listOfDisplayData"
+        [nzLoading]="tableLoading">
+        <thead>
+            <tr>
+                <!-- <th>No.</th>
+                <th nzColumnKey="costDescription" [nzSortFn]="true">Tên thuốc</th>
+                <th nzColumnKey="total" [nzSortFn]="true">Số lượng</th>
+                <th nzColumnKey="createAt" [nzSortFn]="true">Đặc trị</th>
+                <th></th>
+                <th></th> -->
+                <th>No.</th>
+                <th nzColumnKey="costDescription">Tên thuốc</th>
+                <th nzColumnKey="total">Số lượng</th>
+                <th nzColumnKey="createAt">Đặc trị</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody *ngIf="listOfDisplayData!=null">
+            <tr *ngFor="let data of nzTable.data; index as i">
+                <td>{{ i + 1 }}</td>
+                <td>{{ data.name }}</td>
+                <td>{{ data.quantity | currency:'VND' }}</td>
+                <td>{{ data.cate }}</td>
+                <td><button nz-button nzType="default" nzSize="large" nzShape="round"
+                        (click)="showModalCostDetail(cost)">Detail</button></td>
+                <td> <a nz-button nzType="default" nzShape="circle"
+                        (click)="deleteCost(cost.id, cost.costDescription)">Delete</a></td>
+            </tr>
+        </tbody>
+        <div style="margin: 10px; width: 200px;">
+            <button nz-button nzType="primary" nzBlock nzSize="large"
+                [routerLink]="'/medicine-management/medicine-list/add-medicine'">
+                <span>Thêm thuốc</span>
+            </button>
+        </div>
+    </nz-table>
+</nz-spin>

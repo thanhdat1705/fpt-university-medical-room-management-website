@@ -1,0 +1,10 @@
+<!-- <div class="card-body">
+    <mat-spinner style="margin-left:auto; 
+                        margin-right:auto;" color="black" diameter=30>
+    </mat-spinner>
+</div> -->
+
+<div class="loading-frame">
+    <ng-template #indicatorTemplate><i nz-icon nzType="loading"></i></ng-template>
+    <nz-spin nzSimple [nzIndicator]="indicatorTemplate"> </nz-spin>
+</div>

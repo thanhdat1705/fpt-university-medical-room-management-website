@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { WaitingComponent } from 'src/app/shared/components/waiting/waiting.component';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { AuthService } from './../../shared/services/auth-service/auth.service';
 
 @Component({
@@ -17,13 +20,15 @@ export class LoginComponent implements OnInit {
       password: [null, [Validators.required]],
       remember: [true]
     });
+
+    
   }
 
   submitForm(): void {
     for (const i in this.loginForm.controls) {
-      this.loginForm.controls[i].markAsDirty();
-      this.loginForm.controls[i].updateValueAndValidity();
+      // this.loginForm.controls[i].markAsDirty();
+      // this.loginForm.controls[i].updateValueAndValidity();
     }
   }
-  
+
 }

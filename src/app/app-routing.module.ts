@@ -12,11 +12,11 @@ const routes: Routes = [
     redirectTo: '/authentication/login',
     pathMatch: 'full',
   },
-  // {
-  //   path: '',
-  //   component: FullLayoutComponent,
-  //   children: FullLayout_ROUTES
-  // },  
+  {
+    path: '',
+    component: FullLayoutComponent,
+    children: FullLayout_ROUTES
+  }, 
   {
     path: '',
     component: CommonLayoutComponent,

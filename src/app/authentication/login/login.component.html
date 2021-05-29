@@ -23,7 +23,7 @@
                             <nz-form-item class="m-b-20 relative">
                                 <nz-form-label nzRequired nzFor="password" style="font-weight: 500;">Password
                                 </nz-form-label>
-                                <a class="text-link-forget font-size-14 text-muted"
+                                <a (click)="authService.test2()" class="text-link-forget font-size-14 text-muted"
                                     style="position: absolute; right: 0;">Forget password?</a>
                                 <nz-form-control nzErrorTip="Please input your Password!">
                                     <nz-input-group class="p-10 rounded" nzPrefixIcon="lock">
@@ -37,7 +37,7 @@
                                     <div class="d-flex align-items-center justify-content-between">
                                         <button
                                             class="col-sm-7 col-md-7 col-lg- col-xl-7 p-2c5 btn border-radius button-link"
-                                            (click)="authService.loginWithGmail()" style="background-color: #3AC3DC;">
+                                            (click)="authService.GoogleAuth()" style="background-color: #3AC3DC;">
                                             <div class="d-flex align-items-center justify-content-start">
                                                 <img src="/assets/others/google.svg" alt="Google" width="40px">
                                                 <h2 class="font-size-15 m-b-0 flex-grow-1 text-center"

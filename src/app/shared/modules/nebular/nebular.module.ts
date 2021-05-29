@@ -113,7 +113,7 @@ export class NebularModule {
     return {
       ngModule: NebularModule,
       providers: [
-        ...NbThemeModule.forRoot({ name: 'default' }).providers,
+        // ...NbThemeModule.forRoot({ name: 'default' }).providers,
         ...NbSidebarModule.forRoot().providers,
         ...NbMenuModule.forRoot().providers,
         ...NbDatepickerModule.forRoot().providers,
@@ -128,13 +128,8 @@ export class NebularModule {
     return {
       ngModule: NebularModule,
       providers: [
-        // ...NbThemeModule.forRoot({ name: 'default' }).providers,
-        // ...NbSidebarModule.forRoot().providers,
-        // ...NbMenuModule.forRoot().providers,
-        // ...NbDatepickerModule.().providers,        
         ...NbDialogModule.forChild().providers,
         ...NbWindowModule.forChild().providers,
-        // ...NbToastrModule.forRoot().providers,
       ]
     };
   }

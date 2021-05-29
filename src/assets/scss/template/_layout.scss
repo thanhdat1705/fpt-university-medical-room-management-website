@@ -20,14 +20,14 @@
     width: 100%;
     z-index: 2;
     background: #fff;
-    position: fixed;
+    // position: fixed;
     top: 0;
     border-bottom: 1px solid #eaf8fa;
 }
 
 .main-content {
     margin: 0px 16px;
-    margin-top: 70px;
+    // margin-top: 70px;
     .inner-content {
         margin: 15px 0px;
         padding: 24px;
@@ -82,5 +82,11 @@ nz-breadcrumb {
         height: 90%;
         border-right: 0;
         font-weight: 500;
+    }
+}
+
+li {
+    > a:hover {
+        text-decoration: none;
     }
 }

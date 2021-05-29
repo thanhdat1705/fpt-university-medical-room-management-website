@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ErrorComponent } from './error/error.component';
 import { LoginComponent } from './login/login.component';
+import { ThanhdatComponent } from './thanhdat/thanhdat.component';
 
 const routes: Routes = [
   { 
@@ -16,6 +17,13 @@ const routes: Routes = [
     component: ErrorComponent,
     data: {
       title: 'Error'
+    }
+  },
+  { 
+    path: 'thanhdat',
+    component: ThanhdatComponent,
+    data: {
+      title: 'Thanhdat'
     }
   }
 
