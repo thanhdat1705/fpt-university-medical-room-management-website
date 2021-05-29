@@ -32,7 +32,9 @@ export class InsertAccountComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
 
   insertAccount(data: InsertAccountRequest){
-
+    if (this.accountForm.invalid) {
+      return ;
+  }
     console.log(data);
     this.summaryService.insertAccount(data).subscribe(
       (response) =>{

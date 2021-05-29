@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
+import { ViewProfileComponent } from './account/view-profile/view-profile.component';
 import { AppComponent } from './app.component';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
@@ -12,17 +14,17 @@ const routes: Routes = [
     redirectTo: '/authentication/login',
     pathMatch: 'full',
   },
-  // {
-  //   path: '',
-  //   component: FullLayoutComponent,
-  //   children: FullLayout_ROUTES
-  // },  
+  {
+    path: '',
+    component: FullLayoutComponent,
+    children: FullLayout_ROUTES
+  },  
   {
     path: '',
     component: CommonLayoutComponent,
     children: CommonLayout_ROUTES
   },
-  { path: 'medicine', loadChildren: () => import('./medicine/medicine.module').then(m => m.MedicineModule) },
+  
   
 
 ];

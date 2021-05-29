@@ -44,7 +44,7 @@ registerLocaleData(en);
     AppRoutingModule,
     SharedModule.forRoot(),
     TemplateModule,
-    AccountModule
+    // AccountModule,
   ],
   providers: [AuthService, FirebaseService,
     { provide: NZ_I18N, useValue: en_US},

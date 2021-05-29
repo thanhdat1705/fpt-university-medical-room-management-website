@@ -4,8 +4,10 @@ export interface Account {
   photoUrl: string;
   displayName: string;
   token: string;
-  phone: string;
+  phoneNumber: string;
+  description: string;
   role: string;
+
 }
 export interface AccountOwner extends Account {
   iconStoreUrl: string;

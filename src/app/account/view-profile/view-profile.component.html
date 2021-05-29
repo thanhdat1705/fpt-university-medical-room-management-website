@@ -1,0 +1,29 @@
+<div class="profile">
+    <div class="img-container">
+        <img src="{{profile.photoUrl}}" class="avatar">
+    </div>
+    <div class="info">
+        <p class="title">Name: </p>
+        <p class="content">{{profile.displayName}}</p>
+        <br>
+        <br>
+        <p class="title">Email: </p>
+        <p class="content">{{profile.email}}</p>
+        <br>
+        <br>
+        <p class="title">Phone:</p>
+        <p class="content">{{profile.phoneNumber}}</p>
+        <br>
+        <br>
+        <p class="title">Description:</p>
+        <p class="content">{{profile.description}}</p>
+
+    </div>
+    <div class="buttons">
+        <button mat-raised-button color="primary" (click)="editProfile()">Edit profile</button>
+        <!-- <button mat-raised-button color="primary">Change password</button> -->
+    </div>
+
+     
+
+</div>

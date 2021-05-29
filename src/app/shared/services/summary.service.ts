@@ -9,7 +9,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { ResponseServer } from "../models/response-server";
-import { UrlServerAPIInsertAccount } from "../models/url-api";
+import { UrlServerAPIGetProfile, UrlServerAPIInsertAccount } from "../models/url-api";
 
 // import { Injectable } from '@angular/core';
 // import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -21,17 +21,41 @@ import { UrlServerAPIInsertAccount } from "../models/url-api";
 })
 export class SummaryService {
 
-    private headers: HttpHeaders = new HttpHeaders({
-        'Accept': '*/*',
-        'Content-Type': 'application/json'
-      });
+  private headers: HttpHeaders = new HttpHeaders({
+    'Accept': '*/*',
+    'Content-Type': 'application/json'
+  });
+
+  public setTokenHeader() {
+    this.headers = this.headers.set('Authorization', 'Bearer ' + localStorage.getItem("token"));
+    console.log(localStorage.getItem("token"));
+  }
+
 
   constructor(private http: HttpClient, private router: Router) { }
-    public insertAccount(data: any): Observable<any>{
-        console.log(data);
-        return this.http.post<any>(UrlServerAPIInsertAccount, data, {headers: this.headers});
-    }
+
+  public insertAccount(data: any): Observable<any> {
+    console.log(data);
+    return this.http.post<any>(UrlServerAPIInsertAccount, data, { headers: this.headers });
   }
+
+  public getProfile(): Observable<ResponseServer> {
+    if (this.headers.get("Authorization") == null) {
+      this.router.navigate(['']);
+    }
+    return this.http.get<ResponseServer>(UrlServerAPIGetProfile, { headers: this.headers });
+  
+  }
+
+  public updateProfile(data : any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(
+      UrlServerAPIGetProfile, data, { headers: this.headers }
+    );
+  }
+
+
+
+}
 
 
 //   public loginSocial(data: any): Observable<ResponseServer> {
