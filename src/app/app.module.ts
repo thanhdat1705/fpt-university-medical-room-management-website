@@ -19,10 +19,14 @@ import { SharedModule } from './shared/shared.module';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { TemplateModule } from './shared/template/template.module';
-import { FirebaseService } from './shared/services/firebase.service';
+import { AccountModule } from './account/account.module';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { AuthService } from './shared/services/auth-service/auth.service';
 import { GeneralHelperService } from './shared/services/general-helper.service';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
+import { FirebaseService } from './shared/services/firebase.service';
+import { MyErrorStateMatcher } from './shared/my-error-state-matcher';
+
 
 
 registerLocaleData(en);
@@ -33,7 +37,7 @@ registerLocaleData(en);
     CommonLayoutComponent,
     FullLayoutComponent,
   ],
-  exports: [TemplateModule],
+  exports: [TemplateModule, AccountModule],
   imports: [
     BrowserModule,
     HttpClientModule,

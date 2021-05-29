@@ -8,6 +8,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { firebaseConfig } from 'src/environments/environment';
 import { WaitingComponent } from './components/waiting/waiting.component';
 
+
 const SHARE_MODULES = [
   AntModule,
   MaterialModule,
@@ -16,7 +17,6 @@ const SHARE_MODULES = [
 
 const COMPONENTS = [
   WaitingComponent,
-
 ];
 
 export const ANGULAR_MODULES = [

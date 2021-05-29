@@ -11,3 +11,7 @@ export const UrlGetAllWardInDistrict = Proxy + "https://thongtindoanhnghiep.co/a
 
 
 export const UrlServerAPISocialAuthentication = UrlServer + '/api/v1.0/Accounts/SocialAuthentication';
+export const UrlServerAPIInsertAccount = UrlServer + '/api/v1.0/Accounts/StoringNewAccount';
+export const UrlServerAPIGetProfile = UrlServer + '/api/v1.0/Accounts/Profile'
+export const UrlServerAPIUpdateProfile = UrlServer + '/api/v1.0/Accounts/UpdatingProfile'
+
