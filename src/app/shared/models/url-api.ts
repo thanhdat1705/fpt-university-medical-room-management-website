@@ -12,6 +12,13 @@ export const UrlGetAllWardInDistrict = Proxy + "https://thongtindoanhnghiep.co/a
 
 export const UrlServerAPISocialAuthentication = UrlServer + '/api/v1.0/Accounts/SocialAuthentication';
 export const UrlServerAPIInsertAccount = UrlServer + '/api/v1.0/Accounts/StoringNewAccount';
-export const UrlServerAPIGetProfile = UrlServer + '/api/v1.0/Accounts/Profile'
-export const UrlServerAPIUpdateProfile = UrlServer + '/api/v1.0/Accounts/UpdatingProfile'
+export const UrlServerAPIGetProfile = UrlServer + '/api/v1.0/Accounts/Profile';
+export const UrlServerAPIUpdateProfile = UrlServer + '/api/v1.0/Accounts/UpdatingProfile';
+
+export const UrlServerAPISearchMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits/Searching';
+export const UrlServerAPIStoreNewMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits';
+export const UrlServerAPIGetAllMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits';
+export const UrlServerAPIGetAllMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups';
+
+
 

@@ -1,28 +1,161 @@
-<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input your username!" >
-      <nz-input-group nzPrefixIcon="user" nzSize="large">
-        <input type="text" nz-input formControlName="userName" placeholder="Username" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input your Password!">
-      <nz-input-group nzPrefixIcon="lock" nzSize="large">
-        <input type="password" nz-input formControlName="password" placeholder="Password"  />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-  <div nz-row class="login-form-margin">
-    <div nz-col [nzSpan]="12">
-      <label nz-checkbox formControlName="remember">
-        <span>Remember me</span>
-      </label>
-    </div>
-    <div nz-col [nzSpan]="12">
-      <a class="login-form-forgot">Forgot password</a>
-    </div>
+<!-- <form class="example-form" [formGroup]="medicineForm" (ngSubmit)="addMedicine(medicineForm.value)">
+  Medicine Name
+  <mat-form-field class="example-full-width">
+    <mat-label>Tên dược phẩm</mat-label>
+    <input type="text" matInput formControlName="medicineName" [errorStateMatcher]="matcher"
+      placeholder="Nhập tên thuốc">
+    <mat-error *ngIf="f.medicineName.hasError('required')">
+      Hãy nhập tên thuốc
+    </mat-error>
+    <mat-error *ngIf="f.medicineName.hasError('minlength') || f.medicineName.hasError('maxlength')">
+      Nhập độ dài từ 3 tới 50
+    </mat-error>
+    <mat-error *ngIf="f.medicineName.hasError('pattern')">
+      Không nhập ký tự đặc biệt
+    </mat-error>
+  </mat-form-field>
+  <br>
+  Quantity
+  <mat-form-field class="example-full-width">
+    <mat-label>Số lượng</mat-label>
+    <input type="number" matInput formControlName="quantity" [errorStateMatcher]="matcher" placeholder="Nhập số lượng">
+    <mat-error *ngIf="f.medicineName.hasError('required')">
+      Nhập số lượng dược phẩm
+    </mat-error>
+    <mat-error *ngIf="f.quantity.hasError('pattern')">
+      Nhập tối thiếu 1 chữ số và tối đa 5 chữ số
+    </mat-error>
+  </mat-form-field>
+  <br>
+  Medicine Classifications 
+  <mat-form-field class="example-full-width">
+    <mat-label>Loại dược phẩm</mat-label>
+    <input type="text" matInput [formControl]="classControl" [matAutocomplete]="auto" placeholder="Chọn loại dược phẩm">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let option of subgroupListSearch | async" [value]="option">
+        {{option.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <br>
+  Medicine Supgroups 
+  <mat-form-field class="example-full-width">
+    <mat-label>Công dụng dược phẩm</mat-label>
+    <input type="text" matInput [formControl]="subgroupControl" [matAutocomplete]="autoSubgroup"
+      placeholder="Chọn công dụng dược phẩm">
+    <mat-autocomplete autoActiveFirstOption #autoSubgroup="matAutocomplete" [displayWith]="displayFn"
+      (optionSelected)="onSelectionSubgroupChange($event)">
+      <mat-option *ngFor="let option of subgroupListSearch | async" [value]="option">
+        {{option.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <br>
+  Medicine Unit
+  <div class="d-flex flex-column justify-content-between">
+    <mat-form-field class="example-full-width">
+      <mat-label>Đơn vị dược phẩm</mat-label>
+      <input type="text" matInput [formControl]="unitControl" [matAutocomplete]="autoUnit"
+        placeholder="Chọn đơn vị dược phẩm" #unitValue>
+      <mat-autocomplete autoActiveFirstOption #autoUnit="matAutocomplete" [displayWith]="displayFn"
+        (optionSelected)="onSelectionUnitChange($event)" #mySelect>
+        <mat-option *ngFor="let option of unitListSearch | async" [value]="option">
+          {{option.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <a mat-raised-button color="primary" (click)="addUnit(unitValue.value)">Thêm đơn vị</a>
   </div>
-  <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">Log in</button>
-  Or <a> register now! </a>
+
+  <br><br>
+
+  <button class="add-button" [class.spinner]="loading" mat-raised-button color="primary">Thêm</button>
+</form>
+<br><br> -->
+
+
+<form nz-form nzLayout="horizontal" [formGroup]="medicineFormTest" class="form">
+  <!---------------------- Medicine Name ----------------------------->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="medicineName" class="text-label" [nzSpan]="7">
+      <span class="font-size-18">Tên dược phẩm</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="medicineNameErrorTpl">
+      <input id="medicineName" nz-input placeholder="Nhập tên dược phẩm" style="height: 50px; font-size: 18px;"
+        formControlName="medicineNameTest" />
+      <ng-template #medicineNameErrorTpl let-control>
+        <ng-container *ngIf="f.medicineNameTest.hasError('required')">
+          <span class="error-text">Hãy nhập tên thuốc</span>
+        </ng-container>
+        <ng-container *ngIf="f.medicineNameTest.hasError('minlength') || f.medicineNameTest.hasError('maxlength')">
+          <span class="error-text">Nhập độ dài từ 3 tới 50</span>
+        </ng-container>
+        <ng-container *ngIf="f.medicineNameTest.hasError('pattern')">
+          <span class="error-text">Không nhập ký tự đặc biệt</span>
+        </ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <!---------------------- Quantity ----------------------------->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="quantity" class="text-label" [nzSpan]="7">
+      <span class="font-size-18">Số lượng</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="quantityErrorTpl">
+      <nz-input-number id="quantity" formControlName="quantityTest" [nzMin]="1" [nzMax]="500" [nzStep]="1"
+        style="width: 100%; height: 50px; display: flex; align-items: center; font-size: 18px;"></nz-input-number>
+      <ng-template #quantityErrorTpl let-control>
+        <ng-container *ngIf="f.quantityTest.hasError('required')">
+          <span class="error-text">Hãy nhập số lượng</span>
+        </ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <!---------------------- Medicine Unit ----------------------------->
+  <!-- <nz-form-item>
+    <nz-form-label nzRequired nzFor="quantity" class="text-label" [nzSpan]="7">
+      <span class="font-size-18">Đơn vị</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="quantityErrorTpl">
+      <nz-input-number id="quantity" formControlName="quantityTest" [nzMin]="1" [nzMax]="500" [nzStep]="1"
+        style="width: 100%; height: 50px; display: flex; align-items: center; font-size: 18px;"></nz-input-number>
+      <input placeholder="Nhập đơn vị dược phẩm" nz-input formControlName="unit"  (input)="unitChange(unitSearch.value)"
+        [nzAutocomplete]="autoUnit" #unitSearch/>
+      <nz-autocomplete #autoUnit (optionSelected)="onSelectionUnitChange($event)">
+        <nz-auto-option *ngFor="let unit of unitList" [nzValue]="unit.name">
+          {{ unit.name }}
+        </nz-auto-option>
+      </nz-autocomplete>
+    </nz-form-control>
+  </nz-form-item> -->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="quantity" class="text-label" [nzSpan]="7">
+      <span class="font-size-18">Đơn vị</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="quantityErrorTpl">
+      <!-- <nz-input-number id="quantity" formControlName="quantityTest" [nzMin]="1" [nzMax]="500" [nzStep]="1"
+        style="width: 100%; height: 50px; display: flex; align-items: center; font-size: 18px;"></nz-input-number> -->
+      <nz-select nzShowSearch nzAllowClear formControlName="searchUnit" [nzDropdownRender]="renderTemplate" [nzSize]="'large'"
+        nzPlaceHolder="Nhập đơn vị"
+        style="background-color: #e09c83; height: 50px; display: flex; align-items: center; font-size: 18px;">
+        <nz-option *ngFor="let item of unitList" [nzLabel]="item.name" [nzValue]="item.id" nzCustomContent style="height: 50px;">
+          <span style="font-size: 18px;">{{ item.name }}</span>
+        </nz-option>
+      </nz-select>
+      <ng-template #renderTemplate>
+        <nz-divider></nz-divider>
+        <div class="container">
+          <input type="text" nz-input #inputElement />
+          <a class="add-item" (click)="addUnit(inputElement.value)"><i nz-icon nzType="plus"></i> Add item</a>
+        </div>
+      </ng-template>
+
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" (click)="check()">Thêm</button>
+    </nz-form-control>
+  </nz-form-item>
 </form>
