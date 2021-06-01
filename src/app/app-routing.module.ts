@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
+import { SearchAccountComponent } from './account/search-account/search-account.component';
 import { ViewProfileComponent } from './account/view-profile/view-profile.component';
 import { AppComponent } from './app.component';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
@@ -24,7 +25,19 @@ const routes: Routes = [
     component: CommonLayoutComponent,
     children: CommonLayout_ROUTES
   },
+  { 
+    path: 'view-profile', 
+  component: ViewProfileComponent 
+},
+  { 
+    path: 'edit-profile/:profile', 
+    component: EditProfileComponent 
+  },
   
+  { 
+    path: 'search-account', 
+    component: SearchAccountComponent 
+  },
   
 
 ];

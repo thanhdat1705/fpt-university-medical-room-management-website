@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ResponseServer } from '../models/response-server';
 import { Observable } from 'rxjs';
-import { UrlServerAPIGetProfile, UrlServerAPIInsertAccount, UrlServerAPISocialAuthentication } from '../models/url-api';
+import { UrlServerAPIGetProfile, UrlServerAPIInsertAccount, UrlServerAPISocialAuthentication, UrlServerAPIViewAccounts } from '../models/url-api';
 
 @Injectable({
     providedIn: 'root'
@@ -22,10 +22,12 @@ export class SummaryService {
       'Accept': '*/*',
       'Content-Type': 'application/json'
     });
-  
-  
-  
-  
+    
+    private headersFormData: HttpHeaders = new HttpHeaders({
+      'Accept': '*/*',
+      'Content-Type': 'multipart/form-data'
+    });
+
     public insertAccount(data: any): Observable<any> {
       console.log(data);
       return this.http.post<any>(UrlServerAPIInsertAccount, data, { headers: this.headers });
@@ -40,13 +42,30 @@ export class SummaryService {
     }
   
     public updateProfile(data : any): Observable<ResponseServer> {
-      return this.http.post<ResponseServer>(
+      if (this.headersFormData.get("Authorization") == null) {
+        this.router.navigate(['']);
+      }
+      return this.http.put<any>(
+        UrlServerAPIGetProfile, data, { headers: this.headersFormData }
+      );
+    }
+    
+    public viewProfiles(data : any): Observable<ResponseServer> {
+      return this.http.put<any>(
         UrlServerAPIGetProfile, data, { headers: this.headers }
       );
     }
-  
-  
-
+    
+    public searchAccount(searchParam : any): Observable<ResponseServer> {
+      return this.http.get<any>(
+        UrlServerAPIViewAccounts, { headers: this.headers, params: searchParam }
+      );
+    }
+    
+    public setTokenHeaderFormData() {
+      this.headersFormData = this.headersFormData.set('Authorization', 'Bearer ' + localStorage.getItem("token"));
+      console.log(localStorage.getItem("token"));
+  }
 
     public setTokenHeader() {
         this.headers = this.headers.set('Authorization', 'Bearer ' + localStorage.getItem("token"));

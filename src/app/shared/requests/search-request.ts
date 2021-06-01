@@ -7,13 +7,11 @@ export interface SearchRequest {
   //1: descending
   //0: ascending
 }
-export interface SearchCostRequest{
+export interface SearchAccountRequest{
   limit: number;
   page: number;
-  search: string;
   sortField: string;
   sortOrder: number;
-  costTypeIds: string[];
 }
 export interface SearchOrderRequest{
   limit: number;

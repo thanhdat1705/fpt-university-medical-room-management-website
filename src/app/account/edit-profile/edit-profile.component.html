@@ -1,16 +1,22 @@
-<div class="profile">
-    <p class="title">Photo: </p>
+<form [formGroup]="accountForm" (ngSubmit)="updateAccount(accountForm.value)">
 
-    <div class="img-container">
-        <img src="{{url}}" class="avatar">
-    </div>
-    <input type="file" name="profile" (change)="selectFile($event)">
-    <form [formGroup]="accountForm" (ngSubmit)="updateAccount(accountForm.value)">
+    <div class="profile">
+
+        <p class="title">Photo: </p>
+
+        <div class="img-container">
+            <img src="{{url}}" class="avatar">
+        </div>
+
+
         <div class="info">
+
+            <input type="file" name="profile" formControlName="avatarFile" (change)="selectFile($event)">
+
             <p class="title">Name: </p>
             <mat-form-field class="example-full-width">
                 <input name="displayName" type="text" matInput formControlName="displayName"
-                    [errorStateMatcher]="matcher"  >
+                    [errorStateMatcher]="matcher">
                 <mat-error *ngIf="f.displayName.hasError('required')">
                     Name is required
                 </mat-error>
@@ -21,29 +27,29 @@
             <br>
             <br>
             <p class="title">Email: </p>
-                <mat-form-field class="example-full-width">
-                    <input name="email" type="text" matInput formControlName="email"
-                        [errorStateMatcher]="matcher" value="{{profile.email}}">
-                    <mat-error *ngIf="f.email.hasError('required')">
-                        Email is required
-                    </mat-error>
-                    <mat-error *ngIf="f.email.hasError('email')">
-                        Email should be in correct format
-                    </mat-error>
-                </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <input name="email" type="text" matInput formControlName="email" [errorStateMatcher]="matcher"
+                    value="{{profile.email}}">
+                <mat-error *ngIf="f.email.hasError('required')">
+                    Email is required
+                </mat-error>
+                <mat-error *ngIf="f.email.hasError('email')">
+                    Email should be in correct format
+                </mat-error>
+            </mat-form-field>
             <br>
             <br>
             <p class="title">Phone:</p>
             <mat-form-field class="example-full-width">
-                <input name="phone" type="text" matInput formControlName="phone"
+                <input name="phoneNumber" type="text" matInput formControlName="phoneNumber"
                     [errorStateMatcher]="matcher" value="2828282aaaaaaaaaaaaaaaaaaAAAAAAAAAaaa">
-                <mat-error *ngIf="f.phone.hasError('required')">
+                <mat-error *ngIf="f.phoneNumber.hasError('required')">
                     Phone number is required
                 </mat-error>
-                <mat-error *ngIf="f.phone.hasError('minlength') || f.phone.hasError('maxlength')">
+                <mat-error *ngIf="f.phoneNumber.hasError('minlength') || f.phoneNumber.hasError('maxlength')">
                     Phone number length should be between ? to ?
                 </mat-error>
-                <mat-error *ngIf="f.phone.hasError('patern')">
+                <mat-error *ngIf="f.phoneNumber.hasError('patern')">
                     Phone number should be correct format
                 </mat-error>
             </mat-form-field>
@@ -51,13 +57,13 @@
             <br>
             <p class="title">Description:</p>
             <mat-form-field class="example-full-width">
-                <textarea matInput value="" cdkTextareaAutosize>{{profile.description}}</textarea>
+                <textarea matInput formControlName="description" cdkTextareaAutosize>{{profile.description}}</textarea>
             </mat-form-field>
         </div>
         <div class="buttons">
             <button mat-button color="primary">Cancel</button>
             <button mat-raised-button color="primary">Confirm</button>
         </div>
-    </form>
 
-</div>
+    </div>
+</form>

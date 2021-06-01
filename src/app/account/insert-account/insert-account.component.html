@@ -9,6 +9,7 @@
     <mat-error *ngIf="f.username.hasError('required')">
       Username is required
     </mat-error>
+    <mat-hint></mat-hint>
     <mat-error *ngIf="f.username.hasError('minlength') || f.username.hasError('maxlength')">
       Username must be between 8 and 30 characters
     </mat-error>
