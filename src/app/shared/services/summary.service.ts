@@ -10,7 +10,7 @@ import { UrlServerAPIGetProfile, UrlServerAPIInsertAccount, UrlServerAPISocialAu
     providedIn: 'root'
 })
 export class SummaryService {
-
+    
     constructor(private http: HttpClient, private router: Router) { }
 
     public loginSocial(data: any): Observable<ResponseServer> {

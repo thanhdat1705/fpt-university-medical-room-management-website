@@ -8,6 +8,10 @@ export interface SearchRequest {
   //0: ascending
 }
 export interface SearchAccountRequest{
+  displayName : string;
+  email : string;
+  phoneNumbebr : string;
+  roleID: string;
   limit: number;
   page: number;
   sortField: string;

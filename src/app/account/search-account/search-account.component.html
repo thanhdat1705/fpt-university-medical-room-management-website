@@ -1,17 +1,31 @@
-<nz-table #sortTable [nzData]="accountList" nzTableLayout="fixed" [nzLoading]="loading" [nzPageSize]="pageSize" 
-[nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false">
-  
-    <thead>
-      <tr>
-        <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{ column.title }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of accountList">
-        <td>{{ data.displayName }}</td>
-        <td>{{ data.email }}</td>
-        <td>{{ data.phoneNumber }}</td>
-        <td>{{ data.description }}</td>
-      </tr>
-    </tbody>
-  </nz-table>
+<form class="search-form" [formGroup]="searchForm"  (ngSubmit)="Search()">
+  <mat-form-field class="example-full-width" class="search-field">
+    <input matInput formControlName="searchContent">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Search by </mat-label>
+    <mat-select [(ngModel)]="selectedValue" (click)="selectAttribute(selectedValue)" formControlName="searchAttribute">
+      <mat-option *ngFor="let attribute of accountAttribute" [value]="attribute.value">
+        {{attribute.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary">Search</button>
+</form>
+<nz-table #sortTable [nzData]="accountList" nzTableLayout="fixed" [nzLoading]="loading" [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false">
+  <thead>
+    <tr>
+      <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{
+        column.title }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of accountList">
+      <td>{{ data.displayName }}</td>
+      <td>{{ data.email }}</td>
+      <td>{{ data.phoneNumber }}</td>
+      <td>{{ data.description }}</td>
+    </tr>
+  </tbody>
+</nz-table>
