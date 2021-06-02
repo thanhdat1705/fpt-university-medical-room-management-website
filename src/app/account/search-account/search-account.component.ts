@@ -23,10 +23,10 @@ interface SearchAccountAttribute {
 export class SearchAccountComponent implements OnInit {
 
   accountAttribute: SearchAccountAttribute[] = [
-    { value: 'none', viewValue: 'None' },
-    { value: 'internalCode', viewValue: 'Internal code' },
-    { value: 'displayName', viewValue: 'Name' },
-    { value: 'phoneNumber', viewValue: 'Phone number' },
+    { value: 'none', viewValue: '-Trống-' },
+    { value: 'internalCode', viewValue: 'Mã số' },
+    { value: 'displayName', viewValue: 'Tên' },
+    { value: 'phoneNumber', viewValue: 'Số điện thoại' },
     // { value: 'roleId', viewValue: 'Role' }
 
   ]
@@ -34,7 +34,7 @@ export class SearchAccountComponent implements OnInit {
   selectedValue: string;
   accountList: Account[];
   loading = true;
-  pageSize = 2;
+  pageSize = 10;
   pageIndex = 1;
   total = 0;
 
@@ -56,19 +56,19 @@ export class SearchAccountComponent implements OnInit {
 
   listOfColumn = [
     {
-      title: 'Internal code'
+      title: 'Mã số'
     },
     {
-      title: 'Name',
+      title: 'Tên',
     },
     {
       title: 'Email',
     },
     {
-      title: 'Phone number',
+      title: 'Số điện thoại',
     },
     {
-      title: 'Description',
+      title: 'Mô tả',
     }
   ];
 

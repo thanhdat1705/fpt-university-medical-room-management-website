@@ -35,5 +35,19 @@
 </div> -->
 
 <nz-header class="header">
-  <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="toggleCollapse()" ></i>
+  <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="toggleCollapse()"></i>
+  <a class="avatar" href="/account/profile" nz-dropdown [nzDropdownMenu]="menu">
+    <nz-avatar nzIcon="user" nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu>
+      <a href="/account/profile">
+        <li nz-menu-item>Trang cá nhân</li>
+      </a>
+      <a>
+        <li nz-menu-item>??</li>
+      </a>
+      <li nz-menu-item>Đăng xuất</li>
+    </ul>
+  </nz-dropdown-menu>
 </nz-header>

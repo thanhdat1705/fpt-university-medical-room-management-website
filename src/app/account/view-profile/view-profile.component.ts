@@ -24,7 +24,7 @@ export class ViewProfileComponent implements OnInit {
   profile: Account
 
   editProfile(){
-    this.router.navigate(['edit-profile', JSON.stringify(this.profile)]);
+    this.router.navigate(['account/edit-profile', JSON.stringify(this.profile)]);
   }
 
   getProfile() {

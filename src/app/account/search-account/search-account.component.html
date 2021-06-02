@@ -3,14 +3,14 @@
     <input matInput formControlName="searchContent">
   </mat-form-field>
   <mat-form-field appearance="fill">
-    <mat-label>Search by </mat-label>
+    <mat-label>Tìm theo </mat-label>
     <mat-select [(ngModel)]="selectedValue" formControlName="searchAttribute">
       <mat-option *ngFor="let attribute of accountAttribute" [value]="attribute.value">
         {{attribute.viewValue}}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <button mat-raised-button color="primary">Search</button>
+  <button mat-raised-button color="primary">Tìm kiếm</button>
 </form>
 <nz-table #sortTable [nzData]="accountList" nzTableLayout="fixed" [nzLoading]="loading" [nzPageSize]="pageSize"
   [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false">

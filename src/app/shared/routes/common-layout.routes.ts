@@ -22,5 +22,22 @@ export const CommonLayout_ROUTES: Routes = [
         ]
 
     },
+    {
+        path: 'account',
+        data: {
+            title: 'Account Management'
+        },
+        children: [
+            {
+                path: '',
+                redirectTo: '/test',
+                pathMatch: 'full'
+            },
+            {
+                path: '',
+                loadChildren: () => import('../../account/account.module').then(m => m.AccountModule)
+            },
+        ]
 
+    },
 ];

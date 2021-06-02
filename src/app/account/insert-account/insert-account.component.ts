@@ -21,7 +21,9 @@ export class InsertAccountComponent implements OnInit {
   passwordMinLength = 3;
   usernameMaxLength = 50;
   passwordMaxLength = 50;
-  pattern = '[a-zA-Z0-9]*';
+  pattern = '[a-zA-Z0-9 ]*';
+  patternPassword = '[a-zA-Z0-9]*';
+
   matcher = new ErrorStateMatcher;
   // convenience getter for easy access to form fields
   get f() { return this.accountForm.controls; }
@@ -59,7 +61,7 @@ export class InsertAccountComponent implements OnInit {
         [Validators.required,
         Validators.minLength(this.passwordMinLength),
         Validators.maxLength(this.passwordMaxLength),
-        Validators.pattern(this.pattern)]
+        Validators.pattern(this.patternPassword)]
       ],
       displayName: ['',
         [

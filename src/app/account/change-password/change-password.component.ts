@@ -16,6 +16,9 @@ export class ChangePasswordComponent implements OnInit {
 
   get f() { return this.changePasswordForm.controls; }
 
+  passwordMinLength = 3;
+  passwordMaxLength = 50;
+  pattern = '[a-zA-Z]*';
   changePasswordForm: FormGroup;
   matcher = new ErrorStateMatcher;
 
@@ -26,15 +29,21 @@ export class ChangePasswordComponent implements OnInit {
     this.changePasswordForm = this.formBuilder.group({
       oldPassword: ['', [
         Validators.required,
-        Validators.pattern
+        Validators.pattern(this.pattern),
+        Validators.maxLength(this.passwordMaxLength),
+        Validators.minLength(this.passwordMinLength),
       ]],
       newPassword: ['', [
         Validators.required,
-        Validators.pattern
+        Validators.pattern(this.pattern),
+        Validators.maxLength(this.passwordMaxLength),
+        Validators.minLength(this.passwordMinLength),
       ]],
       confirmNewPassword: ['', [
         Validators.required,
-        Validators.pattern
+        Validators.pattern(this.pattern),
+        Validators.maxLength(this.passwordMaxLength),
+        Validators.minLength(this.passwordMinLength),
       ]],
 
     }, { Validators: this.generalHelper.MustMatch('newPassword', 'confirmNewPassword') }

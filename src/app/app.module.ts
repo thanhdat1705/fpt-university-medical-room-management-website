@@ -25,7 +25,6 @@ import { AuthService } from './shared/services/auth-service/auth.service';
 import { GeneralHelperService } from './shared/services/general-helper.service';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { FirebaseService } from './shared/services/firebase.service';
-import { MyErrorStateMatcher } from './shared/my-error-state-matcher';
 
 
 
@@ -37,7 +36,7 @@ registerLocaleData(en);
     CommonLayoutComponent,
     FullLayoutComponent,
   ],
-  exports: [TemplateModule, AccountModule],
+  exports: [TemplateModule],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -46,7 +45,6 @@ registerLocaleData(en);
     SharedModule.forRoot(),
     // SharedModule,
     TemplateModule,
-    AccountModule
   ],
   providers: [GeneralHelperService, FirebaseService,
     { provide: NZ_I18N, useValue: en_US },

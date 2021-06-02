@@ -20,7 +20,7 @@ export class EditProfileComponent implements OnInit {
   passwordMinLength = 3;
   usernameMaxLength = 50;
   passwordMaxLength = 50;
-  pattern = '[a-zA-Z0-9]*';
+  pattern = '[a-zA-Z ]*';
   phoneNumberPattern = '[0-9]'
   matcher = new MyErrorStateMatcher();
   profile: any
@@ -44,7 +44,6 @@ export class EditProfileComponent implements OnInit {
       avatarFile: [],
 
       email: [this.profile.email, [
-        Validators.required,
         Validators.minLength(this.passwordMinLength),
         Validators.maxLength(this.passwordMaxLength),
         Validators.email,
@@ -61,9 +60,9 @@ export class EditProfileComponent implements OnInit {
       phoneNumber: [this.profile.phoneNumber,
       [
         Validators.required,
-        Validators.minLength(this.passwordMinLength),
-        Validators.maxLength(this.passwordMaxLength),
-        Validators.pattern(this.pattern)
+        Validators.minLength(8),
+        Validators.maxLength(10),
+        Validators.pattern(this.phoneNumberPattern)
       ],],
       description: [this.profile.description,
 
