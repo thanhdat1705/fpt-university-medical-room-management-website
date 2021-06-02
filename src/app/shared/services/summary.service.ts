@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ResponseServer } from '../models/response-server';
 import { Observable } from 'rxjs';
-import { UrlServerAPIGetProfile, UrlServerAPIInsertAccount, UrlServerAPISocialAuthentication, UrlServerAPIViewAccounts } from '../models/url-api';
+import { UrlServerAPIChangePassword, UrlServerAPIGetProfile, UrlServerAPIInsertAccount, UrlServerAPISocialAuthentication, UrlServerAPIViewAccounts } from '../models/url-api';
 
 @Injectable({
     providedIn: 'root'
@@ -31,6 +31,14 @@ export class SummaryService {
     public insertAccount(data: any): Observable<any> {
       console.log(data);
       return this.http.post<any>(UrlServerAPIInsertAccount, data, { headers: this.headers });
+    }
+
+    public changePassword(data: any): Observable<any> {
+      if (this.headers.get("Authorization") == null) {
+        this.router.navigate(['']);
+      }
+      console.log(data);
+      return this.http.post<any>(UrlServerAPIChangePassword, data, { headers: this.headers });
     }
   
     public getProfile(): Observable<ResponseServer> {

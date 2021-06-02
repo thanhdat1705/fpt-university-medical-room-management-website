@@ -6,12 +6,13 @@ import { SharedModule } from '../shared/shared.module';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { SearchAccountComponent } from './search-account/search-account.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 
 @NgModule({
-  declarations: [InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ],
-  exports:[InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent],
+  declarations: [InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent, ],
+  exports:[InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent],
   imports: [
     CommonModule,
     AccountRoutingModule,

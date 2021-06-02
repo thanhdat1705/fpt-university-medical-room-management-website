@@ -22,10 +22,7 @@ export class InsertAccountComponent implements OnInit {
   usernameMaxLength = 50;
   passwordMaxLength = 50;
   pattern = '[a-zA-Z0-9]*';
-  matcher = new MyErrorStateMatcher();
-
-  accountRequest : InsertAccountRequest;
-
+  matcher = new ErrorStateMatcher;
   // convenience getter for easy access to form fields
   get f() { return this.accountForm.controls; }
 
@@ -45,8 +42,6 @@ export class InsertAccountComponent implements OnInit {
       }
     )
   }
-
-
 
   ngOnInit() {
     this.accountForm = this.formBuilder.group({

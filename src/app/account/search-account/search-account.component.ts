@@ -24,6 +24,7 @@ export class SearchAccountComponent implements OnInit {
 
   accountAttribute: SearchAccountAttribute[] = [
     { value: 'none', viewValue: 'None' },
+    { value: 'internalCode', viewValue: 'Internal code' },
     { value: 'displayName', viewValue: 'Name' },
     { value: 'phoneNumber', viewValue: 'Phone number' },
     // { value: 'roleId', viewValue: 'Role' }
@@ -40,9 +41,10 @@ export class SearchAccountComponent implements OnInit {
   searchForm: FormGroup;
 
   searchAccountRequest: SearchAccountRequest = {
+    internalCode: '',
     displayName: '',
     email: '',
-    phoneNumbebr: '',
+    phoneNumber: '',
     roleID: '',
     limit: this.pageSize,
     page: this.pageIndex,
@@ -53,6 +55,9 @@ export class SearchAccountComponent implements OnInit {
 
 
   listOfColumn = [
+    {
+      title: 'Internal code'
+    },
     {
       title: 'Name',
     },
@@ -89,12 +94,9 @@ export class SearchAccountComponent implements OnInit {
       return;
     }
     this.accountList = responseData.data;
+    console.log('account list' + JSON.stringify(this.accountList));
     this.total = responseData.info.totalRecord;
     console.log('total: ' + this.total);
-  }
-
-  selectAttribute(selectedValue){
-
   }
 
   constructor(private summaryService: SummaryService, private formBuilder: FormBuilder) { }
@@ -103,14 +105,21 @@ export class SearchAccountComponent implements OnInit {
     console.log(this.searchForm.get('searchAttribute').value);
     console.log(this.searchForm.get('searchContent').value);
     if (this.searchForm.get('searchAttribute').value == 'displayName') {
-      this.searchAccountRequest.phoneNumbebr = '';
+      this.searchAccountRequest.phoneNumber = '';
+      this.searchAccountRequest.internalCode = '';
       this.searchAccountRequest.displayName = this.searchForm.get('searchContent').value;
     } else if (this.searchForm.get('searchAttribute').value == 'phoneNumber') {
       this.searchAccountRequest.displayName = '';
-      this.searchAccountRequest.phoneNumbebr = this.searchForm.get('searchContent').value;
-    } else if (this.searchForm.get('searchAttribute').value == '') {
+      this.searchAccountRequest.internalCode = '';
+      this.searchAccountRequest.phoneNumber = this.searchForm.get('searchContent').value;
+    } else if (this.searchForm.get('searchAttribute').value == 'internalCode') {
       this.searchAccountRequest.displayName = '';
-      this.searchAccountRequest.phoneNumbebr = '';
+      this.searchAccountRequest.phoneNumber = '';
+      this.searchAccountRequest.internalCode = this.searchForm.get('searchContent').value;
+    }else if (this.searchForm.get('searchAttribute').value == 'none') {
+      this.searchAccountRequest.displayName = '';
+      this.searchAccountRequest.phoneNumber = '';
+      this.searchAccountRequest.internalCode = '';
     }
     this.searchAccount();
     console.log("selected" + this.selectedValue);
@@ -123,6 +132,8 @@ export class SearchAccountComponent implements OnInit {
 
     this.summaryService.searchAccount(this.searchAccountRequest).subscribe(
       (response) => {
+        console.log(response.data);
+        
         this.getData(response.data)
         this.loading = false;
       },

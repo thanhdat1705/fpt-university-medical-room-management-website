@@ -4,7 +4,7 @@
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Search by </mat-label>
-    <mat-select [(ngModel)]="selectedValue" (click)="selectAttribute(selectedValue)" formControlName="searchAttribute">
+    <mat-select [(ngModel)]="selectedValue" formControlName="searchAttribute">
       <mat-option *ngFor="let attribute of accountAttribute" [value]="attribute.value">
         {{attribute.viewValue}}
       </mat-option>
@@ -22,6 +22,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of accountList">
+      <td>{{ data.internalCode }}</td>
       <td>{{ data.displayName }}</td>
       <td>{{ data.email }}</td>
       <td>{{ data.phoneNumber }}</td>

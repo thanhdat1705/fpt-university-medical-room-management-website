@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ChangePasswordComponent } from './account/change-password/change-password.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { SearchAccountComponent } from './account/search-account/search-account.component';
 import { ViewProfileComponent } from './account/view-profile/view-profile.component';
@@ -38,7 +39,10 @@ const routes: Routes = [
     path: 'search-account', 
     component: SearchAccountComponent 
   },
-  
+  { 
+    path: 'change-password', 
+    component: ChangePasswordComponent 
+  },
 
 ];
 

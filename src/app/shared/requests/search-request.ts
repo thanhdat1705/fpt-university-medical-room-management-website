@@ -8,21 +8,22 @@ export interface SearchRequest {
   //0: ascending
 }
 export interface SearchAccountRequest{
+  internalCode : string;
   displayName : string;
   email : string;
-  phoneNumbebr : string;
+  phoneNumber : string;
   roleID: string;
   limit: number;
   page: number;
   sortField: string;
   sortOrder: number;
 }
-export interface SearchOrderRequest{
-  limit: number;
-  page: number;
-  search: string;
-  sortField: string;
-  sortOrder: number;
-  address: string;
-  phone: string;
-}
+// export interface SearchOrderRequest{
+//   limit: number;
+//   page: number;
+//   search: string;
+//   sortField: string;
+//   sortOrder: number;
+//   address: string;
+//   phone: string;
+// }
