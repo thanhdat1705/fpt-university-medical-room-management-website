@@ -46,7 +46,7 @@ export class ChangePasswordComponent implements OnInit {
         Validators.minLength(this.passwordMinLength),
       ]],
 
-    }, { Validators: this.generalHelper.MustMatch('newPassword', 'confirmNewPassword') }
+    }, { validators: this.generalHelper.MustMatch('newPassword', 'confirmNewPassword') }
     );
   }
 
