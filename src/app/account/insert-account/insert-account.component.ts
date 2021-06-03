@@ -50,7 +50,8 @@ export class InsertAccountComponent implements OnInit {
       username: ['', [Validators.required,
       Validators.minLength(this.usernameMinLength),
       Validators.maxLength(this.usernameMaxLength),
-      Validators.pattern(this.pattern),]],
+      Validators.pattern(this.pattern),
+    ]],
       email: ['', [
         Validators.required,
         Validators.minLength(this.passwordMinLength),
@@ -68,7 +69,7 @@ export class InsertAccountComponent implements OnInit {
           Validators.required,
           Validators.minLength(this.passwordMinLength),
           Validators.maxLength(this.passwordMaxLength),
-          Validators.pattern(this.pattern)
+          // Validators.pattern(this.pattern)
         ]
       ],
       roleId: ['',
