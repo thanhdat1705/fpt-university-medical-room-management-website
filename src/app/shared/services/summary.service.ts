@@ -50,7 +50,7 @@ export class SummaryService {
     }
   
     public updateProfile(data : any): Observable<ResponseServer> {
-      if (this.headersFormData.get("Authorization") == null) {
+      if (this.headers.get("Authorization") == null) {
         this.router.navigate(['']);
       }
       return this.http.put<any>(

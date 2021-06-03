@@ -17,8 +17,8 @@ export class ViewProfileComponent implements OnInit {
   constructor(private summaryService: SummaryService, private router: Router, private generalService: GeneralHelperService) { }
 
   ngOnInit(): void {
-    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjQ4MjI1MCwiZXhwIjoxNjIzMDg3MDUwLCJpYXQiOjE2MjI0ODIyNTB9.fWz9NFz39-_-aPaMR8dgR63oHth1NNPmO7yJ5m9HoQc");
-    this.summaryService.setTokenHeader();
+    // localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjQ4MjI1MCwiZXhwIjoxNjIzMDg3MDUwLCJpYXQiOjE2MjI0ODIyNTB9.fWz9NFz39-_-aPaMR8dgR63oHth1NNPmO7yJ5m9HoQc");
+    // this.summaryService.setTokenHeader();
     this.getProfile();
   }
 

@@ -31,13 +31,13 @@ export class EditProfileComponent implements OnInit {
     this.profile = JSON.parse(activatedRoute.snapshot.params["profile"]);
   }
 
-  
+
 
   ngOnInit(): void {
     // this.profile = this.profileComponent.profile;
-    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjQ4MjkzMCwiZXhwIjoxNjIzMDg3NzMwLCJpYXQiOjE2MjI0ODI5MzB9.jZYAzNobT_0weAusMndALNDA_CrnYX-BUYv2lgyYpxs");
-    
-    this.summaryService.setTokenHeaderFormData();
+    // localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjQ4MjkzMCwiZXhwIjoxNjIzMDg3NzMwLCJpYXQiOjE2MjI0ODI5MzB9.jZYAzNobT_0weAusMndALNDA_CrnYX-BUYv2lgyYpxs");
+
+    // this.summaryService.setTokenHeaderFormData();
 
     this.url = this.profile.photoUrl;
     this.accountForm = this.formBuilder.group({
@@ -55,7 +55,7 @@ export class EditProfileComponent implements OnInit {
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(this.pattern)
+        // Validators.pattern(this.pattern)
       ]
       ],
       phoneNumber: [this.profile.phoneNumber,
@@ -73,7 +73,10 @@ export class EditProfileComponent implements OnInit {
 
   get f() { return this.accountForm.controls; }
 
-  updateAccount(data:  any) {
+  updateAccount(data: any) {
+    if (this.accountForm.invalid) {
+      return;
+    }
     const uploadData = new FormData();
     uploadData.append('email', this.accountForm.get('email').value);
     uploadData.append('avatarFile', this.accountForm.get('avatarFile').value);
@@ -83,9 +86,7 @@ export class EditProfileComponent implements OnInit {
 
     console.log("form: " + uploadData.get('avatarFile'));
     console.log(uploadData instanceof FormData);
-    if (data.invalid) {
-      return;
-    }
+
     this.summaryService.updateProfile(uploadData).subscribe(
       (response) => {
         console.log(response);

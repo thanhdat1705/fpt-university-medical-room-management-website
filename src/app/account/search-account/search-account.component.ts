@@ -146,8 +146,8 @@ export class SearchAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjI5MjA2MywiZXhwIjoxNjIyODk2ODYzLCJpYXQiOjE2MjIyOTIwNjN9.t7xEtRaYwZuIYzqK2rW6hfwqrtiVEqiSPFGXfOIJ_Hc");
-    this.summaryService.setTokenHeader();
+    // localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjI5MjA2MywiZXhwIjoxNjIyODk2ODYzLCJpYXQiOjE2MjIyOTIwNjN9.t7xEtRaYwZuIYzqK2rW6hfwqrtiVEqiSPFGXfOIJ_Hc");
+    // this.summaryService.setTokenHeader();
     this.loading = true;
     this.searchAccount();
     this.searchForm = this.formBuilder.group({

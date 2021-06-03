@@ -80,8 +80,10 @@ export class GeneralHelperService {
             }
             else {
                 this.notification.error(
-                    'Error code: ' + error.error.statusCode,
-                    error.error.message,
+                    // 'Error code: ' + error.error.statusCode,
+                    'Error code: ' + error.statusCode,
+                    // error.error.message,
+                    error.message,
                     { nzPlacement: 'bottomRight' }
                 );
             }

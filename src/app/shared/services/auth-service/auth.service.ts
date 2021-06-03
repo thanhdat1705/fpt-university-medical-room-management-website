@@ -123,11 +123,13 @@ export class AuthService {
                 console.log(this.account);
                 localStorage.setItem("accountId", response.data.accountId);
                 localStorage.setItem("token", response.data.token);
+                this.summaryService.setTokenHeader();
                 console.log(localStorage.getItem("token"));
                 this.summaryService.setTokenHeader();
                 this.generalService.closeWaitingPopupNz();
                 this.ngZone.run(() => {
-                    this.router.navigate(['medicine-management/medicine']);
+                    // this.router.navigate(['medicine-management/medicine']);
+                    this.router.navigate(['account/profile']);
                 })
                 
             },

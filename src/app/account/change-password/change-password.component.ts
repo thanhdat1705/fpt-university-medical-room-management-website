@@ -23,8 +23,8 @@ export class ChangePasswordComponent implements OnInit {
   matcher = new ErrorStateMatcher;
 
   ngOnInit(): void {
-    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjY0NTkwNCwiZXhwIjoxNjIzMjUwNzA0LCJpYXQiOjE2MjI2NDU5MDR9.fGRQ8GVH86_lRHYPt4YYcDDxTFqRgNgqYBTdCnZFPug");
-    this.summaryService.setTokenHeader();
+    // localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjY0NTkwNCwiZXhwIjoxNjIzMjUwNzA0LCJpYXQiOjE2MjI2NDU5MDR9.fGRQ8GVH86_lRHYPt4YYcDDxTFqRgNgqYBTdCnZFPug");
+    // this.summaryService.setTokenHeader();
 
     this.changePasswordForm = this.formBuilder.group({
       oldPassword: ['', [
