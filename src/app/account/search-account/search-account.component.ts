@@ -8,6 +8,7 @@ import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 
 interface SearchAccountAttribute {
   value: string;
@@ -99,9 +100,10 @@ export class SearchAccountComponent implements OnInit {
     console.log('total: ' + this.total);
   }
 
-  constructor(private summaryService: SummaryService, private formBuilder: FormBuilder) { }
+  constructor(private summaryService: SummaryService, private generalService: GeneralHelperService, private formBuilder: FormBuilder) { }
 
   Search() {
+    this.loading = true;
     console.log(this.searchForm.get('searchAttribute').value);
     console.log(this.searchForm.get('searchContent').value);
     if (this.searchForm.get('searchAttribute').value == 'displayName') {
@@ -139,12 +141,14 @@ export class SearchAccountComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.generalService.createErrorNotification(error);
       });
   }
 
   ngOnInit(): void {
     localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjI5MjA2MywiZXhwIjoxNjIyODk2ODYzLCJpYXQiOjE2MjIyOTIwNjN9.t7xEtRaYwZuIYzqK2rW6hfwqrtiVEqiSPFGXfOIJ_Hc");
     this.summaryService.setTokenHeader();
+    this.loading = true;
     this.searchAccount();
     this.searchForm = this.formBuilder.group({
       searchContent:  [],

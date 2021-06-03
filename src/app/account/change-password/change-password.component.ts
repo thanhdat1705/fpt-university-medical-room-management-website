@@ -12,7 +12,7 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 })
 export class ChangePasswordComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
+  constructor(private formBuilder: FormBuilder, private generalService: GeneralHelperService, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
 
   get f() { return this.changePasswordForm.controls; }
 
@@ -61,6 +61,7 @@ export class ChangePasswordComponent implements OnInit {
       },
       (error) =>{
         console.log(error);
+        this.generalService.createErrorNotification(error);
       }
     )
   }

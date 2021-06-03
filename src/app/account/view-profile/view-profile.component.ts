@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Account } from 'src/app/shared/models/account';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class ViewProfileComponent implements OnInit {
 
   private route: ActivatedRoute;
 
-  constructor(private summaryService: SummaryService, private router: Router) { }
+  constructor(private summaryService: SummaryService, private router: Router, private generalService: GeneralHelperService) { }
 
   ngOnInit(): void {
     localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjQ4MjI1MCwiZXhwIjoxNjIzMDg3MDUwLCJpYXQiOjE2MjI0ODIyNTB9.fWz9NFz39-_-aPaMR8dgR63oHth1NNPmO7yJ5m9HoQc");
@@ -37,6 +38,7 @@ export class ViewProfileComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.generalService.createErrorNotification(error);
       }
 
     )

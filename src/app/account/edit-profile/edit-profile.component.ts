@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 
 @Component({
@@ -21,12 +22,12 @@ export class EditProfileComponent implements OnInit {
   usernameMaxLength = 50;
   passwordMaxLength = 50;
   pattern = '[a-zA-Z ]*';
-  phoneNumberPattern = '[0-9]'
+  phoneNumberPattern = '[0-9]*'
   matcher = new MyErrorStateMatcher();
   profile: any
   router: Router
 
-  constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private summaryService: SummaryService) {
+  constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private summaryService: SummaryService, private generalService: GeneralHelperService) {
     this.profile = JSON.parse(activatedRoute.snapshot.params["profile"]);
   }
 
@@ -91,6 +92,7 @@ export class EditProfileComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.generalService.createErrorNotification(error);
       }
     )
   }

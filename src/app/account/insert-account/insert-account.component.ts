@@ -28,7 +28,7 @@ export class InsertAccountComponent implements OnInit {
   // convenience getter for easy access to form fields
   get f() { return this.accountForm.controls; }
 
-  constructor(private formBuilder: FormBuilder, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
+  constructor(private formBuilder: FormBuilder, private generalService: GeneralHelperService, private summaryService: SummaryService) { }
 
   insertAccount(data: InsertAccountRequest){
     if (this.accountForm.invalid) {
@@ -41,6 +41,7 @@ export class InsertAccountComponent implements OnInit {
       },
       (error) =>{
         console.log(error);
+        this.generalService.createErrorNotification(error);
       }
     )
   }
