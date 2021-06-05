@@ -13,7 +13,7 @@ export const firebaseConfig = {
     storageBucket: "fucs-1ee4c.appspot.com",
     messagingSenderId: "421263472733",
     appId: "1:421263472733:web:c0f9e372b8427e1496b5b4",
-    measurementId: "G-XK70Q0VCZF"
+    measurementId: "G-XK70Q0VCZF",
 };
 
 /*
