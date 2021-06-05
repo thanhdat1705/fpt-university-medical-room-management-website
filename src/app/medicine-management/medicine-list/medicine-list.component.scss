@@ -1,0 +1,50 @@
+li > a >.ng-star-inserted {
+    color: yellow !important;
+}
+a {
+    &:hover {
+        color: #40a9ff !important;
+    }
+}
+
+.form {
+    max-width: 500px;
+    min-width: 150px;
+    // width: 100%;
+    line-height: 20px;
+    height: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .form {
+        max-width: 500px;
+        min-width: 150px;
+        // width: 100%;
+        line-height: 20px;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.global-search-item {
+    display: flex;
+}
+
+.global-search-item-desc {
+    flex: auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.global-search-item-count {
+    flex: none;
+}
+
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 100px;
+}

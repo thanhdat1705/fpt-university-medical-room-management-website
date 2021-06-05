@@ -11,10 +11,15 @@ import {
   UrlServerAPISearchMedicineUnit,
   UrlServerAPIStoreNewMedicineUnit,
   UrlServerAPIGetAllMedicineUnit,
-  UrlServerAPIGetAllMedicineSubgroup
+  UrlServerAPIGetAllMedicineSubgroup,
+  UrlServerAPIStoreNewMedicineSubgroup,
+  UrlServerAPIGetAllMedicineClassification,
+  UrlServerAPIStoreNewMedicine,
+  UrlServerAPISearchMedicine,
+  UrlServerAPIDeleteMedicine
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
-import { StoreNewMedicineUnitRequest } from '../requests/medicine-unit/store-new-request';
+import { SearchMedicineRequest } from '../requests/medicine/search';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +28,40 @@ export class SummaryService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+
+  public searchMedicine(request: SearchMedicineRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPISearchMedicine +
+      "/?Name=" +
+      request.Name +
+      "&UnitId=" +
+      request.UnitId+
+      "&MedicineSubgroupId=" +
+      request.MedicineSubgroupId +
+      "&MedicineClassificationId=" +
+      request.MedicineClassificationId +
+      "&Limit=" +
+      request.Limit +
+      "&Page=" +
+      request.Page +
+      "&SortField=" +
+      request.SortField +
+      "&SortOrder=" +
+      request.SortOrder
+    );
+  }
+
+  public storeNewMedicine(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicine, data);
+  }UrlServerAPIDeleteMedicine
+
+  public deleteMedicine(id: string): Observable<ResponseServer> {
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicine + "/?id=" + id);
+  }
+
+  public getAllMedicineClassification(): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineClassification);
+  }
 
   public getAllMedicineSubgroup(): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineSubgroup);
@@ -34,6 +73,10 @@ export class SummaryService {
 
   public storeNewMedicineUnit(data: any): Observable<ResponseServer> {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineUnit, data);
+  }
+
+  public storeNewMedicineSubgroup(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineSubgroup, data);
   }
 
   public searchMedicineUnit(request: SearchMedicineUnitRequest): Observable<ResponseServer> {

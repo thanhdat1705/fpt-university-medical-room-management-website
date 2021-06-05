@@ -11,11 +11,9 @@ import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subg
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
-
-export interface User {
-  id: number;
-  ahihi: string;
-}
+import { StoreNewMedicineSubgroupRequest } from 'src/app/shared/requests/medicine-subgroup/store-new-request';
+import { StoreNewMedicineRequest } from 'src/app/shared/requests/medicine/store-new';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-medicine',
@@ -23,41 +21,21 @@ export interface User {
   styleUrls: ['./add-medicine.component.scss']
 })
 export class AddMedicineComponent implements OnInit {
-  @ViewChild('unitValue', { read: MatAutocompleteTrigger }) unitComplete: MatAutocompleteTrigger;
-
-  loading = false;
-  isUnitEmpty = false;
-  isClassEmpty = false;
-  isSubgroupEmpty = false;
-
-  idUnit: string;
+  addMedicineLoading = false;
+  addItemLoading = false;
 
   medicineForm!: FormGroup;
-  matcher = new MyErrorStateMatcher();
-
-  unitControl = new FormControl();
-  classControl = new FormControl();
-  subgroupControl = new FormControl();
 
   medicineNameMinL = 3;
   medicineNameMaxL = 50;
-  patternMedicineName = "^[a-zA-Z0-9]*$";
+  descriptionMinL = 1;
+  descriptionMaxL = 500;
+  patternMedicineName = "^[a-zA-Z0-9\\s]+$";
   patternUnit = "^[0-9]{1,5}$";
 
-  /*----------Unit---------------------------------------------------------------------------------------------*/
   unitList: MedicineUnitResponse[] = [];
-  unitListSearch: Observable<MedicineUnitResponse[]>;
-  unitSearch: MedicineUnitResponse[] = [];
-  /*-----------------------------------------------------------------------------------------------------------*/
-
-  /*----------Class--------------------------------------------------------------------------------------------*/
   classList: MedicineUnitResponse[] = [];
-  classListSearch: Observable<MedicineUnitResponse[]>;
-  /*-----------------------------------------------------------------------------------------------------------*/
-
-  /*----------Subgroup-----------------------------------------------------------------------------------------*/
   subgroupList: MedicineSubgroupResponse[] = [];
-  subgroupListSearch: Observable<MedicineSubgroupResponse[]>;
   /*-----------------------------------------------------------------------------------------------------------*/
 
   /*----------REQUEST------------------------------------------------------------------------------------------*/
@@ -73,6 +51,10 @@ export class AddMedicineComponent implements OnInit {
     AcronymUnit: "",
   }
 
+  storeNewMedicineSubgroupRequest: StoreNewMedicineSubgroupRequest = {
+    Name: ""
+  }
+
 
   /*-----------------------------------------------------------------------------------------------------------*/
 
@@ -81,72 +63,67 @@ export class AddMedicineComponent implements OnInit {
     console.log(data);
   }
 
-  constructor(private fb: FormBuilder, private service: MedicineService, private generalService: GeneralHelperService) {
-    this.filteredOptions = this.options;
-  }
+  constructor(private fb: FormBuilder,
+    private service: MedicineService,
+    private generalService: GeneralHelperService,
+    private router: Router,) { }
 
   ngOnInit(): void {
-    // this.medicineForm = this.fb.group({
-    //   medicineName: ['', [
-    //     Validators.required,
-    //     Validators.minLength(this.medicineNameMinL),
-    //     Validators.maxLength(this.medicineNameMaxL),
-    //     Validators.pattern(this.patternMedicineName)
-    //   ]],
-    //   quantity: ['', [
-    //     Validators.required,
-    //     Validators.pattern(this.patternUnit)
-    //   ]],
-    //   // medicineUnit: [null, [Validators.required]],
-    // });
-
-    this.medicineFormTest = this.fb.group({
-      medicineNameTest: ['', [
+    this.medicineForm = this.fb.group({
+      name: ['', [
         Validators.required,
         Validators.minLength(this.medicineNameMinL),
         Validators.maxLength(this.medicineNameMaxL),
         Validators.pattern(this.patternMedicineName)
       ]],
-      quantityTest: [1, [
-        Validators.required,
+      // quantity: [1, [
+      //   Validators.required,
+      // ]],
+      unitId: ['', [
+        Validators.required
       ]],
-      unit: [''],
-      searchUnit: [''],
-      // medicineUnit: [null, [Validators.required]],
+      description: ['', [
+        Validators.minLength(this.descriptionMinL),
+        Validators.maxLength(this.descriptionMaxL)
+      ]],
+      medicineSubgroupId: ['', [
+        Validators.required
+      ]],
+      medicineClassificationId: ['', [
+        Validators.required
+      ]]
     });
 
-    // this.getAllMedicineSubgroup();
-    // this.getAllMedicineUnit();
-    this.getAllMedicineUnitTest();
+    this.getAllMedicineClassification();
+    this.getAllMedicineSubgroup();
+    this.getAllMedicineUnit();
   }
 
 
-  /*----------GET ÂLL------------------------------------------------------------------------------------------*/
+  /*----------GET ALL------------------------------------------------------------------------------------------*/
+  // getAllMedicineUnit() {
+  //   this.service.getAllMedicineUnit().subscribe(
+  //     (response) => {
+  //       console.log(response.data);
+  //       this.unitList = response.data;
+  //       this.unitListSearch = this.unitControl.valueChanges
+  //         .pipe(
+  //           startWith(''),
+  //           map(value => typeof value === 'string' ? value : value.name),
+  //           map(name => name ? this._filterUnit(name) : this.unitList.slice())
+  //         );
+  //     },
+  //     (error) => {
+  //       console.log("login error");
+  //       this.generalService.createErrorNotification(error);
+  //     }
+  //   )
+  // }
   getAllMedicineUnit() {
     this.service.getAllMedicineUnit().subscribe(
       (response) => {
         console.log(response.data);
         this.unitList = response.data;
-        this.unitListSearch = this.unitControl.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => typeof value === 'string' ? value : value.name),
-            map(name => name ? this._filterUnit(name) : this.unitList.slice())
-          );
-      },
-      (error) => {
-        console.log("login error");
-        this.generalService.createErrorNotification(error);
-      }
-    )
-  }
-  getAllMedicineUnitTest() {
-    this.service.getAllMedicineUnit().subscribe(
-      (response) => {
-        console.log(response.data);
-        this.unitList = response.data;
-        this.unitSearch = this.unitList;
-        console.log("unit search", this.unitSearch);
       },
       (error) => {
         console.log("get all error");
@@ -160,12 +137,19 @@ export class AddMedicineComponent implements OnInit {
       (response) => {
         console.log(response.data);
         this.subgroupList = response.data;
-        this.subgroupListSearch = this.subgroupControl.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => typeof value === 'string' ? value : value.name),
-            map(name => name ? this._filterSubgroup(name) : this.subgroupList.slice())
-          );
+      },
+      (error) => {
+        console.log("get all error");
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+  getAllMedicineClassification() {
+    this.service.getAllMedicineClassification().subscribe(
+      (response) => {
+        console.log(response.data);
+        this.classList = response.data;
       },
       (error) => {
         console.log("get all error");
@@ -175,72 +159,9 @@ export class AddMedicineComponent implements OnInit {
   }
 
   /*-----------------------------------------------------------------------------------------------------------*/
-  // unitChange(newValue) {
-  //   var value: string;
-  //   value = newValue;
-  //   console.log(value.toString() + " --- value");
-  //   this.searchUnitRequest.MedicineUnitName = newValue;
-  //   console.log(this.searchUnitRequest);
-  //   this.service.searchMedicineUnit(this.searchUnitRequest).subscribe(
-  //     (response) => {
-  //       console.log(response.data.data);
-  //       if (response.data.data.length !== 0) {
-  //         this.unitList = response.data.data;
-  //         this.isUnitEmpty = false;
-  //         console.log('not null');
-  //       }
-  //       else {
-  //         this.unitList = [];
-  //         this.isUnitEmpty = true;
-  //         console.log('null');
-  //       }
-  //     },
-  //     (error) => {
-  //       console.log("login error");
-  //       this.generalService.createErrorNotification(error);
-  //     }
-  //   )
-  // }
-
-  get f() { return this.medicineFormTest.controls; }
-
-  displayFn(binding: any): string {
-    return binding && binding.name ? binding.name : '';
-  }
 
 
-  private _filterSubgroup(name: string): MedicineSubgroupResponse[] {
-    const filterValue = name.toLowerCase();
-    return this.subgroupList.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  private _filterUnit(name: string): MedicineUnitResponse[] {
-    const filterValue = name.toLowerCase();
-    return this.unitList.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  onSelectionUnitChange(event) {
-    console.log('onSelectionChange called', event);
-  }
-
-  onSelectionSubgroupChange(event) {
-    console.log('onSelectionChange called', event.option.value.id);
-  }
-
-  // addUnit(value): void {
-  //   var name: string;
-  //   var acronymUnit: string;
-
-  //   this.storeNewMedicineUnitRequest.Name = value;
-  //   this.storeNewMedicineUnitRequest.AcronymUnit = value.str.substring(0, 1);
-  //   this.service.storeNewMedicineUnit(this.storeNewMedicineUnitRequest).subscribe(
-  //     (response) => {
-  //       console.log(response.data);
-  //     }
-  //   )
-  //   console.log('value ----------------------------------------');
-  //   console.log(value);
-  // }
+  get f() { return this.medicineForm.controls; }
 
 
   /*-----------------------------------------------------------------------------------------------------------*/
@@ -248,75 +169,89 @@ export class AddMedicineComponent implements OnInit {
 
 
 
+  addSubgroup(value: any) {
+    let data;
+    console.log('value', value);
+    this.storeNewMedicineSubgroupRequest.Name = value;
 
-  inputValue?: string;
-  filteredOptions: string[] = [];
-  options = ['Burns Bay Road', 'Downing Street', 'Wall Street'];
+    if ((this.subgroupList.filter(item => item.name.toLocaleLowerCase() === value.toLocaleLowerCase())).length < 1) {
+      this.addItemLoading = true;
+      this.service.storeNewMedicineSubgroup(this.storeNewMedicineSubgroupRequest).subscribe(
+        (response) => {
+          data = response.data;
+          this.subgroupList = [...this.subgroupList, data];
+          this.addItemLoading = false;
+          this.generalService.messageNz('success', `Thêm mới nhóm dược ${value.bold()} thành công`);
+        },
+        (error) => {
+          console.log("store unit error");
+          this.addItemLoading = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+    } else {
+      this.generalService.messageNz('error', `Nhóm dược ${value.bold()} đã có trong hệ thống`);
+      console.log('duplicate');
+    }
 
-
-
-
-
-  medicineFormTest!: FormGroup;
-
-  // updateValue(value: string): void {
-  //   const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
-  //   if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
-  //     this.value = value;
-  //   }
-  //   this.inputQuantity!.nativeElement.value = this.value;
-  // }
-
-  unitChange(value: string) {
-    console.log('check filter unit change', value);
-    const filterValue = value.toLowerCase();
-    this.unitList = this.unitSearch.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+    console.log(this.unitList);
   }
 
-  onChange(value: string): void {
-    console.log("chek check", value);
-    // this.filteredOptions = this.options.filter(option => option.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-  }
-
-  selectedUnit: MedicineUnitResponse;
-
-  listOfItem = ['jack', 'lucy'];
-  index = 0;
-
-  
   addUnit(value: any): void {
     let data;
-
+    console.log('value', value);
     this.storeNewMedicineUnitRequest.Name = value;
     this.storeNewMedicineUnitRequest.AcronymUnit = value.substring(0, 1);
 
-    if (this.unitList.filter(item => item.name.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) === -1)) {
+    if ((this.unitList.filter(item => item.name.toLocaleLowerCase() === value.toLocaleLowerCase())).length < 1) {
+      this.addItemLoading = true;
       this.service.storeNewMedicineUnit(this.storeNewMedicineUnitRequest).subscribe(
         (response) => {
           data = response.data;
           this.unitList = [...this.unitList, data];
+          this.addItemLoading = false;
+          this.generalService.messageNz('success', `Thêm mới đơn vị ${value.bold()} thành công`);
         },
         (error) => {
           console.log("store unit error");
+          this.addItemLoading = false;
           this.generalService.createErrorNotification(error);
         }
       )
-      
-    }else {
+    } else {
+      this.generalService.messageNz('error', `Đơn vị ${value.bold()} đã có trong hệ thống`);
       console.log('duplicate');
     }
-    
-    // if (this.listOfItem.indexOf(value) === -1) {
-    //   this.listOfItem = [...this.listOfItem, input.value || `New item ${this.index++}`];
-    // }
+
+    console.log(this.unitList);
   }
 
-  searchUsers(value: any) {
-    console.log(value);
-  }
+  addNewMedicine(data: StoreNewMedicineRequest) {
 
-  check() {
-    console.log(this.medicineFormTest.controls['searchUnit'].value);
-
+    if (this.medicineForm.invalid) {
+      for (const i in this.medicineForm.controls) {
+        this.medicineForm.controls[i].markAsDirty();
+        this.medicineForm.controls[i].updateValueAndValidity();
+      }
+    } else {
+      console.log(data);
+      this.addMedicineLoading = true;
+      this.service.storeNewMedicine(data).subscribe(
+        (response) => {
+          console.log(response);
+          this.addMedicineLoading = false;
+          console.log('store new', data);
+          this.generalService.messageNz('success', `Dược phẩm ${data.name.bold()} thêm thành công`);
+          this.medicineForm.reset();
+          setTimeout(() => {
+            this.router.navigate(['medicine-management/medicine-list']);
+          }, 1000);
+        },
+        (error) => {
+          this.addMedicineLoading = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+    }
   }
 }

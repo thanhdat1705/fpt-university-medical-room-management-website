@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { WaitingComponent } from '../components/waiting/waiting.component';
+import { DateTime } from '../models/date-time';
 
 
 @Injectable({
@@ -14,8 +16,9 @@ export class GeneralHelperService {
     constructor(
         private router: Router,
         private notification: NzNotificationService,
-        private modal: NzModalService
-    ) {}
+        private modal: NzModalService,
+        private message: NzMessageService
+    ) { }
 
     openWaitingPopupNz() {
         this.modal.create({
@@ -26,7 +29,11 @@ export class GeneralHelperService {
             nzWidth: 'fit-content',
         });
     }
-    
+
+    messageNz(type: string, content: string) {
+        if (type === 'success') { this.message.success(content, { nzDuration: 5000 }); }
+        if (type === 'error') { this.message.error(content, { nzDuration: 5000 }); }
+    }
 
     closeWaitingPopupNz() {
         // const ref: NzModalRef = this.modal.info();
@@ -99,6 +106,53 @@ export class GeneralHelperService {
                 }
             );
         }
+    }
+
+    getToStringTime(time: DateTime): string {
+        var result = "";
+        if (time.day < 10) {
+            result = result + '0' + time.day + '-';
+        } else {
+            result = result + time.day + '-';
+        }
+        if (time.month < 10) {
+            result = result + '0' + time.month + '-';
+        } else {
+            result = result + time.month + '-';
+        }
+        result = result + time.year + ' ';
+        if (time.hour < 10) {
+            result = result + '0' + time.hour + ':';
+        } else {
+            result = result + time.hour + ':';
+        }
+        if (time.minute < 10) {
+            result = result + '0' + time.minute + ':';
+        } else {
+            result = result + time.minute + ':';
+        }
+        if (time.second < 10) {
+            result = result + '0' + time.second;
+        } else {
+            result = result + time.second;
+        }
+        return result;
+    }
+
+    getDate(time: string) {
+        var subs = time.split('-');
+        var result = '';
+        for (var i = subs.length - 1; i >= 0; i--) {
+            if (subs[i].toString().includes('T')) {
+                var tmp = subs[i].toString().split('T');
+                result = result + tmp[0];
+            }else {
+                result = result + '-' + subs[i].toString();
+            }
+            
+        
+        }
+        return result;
     }
 
     MustMatch(controlName: string, matchingControlName: string) {
