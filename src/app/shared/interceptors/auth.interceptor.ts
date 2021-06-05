@@ -23,7 +23,6 @@ export class AuthInterceptor implements HttpInterceptor {
     const passThrough: boolean =
       !!this.excludedUrlsRegex.find(regex => regex.test(request.url));
     if (userLogin) {
-      console.log('aaaa');
       accessToken = userLogin;
     }
     if (passThrough) {

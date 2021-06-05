@@ -5,6 +5,7 @@ import { MedicineManagementRoutingModule } from './medicine-management-routing.m
 import { SharedModule } from '../shared/shared.module';
 import { AddMedicineComponent } from './medicine-list/add-medicine/add-medicine.component';
 import { MedicineListComponent } from './medicine-list/medicine-list.component';
+import { MedicineService } from '../shared/services/medicine/medicine.service';
 
 
 @NgModule({
@@ -17,5 +18,8 @@ import { MedicineListComponent } from './medicine-list/medicine-list.component';
     MedicineManagementRoutingModule,
     SharedModule.forChild(),
   ],
+  providers: [
+    MedicineService,
+  ]
 })
 export class MedicineManagementModule { }

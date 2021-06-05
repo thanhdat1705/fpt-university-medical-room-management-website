@@ -128,8 +128,8 @@ export class AuthService {
                 this.summaryService.setTokenHeader();
                 this.generalService.closeWaitingPopupNz();
                 this.ngZone.run(() => {
-                    // this.router.navigate(['medicine-management/medicine']);
-                    this.router.navigate(['account/profile']);
+                    // this.router.navigate(['account/profile']);
+                    this.router.navigate(['medicine-management/medicine-list']);
                 })
                 
             },

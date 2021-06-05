@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { AuthService } from '../../services/auth-service/auth.service';
 import { SideNavService } from '../../services/side-nav.service';
 
 
@@ -15,7 +16,7 @@ export class HeaderComponent implements OnInit {
 
   toggleActive: boolean = false;
   isCollapsed: boolean;
-  constructor(private sidenav: SideNavService) {
+  constructor(private sidenav: SideNavService, public auth: AuthService) {
   }
 
   ngOnInit(): void {
