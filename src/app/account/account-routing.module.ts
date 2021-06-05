@@ -12,7 +12,7 @@ const routes: Routes = [
     component: ViewProfileComponent
   },
   {
-    path: 'edit-profile/:profile',
+    path: 'edit-profile',
     component: EditProfileComponent
   },
   {

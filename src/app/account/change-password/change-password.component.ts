@@ -51,6 +51,7 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   changePassword(data: ChangePasswordRequest){
+    this.generalService.openWaitingPopupNz();
     if (this.changePasswordForm.invalid) {
       return ;
   }
@@ -63,7 +64,7 @@ export class ChangePasswordComponent implements OnInit {
         console.log(error);
         this.generalService.createErrorNotification(error);
       }
-    )
+    );
+    this.generalService.closeWaitingPopupNz();
   }
-
 }

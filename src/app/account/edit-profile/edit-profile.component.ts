@@ -1,9 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+
+import { ErrorStateMatcher } from '@angular/material/core';
+import { Router } from '@angular/router';
+import { Account } from 'src/app/shared/models/account';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
+import { HeaderComponent } from 'src/app/shared/template/header/header.component';
 
 @Component({
   selector: 'app-edit-profile',
@@ -12,112 +16,150 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 })
 export class EditProfileComponent implements OnInit {
 
-  @Input() model: Account;
-
-  url: any; //Angular 11, for stricter type
-  msg = "";
-  accountForm: FormGroup
+  @ViewChild(HeaderComponent)
+  imageUrl: any;
+  editProfileForm: FormGroup;
+  matcher = new MyErrorStateMatcher;
   usernameMinLength = 3;
   passwordMinLength = 3;
   usernameMaxLength = 50;
   passwordMaxLength = 50;
   pattern = '[a-zA-Z ]*';
   phoneNumberPattern = '[0-9]*'
-  matcher = new MyErrorStateMatcher();
-  profile: any
-  router: Router
+  profile: Account;
+  router: Router;
+  file: File;
+  fileName: string;
+  get f() { return this.editProfileForm.controls; }
 
-  constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private summaryService: SummaryService, private generalService: GeneralHelperService) {
-    this.profile = JSON.parse(activatedRoute.snapshot.params["profile"]);
+
+  constructor(private formBuilder: FormBuilder, private summaryService: SummaryService, private generalService: GeneralHelperService) {
+    // this.profile = JSON.parse(activatedRoute.snapshot.params["profile"]);
+  }
+
+  headerComponent: HeaderComponent;
+
+  async ngOnInit(): Promise<void> {
+    this.getProfile();
   }
 
 
-
-  ngOnInit(): void {
-    // this.profile = this.profileComponent.profile;
-    // localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjQ4MjkzMCwiZXhwIjoxNjIzMDg3NzMwLCJpYXQiOjE2MjI0ODI5MzB9.jZYAzNobT_0weAusMndALNDA_CrnYX-BUYv2lgyYpxs");
-
-    // this.summaryService.setTokenHeaderFormData();
-
-    this.url = this.profile.photoUrl;
-    this.accountForm = this.formBuilder.group({
-
-      avatarFile: [],
-
-      email: [this.profile.email, [
-        Validators.minLength(this.passwordMinLength),
-        Validators.maxLength(this.passwordMaxLength),
-        Validators.email,
-      ]],
-
-      displayName: [this.profile.displayName,
-      [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-        // Validators.pattern(this.pattern)
-      ]
-      ],
-      phoneNumber: [this.profile.phoneNumber,
-      [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(10),
-        Validators.pattern(this.phoneNumberPattern)
-      ],],
-      description: [this.profile.description,
-
-      ],
-    });
-  }
-
-  get f() { return this.accountForm.controls; }
-
-  updateAccount(data: any) {
-    if (this.accountForm.invalid) {
+  updateAccount() {
+    if (this.editProfileForm.invalid) {
+      console.log("invalid");
       return;
     }
-    const uploadData = new FormData();
-    uploadData.append('email', this.accountForm.get('email').value);
-    uploadData.append('avatarFile', this.accountForm.get('avatarFile').value);
-    uploadData.append('phoneNumber', this.accountForm.get('phoneNumber').value);
-    uploadData.append('displayName', this.accountForm.get('displayName').value);
-    uploadData.append('description', this.accountForm.get('description').value);
+    this.generalService.openWaitingPopupNz();
 
-    console.log("form: " + uploadData.get('avatarFile'));
+    const uploadData = new FormData();
+    uploadData.append('email', this.editProfileForm.get('email').value);
+    uploadData.append('avatarFile', this.file);
+    uploadData.append('phoneNumber', this.editProfileForm.get('phoneNumber').value);
+    uploadData.append('displayName', this.editProfileForm.get('displayName').value);
+    uploadData.append('description', this.editProfileForm.get('description').value);
+
+    console.log("name: " + uploadData.get('displayName'));
+    console.log("phoneNumber: " + uploadData.get('phoneNumber'));
+    console.log("avatarFile: " + uploadData.get('avatarFile'));
+    console.log("email: " + uploadData.get('email'));
+
     console.log(uploadData instanceof FormData);
 
     this.summaryService.updateProfile(uploadData).subscribe(
       (response) => {
         console.log(response);
+        console.log(response.data.photoUrl);
+
+        localStorage.setItem('avatar', response.data.photoUrl);
+
+        this.generalService.closeWaitingPopupNz();
+
+        this.router.navigate(['/account/profile']);
       },
       (error) => {
         console.log(error);
         this.generalService.createErrorNotification(error);
       }
-    )
+    );
+
+  }
+
+  async getProfile() {
+    this.summaryService.getProfile().subscribe(
+      (response) => {
+        this.profile = response.data;
+        //   data.displayName = response.data.displayName;
+        //   data.description = response.data.description;
+        //   data.phoneNumber = response.data.phoneNumber;
+        //   data.photoUrl = response.data.photoUrl;
+
+        //  console.log('response name: ' + response.data.displayName) ;
+        //   console.log("data" + this.profile);
+        console.log(this.profile.email);
+        this.imageUrl = this.profile.photoUrl;
+        this.editProfileForm = this.formBuilder.group({
+          email: [this.profile.email,
+          [Validators.required,
+          Validators.minLength(this.passwordMinLength),
+          Validators.maxLength(this.passwordMaxLength),
+          Validators.email,]
+          ],
+          displayName: [this.profile.displayName,
+          [Validators.required,
+          Validators.minLength(this.passwordMinLength),
+          Validators.maxLength(this.passwordMaxLength),
+            // Validators.pattern(this.pattern)
+          ]
+          ], phoneNumber: [this.profile.phoneNumber,
+          [
+            Validators.required,
+            Validators.minLength(this.passwordMinLength),
+            Validators.maxLength(this.passwordMaxLength),
+            // Validators.pattern(this.pattern)
+          ]
+          ], description: [this.profile.description,
+          ],
+          avatarFile: [],
+        });
+
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
 
-  selectFile(event: any) { //Angular 11, for stricter type
-    if (!event.target.files[0] || event.target.files[0].length == 0) {
-      this.msg = 'You must select an image';
-      return;
-    }
+  // selectFile(event: any) { //Angular 11, for stricter type
+  //   if (!event.target.files[0] || event.target.files[0].length == 0) {
+  //     this.msg = 'You must select an image';
+  //     return;
+  //   }
 
-    var mimeType = event.target.files[0].type;
+  //   var mimeType = event.target.files[0].type;
 
-    if (mimeType.match(/image\/*/) == null) {
-      this.msg = "Only images are supported";
-      return;
-    }
+  //   if (mimeType.match(/image\/*/) == null) {
+  //     this.msg = "Only images are supported";
+  //     return;
+  //   }
 
-    var reader = new FileReader();
-    reader.readAsDataURL(event.target.files[0]);
+  //   var reader = new FileReader();
+  //   reader.readAsDataURL(event.target.files[0]);
 
-    reader.onload = (_event) => {
-      this.msg = "";
-      this.url = reader.result;
+  //   reader.onload = (_event) => {
+  //     this.msg = "";
+  //     this.url = reader.result;
+  //   }
+  // }
+
+  onFileSelected(event) {
+
+    this.file = event.target.files[0];
+    console.log('Got file' + this.file);
+
+    if (this.file) {
+
+      this.fileName = this.file.name;
     }
   }
 }

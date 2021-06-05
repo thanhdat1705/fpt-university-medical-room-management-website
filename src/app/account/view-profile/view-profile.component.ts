@@ -24,16 +24,17 @@ export class ViewProfileComponent implements OnInit {
 
   profile: Account
 
-  editProfile(){
-    this.router.navigate(['account/edit-profile', JSON.stringify(this.profile)]);
-  }
+  // editProfile() {
+  //   this.router.navigate(['account/edit-profile', JSON.stringify(this.profile)]);
+  // }
 
   getProfile() {
+    this.generalService.openWaitingPopupNz();
     this.summaryService.getProfile().subscribe(
       (response) => {
 
         this.profile = response.data;
-        console.log("data" + this.profile);
+        console.log("data" + JSON.stringify(this.profile));
 
       },
       (error) => {
@@ -41,7 +42,9 @@ export class ViewProfileComponent implements OnInit {
         this.generalService.createErrorNotification(error);
       }
 
-    )
+    );
+    this.generalService.closeWaitingPopupNz();
+
   }
 
 }

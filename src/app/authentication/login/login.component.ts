@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { WaitingComponent } from 'src/app/shared/components/waiting/waiting.component';
+import { Account } from 'src/app/shared/models/account';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
+import { SummaryService } from 'src/app/shared/services/summary.service';
 import { AuthService } from './../../shared/services/auth-service/auth.service';
 
 @Component({
@@ -12,7 +15,15 @@ import { AuthService } from './../../shared/services/auth-service/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder, public authService: AuthService) { }
+  user: Account;
+
+  constructor(
+    private fb: FormBuilder,
+    public authService: AuthService,
+    public summaryService: SummaryService,
+    public generalService: GeneralHelperService,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -20,15 +31,30 @@ export class LoginComponent implements OnInit {
       password: [null, [Validators.required]],
       remember: [true]
     });
-
-    
   }
 
-  submitForm(): void {
-    for (const i in this.loginForm.controls) {
-      // this.loginForm.controls[i].markAsDirty();
-      // this.loginForm.controls[i].updateValueAndValidity();
+  submitForm(data: any): void {
+    if (this.loginForm.invalid) {
+      return;
     }
+    this.generalService.openWaitingPopupNz();
+    if (this.loginForm.invalid) {
+      return;
+    }
+    console.log(data);
+    this.summaryService.usernameAuthenticate(data).subscribe(
+      (response) => {
+        localStorage.setItem('avatar', JSON.stringify(response.data.photoUrl));
+        localStorage.setItem("token", response.data.token);
+        this.summaryService.setTokenHeader();
+        this.generalService.closeWaitingPopupNz();
+        this.router.navigate(['/account/profile']);
+      },
+      (error) => {
+        console.log(error);
+        this.generalService.createErrorNotification(error);
+      }
+    );
+    this.generalService.closeWaitingPopupNz();
   }
-
 }

@@ -10,7 +10,7 @@
                             <h2 class="font-size-24 m-b-0 p-l-15">Sign In</h2>
                         </div>
                         <form nz-form [formGroup]="loginForm" nzLayout="vertical" class="login-form"
-                            (ngSubmit)="submitForm()">
+                            (ngSubmit)="submitForm(loginForm.value)">
                             <nz-form-item class="m-b-20">
                                 <nz-form-label nzRequired nzFor="userName" style="font-weight: 500;">Username
                                 </nz-form-label>
@@ -47,7 +47,7 @@
                                         <button
                                             class="button-link btn border-radius font-size-15 p-v-10 col-sm-3 col-md-3 col-lg-3"
                                             style="background-color: #3AC3DC; color: white; font-weight: 500;"
-                                            [routerLink]="['/authentication/error']">
+                                            type="submit">
                                             Log in
                                         </button>
                                     </div>

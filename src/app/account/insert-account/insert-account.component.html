@@ -1,4 +1,4 @@
-<form class="example-form" [formGroup]="accountForm" (ngSubmit)="insertAccount(accountForm.value)" >
+<form class="example-form" [formGroup]="accountForm" (ngSubmit)="insertAccount(accountForm.value)">
 
   <!-- Username -->
   <mat-form-field class="example-full-width">
@@ -32,21 +32,36 @@
     </mat-error>
   </mat-form-field>
   <br>
-    <!-- Name -->
-    <mat-form-field class="example-full-width">
+  <!-- Name -->
+  <mat-form-field class="example-full-width">
 
-      <mat-label>Name</mat-label>
-      <input name="displayName" type="text" matInput formControlName="displayName" [errorStateMatcher]="matcher"
-        placeholder="Name">
-      <mat-error *ngIf="f.displayName.hasError('required')">
-        Name is required
-      </mat-error>
-      <mat-error *ngIf="f.displayName.hasError('pattern')">
-        Name should not contain any special character
-      </mat-error>
-    </mat-form-field>
-  <!-- Password -->
+    <mat-label>Name</mat-label>
+    <input name="displayName" type="text" matInput formControlName="displayName" [errorStateMatcher]="matcher"
+      placeholder="Name">
+    <mat-error *ngIf="f.displayName.hasError('required')">
+      Name is required
+    </mat-error>
+    <mat-error *ngIf="f.displayName.hasError('pattern')">
+      Name should not contain any special character
+    </mat-error>
+  </mat-form-field>
   <br>
+<!-- Internal Code -->
+<mat-form-field class="example-full-width">
+
+  <mat-label>Internal code</mat-label>
+  <input name="displayName" type="text" matInput formControlName="internalCode" [errorStateMatcher]="matcher"
+    placeholder="Name">
+  <mat-error *ngIf="f.internalCode.hasError('required')">
+    Name is required
+  </mat-error>
+  <mat-error *ngIf="f.internalCode.hasError('pattern')">
+    Name should not contain any special character
+  </mat-error>
+</mat-form-field>
+<br>
+
+  <!-- Password -->
   <mat-form-field class="example-full-width">
 
     <mat-label>Password</mat-label>
@@ -63,7 +78,7 @@
     </mat-error>
   </mat-form-field>
   <br>
-  
+
   Select role:
   <mat-button-toggle-group class="button-role-toggle" name="fontStyle" formControlName="roleId" aria-label="Font Style">
     <mat-button-toggle value="1">Admin</mat-button-toggle>

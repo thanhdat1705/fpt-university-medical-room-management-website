@@ -1,23 +1,23 @@
-<form [formGroup]="accountForm" (ngSubmit)="updateAccount(accountForm.value)">
+<form class="ko-co" [formGroup]="editProfileForm" *ngIf="editProfileForm" (ngSubmit)="updateAccount()">
 
     <div class="profile">
 
         <p class="title">Ảnh đại diện: </p>
 
         <div class="img-container">
-            <img src="{{url}}" class="avatar">
+            <!-- <img src="{{url}}" class="avatar"> -->
         </div>
 
 
         <div class="info">
 
-            <input type="file" name="profile" formControlName="avatarFile" (change)="selectFile($event)">
+            <input type="file" name="profile" formControlName="avatarFile" (change)="onFileSelected($event)">
             <br>
             <br>
             <p class="title">Tên: </p>
             <mat-form-field class="example-full-width">
                 <input name="displayName" type="text" matInput formControlName="displayName"
-                    [errorStateMatcher]="matcher">
+                    [errorStateMatcher]="matcher" />
                 <mat-error *ngIf="f.displayName.hasError('required')">
                     Tên không được bỏ trống
                 </mat-error>
@@ -29,8 +29,7 @@
             <br>
             <p class="title">Email: </p>
             <mat-form-field class="example-full-width">
-                <input name="email" type="text" matInput formControlName="email" [errorStateMatcher]="matcher"
-                    value="{{profile.email}}">
+                <input name="email" type="text" matInput formControlName="email" [errorStateMatcher]="matcher" />
                 <mat-error *ngIf="f.email.hasError('email')">
                     Email phải được nhập đúng format (example@email.com)
                 </mat-error>
@@ -40,7 +39,7 @@
             <p class="title">Số điện thoại:</p>
             <mat-form-field class="example-full-width">
                 <input name="phoneNumber" type="text" matInput formControlName="phoneNumber"
-                    [errorStateMatcher]="matcher" value="2828282aaaaaaaaaaaaaaaaaaAAAAAAAAAaaa">
+                    [errorStateMatcher]="matcher" />
                 <mat-error *ngIf="f.phoneNumber.hasError('required')">
                     Số điện thoại không được bỏ trống
                 </mat-error>
@@ -55,13 +54,13 @@
             <br>
             <p class="title">Mô tả:</p>
             <mat-form-field class="example-full-width">
-                <textarea matInput formControlName="description" cdkTextareaAutosize>{{profile.description}}</textarea>
+                <textarea matInput formControlName="description"
+                    cdkTextareaAutosize>{{profile.description}}</textarea>
             </mat-form-field>
         </div>
         <div class="buttons">
             <a [routerLink]="'/account/profile'"><button mat-button color="primary">Hủy</button></a>
-            <button mat-raised-button color="primary">Hoàn thành</button>
+            <button type="submit" mat-raised-button color="primary">Hoàn thành</button>
         </div>
-
     </div>
 </form>

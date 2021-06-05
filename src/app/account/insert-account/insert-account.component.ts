@@ -24,26 +24,29 @@ export class InsertAccountComponent implements OnInit {
   pattern = '[a-zA-Z0-9 ]*';
   patternPassword = '[a-zA-Z0-9]*';
 
-  matcher = new ErrorStateMatcher;
+  matcher = new MyErrorStateMatcher;
   // convenience getter for easy access to form fields
   get f() { return this.accountForm.controls; }
 
   constructor(private formBuilder: FormBuilder, private generalService: GeneralHelperService, private summaryService: SummaryService) { }
 
-  insertAccount(data: InsertAccountRequest){
+  insertAccount(data: InsertAccountRequest) {
+    this.generalService.openWaitingPopupNz();
     if (this.accountForm.invalid) {
-      return ;
-  }
+      return;
+    }
     console.log(data);
     this.summaryService.insertAccount(data).subscribe(
-      (response) =>{
+      (response) => {
         console.log(response);
+
       },
-      (error) =>{
+      (error) => {
         console.log(error);
         this.generalService.createErrorNotification(error);
       }
-    )
+    );
+    this.generalService.closeWaitingPopupNz();
   }
 
   ngOnInit() {
@@ -52,7 +55,7 @@ export class InsertAccountComponent implements OnInit {
       Validators.minLength(this.usernameMinLength),
       Validators.maxLength(this.usernameMaxLength),
       Validators.pattern(this.pattern),
-    ]],
+      ]],
       email: ['', [
         Validators.required,
         Validators.minLength(this.passwordMinLength),
@@ -65,6 +68,11 @@ export class InsertAccountComponent implements OnInit {
         Validators.maxLength(this.passwordMaxLength),
         Validators.pattern(this.patternPassword)]
       ],
+      internalCode: ['', [Validators.required,
+        Validators.minLength(this.usernameMinLength),
+        Validators.maxLength(this.usernameMaxLength),
+        Validators.pattern(this.pattern),
+        ]],
       displayName: ['',
         [
           Validators.required,
