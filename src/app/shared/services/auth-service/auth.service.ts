@@ -13,6 +13,7 @@ import { LoginSocialRequest } from '../../requests/login/login-social-request';
 import { GeneralHelperService } from '../general-helper.service';
 import { SummaryService } from '../summary.service';
 import { GeneralStorage } from '../storages/storages';
+import { LinkToSocialAccountRequest } from '../../requests/link-to-social-account/link-to-social-account-request';
 
 
 @Injectable({
@@ -31,6 +32,11 @@ export class AuthService {
         Provider: 1,
         FromAppLogin: 0,
     };
+
+    linkToSocialAccounRequest: LinkToSocialAccountRequest = {
+        accessToken: null,
+        provider: 0
+    }
 
     constructor(
         private router: Router,
@@ -131,7 +137,7 @@ export class AuthService {
                     // this.router.navigate(['medicine-management/medicine']);
                     this.router.navigate(['account/profile']);
                 })
-                
+
             },
             (error) => {
                 this.generalService.closeWaitingPopupNz();
@@ -161,8 +167,6 @@ export class AuthService {
                 this.token = token.accessToken;
                 console.log("this is token " + this.token);
                 this.login();
-                
-
             }).catch((error) => {
                 this.generalService.createErrorNotification(error);
             })
@@ -187,22 +191,85 @@ export class AuthService {
         );
     }
 
-    //   loginWithFacebook() {
-    //     this.firebaseAuth.signInWithPopup(new firebase.auth.FacebookAuthProvider()).then(
-    //       (response) => {
-    //         this.user = response.user;
-    //         console.log(response);
-    //         this.loginSocialRequest.provider = 0;
-    //         let token: any;
-    //         token = response.credential;
-    //         this.token = token.accessToken;
-    //         console.log("this.token " + this.token);
-    //         this.login();
-    //       }
-    //     ).catch(
-    //       (error) => {
-    //         this.generalService.createErrorNotification(error);
-    //       }
-    //     );
-    //   }
+    linkToSocialAccount() {
+        console.log(this.linkToSocialAccounRequest);
+
+        this.summaryService.linkToSocialAccount(this.linkToSocialAccounRequest).subscribe(
+            (response) => {
+                console.log(response);
+                this.generalService.closeWaitingPopupNz();
+            }
+        ), (error) => {
+            console.log(error);
+
+            this.generalService.closeWaitingPopupNz();
+            this.generalService.createErrorNotification(error);
+
+        };
+        this.generalService.closeWaitingPopupNz();
+
+    }
+
+    loginWithFacebook() {
+        this.firebaseAuth.signInWithPopup(new firebase.auth.FacebookAuthProvider()).then(
+            (response) => {
+                this.user = response.user;
+                console.log(response);
+                this.loginSocialRequest.Provider = 0;
+                let token: any;
+                token = response.credential;
+                this.token = token.accessToken;
+                console.log("this.token " + this.token);
+                this.login();
+            }
+        ).catch(
+            (error) => {
+                this.generalService.createErrorNotification(error);
+            }
+        );
+    }
+
+    linkToFacebookAccount() {
+        this.firebaseAuth.signInWithPopup(new firebase.auth.FacebookAuthProvider()).then(
+            (response) => {
+                this.user = response.user;
+                console.log(response);
+                this.linkToSocialAccounRequest.provider = 0;
+                let token: any;
+                token = response.credential;
+                console.log(response);
+                this.linkToSocialAccounRequest.accessToken = token.accessToken;
+                console.log("credential " + JSON.stringify(token));
+                console.log("credential.access " + token.accessToken);
+
+                console.log(this.linkToSocialAccounRequest);
+
+                this.linkToSocialAccount();
+            }
+        ).catch(
+            (error) => {
+                this.generalService.createErrorNotification(error);
+            }
+        );
+    }
+
+    linkToGmailAccount() {
+        this.firebaseAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
+            (response) => {
+                this.user = response.user;
+                console.log(response);
+                this.linkToSocialAccounRequest.provider = 1;
+                let token: any;
+                token = response.credential;
+                this.linkToSocialAccounRequest.accessToken = token.accessToken;
+                this.linkToSocialAccount();
+            }
+        ).catch(
+            (error) => {
+                this.generalService.createErrorNotification(error);
+
+                // this.generalService.createErrorNotification(error);
+            }
+        );
+    }
 }

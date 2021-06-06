@@ -23,14 +23,14 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.showUserAvatar();
+    this.showUserAvatar();
     // console.log(this.avatar);
     // this.avatar = this.user.photoUrl;
   }
 
-  // showUserAvatar(){
-  //   this.avatar = JSON.parse(localStorage.getItem("avatar"));
-  // }
+  showUserAvatar(){
+    this.avatar = JSON.parse(localStorage.getItem("avatar"));
+  }
 
   ToggleNav() {
 

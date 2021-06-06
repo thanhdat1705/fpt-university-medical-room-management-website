@@ -28,7 +28,7 @@ export class ViewProfileComponent implements OnInit {
   //   this.router.navigate(['account/edit-profile', JSON.stringify(this.profile)]);
   // }
 
-  getProfile() {
+  async getProfile() {
     this.generalService.openWaitingPopupNz();
     this.summaryService.getProfile().subscribe(
       (response) => {

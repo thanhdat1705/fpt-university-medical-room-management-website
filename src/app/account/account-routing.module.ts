@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { InsertAccountComponent } from './insert-account/insert-account.component';
+import { LinkToSocialAccountComponent } from './link-to-social-account/link-to-social-account.component';
 import { SearchAccountComponent } from './search-account/search-account.component';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
 
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'change-password',
     component: ChangePasswordComponent
+  },
+   {
+    path: 'link-to-social-account',
+    component: LinkToSocialAccountComponent
   },
 
 ];
