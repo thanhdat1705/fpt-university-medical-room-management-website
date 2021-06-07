@@ -11,8 +11,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 
 
 @NgModule({
-  declarations: [InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent, ],
-  exports:[InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent],
+  declarations: [InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent,],
+  exports: [InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent],
   imports: [
     CommonModule,
     AccountRoutingModule,
@@ -21,5 +21,5 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 })
 
 export class AccountModule {
-  
- }
+
+}

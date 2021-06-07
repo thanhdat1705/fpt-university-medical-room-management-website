@@ -8,15 +8,14 @@ import { SideNavService } from '../../services/side-nav.service';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  templateUrl: './header.component.html'
 })
 
 export class HeaderComponent implements OnInit {
 
   toggleActive: boolean = false;
   isCollapsed: boolean;
-  constructor(private sidenav: SideNavService, public auth: AuthService) {
+  constructor(public sidenav: SideNavService, public auth: AuthService) {
   }
 
   ngOnInit(): void {
@@ -34,4 +33,7 @@ export class HeaderComponent implements OnInit {
     this.sidenav.toggleCollapse(this.isCollapsed);
   }
 
+  getImgAvatar() {
+    return this.sidenav.getImgUrl();
+  }
 }

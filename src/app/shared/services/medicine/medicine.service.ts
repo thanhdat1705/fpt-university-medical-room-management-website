@@ -6,6 +6,8 @@ import { StoreNewMedicineUnitRequest } from '../../requests/medicine-unit/store-
 import { StoreNewMedicineSubgroupRequest } from '../../requests/medicine-subgroup/store-new-request';
 import { StoreNewMedicineRequest } from '../../requests/medicine/store-new';
 import { SearchMedicineRequest } from '../../requests/medicine/search';
+import { SearchMedicineSubgroupRequest } from '../../requests/medicine-subgroup/search-request';
+import { SearchMedicineClassificationRequest } from '../../requests/medicine-classification/search-request';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,12 @@ export class MedicineService {
   deleteMedicine(id: string) {
     return this.service.deleteMedicine(id);
   }
+  getMedicine(id: string) {
+    return this.service.getMedicine(id);
+  }
+  updateMedicine(request: StoreNewMedicineRequest, id: string) {
+    return this.service.updateMedicine(request, id);
+  }
   /*------------------------------------------------------------------------------------------*/
   /*--------------------------------------- Unit ---------------------------------------------*/
   searchMedicineUnit(searchRequest: SearchMedicineUnitRequest) {
@@ -38,6 +46,9 @@ export class MedicineService {
   getAllMedicineUnit() {
     return this.service.getAllMedicineUnit();
   }
+  // deleteMedicineUnit() {
+  //   return this.service.deleteMedicineUnit();
+  // }
   /*------------------------------------------------------------------------------------------*/
   /*--------------------------------------- Subgroup -----------------------------------------*/
   storeNewMedicineSubgroup(storeRequest: StoreNewMedicineSubgroupRequest) {
@@ -47,10 +58,16 @@ export class MedicineService {
   getAllMedicineSubgroup() {
     return this.service.getAllMedicineSubgroup();
   }
+  searchMedicineSubgroup(searchRequest: SearchMedicineSubgroupRequest) {
+    return this.service.searchMedicineSubgroup(searchRequest);
+  }
   /*------------------------------------------------------------------------------------------*/
   /*-------------------------------------- Classification ------------------------------------*/
   getAllMedicineClassification() {
     return this.service.getAllMedicineClassification();
+  }
+  searchClass(searchRequest: SearchMedicineClassificationRequest) {
+    return this.service.searchClassification(searchRequest);
   }
   /*------------------------------------------------------------------------------------------*/
 }

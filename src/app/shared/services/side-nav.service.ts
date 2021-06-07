@@ -7,6 +7,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 })
 export class SideNavService {
 	isMenuCollapsed: boolean = false
+	imageUrl: string = '//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png';
 
 	private sidenav: MatSidenav;
 
@@ -35,5 +36,13 @@ export class SideNavService {
 
 	toggleCollapse(isCollapsed: boolean) {
 		this.isMenuCollapsedActived.next(isCollapsed);
+	}
+
+	setImgUrl(img: string) {
+		this.imageUrl = img;
+	}
+
+	getImgUrl() {
+		return this.imageUrl;
 	}
 }

@@ -8,6 +8,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { firebaseConfig } from 'src/environments/environment';
 import { WaitingComponent } from './components/waiting/waiting.component';
 import { AuthService } from './services/auth-service/auth.service';
+import { SideNavService } from './services/side-nav.service';
 
 
 const SHARE_MODULES = [
@@ -35,9 +36,7 @@ export const ANGULAR_MODULES = [
   ],
   declarations: [...COMPONENTS],
   exports: [...SHARE_MODULES, ...ANGULAR_MODULES, ...COMPONENTS],
-  providers: [
-    AuthService
-  ]
+  
 })
 export class SharedModule {
   static forRoot(name: string = 'default'): ModuleWithProviders<SharedModule> {

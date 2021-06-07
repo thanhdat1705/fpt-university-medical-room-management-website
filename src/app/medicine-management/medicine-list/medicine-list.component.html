@@ -1,26 +1,3 @@
-<!-- <form nz-form nzLayout="vertical" [formGroup]="searchForm" class="form" (ngSubmit)="test()"
-    style="display: flex; align-items: center; justify-content: start;">
-    <nz-form-item>
-        <nz-form-control>
-            <nz-select formControlName="searchValue" [(ngModel)]="selectedMedicine" nzPlaceHolder="Nhập tên thuốc" nzAllowClear nzShowSearch
-                nzServerSearch [nzShowArrow]="false" (nzOnSearch)="suggestSearchMedicineChange($event)" nzSize="large"
-                style="width: 300px; margin-right: 5px;">
-                <ng-container *ngFor="let item of suggestList">
-                    <nz-option *ngIf="!isLoading" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
-                </ng-container>
-                <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-                    <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
-                </nz-option>
-            </nz-select>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-control>
-            <button class="font-size-18" nz-button nzType="primary"
-                style="padding: 20px; width: 80pxs; display: flex; align-items: center; justify-content: center;">Tìm</button>
-        </nz-form-control>
-    </nz-form-item>
-</form> -->
 <div class="example-input">
     <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
         <input placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchValue"
@@ -32,22 +9,6 @@
             <i nz-icon nzType="search" nzTheme="outline"></i>
         </button>
     </ng-template>
-    <!-- <nz-autocomplete #auto>
-        <nz-auto-option nzDisabled style="color: rgb(84, 137, 230);">
-            Bạn đang tìm kiếm thuốc {{ searchValue }}
-        </nz-auto-option>
-        <ng-container *ngFor="let option of suggestList">
-            <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.name">
-                {{option.name}}
-            </nz-auto-option>
-        </ng-container>
-        <nz-auto-option *ngIf="isLoading" nzDisabled nzCustomContent>
-            <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
-        </nz-auto-option>
-        <nz-auto-option *ngIf="noSuggest" nzDisabled nzCustomContent>
-            Không thấy kết quả tìm kiếm
-        </nz-auto-option>
-    </nz-autocomplete> -->
 </div>
 
 <br>
@@ -79,9 +40,12 @@
                 <td>{{ data.medicineClassification.name }}</td>
                 <td>{{ data.medicineSubgroup.name }}</td>
                 <td>{{ getCreateTime(data.createdDate) }}</td>
-                <td><a style="color: #1890ff">Detail</a></td>
+                <td>
+                    <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
+                    <a style="color: #1890ff" (click)="detailMedicine(medicineId.value)">Detail</a>
+                </td>
                 <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
-                    (nzOnConfirm)="deleteMedicine(data.id)">Delete</a></td>
+                        (nzOnConfirm)="deleteMedicine(data.id)">Delete</a></td>
             </tr>
         </tbody>
     </nz-table>
