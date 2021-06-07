@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavigationExtras, Router } from '@angular/router';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DateTime } from 'src/app/shared/models/date-time';
 import { FilterTable } from 'src/app/shared/models/filterTable';
@@ -13,6 +14,7 @@ import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/med
 import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
+import { SideNavService } from 'src/app/shared/services/side-nav.service';
 
 @Component({
   selector: 'app-medicine-list',
@@ -44,6 +46,7 @@ export class MedicineListComponent implements OnInit {
 
   searchForm: FormGroup;
   searchValue = '';
+  medicineId: string;
 
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
@@ -68,10 +71,12 @@ export class MedicineListComponent implements OnInit {
 
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
-
   constructor(private fb: FormBuilder,
     private service: MedicineService,
-    private generalService: GeneralHelperService) { }
+    private generalService: GeneralHelperService,
+    private router: Router,
+    private sidenav: SideNavService
+  ) { }
 
   ngOnInit(): void {
     // this.searchMedicine();
@@ -169,6 +174,9 @@ export class MedicineListComponent implements OnInit {
     }
   }
 
+  detailMedicine(id: string) {
+    this.router.navigate(['medicine-management/medicine-list/add-medicine'], { queryParams: { id: id } })
+  }
   // searchSuggest() {
   //   this.isLoading = true;
 
@@ -221,6 +229,7 @@ export class MedicineListComponent implements OnInit {
     )
   }
 
+
   getData(responseMedicineData: ResponseSearch) {
     this.pageInfo.info = responseMedicineData.info;
     this.page = this.pageInfo.info.page;
@@ -246,9 +255,9 @@ export class MedicineListComponent implements OnInit {
     sortField == null ? this.sortFieldList = 'createdDate' : this.sortFieldList = sortField;
     this.searchMedicineRequest = {
       Name: this.searchValue,
-      UnitId: params.filter[0].value,
-      MedicineSubgroupId: params.filter[2].value,
-      MedicineClassificationId: params.filter[1].value,
+      UnitId: filter[0].value,
+      MedicineSubgroupId: filter[2].value,
+      MedicineClassificationId: filter[1].value,
       Limit: pageSize,
       Page: pageIndex,
       SortField: this.sortFieldList,
@@ -261,7 +270,7 @@ export class MedicineListComponent implements OnInit {
   }
 
   confirmAdd() {
-    this.checked = false;
+    this.sidenav.setImgUrl('assets/images/avatar/user-avatar.png');
   }
 
 

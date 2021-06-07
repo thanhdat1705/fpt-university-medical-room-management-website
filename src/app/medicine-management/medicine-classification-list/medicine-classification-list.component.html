@@ -1,0 +1,41 @@
+<div class="example-input">
+    <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
+        <input placeholder="Nhập tên loại" nz-input [(ngModel)]="searchValue"
+            (input)="inputChange(inputValue.value)" #inputValue />
+    </nz-input-group>
+    <ng-template #searchIconButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton button-match-logo"
+            (click)="searchClass()">
+            <i nz-icon nzType="search" nzTheme="outline"></i>
+        </button>
+    </ng-template>
+</div>
+
+<br>
+
+<nz-table #nzTable [nzFrontPagination]="false" [nzData]="classList" [nzLoading]="tableLoading"
+    [nzScroll]="{ x: '1000px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+    (nzQueryParams)="onQueryParamsChange($event)">
+    <thead>
+        <tr>
+            <th nzWidth="20%">No.</th>
+            <th nzColumnKey="name" [nzSortFn]="true">Tên nhóm thuốc</th>
+            <th nzWidth="10%"></th>
+            <th nzWidth="10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of classList; index as i">
+            <td>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+            <td>{{ data.name }}</td>
+            <td><a style="color: #1890ff">Detail</a></td>
+            <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
+                    (nzOnConfirm)="deleteClass()">Delete</a></td>
+        </tr>
+    </tbody>
+</nz-table>
+<div style="margin: 10px; width: 200px;">
+    <button nz-button nzType="primary" nzBlock nzSize="large" class="button-match-logo">
+        <span>Thêm mới nhóm</span>
+    </button>
+</div>

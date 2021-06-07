@@ -1,6 +1,7 @@
 // export const UrlServer = "http://192.168.43.45:9000";
-export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
+// export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
 // export const UrlServer = "http://localhost:9000";
+export const UrlServer = "http://14.161.47.36:9000";
 
 export const Proxy = "https://cors-anywhere.herokuapp.com/";
 export const UrlGetAllCity = Proxy + "https://thongtindoanhnghiep.co/api/city";
@@ -22,9 +23,13 @@ export const UrlServerAPIGetAllMedicineUnit = UrlServer + '/api/v1.0/MedicineUni
 
 export const UrlServerAPIGetAllMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups';
 export const UrlServerAPIStoreNewMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups';
+export const UrlServerAPISearchMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups/Searching';
 
 export const UrlServerAPIGetAllMedicineClassification = UrlServer + '/api/v1.0/MedicineClassifications';
+export const UrlServerAPISearchClassification = UrlServer + '/api/v1.0/MedicineClassifications/Searching';
 
 export const UrlServerAPIStoreNewMedicine = UrlServer + '/api/v1.0/Medicines';
 export const UrlServerAPISearchMedicine = UrlServer + '/api/v1.0/Medicines/Searching';
 export const UrlServerAPIDeleteMedicine = UrlServer + '/api/v1.0/Medicines';
+export const UrlServerAPIGetMedicine = UrlServer + '/api/v1.0/Medicines/';
+export const UrlServerAPIUpdateMedicine = UrlServer + '/api/v1.0/Medicines';

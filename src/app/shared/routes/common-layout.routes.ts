@@ -2,9 +2,6 @@ import { Routes } from '@angular/router';
 
 export const CommonLayout_ROUTES: Routes = [
     {
-        path: 'test', loadChildren: () => import('../../test/test.module').then(m => m.TestModule)
-    },
-    {
         path: 'medicine-management',
         data: {
             title: 'Medical Management'

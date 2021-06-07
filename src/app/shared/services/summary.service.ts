@@ -16,12 +16,18 @@ import {
   UrlServerAPIGetAllMedicineClassification,
   UrlServerAPIStoreNewMedicine,
   UrlServerAPISearchMedicine,
-  UrlServerAPIDeleteMedicine, 
+  UrlServerAPIDeleteMedicine,
   UrlServerAPIChangePassword,
-  UrlServerAPIViewAccounts
+  UrlServerAPIViewAccounts,
+  UrlServerAPIGetMedicine,
+  UrlServerAPIUpdateMedicine,
+  UrlServerAPISearchMedicineSubgroup,
+  UrlServerAPISearchClassification
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineRequest } from '../requests/medicine/search';
+import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
+import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +35,6 @@ import { SearchMedicineRequest } from '../requests/medicine/search';
 export class SummaryService {
 
   constructor(private http: HttpClient, private router: Router) { }
-
-
 
   private headers: HttpHeaders = new HttpHeaders({
     'Accept': '*/*',
@@ -41,6 +45,13 @@ export class SummaryService {
     'Accept': '*/*',
     'Content-Type': 'multipart/form-data'
   });
+
+  /*----------------------------------------------------------------------------------------------------- */
+  /*---------------------------------------------- Account ---------------------------------------------- */
+  public loginSocial(data: any): Observable<ResponseServer> {
+    console.log(data);
+    return this.http.post<ResponseServer>(UrlServerAPISocialAuthentication, data);
+  }
 
   public insertAccount(data: any): Observable<any> {
     console.log(data);
@@ -84,17 +95,16 @@ export class SummaryService {
     );
   }
 
-  public setTokenHeaderFormData() {
-    this.headersFormData = this.headersFormData.set('Authorization', 'Bearer ' + localStorage.getItem("token"));
-    console.log(localStorage.getItem("token"));
-  }
+
+  /*----------------------------------------------------------------------------------------------------- */
+  /*---------------------------------------------- Medicine ---------------------------------------------- */
   public searchMedicine(request: SearchMedicineRequest): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(
       UrlServerAPISearchMedicine +
       "/?Name=" +
       request.Name +
       "&UnitId=" +
-      request.UnitId+
+      request.UnitId +
       "&MedicineSubgroupId=" +
       request.MedicineSubgroupId +
       "&MedicineClassificationId=" +
@@ -110,9 +120,17 @@ export class SummaryService {
     );
   }
 
+  public getMedicine(id: string): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetMedicine + id);
+  }
+
+  public updateMedicine(data: any, id: string): Observable<ResponseServer> {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateMedicine + "/?id=" + id, data);
+  }
+
   public storeNewMedicine(data: any): Observable<ResponseServer> {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicine, data);
-  }UrlServerAPIDeleteMedicine
+  }
 
   public deleteMedicine(id: string): Observable<ResponseServer> {
     return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicine + "/?id=" + id);
@@ -120,6 +138,22 @@ export class SummaryService {
 
   public getAllMedicineClassification(): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineClassification);
+  }
+
+  public searchClassification(request: SearchMedicineClassificationRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPISearchClassification +
+      "/?MedicineClassificationName=" +
+      request.MedicineClassificationName.toString() +
+      "&Limit=" +
+      request.Limit +
+      "&Page=" +
+      request.Page +
+      "&SortField=" +
+      request.SortField.toString() +
+      "&SortOrder=" +
+      request.SortOrder
+    );
   }
 
   public getAllMedicineSubgroup(): Observable<ResponseServer> {
@@ -138,6 +172,21 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineSubgroup, data);
   }
 
+  public searchMedicineSubgroup(request: SearchMedicineSubgroupRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPISearchMedicineSubgroup +
+      "/?MedicineSupgroupName=" +
+      request.MedicineSupgroupName.toString() +
+      "&Limit=" +
+      request.Limit +
+      "&Page=" +
+      request.Page +
+      "&SortField=" +
+      request.SortField.toString() +
+      "&SortOrder=" +
+      request.SortOrder
+    );
+  }
   public searchMedicineUnit(request: SearchMedicineUnitRequest): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(
       UrlServerAPISearchMedicineUnit +
@@ -154,12 +203,16 @@ export class SummaryService {
     );
   }
 
-  public loginSocial(data: any): Observable<ResponseServer> {
-    console.log(data);
-    return this.http.post<ResponseServer>(UrlServerAPISocialAuthentication, data);
-  }
+  /*----------------------------------------------------------------------------------------------------- */
+  /*---------------------------------------------- ????? ---------------------------------------------- */
 
-  /*============================================================================================*/
+
+
+  /*===========================================================================================================*/
+  public setTokenHeaderFormData() {
+    this.headersFormData = this.headersFormData.set('Authorization', 'Bearer ' + localStorage.getItem("token"));
+    console.log(localStorage.getItem("token"));
+  }
 
   public setTokenHeader() {
     this.headers = this.headers.set('Authorization', 'Bearer ' + localStorage.getItem("token"));

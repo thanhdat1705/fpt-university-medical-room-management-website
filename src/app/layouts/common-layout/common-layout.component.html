@@ -14,13 +14,26 @@
                     </li>
                 </ul>
             </li>
-            <li nz-submenu nzTitle="Quản lý thuốc" nzIcon="dollar">
+            <li nz-submenu nzTitle="Quản lý dược phẩm" nzIcon="dollar">
                 <ul>
                     <li nz-menu-item>
                         <a [routerLink]="'medicine-management/medicine-list'" >Danh sách thuốc</a>
                     </li>
                     <li nz-menu-item>
-                        <a>Medical supplies</a>
+                        <a [routerLink]="'medicine-management/medicine-unit-list'">Danh sách đơn vị thuốc</a>
+                    </li>
+                    <li nz-menu-item>
+                        <a [routerLink]="'medicine-management/medicine-subgroup-list'">Danh sách nhóm thuốc</a>
+                    </li>
+                    <li nz-menu-item>
+                        <a [routerLink]="'medicine-management/medicine-classification-list'">Danh sách loại thuốc</a>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu nzTitle="Quản lô dược phẩm" nzIcon="dollar">
+                <ul>
+                    <li nz-menu-item>
+                        <a [routerLink]="'medicine-management/medicine-list'" >Danh sách lô</a>
                     </li>
                 </ul>
             </li>
