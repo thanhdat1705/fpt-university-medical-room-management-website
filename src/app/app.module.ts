@@ -26,7 +26,7 @@ import { GeneralHelperService } from './shared/services/general-helper.service';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { FirebaseService } from './shared/services/firebase.service';
 import { SideNavService } from './shared/services/side-nav.service';
-
+import { firebaseConfig } from 'src/environments/environment';
 
 
 registerLocaleData(en);
