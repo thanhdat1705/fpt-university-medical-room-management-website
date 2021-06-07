@@ -26,8 +26,16 @@ import { GeneralHelperService } from './shared/services/general-helper.service';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { FirebaseService } from './shared/services/firebase.service';
 import { SideNavService } from './shared/services/side-nav.service';
-import { firebaseConfig } from 'src/environments/environment';
 
+export const firebaseConfig = {
+  apiKey: "AIzaSyB0T2DzZAZkv0O0yyGzAA-UF8dyOQiA2RM",
+  authDomain: "fucs-1ee4c.firebaseapp.com",
+  projectId: "fucs-1ee4c",
+  storageBucket: "fucs-1ee4c.appspot.com",
+  messagingSenderId: "421263472733",
+  appId: "1:421263472733:web:c0f9e372b8427e1496b5b4",
+  measurementId: "G-XK70Q0VCZF",
+};
 
 registerLocaleData(en);
 
