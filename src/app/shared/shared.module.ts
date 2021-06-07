@@ -9,7 +9,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { WaitingComponent } from './components/waiting/waiting.component';
 import { AuthService } from './services/auth-service/auth.service';
 import { SideNavService } from './services/side-nav.service';
-import { firebaseConfig } from '../app.module';
+import { firebaseConfig } from 'src/environments/environment';
+
 
 
 const SHARE_MODULES = [
