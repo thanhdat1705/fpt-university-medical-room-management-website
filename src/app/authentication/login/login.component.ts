@@ -44,7 +44,9 @@ export class LoginComponent implements OnInit {
     console.log(data);
     this.summaryService.usernameAuthenticate(data).subscribe(
       (response) => {
-        localStorage.setItem('avatar', JSON.stringify(response.data.photoUrl));
+        localStorage.setItem('avatar', response.data.photoUrl);
+        console.log('avatar' + response.data.photoUrl);
+        
         localStorage.setItem("token", response.data.token);
         this.summaryService.setTokenHeader();
         this.generalService.closeWaitingPopupNz();

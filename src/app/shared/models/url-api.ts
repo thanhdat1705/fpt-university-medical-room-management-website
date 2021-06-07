@@ -20,5 +20,5 @@ export const UrlServerAPIViewAccounts = UrlServer + '/api/v1.0/Accounts/Searchin
 export const UrlServerLinkToSocialAccount = UrlServer + '/api/v1.0/Accounts/LinkingToSocialAccount'
 export const UrlServerUpdateAccount = UrlServer + '/api/v1.0/Accounts/Admin/UpdatingAccount'
 
-
+export const UrlServerGetAccountDetail = UrlServer +'/api/v1.0/Accounts/Admin/GettingAccountDetails';
 

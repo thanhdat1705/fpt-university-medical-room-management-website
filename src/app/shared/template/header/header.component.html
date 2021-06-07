@@ -37,7 +37,7 @@
 <nz-header class="header">
   <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="toggleCollapse()"></i>
   <a class="avatar" [routerLink]="'account/profile'" nz-dropdown [nzDropdownMenu]="menu">
-    <nz-avatar nzIcon="user" nzSrc="{{avatar}}"></nz-avatar>
+    <nz-avatar nzIcon="user" [nzSrc]="headerService.getAvatar()"></nz-avatar>
   </a>
   <nz-dropdown-menu #menu="nzDropdownMenu">
     <ul nz-menu>

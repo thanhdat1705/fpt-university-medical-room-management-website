@@ -1,1 +1,56 @@
-<p>edit-account works!</p>
+<form class="ko-co" [formGroup]="editAccountForm" *ngIf="editAccountForm"
+    (ngSubmit)="updateAccount(editAccountForm.value)">
+
+    <div class="profile">
+        <div class="info">
+            <p class="title">Mã số: </p>
+            <mat-form-field class="example-full-width">
+                <input type="text" matInput formControlName="internalCode" [errorStateMatcher]="matcher" />
+                <mat-error *ngIf="f.internalCode.hasError('required')">
+                    Tên không được bỏ trống
+                </mat-error>
+                <!-- <mat-error *ngIf="f.internalCode.hasError('pattern')">
+                    Tên không được có kí tự đặc biệt
+                </mat-error> -->
+            </mat-form-field>
+            <p class="title">Tên: </p>
+            <mat-form-field class="example-full-width">
+                <input name="displayName" type="text" matInput formControlName="displayName"
+                    [errorStateMatcher]="matcher" />
+                <mat-error *ngIf="f.displayName.hasError('required')">
+                    Tên không được bỏ trống
+                </mat-error>
+                <mat-error *ngIf="f.displayName.hasError('pattern')">
+                    Tên không được có kí tự đặc biệt
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <br>
+            <p class="title">Email: </p>
+            <mat-form-field class="example-full-width">
+                <input name="email" type="text" matInput formControlName="email" [errorStateMatcher]="matcher" />
+                <mat-error *ngIf="f.email.hasError('email')">
+                    Email phải được nhập đúng format (example@email.com)
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <br>
+            <p class="title">Role: </p>
+            <mat-form-field appearance="fill">
+                <mat-label>Select an option</mat-label>
+                <mat-select formControlName="roleId">
+                    <mat-option *ngFor="let role of roleList" [value]="role.value">
+                      {{role.roleName}}
+                    </mat-option>
+                  </mat-select>
+                
+            </mat-form-field>
+            <br>
+            <br>
+        </div>
+        <div class="buttons">
+            <a [routerLink]="'/account/profile'"><button mat-button color="primary">Hủy</button></a>
+            <button type="submit" mat-raised-button color="primary">Hoàn thành</button>
+        </div>
+    </div>
+</form>

@@ -16,7 +16,7 @@
   [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false">
   <thead>
     <tr>
-      <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{
+      <th *ngFor="let column of listOfColumn">{{
         column.title }}</th>
     </tr>
   </thead>
@@ -24,9 +24,10 @@
     <tr *ngFor="let data of accountList">
       <td>{{ data.internalCode }}</td>
       <td>{{ data.displayName }}</td>
-      <td>{{ data.email }}</td>
-      <td>{{ data.phoneNumber }}</td>
-      <td>{{ data.description }}</td>
+
+      <td>{{ data.roleId }}</td>
+      <td></td>
+      <td><button nz-button nzType="default" nzSize="large" nzShape="round" [routerLink]="['/edit-account', data.id]">Cbi tiết</button></td>
     </tr>
   </tbody>
 </nz-table>

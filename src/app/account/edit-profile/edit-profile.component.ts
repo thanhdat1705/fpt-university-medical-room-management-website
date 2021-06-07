@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Account } from 'src/app/shared/models/account';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
+import { HeaderService } from 'src/app/shared/services/header.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { HeaderComponent } from 'src/app/shared/template/header/header.component';
 
@@ -16,7 +17,7 @@ import { HeaderComponent } from 'src/app/shared/template/header/header.component
 })
 export class EditProfileComponent implements OnInit {
 
-  @ViewChild(HeaderComponent)
+  @ViewChild('header', { static: false }) header: HeaderComponent;
   imageUrl: any;
   editProfileForm: FormGroup;
   matcher = new MyErrorStateMatcher;
@@ -30,14 +31,18 @@ export class EditProfileComponent implements OnInit {
   router: Router;
   file: File;
   fileName: string;
+
   get f() { return this.editProfileForm.controls; }
 
 
-  constructor(private formBuilder: FormBuilder, private summaryService: SummaryService, private generalService: GeneralHelperService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private summaryService: SummaryService,
+    private generalService: GeneralHelperService,
+    private headerService: HeaderService
+  ) {
     // this.profile = JSON.parse(activatedRoute.snapshot.params["profile"]);
   }
-
-  headerComponent: HeaderComponent;
 
   async ngOnInit(): Promise<void> {
     this.getProfile();
@@ -68,13 +73,10 @@ export class EditProfileComponent implements OnInit {
     this.summaryService.updateProfile(uploadData).subscribe(
       (response) => {
         console.log(response);
-        console.log(response.data.photoUrl);
-
-        localStorage.setItem('avatar', response.data.photoUrl);
-
+        console.log('response avatar: ' + response.data.photoUrl);
+        this.headerService.setAvatar(response.data.photoUrl);
         this.generalService.closeWaitingPopupNz();
-
-        this.router.navigate(['/account/profile']);
+        this.router.navigate(['/profile']);
       },
       (error) => {
         console.log(error);
@@ -98,25 +100,29 @@ export class EditProfileComponent implements OnInit {
         console.log(this.profile.email);
         this.imageUrl = this.profile.photoUrl;
         this.editProfileForm = this.formBuilder.group({
-          email: [this.profile.email,
-          [Validators.required,
-          Validators.minLength(this.passwordMinLength),
-          Validators.maxLength(this.passwordMaxLength),
-          Validators.email,]
-          ],
-          displayName: [this.profile.displayName,
-          [Validators.required,
-          Validators.minLength(this.passwordMinLength),
-          Validators.maxLength(this.passwordMaxLength),
-            // Validators.pattern(this.pattern)
-          ]
-          ], phoneNumber: [this.profile.phoneNumber,
-          [
-            Validators.required,
+          email: [
+            this.profile.email,
+            [Validators.required,
             Validators.minLength(this.passwordMinLength),
             Validators.maxLength(this.passwordMaxLength),
-            // Validators.pattern(this.pattern)
-          ]
+            Validators.email,
+            ]
+          ],
+          displayName: [
+            this.profile.displayName,
+            [Validators.required,
+            Validators.minLength(this.passwordMinLength),
+            Validators.maxLength(this.passwordMaxLength),
+              // Validators.pattern(this.pattern)
+            ]
+          ], phoneNumber: [
+            this.profile.phoneNumber,
+            [
+              Validators.required,
+              Validators.minLength(this.passwordMinLength),
+              Validators.maxLength(this.passwordMaxLength),
+              // Validators.pattern(this.pattern)
+            ]
           ], description: [this.profile.description,
           ],
           avatarFile: [],

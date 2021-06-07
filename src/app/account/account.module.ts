@@ -9,12 +9,28 @@ import { SearchAccountComponent } from './search-account/search-account.componen
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { LinkToSocialAccountComponent } from './link-to-social-account/link-to-social-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
+import { ViewAccountDetailComponent } from './view-account-detail/view-account-detail.component';
 
 
 
 @NgModule({
-  declarations: [InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent, LinkToSocialAccountComponent, EditAccountComponent, ],
-  exports:[InsertAccountComponent, ViewProfileComponent, EditProfileComponent, SearchAccountComponent, ChangePasswordComponent, LinkToSocialAccountComponent],
+  declarations: [
+    InsertAccountComponent, 
+    ViewProfileComponent, 
+    EditProfileComponent, 
+    SearchAccountComponent, 
+    ChangePasswordComponent, 
+    LinkToSocialAccountComponent, 
+    EditAccountComponent, ViewAccountDetailComponent, 
+  ],
+  exports:[InsertAccountComponent, 
+    ViewProfileComponent, 
+    EditProfileComponent, 
+    SearchAccountComponent, 
+    ChangePasswordComponent, 
+    LinkToSocialAccountComponent, 
+    EditAccountComponent
+  ],
   imports: [
     CommonModule,
     AccountRoutingModule,

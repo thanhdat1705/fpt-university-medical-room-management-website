@@ -44,12 +44,19 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIChangePassword, data, { headers: this.headers });
   }
 
+  public getAccountDetail(param: any): Observable<any> {
+    if (this.headers.get("Authorization") == null) {
+      this.router.navigate(['']);
+    }
+    // console.log(data);
+    return this.http.post<ResponseServer>(UrlServerAPIChangePassword, { headers: this.headers, param: param });
+  }
+
   public getProfile(): Observable<ResponseServer> {
     if (this.headers.get("Authorization") == null) {
       this.router.navigate(['']);
     }
     return this.http.get<ResponseServer>(UrlServerAPIGetProfile, { headers: this.headers });
-
   }
 
   public updateProfile(data: FormData): Observable<ResponseServer> {

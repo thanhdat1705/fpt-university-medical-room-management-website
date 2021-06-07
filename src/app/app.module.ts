@@ -25,6 +25,7 @@ import { AuthService } from './shared/services/auth-service/auth.service';
 import { GeneralHelperService } from './shared/services/general-helper.service';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { FirebaseService } from './shared/services/firebase.service';
+import { HeaderService } from './shared/services/header.service';
 
 
 

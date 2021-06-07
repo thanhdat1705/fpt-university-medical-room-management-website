@@ -18,7 +18,7 @@ export class ChangePasswordComponent implements OnInit {
 
   passwordMinLength = 3;
   passwordMaxLength = 50;
-  pattern = '[a-zA-Z]*';
+  pattern = '[a-zA-Z0-9 ]*';
   changePasswordForm: FormGroup;
   matcher = new ErrorStateMatcher;
 

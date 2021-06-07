@@ -24,7 +24,7 @@ interface SearchAccountAttribute {
 export class SearchAccountComponent implements OnInit {
 
   accountAttribute: SearchAccountAttribute[] = [
-    { value: 'none', viewValue: '-Trống-' },
+    { value: '', viewValue: '-Trống-' },
     { value: 'internalCode', viewValue: 'Mã số' },
     { value: 'displayName', viewValue: 'Tên' },
     { value: 'phoneNumber', viewValue: 'Số điện thoại' },
@@ -57,20 +57,29 @@ export class SearchAccountComponent implements OnInit {
 
   listOfColumn = [
     {
-      title: 'Mã số'
+      title: 'Mã số',
     },
     {
       title: 'Tên',
     },
+    // {
+    //   title: 'Email',
+    // },
+    // {
+    //   title: 'Số điện thoại',
+    // },
+    // {
+    //   title: 'Mô tả',
+    // },
     {
-      title: 'Email',
+      title: 'Vai trò',
     },
     {
-      title: 'Số điện thoại',
+      title: 'Trạng thái',
     },
     {
-      title: 'Mô tả',
-    }
+      title: '',
+    },
   ];
 
   selected() {

@@ -1,7 +1,8 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Account } from '../../models/account';
 import { AuthService } from '../../services/auth-service/auth.service';
+import { HeaderService } from '../../services/header.service';
 import { SideNavService } from '../../services/side-nav.service';
 
 
@@ -15,25 +16,26 @@ import { SideNavService } from '../../services/side-nav.service';
 
 export class HeaderComponent implements OnInit {
 
-  avatar: string;
+  avatar = this.headerService.getAvatar();
   user: Account;
   toggleActive: boolean = false;
   isCollapsed: boolean;
-  constructor(private sidenav: SideNavService, private authService: AuthService) {
+
+  constructor(private sidenav: SideNavService, private sanitizer: DomSanitizer, private authService: AuthService, public headerService: HeaderService) {
   }
+
+
 
   ngOnInit(): void {
-    this.showUserAvatar();
-    // console.log(this.avatar);
-    // this.avatar = this.user.photoUrl;
+    console.log(this.headerService.getAvatar());
   }
 
-  showUserAvatar(){
-    this.avatar = JSON.parse(localStorage.getItem("avatar"));
+  showAvatar() {
+    // this.avatar = this.headerService.avatar;
+    // this.sanitizer.bypassSecurityTrustUrl(this.);
   }
 
   ToggleNav() {
-
     console.log('Clicked');
     this.toggleActive = !this.toggleActive;
     this.sidenav.toggle();
@@ -44,7 +46,7 @@ export class HeaderComponent implements OnInit {
     this.sidenav.toggleCollapse(this.isCollapsed);
   }
 
-  signOut(){
+  signOut() {
     this.authService.SignOut();
   }
 
