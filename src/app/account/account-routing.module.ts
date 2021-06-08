@@ -6,6 +6,7 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { InsertAccountComponent } from './insert-account/insert-account.component';
 import { LinkToSocialAccountComponent } from './link-to-social-account/link-to-social-account.component';
 import { SearchAccountComponent } from './search-account/search-account.component';
+import { ViewAccountDetailComponent } from './view-account-detail/view-account-detail.component';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
 
 const routes: Routes = [
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: 'edit-account/:id',
     component: EditAccountComponent
+  },
+  {
+    path: 'account-detail/:id',
+    component: ViewAccountDetailComponent
   },
 ];
 

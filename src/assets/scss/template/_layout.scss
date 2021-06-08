@@ -21,8 +21,26 @@
     z-index: 2;
     background: #fff;
     // position: fixed;
-    top: 0;
+    top: 0px;
     border-bottom: 1px solid #eaf8fa;
+    display: flex;
+
+    height: 70px;
+
+    .nav-wrap {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+
+        .nav-left,
+        .nav-right {
+            list-style-type: none;
+            padding-left: 0px;
+            margin-bottom: 0px;
+            align-items: center;
+            display: flex;
+        }
+    }
 }
 
 .main-content {
@@ -50,7 +68,7 @@ nz-breadcrumb {
 
 .sidebar-logo {
     position: relative;
-    height: 64px;
+    height: 70px;
     padding-left: 24px;
     overflow: hidden;
     line-height: 64px;
@@ -89,4 +107,9 @@ li {
     > a:hover {
         text-decoration: none;
     }
+}
+
+.baseline-icon {
+    display: flex;
+    align-items: baseline;
 }

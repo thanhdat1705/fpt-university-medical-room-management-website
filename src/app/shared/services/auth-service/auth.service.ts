@@ -6,8 +6,10 @@ import { Account } from '../../models/account';
 // import { SummaryService } from '../summary.service';
 import { Router } from '@angular/router';
 import { Injectable, NgZone } from '@angular/core';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
+import 'firebase/storage'; 
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoginSocialRequest } from '../../requests/login/login-social-request';
 import { GeneralHelperService } from '../general-helper.service';
@@ -125,7 +127,7 @@ export class AuthService {
             (response) => {
                 console.log(response);
                 this.setAccount(response.data);
-                this.account.id = response.data.accountId;
+                this.account.accountId = response.data.accountId;
                 console.log(this.account);
                 localStorage.setItem("accountId", response.data.accountId);
                 localStorage.setItem("token", response.data.token);
@@ -134,8 +136,8 @@ export class AuthService {
                 this.summaryService.setTokenHeader();
                 this.generalService.closeWaitingPopupNz();
                 this.ngZone.run(() => {
-                    // this.router.navigate(['medicine-management/medicine']);
-                    this.router.navigate(['account/profile']);
+                    // this.router.navigate(['account/profile']);
+                    this.router.navigate(['medicine-management/medicine-list']);
                 })
 
             },

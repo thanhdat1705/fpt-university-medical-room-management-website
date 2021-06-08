@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Account } from '../../models/account';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { HeaderService } from '../../services/header.service';
+import { MatSidenav } from '@angular/material/sidenav';
 import { SideNavService } from '../../services/side-nav.service';
 
 
@@ -10,8 +11,7 @@ import { SideNavService } from '../../services/side-nav.service';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  templateUrl: './header.component.html'
 })
 
 export class HeaderComponent implements OnInit {
@@ -50,4 +50,7 @@ export class HeaderComponent implements OnInit {
     this.authService.SignOut();
   }
 
+  getImgAvatar() {
+    return this.sidenav.getImgUrl();
+  }
 }

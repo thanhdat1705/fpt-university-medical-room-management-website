@@ -1,39 +1,58 @@
+<div class="example-input">
+    <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
+        <input placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchValue"
+            (input)="inputChange(inputValue.value)" #inputValue />
+    </nz-input-group>
+    <ng-template #searchIconButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton button-match-logo"
+            (click)="searchMedicine()">
+            <i nz-icon nzType="search" nzTheme="outline"></i>
+        </button>
+    </ng-template>
+</div>
+
+<br>
+
 <nz-spin [nzSpinning]="detailLoading" nzTip="Loading...">
-    <nz-table #nzTable nzShowQuickJumper [nzFrontPagination]="false" [nzData]="listOfDisplayData"
-        [nzLoading]="tableLoading">
+    <nz-table #nzTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="medicineList" [nzLoading]="tableLoading"
+        [nzScroll]="{ x: '1000px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+        (nzQueryParams)="onQueryParamsChange($event)">
         <thead>
             <tr>
-                <!-- <th>No.</th>
-                <th nzColumnKey="costDescription" [nzSortFn]="true">Tên thuốc</th>
-                <th nzColumnKey="total" [nzSortFn]="true">Số lượng</th>
-                <th nzColumnKey="createAt" [nzSortFn]="true">Đặc trị</th>
-                <th></th>
-                <th></th> -->
-                <th>No.</th>
-                <th nzColumnKey="costDescription">Tên thuốc</th>
-                <th nzColumnKey="total">Số lượng</th>
-                <th nzColumnKey="createAt">Đặc trị</th>
-                <th></th>
-                <th></th>
+                <th nzWidth="60px">No.</th>
+                <th nzWidth="190px" nzColumnKey="name" [nzSortFn]="true">Tên thuốc</th>
+                <th nzWidth="140px" nzColumnKey="unit" [nzSortFn]="true" [nzFilters]="filterUnit" [nzFilterFn]="true">
+                    Đơn vị</th>
+                <th nzWidth="140px" nzColumnKey="medicineClassification" [nzSortFn]="true" [nzFilters]="filterClass"
+                    [nzFilterFn]="true">Loại thuốc</th>
+                <th nzWidth="190px" nzColumnKey="medicineSubgroup" [nzSortFn]="true" [nzFilters]="filterSubgroup"
+                    [nzFilterFn]="true">Nhóm</th>
+                <th nzWidth="140px" nzColumnKey="createdDate" [nzSortFn]="true">Ngày thêm</th>
+                <th nzWidth="70px"></th>
+                <th nzWidth="75px"></th>
             </tr>
         </thead>
-        <tbody *ngIf="listOfDisplayData!=null">
-            <tr *ngFor="let data of nzTable.data; index as i">
-                <td>{{ i + 1 }}</td>
+        <tbody>
+            <tr *ngFor="let data of medicineList; index as i">
+                <td>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
                 <td>{{ data.name }}</td>
-                <td>{{ data.quantity | currency:'VND' }}</td>
-                <td>{{ data.cate }}</td>
-                <td><button nz-button nzType="default" nzSize="large" nzShape="round"
-                        (click)="showModalCostDetail(cost)">Detail</button></td>
-                <td> <a nz-button nzType="default" nzShape="circle"
-                        (click)="deleteCost(cost.id, cost.costDescription)">Delete</a></td>
+                <td>{{ data.unit.name }}</td>
+                <td>{{ data.medicineClassification.name }}</td>
+                <td>{{ data.medicineSubgroup.name }}</td>
+                <td>{{ getCreateTime(data.createdDate) }}</td>
+                <td>
+                    <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
+                    <a style="color: #1890ff" (click)="detailMedicine(medicineId.value)">Detail</a>
+                </td>
+                <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
+                        (nzOnConfirm)="deleteMedicine(data.id)">Delete</a></td>
             </tr>
         </tbody>
-        <div style="margin: 10px; width: 200px;">
-            <button nz-button nzType="primary" nzBlock nzSize="large"
-                [routerLink]="'/medicine-management/medicine-list/add-medicine'">
-                <span>Thêm thuốc</span>
-            </button>
-        </div>
     </nz-table>
+    <div style="margin: 10px; width: 200px;">
+        <button nz-button nzType="primary" nzBlock nzSize="large" class="button-match-logo"
+            [routerLink]="'/medicine-management/medicine-list/add-medicine'">
+            <span>Thêm thuốc</span>
+        </button>
+    </div>
 </nz-spin>

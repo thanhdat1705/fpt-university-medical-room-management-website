@@ -15,21 +15,24 @@ import { ViewAccountDetailComponent } from './view-account-detail/view-account-d
 
 @NgModule({
   declarations: [
-    InsertAccountComponent, 
-    ViewProfileComponent, 
-    EditProfileComponent, 
-    SearchAccountComponent, 
-    ChangePasswordComponent, 
-    LinkToSocialAccountComponent, 
-    EditAccountComponent, ViewAccountDetailComponent, 
+    InsertAccountComponent,
+    ViewProfileComponent,
+    EditProfileComponent,
+    SearchAccountComponent,
+    ChangePasswordComponent,
+    LinkToSocialAccountComponent,
+    EditAccountComponent,
+    ViewAccountDetailComponent,
   ],
-  exports:[InsertAccountComponent, 
-    ViewProfileComponent, 
-    EditProfileComponent, 
-    SearchAccountComponent, 
-    ChangePasswordComponent, 
-    LinkToSocialAccountComponent, 
-    EditAccountComponent
+  exports: [
+    InsertAccountComponent,
+    ViewProfileComponent,
+    EditProfileComponent,
+    SearchAccountComponent,
+    ChangePasswordComponent,
+    LinkToSocialAccountComponent,
+    EditAccountComponent,
+    ViewAccountDetailComponent,
   ],
   imports: [
     CommonModule,
@@ -39,5 +42,5 @@ import { ViewAccountDetailComponent } from './view-account-detail/view-account-d
 })
 
 export class AccountModule {
-  
- }
+
+}

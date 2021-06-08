@@ -4,7 +4,35 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, JsonpClientBackend } from '@angular/common/http';
 import { ResponseServer } from '../models/response-server';
 import { Observable } from 'rxjs';
-import { UrlServerAPIChangePassword, UrlServerAPIGetProfile, UrlServerAPIInsertAccount, UrlServerAPISocialAuthentication, UrlServerAPIUpdateProfile, UrlServerAPIUsernameAuthentication, UrlServerAPIViewAccounts, UrlServerLinkToSocialAccount, UrlServerUpdateAccount } from '../models/url-api';
+import {
+  UrlServerAPIGetProfile,
+  UrlServerAPIInsertAccount,
+  UrlServerAPISocialAuthentication,
+  UrlServerAPISearchMedicineUnit,
+  UrlServerAPIStoreNewMedicineUnit,
+  UrlServerAPIGetAllMedicineUnit,
+  UrlServerAPIGetAllMedicineSubgroup,
+  UrlServerAPIStoreNewMedicineSubgroup,
+  UrlServerAPIGetAllMedicineClassification,
+  UrlServerAPIStoreNewMedicine,
+  UrlServerAPISearchMedicine,
+  UrlServerAPIDeleteMedicine,
+  UrlServerAPIChangePassword,
+  UrlServerAPIViewAccounts,
+  UrlServerAPIGetMedicine,
+  UrlServerAPIUpdateMedicine,
+  UrlServerAPISearchMedicineSubgroup,
+  UrlServerAPISearchClassification,
+  UrlServerLinkToSocialAccount,
+  UrlServerAPIUsernameAuthentication,
+  UrlServerAPIUpdateProfile,
+  UrlServerUpdateAccount,
+  UrlServerGetAccountDetail
+} from '../models/url-api';
+import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
+import { SearchMedicineRequest } from '../requests/medicine/search';
+import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
+import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
 
 @Injectable({
   providedIn: 'root'
@@ -44,12 +72,9 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIChangePassword, data, { headers: this.headers });
   }
 
-  public getAccountDetail(param: any): Observable<any> {
-    if (this.headers.get("Authorization") == null) {
-      this.router.navigate(['']);
-    }
-    // console.log(data);
-    return this.http.post<ResponseServer>(UrlServerAPIChangePassword, { headers: this.headers, param: param });
+  public getAccountDetail(id: any): Observable<any> {
+
+    return this.http.get<ResponseServer>(UrlServerGetAccountDetail+"/"+ id, { headers: this.headers});
   }
 
   public getProfile(): Observable<ResponseServer> {
@@ -96,6 +121,120 @@ export class SummaryService {
       UrlServerLinkToSocialAccount, data, { headers: this.headers}
     );
   }
+
+  /*----------------------------------------------------------------------------------------------------- */
+  /*---------------------------------------------- Medicine ---------------------------------------------- */
+  public searchMedicine(request: SearchMedicineRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPISearchMedicine +
+      "/?Name=" +
+      request.Name +
+      "&UnitId=" +
+      request.UnitId +
+      "&MedicineSubgroupId=" +
+      request.MedicineSubgroupId +
+      "&MedicineClassificationId=" +
+      request.MedicineClassificationId +
+      "&Limit=" +
+      request.Limit +
+      "&Page=" +
+      request.Page +
+      "&SortField=" +
+      request.SortField +
+      "&SortOrder=" +
+      request.SortOrder
+    );
+  }
+
+  public getMedicine(id: string): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetMedicine + id);
+  }
+
+  public updateMedicine(data: any, id: string): Observable<ResponseServer> {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateMedicine + "/?id=" + id, data);
+  }
+
+  public storeNewMedicine(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicine, data);
+  }
+
+  public deleteMedicine(id: string): Observable<ResponseServer> {
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicine + "/?id=" + id);
+  }
+
+  public getAllMedicineClassification(): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineClassification);
+  }
+
+  public searchClassification(request: SearchMedicineClassificationRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPISearchClassification +
+      "/?MedicineClassificationName=" +
+      request.MedicineClassificationName.toString() +
+      "&Limit=" +
+      request.Limit +
+      "&Page=" +
+      request.Page +
+      "&SortField=" +
+      request.SortField.toString() +
+      "&SortOrder=" +
+      request.SortOrder
+    );
+  }
+
+  public getAllMedicineSubgroup(): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineSubgroup);
+  }
+
+  public getAllMedicineUnit(): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineUnit);
+  }
+
+  public storeNewMedicineUnit(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineUnit, data);
+  }
+
+  public storeNewMedicineSubgroup(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineSubgroup, data);
+  }
+
+  public searchMedicineSubgroup(request: SearchMedicineSubgroupRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPISearchMedicineSubgroup +
+      "/?MedicineSupgroupName=" +
+      request.MedicineSupgroupName.toString() +
+      "&Limit=" +
+      request.Limit +
+      "&Page=" +
+      request.Page +
+      "&SortField=" +
+      request.SortField.toString() +
+      "&SortOrder=" +
+      request.SortOrder
+    );
+  }
+  public searchMedicineUnit(request: SearchMedicineUnitRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPISearchMedicineUnit +
+      "/?MedicineUnitName=" +
+      request.MedicineUnitName.toString() +
+      "&Limit=" +
+      request.Limit +
+      "&Page=" +
+      request.Page +
+      "&SortField=" +
+      request.SortField.toString() +
+      "&SortOrder=" +
+      request.SortOrder
+    );
+  }
+
+  /*----------------------------------------------------------------------------------------------------- */
+  /*---------------------------------------------- ????? ---------------------------------------------- */
+
+
+
+  /*===========================================================================================================*/
 
   public setTokenHeader() {
     this.headers = this.headers.set('Authorization', 'Bearer ' + localStorage.getItem("token"));

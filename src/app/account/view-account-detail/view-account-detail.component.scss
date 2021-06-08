@@ -1,40 +1,21 @@
-.profile{
-    p{
-        display: inline;
-    }
-    br{
-        margin-bottom: 10px;
-    }
-    .img-container{
-        margin-right: 5%;
-        float: left;
-        width: 30%;
-        height: 30%;
-    .avatar{
-        max-width:100%;
-        max-height:100%;
-        }
-    }
-    .info{
-        float: left;
-        height: auto;
-        .title{
-            font-size: 20px;
-            font-weight: bold;
-            margin-right: 5px;
-            word-wrap: break-word;
-        }
-        .content{
+.avatarImg{
+    width: 200px;
+    height: 200px;
+}
 
-        }
+.avatarConntainer{
+    margin-left: 20%;
+}
+
+form {
+    max-width: 800px;
+    min-width: 150px;
+    // width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 20px;
+    height: auto;
+    nz-form-item {
+      margin-bottom: 20px;
     }
-    .buttons{
-        button{
-            margin-top: 10px;
-            margin-right: 5%;
-        }
-        clear: both;
-        text-align: center;
-    }
-    
 }

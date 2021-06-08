@@ -1,5 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavigationExtras, Router } from '@angular/router';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { DateTime } from 'src/app/shared/models/date-time';
+import { FilterTable } from 'src/app/shared/models/filterTable';
 import { Medicine } from 'src/app/shared/models/medicine';
+import { PageInfo } from 'src/app/shared/models/page-info';
+import { ResponseSearch } from 'src/app/shared/models/response-search';
+import { SearchMedicineRequest } from 'src/app/shared/requests/medicine/search';
+import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
+import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
+import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
+import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
+import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
+import { SideNavService } from 'src/app/shared/services/side-nav.service';
 
 @Component({
   selector: 'app-medicine-list',
@@ -9,61 +24,253 @@ import { Medicine } from 'src/app/shared/models/medicine';
 export class MedicineListComponent implements OnInit {
 
   detailLoading = false;
-  tableLoading = true;
+  tableLoading = false;
   checked = false;
+  medicineList: MedicineResponse[] = [];
+  pageInfo: PageInfo = { isFirstPage: true, isLastPage: false, numberOfPage: 1, info: null };
+  page: number;
+  pageLimit: number;
 
-  listOfData: Medicine[] = [
-    {
-      name: 'John Brown',
-      quantity: 32,
-      cate: 'New York No. 1 Lake Park'
-    },
-    {
-      name: 'Jim Green',
-      quantity: 42,
-      cate: 'London No. 1 Lake Park'
-    },
-    {
-      name: 'Joe Black',
-      quantity: 32,
-      cate: 'Sidney No. 1 Lake Park'
-    },
-    {
-      name: 'Jim Red',
-      quantity: 32,
-      cate: 'London No. 2 Lake Park'
-    }
-  ];
+  totalRecord!: number;
+  pageSize = 10;
+  pageIndex = 1;
 
-  listOfDisplayData = [...this.listOfData];
+  sortOrderList = 0;
+  sortFieldList = "createdDate";
 
-  constructor() { }
+  isLoading = false;
+  noSuggest = false;
+  isSearch = false;
+  selectedMedicine: string;
+  suggestList: MedicineResponse[] = [];
+
+  searchForm: FormGroup;
+  searchValue = '';
+  medicineId: string;
+
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  searchMedicineRequest: SearchMedicineRequest = {
+    Name: '',
+    UnitId: '',
+    MedicineSubgroupId: '',
+    MedicineClassificationId: '',
+    Limit: 10,
+    Page: 1,
+    SortField: "createdDate",
+    SortOrder: 0
+  };
+
+  filterUnit: FilterTable[] = [];
+  filterClass: FilterTable[] = [];
+  filterSubgroup: FilterTable[] = [];
+  // filterUnit: MedicineUnitResponse[] = [];
+  // filterClass: MedicineClassificationResponse[] = [];
+  // filterSubgroup: MedicineSubgroupResponse[] = [];
+
+
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  constructor(private fb: FormBuilder,
+    private service: MedicineService,
+    private generalService: GeneralHelperService,
+    private router: Router,
+    private sidenav: SideNavService
+  ) { }
 
   ngOnInit(): void {
-    setTimeout(
-      () => {
-        this.tableLoading = false;
+    // this.searchMedicine();
+    this.getAllUnit();
+    this.getAllSubgroup();
+    this.getAllClass();
+
+
+  }
+
+
+  get f() { return this.searchForm.controls; }
+
+  getCreateTime(time: string) {
+    return this.generalService.getDate(time);
+  }
+
+  getAllUnit() {
+    this.service.getAllMedicineUnit().subscribe(
+      (response) => {
+        for (let unit of response.data) {
+          let tmp = { text: unit.name, value: unit.id };
+          this.filterUnit = [...this.filterUnit, tmp]
+        }
       },
-      1500
-    );
+      (error) => {
+        console.log("get all error");
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+  getAllSubgroup() {
+    this.service.getAllMedicineSubgroup().subscribe(
+      (response) => {
+        for (let unit of response.data) {
+          let tmp = { text: unit.name, value: unit.id };
+          this.filterSubgroup = [...this.filterSubgroup, tmp]
+        }
+      },
+      (error) => {
+        console.log("get all error");
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+  getAllClass() {
+    this.service.getAllMedicineClassification().subscribe(
+      (response) => {
+        for (let unit of response.data) {
+          let tmp = { text: unit.name, value: unit.id };
+          this.filterClass = [...this.filterClass, tmp]
+        }
+      },
+      (error) => {
+        console.log("get all error");
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+  inputChange(value: any) {
+    this.isSearch = true;
+    console.log('value -- ', value);
+    // this.searchValue = value;
+    console.log(this.pageSize);
+    if (value !== '') {
+      this.pageSize = 10;
+      this.searchMedicineRequest = {
+        Name: this.searchValue,
+        UnitId: '',
+        MedicineSubgroupId: '',
+        MedicineClassificationId: '',
+        Limit: 10,
+        Page: 1,
+        SortField: "createdDate",
+        SortOrder: 0
+      }
+      this.searchMedicine();
+
+    } else {
+      this.searchMedicineRequest = {
+        Name: '',
+        UnitId: '',
+        MedicineSubgroupId: '',
+        MedicineClassificationId: '',
+        Limit: 10,
+        Page: 1,
+        SortField: "createdDate",
+        SortOrder: 0
+      }
+      this.pageSize = 10;
+      this.searchMedicine();
+    }
+  }
+
+  detailMedicine(id: string) {
+    this.router.navigate(['medicine-management/medicine-list/add-medicine'], { queryParams: { id: id } })
+  }
+  // searchSuggest() {
+  //   this.isLoading = true;
+
+  //   this.service.searchMedicine(this.searchMedicineRequest).subscribe(
+  //     (response) => {
+  //       this.isLoading = false;
+  //       this.suggestList = response.data.data;
+  //       console.log(this.suggestList);
+  //       if (this.suggestList.length > 0) {
+  //         this.noSuggest = false;
+  //       }else {
+  //         this.noSuggest = true;
+  //       }
+  //     },
+  //     (error) => {
+  //       this.isLoading = false;
+  //       console.log('search error');
+  //       this.generalService.createErrorNotification(error);
+  //     }
+  //   )
+  // }
+
+  deleteMedicine(id: string) {
+    this.tableLoading = true;
+    this.service.deleteMedicine(id).subscribe(
+      (response) => {
+        this.searchMedicine();
+        this.generalService.messageNz('success', `Xóa thành công`);
+      }, (error) => {
+        console.log('delete error');
+        this.tableLoading = false;
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+  searchMedicine() {
+    this.tableLoading = true;
+    this.searchMedicineRequest.Name = this.searchValue;
+    this.service.searchMedicine(this.searchMedicineRequest).subscribe(
+      (response) => {
+        this.tableLoading = false;
+        this.getData(response.data);
+      },
+      (error) => {
+        console.log('search error');
+        this.tableLoading = false;
+        this.generalService.createErrorNotification(error);
+      }
+    )
   }
 
 
-  showModalCostDetail(cost: any) {
+  getData(responseMedicineData: ResponseSearch) {
+    this.pageInfo.info = responseMedicineData.info;
+    this.page = this.pageInfo.info.page;
+    this.pageLimit = this.pageInfo.info.limit;
+    this.totalRecord = this.pageInfo.info.totalRecord;
+    this.medicineList = responseMedicineData.data;
+    console.log('medicineList ', this.medicineList);
 
   }
 
-  showModalCostAdd(cost: any) {
 
-  }
+  onQueryParamsChange(params: NzTableQueryParams) {
+    console.log("params -- ", params);
+    const { pageIndex, pageSize, sort, filter } = params;
+    this.pageSize = params.pageSize;
+    this.pageIndex = params.pageIndex;
+    const currentSort = sort.find(item => item.value !== null);
+    const sortField = (currentSort && currentSort.key) || null;
+    const sortOrder = (currentSort && currentSort.value) || null;
+    console.log("sortField -- " + sortField);
+    console.log("pageIndex -- " + pageIndex);
+    sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
+    sortField == null ? this.sortFieldList = 'createdDate' : this.sortFieldList = sortField;
+    this.searchMedicineRequest = {
+      Name: this.searchValue,
+      UnitId: filter[0].value,
+      MedicineSubgroupId: filter[2].value,
+      MedicineClassificationId: filter[1].value,
+      Limit: pageSize,
+      Page: pageIndex,
+      SortField: this.sortFieldList,
+      SortOrder: this.sortOrderList
+    }
 
-  deleteCost(id: string, description: string) {
-
+    this.searchMedicine();
+    this.isSearch = false;
 
   }
 
   confirmAdd() {
-    this.checked = false;
+    this.sidenav.setImgUrl('assets/images/avatar/user-avatar.png');
   }
 
 

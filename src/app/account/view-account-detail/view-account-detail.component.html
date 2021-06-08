@@ -1,40 +1,132 @@
-<!-- <div class="profile" *ngIf="profile">
+<form nz-form [formGroup]="accountDetailForm" *ngIf="accountDetailForm">
+    <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+        <span class="font-size-18">Ảnh đại diện</span>
+    </nz-form-label>
+    <div class="avatarConntainer">
+        <img src="{{accountDetail.photoUrl}}" class="avatarImg" />
+    </div>
+
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+            <span class="font-size-18">Mã số</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <input formControlName="internalCode" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        </nz-form-control>
+    </nz-form-item>
+    <!---------------------- Medicine Subgroup ----------------------------->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="displayName" [nzSpan]="7">
+            <span class="font-size-18">Tên</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <input formControlName="displayName" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        </nz-form-control>
+    </nz-form-item>
+    <!---------------------- Medicine Unit ----------------------------->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="email" [nzSpan]="7">
+            <span class="font-size-18">Email</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <input formControlName="email" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        </nz-form-control>
+    </nz-form-item>
+    <!---------------------- Medicine Unit ----------------------------->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="phoneNumber" [nzSpan]="7">
+            <span class="font-size-18">Số điện thoại</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <input formControlName="phoneNumber" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        </nz-form-control>
+    </nz-form-item>
+    <!---------------------- Medicine Unit ----------------------------->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="roleId" [nzSpan]="7">
+            <span class="font-size-18">Vai trò</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <input formControlName="roleId" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        </nz-form-control>
+    </nz-form-item>
+    <!---------------------- Medicine Unit ----------------------------->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="active" [nzSpan]="7">
+            <span class="font-size-18">Trạng thái</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <input formControlName="active" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        </nz-form-control>
+    </nz-form-item>
+    <!---------------------- Description ----------------------------->
+    <nz-form-item>
+        <nz-form-label nzFor="description" [nzSpan]="7">
+            <span class="font-size-18 m-l-11">Mô tả</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <nz-textarea-count [nzMaxCharacterCount]="500">
+                <textarea id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
+                    formControlName="description" style="font-size: 18px;"></textarea>
+                <ng-template #descriptionErrorTpl let-control>
+                    <ng-container *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
+                        <span class="error-text">Nhập độ dài từ 1 tới 500</span>
+                    </ng-container>
+                </ng-template>
+            </nz-textarea-count>
+        </nz-form-control>
+    </nz-form-item>
+    <br><br>
+    <nz-form-item>
+        <nz-form-control>
+            <button class="font-size-18" nz-button nzType="primary" (click)='editAccounnt()'
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                Sửa thông tin
+            </button>
+        </nz-form-control>
+    </nz-form-item>
+</form>
+
+<!-- <div class="profile" *ngIf="accountDetail">
     <div class="img-container">
-        <img src="{{profile.photoUrl}}" class="avatar">
+        <img src="{{accountDetail.photoUrl}}" class="avatar">
     </div>
     <div class="info">
         <p class="title">Mã số: </p>
-        <p class="content">{{profile.displayName}}</p>
+        <p class="content">{{accountDetail.role.accounts[0].internalCode}}</p>
         <br>
         <br>
         <p class="title">Tên: </p>
-        <p class="content">{{profile.displayName}}</p>
+        <p class="content">{{accountDetail.displayName}}</p>
         <br>
         <br>
         <p class="title">Email: </p>
-        <p class="content">{{profile.email}}</p>
+        <p class="content">{{accountDetail.email}}</p>
         <br>
         <br>
         <p class="title">Số điện thoại:</p>
-        <p class="content">{{profile.phoneNumber}}</p>
+        <p class="content">{{accountDetail.phoneNumber}}</p>
         <br>
         <br>
         <p class="title">Mô tả:</p>
-        <p class="content">{{profile.description}}</p>
+        <p class="content">{{accountDetail.description}}</p>
         <br>
         <br>
         <p class="title">Vai trò:</p>
-        <p class="content">{{profile.description}}</p>
+        <p class="content">{{accountDetail.role.roleName}}</p>
         <br>
         <br>
-        <p class="title">Trạng thái:</p>
-        <p class="content">{{profile.description}}</p>
-        <br>
+        <p class="title">Trạng thái:</p> -->
+<!-- <p class="content">{{accountDetail.role.account[0].active}}</p> -->
+<!-- <br>
         <br>
     </div>
     <div class="buttons">
-        <a [routerLink]="'/account/edit-profile'"><button mat-raised-button color="primary">Sửa thông tin cá nhân</button></a> 
-        <a [routerLink]="'/account/change-password'"> <button mat-raised-button color="primary">Đổi mật khẩu</button></a>
-
-    </div>
+        <a [routerLink]="['/account/edit-account', accountDetail.accountId]"><button mat-raised-button
+                color="primary">Sửa thông tin tài
+                khoản</button></a>
+        <a [routerLink]="'/account/edit-profile'"><button mat-raised-button color="primary">Vô hiệu hóa tài
+                khoản</button></a> -->
+<!-- <a [routerLink]="'/account/change-password'"> <button mat-raised-button color="primary">Đổi mật khẩu</button></a> -->
+<!-- </div>
 </div> -->

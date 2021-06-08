@@ -5,14 +5,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { firebaseConfig } from 'src/environments/environment';
+
 import { WaitingComponent } from './components/waiting/waiting.component';
+import { AuthService } from './services/auth-service/auth.service';
+import { SideNavService } from './services/side-nav.service';
+import { firebaseConfig } from 'src/environments/environment';
+
 
 
 const SHARE_MODULES = [
   AntModule,
   MaterialModule,
-  NebularModule 
+  NebularModule
 ]
 
 const COMPONENTS = [
@@ -23,7 +27,7 @@ export const ANGULAR_MODULES = [
   FormsModule,
   ReactiveFormsModule,
   PerfectScrollbarModule,
-  
+
 ]
 @NgModule({
   imports: [
@@ -33,14 +37,15 @@ export const ANGULAR_MODULES = [
     ...SHARE_MODULES
   ],
   declarations: [...COMPONENTS],
-  exports: [...SHARE_MODULES, ...ANGULAR_MODULES, ...COMPONENTS]
+  exports: [...SHARE_MODULES, ...ANGULAR_MODULES, ...COMPONENTS],
+  
 })
 export class SharedModule {
   static forRoot(name: string = 'default'): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
-      providers: [        
-        ...NebularModule.forRoot().providers,        
+      providers: [
+        ...NebularModule.forRoot().providers,
       ]
     };
   }
@@ -48,7 +53,7 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: [
-        ...NebularModule.forChild().providers,              
+        ...NebularModule.forChild().providers,
       ]
     };
   }

@@ -1,12 +1,12 @@
+import { Role } from "./role";
+
 export interface Account {
-  id: string;
-  internalCode: string;
+  accountId: string;
+  phoneNumber: string;
   email: string;
   displayName: string;
-  phoneNumber: string;
-  photoUrl: string;
-  token: string;
   description: string;
-  role: string;
-
+  photoUrl: string;
+  role: Role;
+  lastLogin: Date;
 }
