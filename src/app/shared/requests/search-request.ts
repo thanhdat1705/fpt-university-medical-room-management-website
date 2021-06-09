@@ -1,12 +1,12 @@
-export interface SearchRequest {
-  limit: number;
-  page: number;
-  search: string;
-  sortField: string;
-  sortOrder: number;
-  //1: descending
-  //0: ascending
-}
+// export interface SearchRequest {
+//   limit: number;
+//   page: number;
+//   search: string;
+//   sortField: string;
+//   sortOrder: number;
+//   //1: descending
+//   //0: ascending
+// }
 export interface SearchAccountRequest{
   internalCode : string;
   displayName : string;
@@ -27,3 +27,17 @@ export interface SearchAccountRequest{
 //   address: string;
 //   phone: string;
 // }
+
+export interface ValueCompare {
+  value: string;
+  compare: string;
+}
+
+export interface SearchRequest {
+  Limit: number;
+  Page: number;
+  SortField: string;
+  SortOrder: number;
+  SearchValue: Record<string, ValueCompare>; 
+  SelectFields: string;
+}

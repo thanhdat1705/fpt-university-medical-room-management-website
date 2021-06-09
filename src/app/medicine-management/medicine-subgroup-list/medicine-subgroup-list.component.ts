@@ -3,6 +3,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchMedicineSubgroupRequest } from 'src/app/shared/requests/medicine-subgroup/search-request';
+import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 
@@ -19,25 +20,40 @@ export class MedicineSubgroupListComponent implements OnInit {
   page: number;
   pageLimit: number;
   totalRecord!: number;
-  pageSize = 10;
+  pageSize = 5;
   pageIndex = 1;
   sortOrderList = 0;
-  sortFieldList = "name";
+  sortFieldList = "Name";
 
   tableLoading = false;
   searchValue = '';
 
-  searchSubgroupRequest: SearchMedicineSubgroupRequest = {
-    MedicineSupgroupName: '',
+  searchName: ValueCompare = {
+    value: '',
+    compare: 'Contains'
+  }
+  searchRecord: Record<string, ValueCompare> = {};
+  searchFields = "id, name";
+  searchSubgroupRequest: SearchRequest = {
     Limit: 5,
     Page: 1,
     SortField: 'name',
     SortOrder: 0,
+    SearchValue: null,
+    SelectFields: this.searchFields,
   }
 
   constructor(private service: MedicineService) { }
 
   ngOnInit(): void {
+    this.searchRecord['Name'] = null;
+  }
+
+  resetTable() {
+    this.pageSize = 5;
+    this.pageIndex = 1;
+    this.sortOrderList = 0;
+    this.sortFieldList = "Name";
   }
 
   searchSubgroup() {
@@ -72,13 +88,14 @@ export class MedicineSubgroupListComponent implements OnInit {
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
-    sortField == null ? this.sortFieldList = 'name' : this.sortFieldList = sortField;
+    sortField == null ? this.sortFieldList = 'Name' : this.sortFieldList = sortField;
     this.searchSubgroupRequest = {
-      MedicineSupgroupName: this.searchValue,
       Limit: pageSize,
       Page: pageIndex,
       SortField: this.sortFieldList,
-      SortOrder: this.sortOrderList
+      SortOrder: this.sortOrderList,
+      SearchValue: this.searchRecord,
+    SelectFields: this.searchFields,
     }
 
     this.searchSubgroup();
@@ -90,24 +107,29 @@ export class MedicineSubgroupListComponent implements OnInit {
     console.log('value -- ', value);
     // this.searchValue = value;
     console.log(this.pageSize);
+    this.resetTable();
+    this.searchName.value = this.searchValue;
+    this.searchRecord['Name'] = this.searchName;
     if (value !== '') {
       this.pageSize = 5;
       this.searchSubgroupRequest = {
-        MedicineSupgroupName: this.searchValue,
         Limit: 5,
         Page: 1,
-        SortField: "name",
-        SortOrder: 0
+        SortField: this.sortFieldList,
+        SortOrder: this.sortOrderList,
+        SearchValue: null,
+    SelectFields: this.searchFields,
       }
       this.searchSubgroup();
 
     } else {
       this.searchSubgroupRequest = {
-        MedicineSupgroupName: '',
         Limit: 5,
         Page: 1,
-        SortField: "name",
-        SortOrder: 0
+        SortField: this.sortFieldList,
+        SortOrder: this.sortOrderList,
+        SearchValue: null,
+    SelectFields: this.searchFields,
       }
       this.pageSize = 5;
       this.searchSubgroup();

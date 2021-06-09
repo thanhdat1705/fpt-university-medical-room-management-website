@@ -33,3 +33,6 @@ export const UrlServerAPISearchMedicine = UrlServer + '/api/v1.0/Medicines/Searc
 export const UrlServerAPIDeleteMedicine = UrlServer + '/api/v1.0/Medicines';
 export const UrlServerAPIGetMedicine = UrlServer + '/api/v1.0/Medicines/';
 export const UrlServerAPIUpdateMedicine = UrlServer + '/api/v1.0/Medicines';
+
+
+export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';

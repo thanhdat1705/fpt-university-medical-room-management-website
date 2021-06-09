@@ -3,6 +3,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchMedicineUnitRequest } from 'src/app/shared/requests/medicine-unit/search-request';
+import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 
@@ -19,24 +20,32 @@ export class MedicineUnitListComponent implements OnInit {
   page: number;
   pageLimit: number;
   totalRecord!: number;
-  pageSize = 10;
+  pageSize = 5;
   pageIndex = 1;
   sortOrderList = 0;
-  sortFieldList = "name";
+  sortFieldList = "Name";
 
   tableLoading = false;
   searchValue = '';
 
-  searchUnitRequest: SearchMedicineUnitRequest = {
-    MedicineUnitName: '',
+  searchName: ValueCompare = {
+    value: '',
+    compare: 'Contains'
+  }
+  searchRecord: Record<string, ValueCompare> = {};
+  searchFields = "id, name, acronymUnit";
+  searchUnitRequest: SearchRequest = {
     Limit: 5,
     Page: 1,
     SortField: 'name',
     SortOrder: 0,
+    SearchValue: null,
+    SelectFields: this.searchFields,
   }
   constructor(private service: MedicineService) { }
 
   ngOnInit(): void {
+    this.searchRecord['Name'] = null;
   }
 
 
@@ -52,6 +61,12 @@ export class MedicineUnitListComponent implements OnInit {
   //     }
   //   )
   // }
+  resetTable() {
+    this.pageSize = 5;
+    this.pageIndex = 1;
+    this.sortOrderList = 0;
+    this.sortFieldList = "Name";
+  }
 
   searchUnit() {
     this.tableLoading = true;
@@ -85,13 +100,14 @@ export class MedicineUnitListComponent implements OnInit {
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
-    sortField == null ? this.sortFieldList = 'name' : this.sortFieldList = sortField;
+    sortField == null ? this.sortFieldList = 'Name' : this.sortFieldList = sortField;
     this.searchUnitRequest = {
-      MedicineUnitName: this.searchValue,
       Limit: pageSize,
       Page: pageIndex,
       SortField: this.sortFieldList,
-      SortOrder: this.sortOrderList
+      SortOrder: this.sortOrderList,
+      SearchValue: this.searchRecord,
+      SelectFields: this.searchFields,
     }
 
     this.searchUnit();
@@ -103,24 +119,29 @@ export class MedicineUnitListComponent implements OnInit {
     console.log('value -- ', value);
     // this.searchValue = value;
     console.log(this.pageSize);
+    this.resetTable();
+    this.searchName.value = this.searchValue;
+    this.searchRecord['Name'] = this.searchName;
     if (value !== '') {
       this.pageSize = 5;
       this.searchUnitRequest = {
-        MedicineUnitName: this.searchValue,
         Limit: 5,
         Page: 1,
-        SortField: "name",
-        SortOrder: 0
+        SortField: this.sortFieldList,
+        SortOrder: this.sortOrderList,
+        SearchValue: this.searchRecord,
+        SelectFields: this.searchFields,
       }
       this.searchUnit();
 
     } else {
       this.searchUnitRequest = {
-        MedicineUnitName: '',
         Limit: 5,
         Page: 1,
-        SortField: "name",
-        SortOrder: 0
+        SortField: this.sortFieldList,
+        SortOrder: this.sortOrderList,
+        SearchValue: this.searchRecord,
+        SelectFields: this.searchFields,
       }
       this.pageSize = 5;
       this.searchUnit();

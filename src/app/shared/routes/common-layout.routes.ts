@@ -35,6 +35,24 @@ export const CommonLayout_ROUTES: Routes = [
                 loadChildren: () => import('../../account/account.module').then(m => m.AccountModule)
             },
         ]
+    },
+
+    {
+        path: 'batch-medicine-management',
+        data: {
+            title: 'Batch Medicine Management'
+        },
+        children: [
+            {
+                path: '',
+                redirectTo: '/test',
+                pathMatch: 'full'
+            },
+            {
+                path: '',
+                loadChildren: () => import('../../batch-medicine-management/batch-medicine-management.module').then(m => m.BatchMedicineManagementModule)
+            }
+        ],
 
     },
 ];

@@ -34,3 +34,26 @@ a {
     margin: auto;
     width: 100px;
 }
+
+.search-filter {
+
+    ::placeholder {
+        color: #8f9b99;
+        font-weight: 500;
+      }
+.input {
+    background-color: #e6e6e63e;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+    .select-wrap {
+
+        .select-w {
+            width: 240px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+           
+        }
+        
+    }
+}

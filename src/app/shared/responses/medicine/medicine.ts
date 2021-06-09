@@ -13,7 +13,7 @@ export interface MedicineResponse {
     updatedDate: String;
     medicineClassification: MedicineClassificationResponse;
     medicineSubgroup: MedicineSubgroupResponse;
-    unit: MedicineUnitResponse;
+    medicineUnit: MedicineUnitResponse;
     batchMedicineInInventories: any
     beginInventories: any
     eliminateMedicines: any

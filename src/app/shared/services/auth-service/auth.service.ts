@@ -84,13 +84,6 @@ export class AuthService {
         })
     }
 
-    test() {
-        this.router.navigate(['test']);
-    }
-
-    test2() {
-        this.generalService.openWaitingPopupNz();
-    }
 
     login() {
         this.isLoginUser = true;

@@ -6,6 +6,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { WaitingComponent } from '../components/waiting/waiting.component';
 import { DateTime } from '../models/date-time';
+import { AuthService } from './auth-service/auth.service';
 
 
 @Injectable({
@@ -27,6 +28,9 @@ export class GeneralHelperService {
             nzMaskClosable: false,
             nzClosable: false,
             nzWidth: 'fit-content',
+            // nzStyle	: {backgroundColor: 'red'},
+            // nzMaskStyle	: {backgroundColor: 'blue'},
+            // nzBodyStyle: {backgroundColor: 'transparent'},
         });
     }
 
@@ -56,6 +60,23 @@ export class GeneralHelperService {
                         },
                     }
                 );
+            }
+            else if (error.status == 401) {
+                this.notification.warning(
+                    'Opp!',
+                    'Phiên đăng nhập của bạn đã hết hạn',
+                    {
+                        nzPlacement: 'bottomRight',
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: '#f0d1a9',
+                        },
+                    }
+                );
+                localStorage.removeItem('user');
+                localStorage.removeItem("token");
+                this.router.navigate(['authentication/login']);
             }
             else if (error.status == 400) {
                 this.notification.error(
@@ -148,17 +169,17 @@ export class GeneralHelperService {
             if (subs[i].toString().includes('T')) {
                 var tmp = subs[i].toString().split('T');
                 result = result + tmp[0];
-            }else {
+            } else {
                 result = result + '-' + subs[i].toString();
             }
-            
-        
+
+
         }
         return result;
     }
 
     MustMatch(controlName: string, matchingControlName: string) {
-        
+
         return (formGroup: FormGroup) => {
             const control = formGroup.controls[controlName];
             const matchingControl = formGroup.controls[matchingControlName];

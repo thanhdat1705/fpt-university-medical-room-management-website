@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ErrorComponent } from './error/error.component';
+import { ErrorComponent } from '../shared/components/error/error.component';
 import { LoginComponent } from './login/login.component';
-import { ThanhdatComponent } from './thanhdat/thanhdat.component';
 
 const routes: Routes = [
   { 
@@ -12,20 +11,6 @@ const routes: Routes = [
       title: 'Login'
     }
   },
-  { 
-    path: 'error',
-    component: ErrorComponent,
-    data: {
-      title: 'Error'
-    }
-  },
-  { 
-    path: 'thanhdat',
-    component: ThanhdatComponent,
-    data: {
-      title: 'Thanhdat'
-    }
-  }
 
 ];
 
