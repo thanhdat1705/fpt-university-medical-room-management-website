@@ -13,6 +13,11 @@ import { DateTime } from '../models/date-time';
 })
 export class GeneralHelperService {
 
+    minCharacterLength = 3;
+    maxInputCharacterLength = 50;
+    maxTextAreaCharacterLength = 50;
+    
+
     constructor(
         private router: Router,
         private notification: NzNotificationService,
@@ -39,6 +44,26 @@ export class GeneralHelperService {
         // const ref: NzModalRef = this.modal.info();
         // ref.destroy();
         this.modal.closeAll();
+    }
+
+    showRequiredError(fieldName: string) {
+        return fieldName + " không được trống";
+    }
+
+    showMinMaxLengthError(fieldName: string, minLength: number, maxLength: number) {
+        return fieldName + " phải từ " + minLength + " đến " + maxLength + " kí tự";
+    }
+
+    showNumberPatternError(fieldName: string){
+        return fieldName + " phải là số";
+    }
+
+    showEmailPatternError(fieldName: string){
+        return fieldName + " phải theo định dạng tenban@fpt.edu.vn";
+    }
+
+    showPatternError(fieldName: string){
+        return fieldName + " không được chứa kí tự đặc biệt";
     }
 
     createErrorNotification(error: any) {
@@ -148,17 +173,17 @@ export class GeneralHelperService {
             if (subs[i].toString().includes('T')) {
                 var tmp = subs[i].toString().split('T');
                 result = result + tmp[0];
-            }else {
+            } else {
                 result = result + '-' + subs[i].toString();
             }
-            
-        
+
+
         }
         return result;
     }
 
     MustMatch(controlName: string, matchingControlName: string) {
-        
+
         return (formGroup: FormGroup) => {
             const control = formGroup.controls[controlName];
             const matchingControl = formGroup.controls[matchingControlName];

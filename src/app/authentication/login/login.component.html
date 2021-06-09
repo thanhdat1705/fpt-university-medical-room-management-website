@@ -23,7 +23,7 @@
                             <nz-form-item class="m-b-20 relative">
                                 <nz-form-label nzRequired nzFor="password" style="font-weight: 500;">Password
                                 </nz-form-label>
-                                <a (click)="authService.test2()" class="text-link-forget font-size-14 text-muted"
+                                <a [routerLink]="['/authentication/forgot-password/verify-username']" class="text-link-forget font-size-14 text-muted"
                                     style="position: absolute; right: 0;">Forget password?</a>
                                 <nz-form-control nzErrorTip="Please input your Password!">
                                     <nz-input-group class="p-10 rounded" nzPrefixIcon="lock">

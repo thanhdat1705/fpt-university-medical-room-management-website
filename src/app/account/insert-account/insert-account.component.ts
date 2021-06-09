@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { InsertAccountRequest } from 'src/app/shared/interfaces/account/insert-account-request';
+import { Role } from 'src/app/shared/models/role';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
@@ -16,6 +17,11 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 export class InsertAccountComponent implements OnInit {
 
   accountForm: FormGroup;
+  roles: Role[] = [
+    { id: 1, roleName: "Admin" },
+    { id: 2, roleName: "Nhân viên y tế" },
+
+  ];
 
   usernameMinLength = 3;
   passwordMinLength = 3;
@@ -31,8 +37,10 @@ export class InsertAccountComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private generalService: GeneralHelperService, private summaryService: SummaryService) { }
 
   insertAccount(data: InsertAccountRequest) {
+    console.log(data);
     this.generalService.openWaitingPopupNz();
     if (this.accountForm.invalid) {
+      this.generalService.closeWaitingPopupNz();
       return;
     }
     console.log(data);
@@ -57,9 +65,9 @@ export class InsertAccountComponent implements OnInit {
       Validators.pattern(this.pattern),
       ]],
       email: ['', [
-        Validators.required,
-        Validators.minLength(this.passwordMinLength),
-        Validators.maxLength(this.passwordMaxLength),
+        // Validators.required,
+        // Validators.minLength(this.passwordMinLength),
+        // Validators.maxLength(this.passwordMaxLength),
         Validators.email,
       ]],
       password: ['',
@@ -69,18 +77,16 @@ export class InsertAccountComponent implements OnInit {
         Validators.pattern(this.patternPassword)]
       ],
       internalCode: ['', [Validators.required,
-        Validators.minLength(this.usernameMinLength),
-        Validators.maxLength(this.usernameMaxLength),
-        Validators.pattern(this.pattern),
-        ]],
+      // Validators.minLength(this.usernameMinLength),
+      // Validators.maxLength(this.usernameMaxLength),
+      Validators.pattern(this.pattern),
+      ]],
       displayName: ['',
-        [
-          Validators.required,
+        [ Validators.required,
           Validators.minLength(this.passwordMinLength),
           Validators.maxLength(this.passwordMaxLength),
           // Validators.pattern(this.pattern)
-        ]
-      ],
+        ]],
       roleId: ['',
         [Validators.required]
       ]

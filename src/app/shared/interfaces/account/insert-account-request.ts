@@ -1,4 +1,5 @@
 export interface InsertAccountRequest{
+  interncalCode: string,
   displayName: string,
   email: string,
   username: string,

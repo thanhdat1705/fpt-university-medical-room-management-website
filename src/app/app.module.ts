@@ -28,6 +28,7 @@ import { FirebaseService } from './shared/services/firebase.service';
 import { HeaderService } from './shared/services/header.service';
 
 import { SideNavService } from './shared/services/side-nav.service';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 
 registerLocaleData(en);
@@ -47,7 +48,7 @@ registerLocaleData(en);
     SharedModule.forRoot(),
     // SharedModule,
     TemplateModule,
-    AccountModule
+    AccountModule,
   ],
   providers: [GeneralHelperService, FirebaseService,
     { provide: NZ_I18N, useValue: en_US },

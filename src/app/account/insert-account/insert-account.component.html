@@ -1,6 +1,123 @@
-<form class="example-form" [formGroup]="accountForm" (ngSubmit)="insertAccount(accountForm.value)">
-
+<form nz-form nzLayout="horizontal" [formGroup]="accountForm" *ngIf="accountForm"
+  (ngSubmit)="insertAccount(accountForm.value)">
+  <!-- Mã số -->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+      <span class="font-size-18">Mã số</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="internalCodeTpl">
+      <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
+      <ng-template #internalCodeTpl let-control>
+        <ng-container *ngIf="f.internalCode.hasError('required')">
+          Mã số không được để trống
+        </ng-container>
+        <ng-container *ngIf="f.internalCode.hasError('pattern')">
+          Mã số không được chứa kí tự đặc biệt
+        </ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <!-- Tên -->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="displayName" [nzSpan]="7">
+      <span class="font-size-18">Tên</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="displayNameTpl">
+      <input id="displayName" formControlName="displayName" type="text" nz-input [nzSize]="'large'" />
+      <ng-template #displayNameTpl let-control>
+        <ng-container *ngIf="f.displayName.hasError('required')">
+          Tên không được để trống
+        </ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <!-- Email -->
+  <nz-form-item>
+    <nz-form-label nzFor="email" [nzSpan]="7">
+      <span class="font-size-18">Email</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="emailTpl">
+      <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
+      <ng-template #emailTpl let-control>
+        <ng-container *ngIf="f.email.hasError('required')">
+          <span class="error-text">Email không được để trống</span>
+        </ng-container>
+        <ng-container *ngIf="f.email.hasError('email')">
+          <span class="error-text">Hãy nhập đúng định dạng email (example@fpt.edu.vn)</span>
+        </ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
   <!-- Username -->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="username" [nzSpan]="7">
+      <span class="font-size-18">Tên đăng nhập</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="usernameTpl">
+      <input id="username" formControlName="username" type="text" nz-input [nzSize]="'large'" />
+      <ng-template #usernameTpl let-control>
+        <ng-container *ngIf="f.username.hasError('required')">
+          Tên đăng nhập không được để trống
+        </ng-container>
+        <ng-container *ngIf="f.username.hasError('pattern')">
+          <span class="error-text">Tên đăng nhập không được chứa kí tự đặc biệt</span>
+        </ng-container>
+        <ng-container *ngIf="f.username.hasError('minlength') || f.username.hasError('maxlength')">
+          <span class="error-text">Tên nhập có độ dài từ 3 đến 50 kí tự</span>
+        </ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <!-- Password -->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="password" [nzSpan]="7">
+      <span class="font-size-18">Mật khẩu</span>
+    </nz-form-label>
+    <nz-form-control [nzErrorTip]="passwordTpl">
+      <input id="password" formControlName="password" type="text" nz-input [nzSize]="'large'" />
+      <ng-template #passwordTpl let-control>
+        <ng-container *ngIf="f.password.hasError('required')">
+          Mật khẩu không được để trống
+        </ng-container>
+        <ng-container *ngIf="f.password.hasError('pattern')">
+          <span class="error-text">Mật khẩu không được chứa kí tự đặc biệt</span>
+        </ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <!-- Role -->
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="roleId" [nzSpan]="7">
+      <span class="font-size-18">Vai trò</span>
+    </nz-form-label>
+    <nz-form-control>
+      <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId" [nzSize]="'large'"
+        style="display: flex; align-items: center; font-size: 18px;" >
+        <nz-option *ngFor="let role of roles" [(ngModel)]="role.id" [nzLabel]="role.roleName" [nzValue]="role.id" nzCustomContent>
+          <span style="font-size: 18px;">{{ role.roleName }}</span>
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <!-- Button -->
+  <nz-form-item>
+    <nz-form-control>
+      <button class="font-size-18" type="submit" nz-button nzType="primary"
+        style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+        Tạo tài khoản
+      </button>
+      <button class="font-size-18" nz-button [routerLink]="'/account/profile'"
+        style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+        Hủy
+      </button>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+
+<!-- <form class="example-form" [formGroup]="accountForm" (ngSubmit)="insertAccount(accountForm.value)">
+
+  Username
   <mat-form-field class="example-full-width">
 
     <mat-label>Username</mat-label>
@@ -18,7 +135,7 @@
     </mat-error>
   </mat-form-field>
   <br>
-  <!-- Email -->
+  Email
   <mat-form-field class="example-full-width">
 
     <mat-label>Email</mat-label>
@@ -32,7 +149,7 @@
     </mat-error>
   </mat-form-field>
   <br>
-  <!-- Name -->
+  Name
   <mat-form-field class="example-full-width">
 
     <mat-label>Name</mat-label>
@@ -46,7 +163,7 @@
     </mat-error>
   </mat-form-field>
   <br>
-<!-- Internal Code -->
+Internal Code
 <mat-form-field class="example-full-width">
 
   <mat-label>Internal code</mat-label>
@@ -61,7 +178,7 @@
 </mat-form-field>
 <br>
 
-  <!-- Password -->
+  Password
   <mat-form-field class="example-full-width">
 
     <mat-label>Password</mat-label>
@@ -89,4 +206,4 @@
   <button type="submit" mat-raised-button color="primary">Create</button>
 
 
-</form>
+</form> -->

@@ -1,5 +1,5 @@
 export const UrlServer = "http://14.161.47.36:9000";
-//   export const UrlServer = "http://192.168.43.45:9000";
+// export const UrlServer = "http://192.168.43.45:9000";
 // export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
 // export const UrlServer = "http://localhost:9000";
 // export const UrlServer = "http://14.161.47.36:9000";
@@ -12,15 +12,18 @@ export const UrlGetAllWardInDistrict = Proxy + "https://thongtindoanhnghiep.co/a
 
 export const UrlServerAPISocialAuthentication = UrlServer + '/api/v1.0/Accounts/SocialAuthentication';
 export const UrlServerAPIUsernameAuthentication = UrlServer + '/api/v1.0/Accounts/UsernameAuthentication';
-export const UrlServerAPIInsertAccount = UrlServer + '/api/v1.0/Accounts/StoringNewAccount';
+export const UrlServerAPIInsertAccount = UrlServer + '/api/v1.0/Accounts/Admin/StoringNewAccount';
 export const UrlServerLinkToSocialAccount = UrlServer + '/api/v1.0/Accounts/LinkingToSocialAccount'
 export const UrlServerAPIChangePassword = UrlServer + '/api/v1.0/Accounts/ResetingPasswordAccountUsername'
 export const UrlServerAPIUpdateProfile = UrlServer + '/api/v1.0/Accounts/UpdatingProfile'
 export const UrlServerAPIViewAccounts = UrlServer + '/api/v1.0/Accounts/Searching'
-export const UrlServerGetAccountDetail = UrlServer +'/api/v1.0/Accounts/Admin​/GettingAccountDetails';
-
+export const UrlServerGetAccountDetail = UrlServer + '/api/v1.0/Accounts/Admin​/GettingAccountDetails';
+export const UrlServerSendingCodeForgotPassword = UrlServer + '/api/v1.0/Accounts/SendingCodeForgotPassword';
 export const UrlServerUpdateAccount = UrlServer + '/api/v1.0/Accounts/Admin/UpdatingAccount'
 export const UrlServerAPIGetProfile = UrlServer + '/api/v1.0/Accounts/Profile'
+export const UrlServerAPIVerifyingCodeForgotPassword = UrlServer + '/api/v1.0/Accounts/VerifyingCodeForgotPassword';
+export const UrlServerAPIChangingNewPasswordForgot = UrlServer + '/api/v1.0/Accounts/ChangingNewPasswordForgot';
+
 
 
 export const UrlServerAPISearchMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits/Searching';

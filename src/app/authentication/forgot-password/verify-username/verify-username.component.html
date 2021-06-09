@@ -1,0 +1,23 @@
+<form nz-form [formGroup]="forgotPasswordForm" nzLayout="vertical" class="login-form"
+    (ngSubmit)="sendingCodeForgotPassword(forgotPasswordForm.value)">
+    <nz-form-item class="m-b-20">
+        <nz-form-label nzRequired nzFor="username" style="font-weight: 500;">
+            Tên đăng nhập
+        </nz-form-label>
+        <nz-form-control nzErrorTip="Please input your username!">
+            <nz-input-group class="p-10 rounded" nzPrefixIcon="user">
+                <input type="text" nz-input formControlName="username" placeholder="Nhập Tên đăng nhập" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <div class="d-flex align-items-center justify-content-between">
+                <button class="button-link btn border-radius font-size-15 p-v-10 col-sm-3 col-md-3 col-lg-3"
+                    style="background-color: #3AC3DC; color: white; font-weight: 500;" type="submit">
+                    Xác nhận
+                </button>
+            </div>
+        </nz-form-control>
+    </nz-form-item>
+</form>

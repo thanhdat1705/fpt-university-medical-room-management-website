@@ -10,6 +10,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { EmailValidator, FormBuilder, FormGroup } from '@angular/forms';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { ValueCompare } from 'src/app/shared/models/search-value';
+import { FilterTable } from 'src/app/shared/models/filterTable';
 
 interface SearchAccountAttribute {
   value: string;
@@ -28,14 +29,35 @@ export class SearchAccountComponent implements OnInit {
     { value: '', viewValue: '-Trống-' },
     { value: 'internalCode', viewValue: 'Mã số' },
     { value: 'displayName', viewValue: 'Tên' },
-    { value: 'phoneNumber', viewValue: 'Số điện thoại' },
     // { value: 'roleId', viewValue: 'Role' }
 
   ]
 
+  filterRole: FilterTable[] = [
+    {
+      text: "Quản lí",
+      value: "1",
+    },
+    {
+      text: "Nhân viên y tế",
+      value: "2",
+    },
+    {
+      text: "Bệnh nhân",
+      value: "3",
+    },
+  ];
 
-
-
+  filterActiveStatus: FilterTable[] = [
+    {
+      text: "Hoạt động",
+      value: "1"
+    },
+    {
+      text: "Dừng hoạt động",
+      value: "0"
+    },
+  ];
 
   selectedValue: string;
   accountList: Account[];
@@ -62,7 +84,7 @@ export class SearchAccountComponent implements OnInit {
   SearchEmail = { 'Email': this.searchEmail };
 
   searchRecordList: Record<string, ValueCompare>[5];
-  
+
   searchAccountRequest: SearchRequest = {
     limit: this.pageSize,
     page: this.pageIndex,
@@ -79,15 +101,6 @@ export class SearchAccountComponent implements OnInit {
     {
       title: 'Tên',
     },
-    // {
-    //   title: 'Email',
-    // },
-    // {
-    //   title: 'Số điện thoại',
-    // },
-    // {
-    //   title: 'Mô tả',
-    // },
     {
       title: 'Vai trò',
     },
@@ -128,14 +141,14 @@ export class SearchAccountComponent implements OnInit {
 
   map = new Map<string, ValueCompare>();
 
-  convertMapToObject(metricArguments: Map<string,ValueCompare>): Record<string,ValueCompare> {
-    let newObject: Record<string,ValueCompare> = {}
+  convertMapToObject(metricArguments: Map<string, ValueCompare>): Record<string, ValueCompare> {
+    let newObject: Record<string, ValueCompare> = {}
     for (let [key, value] of metricArguments) {
       newObject[key] = value;
     }
     return newObject;
   }
-  
+
 
   constructor(
     private summaryService: SummaryService,
@@ -210,15 +223,15 @@ export class SearchAccountComponent implements OnInit {
     // console.log("this.searchRecordList[0]" + this.searchRecordList[0]);
     // this.searchRecordList[1] = this.SearchEmail;
     // console.log("this.searchRecordList[1]" + this.searchRecordList[1]);
-    
+
 
     // for (var search in this.searchRecordList) {
     //   if (true) {
     //     this.searchAccountRequest.searchValue[0] = this.searchRecordList[0];
     //   }
     // }
- 
-    
+
+
     // this.searchAccountRequest.searchValue.
   }
 }

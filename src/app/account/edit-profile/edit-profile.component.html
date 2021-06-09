@@ -1,11 +1,114 @@
-<form class="ko-co" [formGroup]="editProfileForm" *ngIf="editProfileForm" (ngSubmit)="updateAccount()">
+<form nz-form nzLayout="horizontal" [formGroup]="editProfileForm" *ngIf="editProfileForm" (ngSubmit)="updateAccount()">
+    <!-- Avatar -->
+    <nz-form-item *ngIf="url">
+        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+            <span class="font-size-18">Ảnh đại diện</span>
+        </nz-form-label>
+        <nz-form-control>
+            <img class="avatar-img" [src]="url" *ngIf="url">
+            <input formControlName="internalCode" type="file" (change)="onFileSelected($event)" />
+        </nz-form-control>
+    </nz-form-item>
+    <!-- Mã số -->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+            <span class="font-size-18">Mã số</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="internalCodeTpl">
+            <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #internalCodeTpl let-control>
+                <ng-container *ngIf="f.internalCode.hasError('required')">
+                    Mã số không được để trống
+                </ng-container>
+                <ng-container *ngIf="f.internalCode.hasError('duplicated')">
+                    Mã số có độ dài từ ? đến ? kí tự
+                </ng-container>
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <!-- Tên -->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="displayName" [nzSpan]="7">
+            <span class="font-size-18">Tên</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="displayNameTpl">
+            <input id="displayName" formControlName="displayName" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #displayNameTpl let-control>
+                <ng-container *ngIf="f.displayName.hasError('required')">
+                    Tên không được để trống
+                </ng-container>
+                <ng-container *ngIf="f.displayName.hasError('duplicated')">
+                    <span class="error-text">Mã số có độ dài từ ? đến ? kí tự</span>
+                </ng-container>
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <!-- Email -->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="email" [nzSpan]="7">
+            <span class="font-size-18">Email</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="emailTpl">
+            <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #emailTpl let-control>
+                <ng-container *ngIf="f.email.hasError('required')">
+                    <span class="error-text">Email không được để trống</span>
+                </ng-container>
+                <ng-container *ngIf="f.email.hasError('duplicated')">
+                    <span class="error-text">Tên không được để trống</span>
+                </ng-container>
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <!-- Sdt -->
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="phoneNumber" [nzSpan]="7">
+            <span class="font-size-18">Số điện thoại</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="phoneNumberTpl">
+            <input formControlName="phoneNumber" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #phoneNumberTpl let-control>
+                <ng-container *ngIf="f.hasError('patern')">
+                    Số điện thoại phải là số
+                </ng-container>
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label nzFor="description" [nzSpan]="7">
+            <span class="font-size-18 m-l-11">Mô tả</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="">
+            <nz-textarea-count [nzMaxCharacterCount]="500">
+                <textarea id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
+                    formControlName="description" style="font-size: 18px;"></textarea>
+            </nz-textarea-count>
+        </nz-form-control>
+    </nz-form-item>
+    <br><br>
+    <nz-form-item>
+        <nz-form-control>
+            <button class="font-size-18" type="submit" nz-button nzType="primary"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                Sửa thông tin
+            </button>
+            <button class="font-size-18" nz-button [routerLink]="'/account/profile'"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                Hủy
+            </button>
+        </nz-form-control>
+    </nz-form-item>
+</form>
+
+
+<!-- <form class="ko-co" [formGroup]="editProfileForm" *ngIf="editProfileForm" (ngSubmit)="updateAccount()">
 
     <div class="profile">
 
         <p class="title">Ảnh đại diện: </p>
 
         <div class="img-container">
-            <!-- <img src="{{url}}" class="avatar"> -->
+
         </div>
 
 
@@ -63,4 +166,4 @@
             <button type="submit" mat-raised-button color="primary">Hoàn thành</button>
         </div>
     </div>
-</form>
+</form> -->

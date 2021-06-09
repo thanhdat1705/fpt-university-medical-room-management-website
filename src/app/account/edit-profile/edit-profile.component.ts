@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Valida
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { Account } from 'src/app/shared/models/account';
+import { AccountDetailResponse } from 'src/app/shared/models/account-details-response';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { HeaderService } from 'src/app/shared/services/header.service';
@@ -27,11 +28,11 @@ export class EditProfileComponent implements OnInit {
   passwordMaxLength = 50;
   pattern = '[a-zA-Z ]*';
   phoneNumberPattern = '[0-9]*'
-  profile: Account;
-  router: Router;
+  profile: AccountDetailResponse;
   file: File;
   fileName: string;
-
+  url: any;
+  reader = new FileReader();
   get f() { return this.editProfileForm.controls; }
 
 
@@ -39,7 +40,8 @@ export class EditProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private summaryService: SummaryService,
     private generalService: GeneralHelperService,
-    private headerService: HeaderService
+    private headerService: HeaderService,
+    private router: Router
   ) {
     // this.profile = JSON.parse(activatedRoute.snapshot.params["profile"]);
   }
@@ -76,7 +78,7 @@ export class EditProfileComponent implements OnInit {
         console.log('response avatar: ' + response.data.photoUrl);
         this.headerService.setAvatar(response.data.photoUrl);
         this.generalService.closeWaitingPopupNz();
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/account/profile']);
       },
       (error) => {
         console.log(error);
@@ -97,7 +99,7 @@ export class EditProfileComponent implements OnInit {
 
         //  console.log('response name: ' + response.data.displayName) ;
         //   console.log("data" + this.profile);
-        console.log(this.profile.email);
+        console.log(this.profile);
         this.imageUrl = this.profile.photoUrl;
         this.editProfileForm = this.formBuilder.group({
           email: [
@@ -115,6 +117,14 @@ export class EditProfileComponent implements OnInit {
             Validators.maxLength(this.passwordMaxLength),
               // Validators.pattern(this.pattern)
             ]
+          ], internalCode: [
+            this.profile.role.accounts[0].internalCode,
+            [
+              Validators.required,
+              Validators.minLength(this.passwordMinLength),
+              Validators.maxLength(this.passwordMaxLength),
+              // Validators.pattern(this.pattern)
+            ]
           ], phoneNumber: [
             this.profile.phoneNumber,
             [
@@ -127,7 +137,7 @@ export class EditProfileComponent implements OnInit {
           ],
           avatarFile: [],
         });
-
+        this.url = this.profile.photoUrl;
       },
       (error) => {
         console.log(error);
@@ -159,12 +169,13 @@ export class EditProfileComponent implements OnInit {
   // }
 
   onFileSelected(event) {
-
     this.file = event.target.files[0];
     console.log('Got file' + this.file);
-
     if (this.file) {
-
+      this.reader.readAsDataURL(this.file);
+      this.reader.onload = (_event) => {
+        this.url = this.reader.result;
+      }
       this.fileName = this.file.name;
     }
   }

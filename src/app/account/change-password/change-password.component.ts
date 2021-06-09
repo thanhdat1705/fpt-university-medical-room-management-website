@@ -12,10 +12,10 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 })
 export class ChangePasswordComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder, private generalService: GeneralHelperService, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
+  constructor(private formBuilder: FormBuilder, public generalService: GeneralHelperService, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
 
   get f() { return this.changePasswordForm.controls; }
-
+  
   passwordMinLength = 3;
   passwordMaxLength = 50;
   pattern = '[a-zA-Z0-9 ]*';

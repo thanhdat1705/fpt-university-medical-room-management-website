@@ -23,7 +23,7 @@ export class ViewAccountDetailComponent implements OnInit {
     { id: 3, roleName: "Bệnh nhân" },
 
   ];
-
+  medicineNameMinL = 3;
   updateAccountrequest: UpdateAccountRequest;
 
   constructor(
@@ -41,7 +41,7 @@ export class ViewAccountDetailComponent implements OnInit {
       ]],
       displayName: ['', [
         Validators.required,
-
+        Validators.minLength(this.medicineNameMinL)
       ]],
       email: ['', [
         Validators.required,
@@ -65,10 +65,12 @@ export class ViewAccountDetailComponent implements OnInit {
 
   }
 
-  f() {
+  test() {
+    console.log(this.f.displayName.hasError('minLength'))
+  }
+  get f() {
     return this.accountDetailForm.controls;
   }
-
   editAccount(data: UpdateAccountRequest) {
     // this.updateAccountrequest = data;
     console.log(data);
@@ -92,6 +94,15 @@ export class ViewAccountDetailComponent implements OnInit {
 
   }
 
+  checkActiveId(id: boolean) {
+    if (id) {
+      return "Hoạt động";
+    }
+    else {
+      return "Dừng hoạt động";
+    }
+  }
+
   getAccountForm() {
     this.summaryService.getAccountDetail(this.id).subscribe(
       (response) => {
@@ -103,11 +114,9 @@ export class ViewAccountDetailComponent implements OnInit {
           email: this.accountDetail.email,
           phoneNumber: this.accountDetail.phoneNumber,
           roleId: this.accountDetail.role.id,
-          active: this.accountDetail.role.accounts[0].active,
+          active: this.checkActiveId(this.accountDetail.role.accounts[0].active),
           description: this.accountDetail.description,
-
         });
-
       },
       (error) => {
         console.log(error);

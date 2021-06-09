@@ -19,9 +19,7 @@
                 <ng-container *ngIf="f.internalCode.hasError('required')">
                     Mã số không được để trống
                 </ng-container>
-                <ng-container *ngIf="f.internalCode.control.hasError('duplicated')">
-                    Mã số có độ dài từ ? đến ? kí tự
-                </ng-container>
+
             </ng-template>
         </nz-form-control>
     </nz-form-item>
@@ -31,13 +29,13 @@
             <span class="font-size-18">Tên</span>
         </nz-form-label>
         <nz-form-control [nzErrorTip]="displayNameTpl">
-            <input id="displayName" formControlName="displayName" type="text" nz-input [nzSize]="'large'" />
+            <input id="displayName" formControlName="displayName" nz-input [nzSize]="'large'" (input)="test()" />
             <ng-template #displayNameTpl let-control>
                 <ng-container *ngIf="f.displayName.hasError('required')">
-                   Tên không được để trống
+                   <span>Tên không được để trống</span>
                 </ng-container>
-                <ng-container *ngIf="f.displayName.hasError('duplicated')">
-                    <span class="error-text">Mã số có độ dài từ ? đến ? kí tự</span>
+                <ng-container *ngIf="f.displayName.hasError('minLength')">
+                    <span class="error-text">minnnnnnnn</span>
                 </ng-container>
             </ng-template>
         </nz-form-control>
@@ -54,9 +52,7 @@
                     <span class="error-text">Tên không được để trống</span>
 
                 </ng-container>
-                <ng-container *ngIf="f.email.control.hasError('duplicated')">
-                    <span class="error-text">Tên không được để trống</span>
-                </ng-container>
+
             </ng-template>
         </nz-form-control>
     </nz-form-item>
@@ -71,9 +67,6 @@
                 <ng-container *ngIf="f.email.hasError('required')">
                     Mã số không được để trống
                 </ng-container>
-                <ng-container *ngIf="f.email.control.hasError('duplicated')">
-                    Mã số có độ dài từ ? đến ? kí tự
-                </ng-container>
             </ng-template>
         </nz-form-control>
     </nz-form-item>
@@ -83,7 +76,7 @@
             <span class="font-size-18">Vai trò</span>
         </nz-form-label>
         <nz-form-control>
-            <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId" [nzDropdownRender]="renderUnitL"
+            <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId"
                 [nzSize]="'large'" nzPlaceHolder="Nhập đơn vị"
                 style="display: flex; align-items: center; font-size: 18px;">
                 <nz-option *ngFor="let item of roles" [nzLabel]="item.roleName" [nzValue]="item.id" nzCustomContent>
@@ -124,6 +117,10 @@
             <button class="font-size-18" type="submit" nz-button nzType="primary"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Sửa thông tin
+            </button>
+            <button class="font-size-18" nz-button (click)="getAccountForm()"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                Hủy
             </button>
         </nz-form-control>
     </nz-form-item>
