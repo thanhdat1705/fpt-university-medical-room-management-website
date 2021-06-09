@@ -5,9 +5,9 @@ import { SearchMedicineUnitRequest } from '../../requests/medicine-unit/search-r
 import { StoreNewMedicineUnitRequest } from '../../requests/medicine-unit/store-new-request';
 import { StoreNewMedicineSubgroupRequest } from '../../requests/medicine-subgroup/store-new-request';
 import { StoreNewMedicineRequest } from '../../requests/medicine/store-new';
-import { SearchMedicineRequest } from '../../requests/medicine/search';
 import { SearchMedicineSubgroupRequest } from '../../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../../requests/medicine-classification/search-request';
+import { SearchRequest } from '../../requests/search-request';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class MedicineService {
   storeNewMedicine(request: StoreNewMedicineRequest) {
     return this.service.storeNewMedicine(request);
   }
-  searchMedicine(request: SearchMedicineRequest) {
+  searchMedicine(request: SearchRequest) {
     return this.service.searchMedicine(request);
   }
   deleteMedicine(id: string) {
@@ -37,7 +37,7 @@ export class MedicineService {
   }
   /*------------------------------------------------------------------------------------------*/
   /*--------------------------------------- Unit ---------------------------------------------*/
-  searchMedicineUnit(searchRequest: SearchMedicineUnitRequest) {
+  searchMedicineUnit(searchRequest: SearchRequest) {
     return this.service.searchMedicineUnit(searchRequest);
   }
   storeNewMedicineUnit(storeRequest: StoreNewMedicineUnitRequest) {
@@ -58,7 +58,7 @@ export class MedicineService {
   getAllMedicineSubgroup() {
     return this.service.getAllMedicineSubgroup();
   }
-  searchMedicineSubgroup(searchRequest: SearchMedicineSubgroupRequest) {
+  searchMedicineSubgroup(searchRequest: SearchRequest) {
     return this.service.searchMedicineSubgroup(searchRequest);
   }
   /*------------------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ export class MedicineService {
   getAllMedicineClassification() {
     return this.service.getAllMedicineClassification();
   }
-  searchClass(searchRequest: SearchMedicineClassificationRequest) {
+  searchClass(searchRequest: SearchRequest) {
     return this.service.searchClassification(searchRequest);
   }
   /*------------------------------------------------------------------------------------------*/

@@ -105,7 +105,7 @@ export class AddMedicineComponent implements OnInit {
     this.getDetailMedicine();
 
   }
-
+ 
   edit() {
     this.medicineForm.controls['name'].enable();
     this.medicineForm.controls['description'].enable();

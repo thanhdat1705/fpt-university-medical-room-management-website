@@ -1,14 +1,27 @@
-<div class="example-input">
+<div class="search-filter">
     <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
-        <input placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchValue"
+        <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchValue" 
             (input)="inputChange(inputValue.value)" #inputValue />
     </nz-input-group>
     <ng-template #searchIconButton>
-        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton button-match-logo"
+        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton"
             (click)="searchMedicine()">
             <i nz-icon nzType="search" nzTheme="outline"></i>
         </button>
     </ng-template>
+    <br><br>
+    <div class="select-wrap">
+        <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
+        <nz-select class="select-w" nzPlaceHolder="Đơn vị" nzAllowClear [(ngModel)]="unitValue" (ngModelChange)="onSearchUnit($event)">
+            <nz-option *ngFor="let option of filterUnit" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+        </nz-select>
+        <nz-select class="select-w" nzPlaceHolder="Loại" nzAllowClear [(ngModel)]="classValue" (ngModelChange)="onSearchClass($event)">
+            <nz-option *ngFor="let option of filterClass" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+        </nz-select>
+        <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="subgroupValue" (ngModelChange)="onSearchSubgroup($event)">
+            <nz-option *ngFor="let option of filterSubgroup" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+        </nz-select>
+    </div>
 </div>
 
 <br>
@@ -20,14 +33,11 @@
         <thead>
             <tr>
                 <th nzWidth="60px">No.</th>
-                <th nzWidth="190px" nzColumnKey="name" [nzSortFn]="true">Tên thuốc</th>
-                <th nzWidth="140px" nzColumnKey="unit" [nzSortFn]="true" [nzFilters]="filterUnit" [nzFilterFn]="true">
-                    Đơn vị</th>
-                <th nzWidth="140px" nzColumnKey="medicineClassification" [nzSortFn]="true" [nzFilters]="filterClass"
-                    [nzFilterFn]="true">Loại thuốc</th>
-                <th nzWidth="190px" nzColumnKey="medicineSubgroup" [nzSortFn]="true" [nzFilters]="filterSubgroup"
-                    [nzFilterFn]="true">Nhóm</th>
-                <th nzWidth="140px" nzColumnKey="createdDate" [nzSortFn]="true">Ngày thêm</th>
+                <th nzWidth="190px" nzColumnKey="Name" [nzSortFn]="true">Tên thuốc</th>
+                <th nzWidth="140px" nzColumnKey="MedicineUnit" [nzSortFn]="true">Đơn vị</th>
+                <th nzWidth="140px" nzColumnKey="MedicineClassification" [nzSortFn]="true">Loại thuốc</th>
+                <th nzWidth="190px" nzColumnKey="MedicineSubgroup" [nzSortFn]="true">Nhóm</th>
+                <th nzWidth="140px" nzColumnKey="CreatedDate" [nzSortFn]="true">Ngày thêm</th>
                 <th nzWidth="70px"></th>
                 <th nzWidth="75px"></th>
             </tr>
@@ -36,7 +46,7 @@
             <tr *ngFor="let data of medicineList; index as i">
                 <td>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
                 <td>{{ data.name }}</td>
-                <td>{{ data.unit.name }}</td>
+                <td>{{ data.medicineUnit.name }}</td>
                 <td>{{ data.medicineClassification.name }}</td>
                 <td>{{ data.medicineSubgroup.name }}</td>
                 <td>{{ getCreateTime(data.createdDate) }}</td>
@@ -50,7 +60,7 @@
         </tbody>
     </nz-table>
     <div style="margin: 10px; width: 200px;">
-        <button nz-button nzType="primary" nzBlock nzSize="large" class="button-match-logo"
+        <button nz-button nzType="primary" nzBlock nzSize="large"
             [routerLink]="'/medicine-management/medicine-list/add-medicine'">
             <span>Thêm thuốc</span>
         </button>
