@@ -1,65 +1,107 @@
-<form nz-form [formGroup]="accountDetailForm" *ngIf="accountDetailForm">
-    <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
-        <span class="font-size-18">Ảnh đại diện</span>
-    </nz-form-label>
-    <div class="avatarConntainer">
-        <img src="{{accountDetail.photoUrl}}" class="avatarImg" />
-    </div>
-
+<form nz-form nzLayout="horizontal" [formGroup]="accountDetailForm" *ngIf="accountDetailForm"
+    (ngSubmit)="editAccount(accountDetailForm.value)">
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+            <span class="font-size-18">Ảnh đại diện</span>
+        </nz-form-label>
+        <div class="avatarConntainer" *ngIf="accountDetail.photoUrl != null">
+            <img src="{{accountDetail.photoUrl}}" class="avatarImg" />
+        </div>
+    </nz-form-item>
+    <!-- Mã số -->
     <nz-form-item>
         <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
             <span class="font-size-18">Mã số</span>
         </nz-form-label>
-        <nz-form-control [nzErrorTip]="">
-            <input formControlName="internalCode" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        <nz-form-control [nzErrorTip]="internalCodeTpl">
+            <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #internalCodeTpl let-control>
+                <ng-container *ngIf="f.internalCode.hasError('required')">
+                    Mã số không được để trống
+                </ng-container>
+                <ng-container *ngIf="f.internalCode.control.hasError('duplicated')">
+                    Mã số có độ dài từ ? đến ? kí tự
+                </ng-container>
+            </ng-template>
         </nz-form-control>
     </nz-form-item>
-    <!---------------------- Medicine Subgroup ----------------------------->
+    <!-- Tên -->
     <nz-form-item>
         <nz-form-label nzRequired nzFor="displayName" [nzSpan]="7">
             <span class="font-size-18">Tên</span>
         </nz-form-label>
-        <nz-form-control [nzErrorTip]="">
-            <input formControlName="displayName" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        <nz-form-control [nzErrorTip]="displayNameTpl">
+            <input id="displayName" formControlName="displayName" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #displayNameTpl let-control>
+                <ng-container *ngIf="f.displayName.hasError('required')">
+                   Tên không được để trống
+                </ng-container>
+                <ng-container *ngIf="f.displayName.hasError('duplicated')">
+                    <span class="error-text">Mã số có độ dài từ ? đến ? kí tự</span>
+                </ng-container>
+            </ng-template>
         </nz-form-control>
     </nz-form-item>
-    <!---------------------- Medicine Unit ----------------------------->
+    <!-- Email -->
     <nz-form-item>
         <nz-form-label nzRequired nzFor="email" [nzSpan]="7">
             <span class="font-size-18">Email</span>
         </nz-form-label>
-        <nz-form-control [nzErrorTip]="">
-            <input formControlName="email" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        <nz-form-control [nzErrorTip]="emailTpl">
+            <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #emailTpl let-control>
+                <ng-container *ngIf="f.email.hasError('required')">
+                    <span class="error-text">Tên không được để trống</span>
+
+                </ng-container>
+                <ng-container *ngIf="f.email.control.hasError('duplicated')">
+                    <span class="error-text">Tên không được để trống</span>
+                </ng-container>
+            </ng-template>
         </nz-form-control>
     </nz-form-item>
-    <!---------------------- Medicine Unit ----------------------------->
+    <!-- Sdt -->
     <nz-form-item>
         <nz-form-label nzRequired nzFor="phoneNumber" [nzSpan]="7">
             <span class="font-size-18">Số điện thoại</span>
         </nz-form-label>
-        <nz-form-control [nzErrorTip]="">
-            <input formControlName="phoneNumber" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        <nz-form-control [nzErrorTip]="phoneNumberTpl">
+            <input formControlName="phoneNumber" type="text" nz-input [nzSize]="'large'" />
+            <ng-template #phoneNumberTpl let-control>
+                <ng-container *ngIf="f.email.hasError('required')">
+                    Mã số không được để trống
+                </ng-container>
+                <ng-container *ngIf="f.email.control.hasError('duplicated')">
+                    Mã số có độ dài từ ? đến ? kí tự
+                </ng-container>
+            </ng-template>
         </nz-form-control>
     </nz-form-item>
-    <!---------------------- Medicine Unit ----------------------------->
+    <!-- Role -->
     <nz-form-item>
         <nz-form-label nzRequired nzFor="roleId" [nzSpan]="7">
             <span class="font-size-18">Vai trò</span>
         </nz-form-label>
-        <nz-form-control [nzErrorTip]="">
-            <input formControlName="roleId" type="text" nz-input #inputUnit [nzSize]="'large'" />
+        <nz-form-control>
+            <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId" [nzDropdownRender]="renderUnitL"
+                [nzSize]="'large'" nzPlaceHolder="Nhập đơn vị"
+                style="display: flex; align-items: center; font-size: 18px;">
+                <nz-option *ngFor="let item of roles" [nzLabel]="item.roleName" [nzValue]="item.id" nzCustomContent>
+                    <span style="font-size: 18px;">{{ item.roleName }}</span>
+                </nz-option>
+            </nz-select>
         </nz-form-control>
     </nz-form-item>
-    <!---------------------- Medicine Unit ----------------------------->
+    <!-- Active -->
     <nz-form-item>
         <nz-form-label nzRequired nzFor="active" [nzSpan]="7">
             <span class="font-size-18">Trạng thái</span>
         </nz-form-label>
         <nz-form-control [nzErrorTip]="">
-            <input formControlName="active" type="text" nz-input #inputUnit [nzSize]="'large'" />
+            <input formControlName="active" type="text" nz-input [nzSize]="'large'" />
         </nz-form-control>
     </nz-form-item>
-    <!---------------------- Description ----------------------------->
+    <!-- Description -->
     <nz-form-item>
         <nz-form-label nzFor="description" [nzSpan]="7">
             <span class="font-size-18 m-l-11">Mô tả</span>
@@ -79,7 +121,7 @@
     <br><br>
     <nz-form-item>
         <nz-form-control>
-            <button class="font-size-18" nz-button nzType="primary" (click)='editAccounnt()'
+            <button class="font-size-18" type="submit" nz-button nzType="primary"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Sửa thông tin
             </button>

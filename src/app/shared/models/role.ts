@@ -1,5 +1,5 @@
 export interface Role {
     id: number;
     roleName: string;
-    accounts: Account[];
+    accounts?: Account[];
 }

@@ -17,7 +17,7 @@ export const UrlServerLinkToSocialAccount = UrlServer + '/api/v1.0/Accounts/Link
 export const UrlServerAPIChangePassword = UrlServer + '/api/v1.0/Accounts/ResetingPasswordAccountUsername'
 export const UrlServerAPIUpdateProfile = UrlServer + '/api/v1.0/Accounts/UpdatingProfile'
 export const UrlServerAPIViewAccounts = UrlServer + '/api/v1.0/Accounts/Searching'
-export const UrlServerGetAccountDetail = UrlServer +'/api/v1.0/Accounts/Admin/GettingAccountDetails';
+export const UrlServerGetAccountDetail = UrlServer +'/api/v1.0/Accounts/Admin​/GettingAccountDetails';
 
 export const UrlServerUpdateAccount = UrlServer + '/api/v1.0/Accounts/Admin/UpdatingAccount'
 export const UrlServerAPIGetProfile = UrlServer + '/api/v1.0/Accounts/Profile'

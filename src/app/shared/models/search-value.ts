@@ -1,9 +1,4 @@
-export class ValueCompare {
+export interface ValueCompare {
     value: string;
     compare: string;
-}
-
-export class SearchValue {
-    key: string;
-    value: ValueCompare;
 }

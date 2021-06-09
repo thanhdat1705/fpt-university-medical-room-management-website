@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Account } from 'src/app/shared/models/account';
 import { SummaryService } from 'src/app/shared/services/summary.service';
-import { SearchAccountRequest, SearchRequest } from 'src/app/shared/requests/search-request';
+import { SearchRequest } from 'src/app/shared/requests/search-request';
 import { HttpParams } from '@angular/common/http';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { MatSelectChange } from '@angular/material/select';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { EmailValidator, FormBuilder, FormGroup } from '@angular/forms';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
+import { ValueCompare } from 'src/app/shared/models/search-value';
 
 interface SearchAccountAttribute {
   value: string;
@@ -32,6 +33,10 @@ export class SearchAccountComponent implements OnInit {
 
   ]
 
+
+
+
+
   selectedValue: string;
   accountList: Account[];
   loading = true;
@@ -41,19 +46,31 @@ export class SearchAccountComponent implements OnInit {
 
   searchForm: FormGroup;
 
-  searchAccountRequest: SearchAccountRequest = {
-    internalCode: '',
-    displayName: '',
-    email: '',
-    phoneNumber: '',
-    roleID: '',
+  email = 'SE135751';
+  name = 'Dũng';
+
+  searchObject: ValueCompare = {
+    compare: "contains",
+    value: this.name
+  }
+  searchEmail: ValueCompare = {
+    compare: "contains",
+    value: this.email
+  }
+
+  SearchName = { 'DisplayName': this.searchObject };
+  SearchEmail = { 'Email': this.searchEmail };
+
+  searchRecordList: Record<string, ValueCompare>[5];
+  
+  searchAccountRequest: SearchRequest = {
     limit: this.pageSize,
     page: this.pageIndex,
+    searchValue: null,
     sortField: '',
+    selectFields: 'Id, InternalCode, DisplayName, Role, Active',
     sortOrder: 0,
   };
-
-
 
   listOfColumn = [
     {
@@ -109,32 +126,49 @@ export class SearchAccountComponent implements OnInit {
     console.log('total: ' + this.total);
   }
 
-  constructor(private summaryService: SummaryService, private generalService: GeneralHelperService, private formBuilder: FormBuilder) { }
+  map = new Map<string, ValueCompare>();
+
+  convertMapToObject(metricArguments: Map<string,ValueCompare>): Record<string,ValueCompare> {
+    let newObject: Record<string,ValueCompare> = {}
+    for (let [key, value] of metricArguments) {
+      newObject[key] = value;
+    }
+    return newObject;
+  }
+  
+
+  constructor(
+    private summaryService: SummaryService,
+    private generalService: GeneralHelperService,
+    private formBuilder: FormBuilder) {
+
+
+  }
 
   Search() {
     this.loading = true;
     console.log(this.searchForm.get('searchAttribute').value);
     console.log(this.searchForm.get('searchContent').value);
     if (this.searchForm.get('searchAttribute').value == 'displayName') {
-      this.searchAccountRequest.phoneNumber = '';
-      this.searchAccountRequest.internalCode = '';
-      this.searchAccountRequest.displayName = this.searchForm.get('searchContent').value;
+      this.searchAccountRequest.searchValue = null;
+      // this.searchAccountRequest.searchValue. = '';
+      // this.searchAccountRequest.displayName = this.searchForm.get('searchContent').value;
     } else if (this.searchForm.get('searchAttribute').value == 'phoneNumber') {
-      this.searchAccountRequest.displayName = '';
-      this.searchAccountRequest.internalCode = '';
-      this.searchAccountRequest.phoneNumber = this.searchForm.get('searchContent').value;
+      // this.searchAccountRequest.displayName = '';
+      // this.searchAccountRequest.internalCode = '';
+      // this.searchAccountRequest.phoneNumber = this.searchForm.get('searchContent').value;
     } else if (this.searchForm.get('searchAttribute').value == 'internalCode') {
-      this.searchAccountRequest.displayName = '';
-      this.searchAccountRequest.phoneNumber = '';
-      this.searchAccountRequest.internalCode = this.searchForm.get('searchContent').value;
-    }else if (this.searchForm.get('searchAttribute').value == 'none') {
-      this.searchAccountRequest.displayName = '';
-      this.searchAccountRequest.phoneNumber = '';
-      this.searchAccountRequest.internalCode = '';
+      // this.searchAccountRequest.displayName = '';
+      // this.searchAccountRequest.phoneNumber = '';
+      // this.searchAccountRequest.internalCode = this.searchForm.get('searchContent').value;
+    } else if (this.searchForm.get('searchAttribute').value == 'none') {
+      // this.searchAccountRequest.displayName = '';
+      // this.searchAccountRequest.phoneNumber = '';
+      // this.searchAccountRequest.internalCode = '';
     }
     this.searchAccount();
     console.log("selected" + this.selectedValue);
-    
+
   }
 
   searchAccount() {
@@ -144,7 +178,7 @@ export class SearchAccountComponent implements OnInit {
     this.summaryService.searchAccount(this.searchAccountRequest).subscribe(
       (response) => {
         console.log(response.data);
-        
+
         this.getData(response.data)
         this.loading = false;
       },
@@ -157,11 +191,34 @@ export class SearchAccountComponent implements OnInit {
   ngOnInit(): void {
     // localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiY2FjNzgwYy04YmY0LTQ4NjMtODRkYS00M2UwZWQzNWY0M2EiLCJEaXNwbGF5TmFtZSI6ImRvbyIsIkVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiMSIsIm5iZiI6MTYyMjI5MjA2MywiZXhwIjoxNjIyODk2ODYzLCJpYXQiOjE2MjIyOTIwNjN9.t7xEtRaYwZuIYzqK2rW6hfwqrtiVEqiSPFGXfOIJ_Hc");
     // this.summaryService.setTokenHeader();
+    console.log(this.searchAccountRequest);
+    // this.map.set("DisplayName", this.searchObject);
+    // this.map.set("InternalCode", this.searchEmail);
+
+    // console.log(this.convertMapToObject(this.map));
+    // this.searchAccountRequest.searchValue = this.convertMapToObject(this.map);
+    // console.log("request search: " + JSON.stringify( this.searchAccountRequest));
     this.loading = true;
     this.searchAccount();
     this.searchForm = this.formBuilder.group({
-      searchContent:  [],
+      searchContent: [],
       searchAttribute: []
     });
+
+
+    // this.searchRecordList[0] = { 'DisplayName': this.searchObject };
+    // console.log("this.searchRecordList[0]" + this.searchRecordList[0]);
+    // this.searchRecordList[1] = this.SearchEmail;
+    // console.log("this.searchRecordList[1]" + this.searchRecordList[1]);
+    
+
+    // for (var search in this.searchRecordList) {
+    //   if (true) {
+    //     this.searchAccountRequest.searchValue[0] = this.searchRecordList[0];
+    //   }
+    // }
+ 
+    
+    // this.searchAccountRequest.searchValue.
   }
 }

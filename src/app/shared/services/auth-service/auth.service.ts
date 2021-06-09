@@ -127,7 +127,7 @@ export class AuthService {
             (response) => {
                 console.log(response);
                 this.setAccount(response.data);
-                this.account.accountId = response.data.accountId;
+                this.account.Id = response.data.accountId;
                 console.log(this.account);
                 localStorage.setItem("accountId", response.data.accountId);
                 localStorage.setItem("token", response.data.token);

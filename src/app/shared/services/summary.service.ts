@@ -94,13 +94,10 @@ export class SummaryService {
     );
   }
 
-  public updateAccount(data: FormData): Observable<ResponseServer> {
-    if (this.headers.get("Authorization") == null) {
-      this.router.navigate(['']);
-    }
+  public updateAccount(param: any, data: any): Observable<ResponseServer> {
     console.log(this.headers);
     return this.http.put<ResponseServer>(
-      UrlServerUpdateAccount, data, { headers: this.headers }
+      UrlServerUpdateAccount+"/"+param, data, { headers: this.headers }
     );
   }
 
@@ -111,8 +108,8 @@ export class SummaryService {
   }
 
   public searchAccount(searchParam: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(
-      UrlServerAPIViewAccounts, { headers: this.headers, params: searchParam }
+    return this.http.post<ResponseServer>(
+      UrlServerAPIViewAccounts, searchParam
     );
   }
 

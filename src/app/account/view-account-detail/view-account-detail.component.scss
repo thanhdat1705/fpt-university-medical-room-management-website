@@ -3,9 +3,6 @@
     height: 200px;
 }
 
-.avatarConntainer{
-    margin-left: 20%;
-}
 
 form {
     max-width: 800px;
@@ -18,4 +15,9 @@ form {
     nz-form-item {
       margin-bottom: 20px;
     }
+}
+
+.error-text {
+  font-size: 16px;
+  margin-right: 20px;
 }

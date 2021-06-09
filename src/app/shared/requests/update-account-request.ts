@@ -1,4 +1,4 @@
-export interface EditAccountRequest {
+export interface UpdateAccountRequest {
     internalCode: string,
     displayName: string,
     email: string,

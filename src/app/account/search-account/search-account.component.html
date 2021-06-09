@@ -21,13 +21,13 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of accountList">
-      <td>{{ data.internalCode }}</td>
-      <td>{{ data.displayName }}</td>
+    <tr *ngFor="let account of accountList">
+      <td>{{ account.internalCode }}</td>
+      <td>{{ account.displayName }}</td>
 
-      <td>{{ data.roleId }}</td>
+      <td>{{ account.role.roleName }}</td>
       <td></td>
-      <td><button nz-button nzType="default" nzSize="large" nzShape="round" [routerLink]="['/account/account-detail', data.id]">Chi tiết</button></td>
+      <td><button nz-button nzType="default" nzSize="large" nzShape="round" [routerLink]="['/account/account-detail', account.id]">Chi tiết</button></td>
     </tr>
   </tbody>
 </nz-table>

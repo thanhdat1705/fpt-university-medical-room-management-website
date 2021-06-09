@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Account } from 'src/app/shared/models/account';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
-import { EditAccountRequest } from 'src/app/shared/requests/edit-account-request';
+import { UpdateAccountRequest } from 'src/app/shared/requests/update-account-request';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 
@@ -20,7 +20,7 @@ interface role{
 export class EditAccountComponent implements OnInit {
 
   editAccountForm: FormGroup;
-  accountDetail: EditAccountRequest;
+  accountDetail: UpdateAccountRequest;
   matcher = new MyErrorStateMatcher;
   usernameMinLength = 3;
   passwordMinLength = 3;
@@ -50,17 +50,17 @@ export class EditAccountComponent implements OnInit {
     if (this.editAccountForm.invalid) {
       return;
     }
-    this.generalService.openWaitingPopupNz();
-    this.summaryService.updateAccount(data).subscribe(
-      (response) => {
-        console.log(response);
+    // this.generalService.openWaitingPopupNz();
+    // this.summaryService.updateAccount(data).subscribe(
+    //   (response) => {
+    //     console.log(response);
 
-      }, (error) => {
-        console.log(error);
-        this.generalService.createErrorNotification(error);
-        this.generalService.closeWaitingPopupNz();
-      }
-    );
+    //   }, (error) => {
+    //     console.log(error);
+    //     this.generalService.createErrorNotification(error);
+    //     this.generalService.closeWaitingPopupNz();
+    //   }
+    // );
     this.generalService.closeWaitingPopupNz();
   }
 
