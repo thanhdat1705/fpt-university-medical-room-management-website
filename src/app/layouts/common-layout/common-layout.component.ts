@@ -8,7 +8,6 @@ import { distinctUntilChanged, filter, map, startWith } from "rxjs/operators";
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SideNavService } from 'src/app/shared/services/side-nav.service';
 import { IBreadcrumb } from "../../shared/interfaces/breadcrumb.type";
-import { ThemeConstantService } from '../../shared/services/theme-constant.service';
 
 @Component({
     selector: 'app-common-layout',

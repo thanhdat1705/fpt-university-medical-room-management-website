@@ -10,6 +10,7 @@ import { WaitingComponent } from './components/waiting/waiting.component';
 import { AuthService } from './services/auth-service/auth.service';
 import { SideNavService } from './services/side-nav.service';
 import { firebaseConfig } from 'src/environments/environment';
+import { ErrorComponent } from './components/error/error.component';
 
 
 
@@ -21,6 +22,7 @@ const SHARE_MODULES = [
 
 const COMPONENTS = [
   WaitingComponent,
+  ErrorComponent,
 ];
 
 export const ANGULAR_MODULES = [

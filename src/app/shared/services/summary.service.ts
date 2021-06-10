@@ -33,7 +33,6 @@ import {
   UrlServerAPIChangingNewPasswordForgot
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
-import { SearchMedicineRequest } from '../requests/medicine/search';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
 
@@ -67,7 +66,7 @@ export class SummaryService {
 
   }
 
-  public changeForgotPassword(data:any): Observable<any> {
+  public changeForgotPassword(data: any): Observable<any> {
     if (this.headers.get("Authorization") == null) {
       this.router.navigate(['']);
     }
@@ -141,26 +140,29 @@ export class SummaryService {
 
   /*----------------------------------------------------------------------------------------------------- */
   /*---------------------------------------------- Medicine ---------------------------------------------- */
-  public searchMedicine(request: SearchMedicineRequest): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(
-      UrlServerAPISearchMedicine +
-      "/?Name=" +
-      request.Name +
-      "&UnitId=" +
-      request.UnitId +
-      "&MedicineSubgroupId=" +
-      request.MedicineSubgroupId +
-      "&MedicineClassificationId=" +
-      request.MedicineClassificationId +
-      "&Limit=" +
-      request.Limit +
-      "&Page=" +
-      request.Page +
-      "&SortField=" +
-      request.SortField +
-      "&SortOrder=" +
-      request.SortOrder
-    );
+  // public searchMedicine(request: SearchMedicineRequest): Observable<ResponseServer> {
+  //   return this.http.get<ResponseServer>(
+  //     UrlServerAPISearchMedicine +
+  //     "/?Name=" +
+  //     request.Name +
+  //     "&UnitId=" +
+  //     request.UnitId +
+  //     "&MedicineSubgroupId=" +
+  //     request.MedicineSubgroupId +
+  //     "&MedicineClassificationId=" +
+  //     request.MedicineClassificationId +
+  //     "&Limit=" +
+  //     request.Limit +
+  //     "&Page=" +
+  //     request.Page +
+  //     "&SortField=" +
+  //     request.SortField +
+  //     "&SortOrder=" +
+  //     request.SortOrder
+  //   );
+  // }
+  public searchMedicine(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchMedicine, data);
   }
 
   public getMedicine(id: string): Observable<ResponseServer> {
@@ -183,20 +185,8 @@ export class SummaryService {
     return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineClassification);
   }
 
-  public searchClassification(request: SearchMedicineClassificationRequest): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(
-      UrlServerAPISearchClassification +
-      "/?MedicineClassificationName=" +
-      request.MedicineClassificationName.toString() +
-      "&Limit=" +
-      request.Limit +
-      "&Page=" +
-      request.Page +
-      "&SortField=" +
-      request.SortField.toString() +
-      "&SortOrder=" +
-      request.SortOrder
-    );
+  public searchClassification(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchClassification, data);
   }
 
   public getAllMedicineSubgroup(): Observable<ResponseServer> {
@@ -215,40 +205,18 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineSubgroup, data);
   }
 
-  public searchMedicineSubgroup(request: SearchMedicineSubgroupRequest): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(
-      UrlServerAPISearchMedicineSubgroup +
-      "/?MedicineSupgroupName=" +
-      request.MedicineSupgroupName.toString() +
-      "&Limit=" +
-      request.Limit +
-      "&Page=" +
-      request.Page +
-      "&SortField=" +
-      request.SortField.toString() +
-      "&SortOrder=" +
-      request.SortOrder
-    );
+  public searchMedicineSubgroup(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineSubgroup, data);
   }
-  public searchMedicineUnit(request: SearchMedicineUnitRequest): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(
-      UrlServerAPISearchMedicineUnit +
-      "/?MedicineUnitName=" +
-      request.MedicineUnitName.toString() +
-      "&Limit=" +
-      request.Limit +
-      "&Page=" +
-      request.Page +
-      "&SortField=" +
-      request.SortField.toString() +
-      "&SortOrder=" +
-      request.SortOrder
-    );
+  public searchMedicineUnit(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineUnit, data);
   }
 
   /*----------------------------------------------------------------------------------------------------- */
-  /*---------------------------------------------- ????? ---------------------------------------------- */
-
+  /*---------------------------------------- ImportBatchMedicine ---------------------------------------- */
+  public searchImportBatchMedicine(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineUnit, data);
+  }
 
 
   /*===========================================================================================================*/

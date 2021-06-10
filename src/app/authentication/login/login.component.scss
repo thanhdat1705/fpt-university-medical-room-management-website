@@ -23,7 +23,7 @@
 //#3AC3DC#14b19c
 .button-link {
     &:hover {
-        background-color: #39d3ee !important;
+        background-color: #2fadc9 !important;
     }
    
 }
@@ -35,4 +35,22 @@
 
 .p-2c5 {
     padding: 2.5px;
+}
+
+
+
+
+@media only screen and (max-width: 576px) {
+    .wrap {
+        flex-wrap: wrap !important;
+    }
+    .mb {
+        margin-bottom: 5px !important;
+    }
+    .img-fuild {
+        width: 210px !important;
+    }
+    .font {
+        font-size: 22px !important;
+    }
 }

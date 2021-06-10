@@ -7,7 +7,7 @@ import { FilterTable } from 'src/app/shared/models/filterTable';
 import { Medicine } from 'src/app/shared/models/medicine';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchMedicineRequest } from 'src/app/shared/requests/medicine/search';
+import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
@@ -36,7 +36,7 @@ export class MedicineListComponent implements OnInit {
   pageIndex = 1;
 
   sortOrderList = 0;
-  sortFieldList = "createdDate";
+  sortFieldList = "CreatedDate";
 
   isLoading = false;
   noSuggest = false;
@@ -48,25 +48,59 @@ export class MedicineListComponent implements OnInit {
   searchValue = '';
   medicineId: string;
 
+  unitValue = null;
+  classValue = null;
+  subgroupValue = null;
+
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
-  searchMedicineRequest: SearchMedicineRequest = {
-    Name: '',
-    UnitId: '',
-    MedicineSubgroupId: '',
-    MedicineClassificationId: '',
-    Limit: 10,
-    Page: 1,
-    SortField: "createdDate",
-    SortOrder: 0
+  // searchMedicineRequest: SearchMedicineRequest = {
+  //   Name: '',
+  //   UnitId: '',
+  //   MedicineSubgroupId: '',
+  //   MedicineClassificationId: '',
+  //   Limit: 10,
+  //   Page: 1,
+  //   SortField: "createdDate",
+  //   SortOrder: 0
+  // };
+
+  searchRecord: Record<string, ValueCompare> = {};
+
+
+  searchName: ValueCompare = {
+    value: '',
+    compare: 'Contains'
+  }
+  searchUnit: ValueCompare = {
+    value: '',
+    compare: 'Equals'
+  }
+  searchSubgroup: ValueCompare = {
+    value: '',
+    compare: 'Equals'
+  }
+  searchClass: ValueCompare = {
+    value: '',
+    compare: 'Equals'
+  }
+
+  searchFields = "id, name, medicineUnit, medicineClassification, medicineSubgroup, createdDate";
+  searchMedicineRequest: SearchRequest = {
+    limit: 10,
+    page: 1,
+    sortField: "CreatedDate",
+    sortOrder: 0,
+    searchValue: null,
+    selectFields: this.searchFields,
   };
 
-  filterUnit: FilterTable[] = [];
-  filterClass: FilterTable[] = [];
-  filterSubgroup: FilterTable[] = [];
-  // filterUnit: MedicineUnitResponse[] = [];
-  // filterClass: MedicineClassificationResponse[] = [];
-  // filterSubgroup: MedicineSubgroupResponse[] = [];
+  // filterUnit: FilterTable[] = [];
+  // filterClass: FilterTable[] = [];
+  // filterSubgroup: FilterTable[] = [];
+  filterUnit: MedicineUnitResponse[] = [];
+  filterClass: MedicineClassificationResponse[] = [];
+  filterSubgroup: MedicineSubgroupResponse[] = [];
 
 
   /*---------------------------------------------------------------------------------------------------------------------*/
@@ -78,13 +112,17 @@ export class MedicineListComponent implements OnInit {
     private sidenav: SideNavService
   ) { }
 
+
   ngOnInit(): void {
     // this.searchMedicine();
     this.getAllUnit();
     this.getAllSubgroup();
     this.getAllClass();
 
-
+    this.searchRecord['Name'] = null;
+    this.searchRecord['UnitId'] = null;
+    this.searchRecord['MedicineSubgroupId'] = null;
+    this.searchRecord['MedicineClassificationId'] = null;
   }
 
 
@@ -94,13 +132,23 @@ export class MedicineListComponent implements OnInit {
     return this.generalService.getDate(time);
   }
 
+  resetTable() {
+    this.pageSize = 10;
+    this.pageIndex = 1;
+    this.sortOrderList = 0;
+    this.sortFieldList = "CreatedDate";
+  }
+
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  /*------------------------------------------------ Get All -------------------------------------------------------------*/
   getAllUnit() {
     this.service.getAllMedicineUnit().subscribe(
       (response) => {
-        for (let unit of response.data) {
-          let tmp = { text: unit.name, value: unit.id };
-          this.filterUnit = [...this.filterUnit, tmp]
-        }
+        // for (let unit of response.data) {
+        //   let tmp = { text: unit.name, value: unit.id };
+        //   this.filterUnit = [...this.filterUnit, tmp]
+        // }
+        this.filterUnit = response.data;
       },
       (error) => {
         console.log("get all error");
@@ -112,10 +160,11 @@ export class MedicineListComponent implements OnInit {
   getAllSubgroup() {
     this.service.getAllMedicineSubgroup().subscribe(
       (response) => {
-        for (let unit of response.data) {
-          let tmp = { text: unit.name, value: unit.id };
-          this.filterSubgroup = [...this.filterSubgroup, tmp]
-        }
+        // for (let unit of response.data) {
+        //   let tmp = { text: unit.name, value: unit.id };
+        //   this.filterSubgroup = [...this.filterSubgroup, tmp]
+        // }
+        this.filterSubgroup = response.data;
       },
       (error) => {
         console.log("get all error");
@@ -127,10 +176,11 @@ export class MedicineListComponent implements OnInit {
   getAllClass() {
     this.service.getAllMedicineClassification().subscribe(
       (response) => {
-        for (let unit of response.data) {
-          let tmp = { text: unit.name, value: unit.id };
-          this.filterClass = [...this.filterClass, tmp]
-        }
+        // for (let unit of response.data) {
+        //   let tmp = { text: unit.name, value: unit.id };
+        //   this.filterClass = [...this.filterClass, tmp]
+        // }
+        this.filterClass = response.data;
       },
       (error) => {
         console.log("get all error");
@@ -139,41 +189,106 @@ export class MedicineListComponent implements OnInit {
     )
   }
 
+
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  /*------------------------------------------------ Change ------------------------------------------------------------*/
   inputChange(value: any) {
-    this.isSearch = true;
-    console.log('value -- ', value);
-    // this.searchValue = value;
-    console.log(this.pageSize);
+    this.unitValue = null;
+    this.classValue = null;
+    this.subgroupValue = null;
+    this.searchName.value = this.searchValue;
+    this.searchRecord['Name'] = this.searchName;
+    this.searchRecord['UnitId'] = null;
+    this.searchRecord['MedicineSubgroupId'] = null;
+    this.searchRecord['MedicineClassificationId'] = null;
+    console.log(this.searchRecord);
+    this.resetTable();
     if (value !== '') {
       this.pageSize = 10;
-      this.searchMedicineRequest = {
-        Name: this.searchValue,
-        UnitId: '',
-        MedicineSubgroupId: '',
-        MedicineClassificationId: '',
-        Limit: 10,
-        Page: 1,
-        SortField: "createdDate",
-        SortOrder: 0
-      }
+      this.searchMedicineRequest.limit = 10;
+      this.searchMedicineRequest.page = 1;
       this.searchMedicine();
 
     } else {
-      this.searchMedicineRequest = {
-        Name: '',
-        UnitId: '',
-        MedicineSubgroupId: '',
-        MedicineClassificationId: '',
-        Limit: 10,
-        Page: 1,
-        SortField: "createdDate",
-        SortOrder: 0
-      }
+      this.searchRecord['Name'] = null;
+      this.searchRecord['UnitId'] = null;
+      this.searchRecord['MedicineSubgroupId'] = null;
+      this.searchRecord['MedicineClassificationId'] = null;
+      this.searchMedicineRequest.limit = 10;
+      this.searchMedicineRequest.page = 1;
       this.pageSize = 10;
       this.searchMedicine();
     }
   }
 
+
+  onSearchUnit(value: string) {
+    console.log(value);
+    console.log(value === '');
+    console.log(value === null);
+    if (value !== '' && value !== null) {
+      this.resetTable();
+      this.searchUnit.value = value;
+      this.searchRecord['UnitId'] = this.searchUnit;
+      this.searchMedicineRequest.limit = 10;
+
+    } else {
+      this.resetTable();
+      this.searchRecord['UnitId'] = null;
+      this.searchMedicineRequest.limit = 10;
+
+    }
+    this.searchMedicine();
+  }
+
+  onSearchClass(value: string) {
+    if (value !== '' && value !== null) {
+      this.resetTable();
+      this.searchClass.value = value;
+      this.searchRecord['MedicineClassificationId'] = this.searchClass;
+      this.searchMedicineRequest.limit = 10;
+
+    } else {
+      this.resetTable();
+      this.searchRecord['MedicineClassificationId'] = null;
+      this.searchMedicineRequest.limit = 10;
+
+    }
+    this.searchMedicine();
+  }
+
+  onSearchSubgroup(value: string) {
+    if (value !== '' && value !== null) {
+      this.resetTable();
+      this.searchSubgroup.value = value;
+      this.searchRecord['MedicineSubgroupId'] = this.searchSubgroup;
+      this.searchMedicineRequest = {
+        limit: 10,
+        page: this.pageIndex,
+        sortField: this.sortFieldList,
+        sortOrder: this.sortOrderList,
+        searchValue: this.searchRecord,
+        selectFields: this.searchFields
+      }
+
+    } else {
+      this.resetTable();
+      this.searchRecord['MedicineSubgroupId'] = null;
+      this.searchMedicineRequest = {
+        limit: 10,
+        page: this.pageIndex,
+        sortField: this.sortFieldList,
+        sortOrder: this.sortOrderList,
+        searchValue: this.searchRecord,
+        selectFields: this.searchFields
+      }
+
+    }
+    this.searchMedicine();
+  }
+
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  /*---------------------------------------------------------------------------------------------------------------------*/
   detailMedicine(id: string) {
     this.router.navigate(['medicine-management/medicine-list/add-medicine'], { queryParams: { id: id } })
   }
@@ -215,7 +330,8 @@ export class MedicineListComponent implements OnInit {
 
   searchMedicine() {
     this.tableLoading = true;
-    this.searchMedicineRequest.Name = this.searchValue;
+    // this.searchName.value = this.searchValue
+    // this.searchMedicineRequest.SearchValue = this.searchRecord;
     this.service.searchMedicine(this.searchMedicineRequest).subscribe(
       (response) => {
         this.tableLoading = false;
@@ -249,23 +365,22 @@ export class MedicineListComponent implements OnInit {
     const currentSort = sort.find(item => item.value !== null);
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
-    console.log("sortField -- " + sortField);
-    console.log("pageIndex -- " + pageIndex);
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
-    sortField == null ? this.sortFieldList = 'createdDate' : this.sortFieldList = sortField;
+    sortField == null ? this.sortFieldList = 'CreatedDate' : this.sortFieldList = sortField;
+    this.searchName.value = this.searchValue;
+    // this.searchUnit.value = filter[0].value;
+    // this.searchClass.value = filter[1].value;
+    // this.searchSubgroup.value = filter[2].value;
     this.searchMedicineRequest = {
-      Name: this.searchValue,
-      UnitId: filter[0].value,
-      MedicineSubgroupId: filter[2].value,
-      MedicineClassificationId: filter[1].value,
-      Limit: pageSize,
-      Page: pageIndex,
-      SortField: this.sortFieldList,
-      SortOrder: this.sortOrderList
+      limit: pageSize,
+      page: pageIndex,
+      sortField: this.sortFieldList,
+      sortOrder: this.sortOrderList,
+      searchValue: this.searchRecord,
+      selectFields: this.searchFields
     }
 
     this.searchMedicine();
-    this.isSearch = false;
 
   }
 
