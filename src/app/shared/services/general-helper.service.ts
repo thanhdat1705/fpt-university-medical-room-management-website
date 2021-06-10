@@ -58,8 +58,8 @@ export class GeneralHelperService {
         return fieldName + " phải là số";
     }
 
-    showEmailPatternError(fieldName: string){
-        return fieldName + " phải theo định dạng tenban@fpt.edu.vn";
+    showEmailPatternError(){
+        "Email phải được nhập đúng format (example@email.com)"
     }
 
     showPatternError(fieldName: string){
