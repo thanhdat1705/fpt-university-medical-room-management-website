@@ -4,9 +4,7 @@
         <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
             <span class="font-size-18">Ảnh đại diện</span>
         </nz-form-label>
-        <div class="avatarConntainer" *ngIf="accountDetail.photoUrl != null">
-            <img src="{{accountDetail.photoUrl}}" class="avatarImg" />
-        </div>
+            <img  [src]="url" *ngIf="url" class="avatarImg" />
     </nz-form-item>
     <!-- Mã số -->
     <nz-form-item>
@@ -91,7 +89,7 @@
             <span class="font-size-18">Trạng thái</span>
         </nz-form-label>
         <nz-form-control [nzErrorTip]="">
-            <input formControlName="active" type="text" nz-input [nzSize]="'large'" />
+            <span class="font-size-18 m-l-11">{{ activeStatus }}</span>
         </nz-form-control>
     </nz-form-item>
     <!-- Description -->

@@ -1,12 +1,12 @@
 <form nz-form nzLayout="horizontal" [formGroup]="editProfileForm" *ngIf="editProfileForm" (ngSubmit)="updateAccount()">
     <!-- Avatar -->
     <nz-form-item *ngIf="url">
-        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+        <nz-form-label nzRequired  [nzSpan]="7">
             <span class="font-size-18">Ảnh đại diện</span>
         </nz-form-label>
         <nz-form-control>
             <img class="avatar-img" [src]="url" *ngIf="url">
-            <input formControlName="internalCode" type="file" (change)="onFileSelected($event)" />
+            <input  type="file" (change)="onFileSelected($event)" />
         </nz-form-control>
     </nz-form-item>
     <!-- Mã số -->

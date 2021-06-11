@@ -78,6 +78,7 @@ export class EditProfileComponent implements OnInit {
         console.log('response avatar: ' + response.data.photoUrl);
         this.headerService.setAvatar(response.data.photoUrl);
         this.generalService.closeWaitingPopupNz();
+        this.generalService.messageNz('success', `Thông tin đã được cập nhật`);
         this.router.navigate(['/account/profile']);
       },
       (error) => {
@@ -85,20 +86,17 @@ export class EditProfileComponent implements OnInit {
         this.generalService.createErrorNotification(error);
       }
     );
+  }
 
+  cancel(){
+    this.router.navigate(['/account/profile']);
   }
 
   async getProfile() {
     this.summaryService.getProfile().subscribe(
       (response) => {
         this.profile = response.data;
-        //   data.displayName = response.data.displayName;
-        //   data.description = response.data.description;
-        //   data.phoneNumber = response.data.phoneNumber;
-        //   data.photoUrl = response.data.photoUrl;
 
-        //  console.log('response name: ' + response.data.displayName) ;
-        //   console.log("data" + this.profile);
         console.log(this.profile);
         this.imageUrl = this.profile.photoUrl;
         this.editProfileForm = this.formBuilder.group({
@@ -135,7 +133,6 @@ export class EditProfileComponent implements OnInit {
             ]
           ], description: [this.profile.description,
           ],
-          avatarFile: [],
         });
         this.url = this.profile.photoUrl;
       },

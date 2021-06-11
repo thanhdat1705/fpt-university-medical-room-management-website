@@ -55,6 +55,7 @@ export class ChangePasswordComponent implements OnInit {
     this.summaryService.changePassword(data).subscribe(
       (response) =>{
         console.log(response);
+        this.generalService.messageNz('success', `Mật khẩu đã được đổi`);
       },
       (error) =>{
         console.log(error);

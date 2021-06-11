@@ -11,9 +11,6 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 })
 export class ViewProfileComponent implements OnInit {
 
-
-  private route: ActivatedRoute;
-
   constructor(private summaryService: SummaryService, private router: Router, private generalService: GeneralHelperService) { }
 
   ngOnInit(): void {
@@ -22,7 +19,8 @@ export class ViewProfileComponent implements OnInit {
     this.getProfile();
   }
 
-  profile: Account
+  url: string;
+  profile: Account;
 
   // editProfile() {
   //   this.router.navigate(['account/edit-profile', JSON.stringify(this.profile)]);
@@ -34,6 +32,7 @@ export class ViewProfileComponent implements OnInit {
       (response) => {
 
         this.profile = response.data;
+        this.url = this.profile.photoUrl;
         console.log("data" + JSON.stringify(this.profile));
 
       },

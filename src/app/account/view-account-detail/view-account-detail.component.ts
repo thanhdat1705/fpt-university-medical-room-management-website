@@ -5,6 +5,7 @@ import { Account } from 'src/app/shared/models/account';
 import { AccountDetailResponse } from 'src/app/shared/models/account-details-response';
 import { Role } from 'src/app/shared/models/role';
 import { UpdateAccountRequest } from 'src/app/shared/requests/update-account-request';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 
 @Component({
@@ -13,7 +14,7 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
   styleUrls: ['./view-account-detail.component.scss']
 })
 export class ViewAccountDetailComponent implements OnInit {
-
+  url: string;
   id: any;
   accountDetail: AccountDetailResponse;
   accountDetailForm: FormGroup
@@ -21,22 +22,22 @@ export class ViewAccountDetailComponent implements OnInit {
     { id: 1, roleName: "Admin" },
     { id: 2, roleName: "Nhân viên y tế" },
     { id: 3, roleName: "Bệnh nhân" },
-
   ];
   medicineNameMinL = 3;
   updateAccountrequest: UpdateAccountRequest;
-
+  activeStatus: string;
   constructor(
     private summaryService: SummaryService,
     private activatedroute: ActivatedRoute,
     private formsBuider: FormBuilder,
-    private router: Router
+    private router: Router,
+    private generalService: GeneralHelperService,
   ) { }
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
     this.accountDetailForm = this.formsBuider.group({
-      internalCode: [this.accountDetail ? this.accountDetail.role.accounts[0].internalCode : '', [
+      internalCode: ['', [
         Validators.required,
       ]],
       displayName: ['', [
@@ -61,26 +62,28 @@ export class ViewAccountDetailComponent implements OnInit {
       ]]
     });
     this.getAccountForm();
-
-
+    console.log(this.accountDetail.role.accounts[0].active);
+    this.activeStatus = this.checkActiveId(this.accountDetail.role.accounts[0].active);
   }
 
-  test() {
-    console.log(this.f.displayName.hasError('minLength'))
-  }
   get f() {
     return this.accountDetailForm.controls;
   }
+
   editAccount(data: UpdateAccountRequest) {
     // this.updateAccountrequest = data;
+    this.generalService.openWaitingPopupNz();
     console.log(data);
     this.summaryService.updateAccount(this.id, data).subscribe(
       (response) => {
         console.log(response);
+        this.generalService.messageNz('success', 'Thông tin tài khoản của "' + this.accountDetailForm.get("displayName").value + '" đã được cập nhật');
       }, (error) => {
         console.log(error);
+        this.generalService.createErrorNotification(error);
       }
     );
+    this.generalService.closeWaitingPopupNz();
   }
 
   disableAllField() {
@@ -108,13 +111,14 @@ export class ViewAccountDetailComponent implements OnInit {
       (response) => {
         this.accountDetail = response.data;
         console.log(this.accountDetail);
+        this.url = this.accountDetail.photoUrl;
         this.accountDetailForm.setValue({
           internalCode: this.accountDetail.role.accounts[0].internalCode,
           displayName: this.accountDetail.displayName,
           email: this.accountDetail.email,
           phoneNumber: this.accountDetail.phoneNumber,
           roleId: this.accountDetail.role.id,
-          active: this.checkActiveId(this.accountDetail.role.accounts[0].active),
+          active: this.accountDetail.role.accounts[0].active,
           description: this.accountDetail.description,
         });
       },
@@ -122,6 +126,7 @@ export class ViewAccountDetailComponent implements OnInit {
         console.log(error);
       },
     );
+
   }
 
 }
