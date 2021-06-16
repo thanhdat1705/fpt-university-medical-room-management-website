@@ -58,8 +58,8 @@ export class GeneralHelperService {
         return fieldName + " phải từ " + minLength + " đến " + maxLength + " kí tự";
     }
 
-    showNumberPatternError(fieldName: string){
-        return fieldName + " phải là số";
+    showPhoneNumberPatternError(){
+        return "Số điện thoại phải là số";
     }
 
     showEmailPatternError(){

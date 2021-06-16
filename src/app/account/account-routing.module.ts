@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ChangePasswordComponent } from './change-password/change-password.component';
-import { EditAccountComponent } from './edit-account/edit-account.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { InsertAccountComponent } from './insert-account/insert-account.component';
 import { LinkToSocialAccountComponent } from './link-to-social-account/link-to-social-account.component';
@@ -33,10 +32,6 @@ const routes: Routes = [
    {
     path: 'link-to-social-account',
     component: LinkToSocialAccountComponent
-  },
-  {
-    path: 'edit-account/:id',
-    component: EditAccountComponent
   },
   {
     path: 'account-detail/:id',

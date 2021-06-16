@@ -5,12 +5,18 @@ import { BatchMedicineManagementRoutingModule } from './batch-medicine-managemen
 import { SharedModule } from '../shared/shared.module';
 import { BatchMedicineListComponent } from './batch-medicine-list/batch-medicine-list.component';
 import { AddBatchMedicineComponent } from './batch-medicine-list/add-batch-medicine/add-batch-medicine.component';
+import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
+import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eliminated-medicine/view-eliminated-medicine.component';
+import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
 
 
 @NgModule({
   declarations: [
     BatchMedicineListComponent,
-    AddBatchMedicineComponent
+    AddBatchMedicineComponent,
+    EliminateMedicineComponent,
+    ViewEliminatedMedicineComponent,
+    ViewEliminatedMedicineDetailsComponent,
   ],
   imports: [
     CommonModule,

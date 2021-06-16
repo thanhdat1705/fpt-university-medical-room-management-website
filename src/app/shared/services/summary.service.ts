@@ -30,7 +30,12 @@ import {
   UrlServerGetAccountDetail,
   UrlServerSendingCodeForgotPassword,
   UrlServerAPIVerifyingCodeForgotPassword,
-  UrlServerAPIChangingNewPasswordForgot
+  UrlServerAPIChangingNewPasswordForgot,
+  UrlServerAPIEliminateMedicine,
+  UrlServerAPISearchEliminatedMedicine,
+  UrlServerAPIGetEliminatedMedicineDetails,
+  UrlServerAPIUpdateEliminatedMedicineDetails,
+  UrlServerAPIDeleteEliminatedMedicineDetails
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -218,6 +223,32 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPISearchMedicineUnit, data);
   }
 
+  //  Medicine Elimination Management
+  public eliminateMedicine(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIEliminateMedicine, data, { headers: this.headers });
+
+  }
+
+  public searchEliminateMedicine(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchEliminatedMedicine, data, { headers: this.headers });
+
+  }
+
+  public getEliminatedMedicineDetails(id: any): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetEliminatedMedicineDetails + "/" + id, { headers: this.headers });
+  }
+
+  public updateEliminatedMedicineDetails(id: any, data: any): Observable<ResponseServer> {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateEliminatedMedicineDetails + "/" + id, data, { headers: this.headers });
+
+  }
+
+  public deleteEliminatedMedicineDetails(id: any): Observable<ResponseServer> {
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteEliminatedMedicineDetails + "/" + id, { headers: this.headers });
+
+  }
+
+  
 
   /*===========================================================================================================*/
 
@@ -250,3 +281,4 @@ export interface Options {
   responseType: 'json';
   withCredentials?: boolean;
 }
+

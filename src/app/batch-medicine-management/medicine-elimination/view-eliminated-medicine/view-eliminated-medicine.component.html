@@ -1,0 +1,30 @@
+<nz-table [nzScroll]="{ x: '1000px' }" [nzData]="eliminatedMedicineList" nzTableLayout="fixed" [nzLoading]="loading" [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false">
+  <thead>
+    <tr>
+      <th nzWidth="190px">Tên thuốc</th>
+      <th nzWidth="140px">Số lượng</th>
+      <th nzWidth="140px">Đơn vị</th>
+      <th nzWidth="140px">Ngày hủy</th>
+      <th nzWidth="140px">Thuộc lô</th>
+      <th nzWidth="70px"></th>
+      <th nzWidth="70px"></th>
+      <!-- <th>Thuộc lô</th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let eliminatedMedicine of eliminatedMedicineList">
+      <td>{{ eliminatedMedicine.name }}</td>
+      <td>{{ eliminatedMedicine.quantity }}</td>
+      <td>{{ eliminatedMedicine.medicineUnit.name }}</td>
+      <td>{{ eliminatedMedicine.createDate }}</td>
+      <td>{{ eliminatedMedicine.batchMedicineInInventory.createdDate }}</td>
+      <td>
+        <input type="hidden" nz-input #medicineId>
+        <a style="color: #1890ff;" [routerLink]="['/batch-medicine-management/eliminated-medicine-details', eliminatedMedicine.id]">Detail</a>
+    </td>
+      <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
+        (nzOnConfirm)="deletedEliminatedMedicine(eliminatedMedicine.id)">Delete</a></td>
+    </tr>
+  </tbody>
+</nz-table>

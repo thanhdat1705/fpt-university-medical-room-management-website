@@ -1,0 +1,51 @@
+<button nz-button nzType="primary" (click)="showModal2()"> aaaaaaaaaaaaaaaaaaaaaaaaaa yeeeeeeeeeeeeeeeeeeeeeeee</button>
+
+Hủy thuốc {{ medicineName }}
+
+<form nzForm *ngIf="eliminateMedicineForm" [formGroup]="eliminateMedicineForm" nzLayout="horizontal"
+    (ngSubmit)="eliminateMedicine(eliminateMedicineForm.value)">
+
+    <!-- Old passord -->
+
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="quantity" [nzSpan]="7">
+            <span class="font-size-18">Số lượng:</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="quantityTpl">
+            <input formControlName="quantity" type="text" nz-input #inputUnit [nzSize]="'large'" />
+            <ng-template #quantityTpl let-control>
+                <ng-container *ngIf="f.quantity.hasError('required')">
+                    {{ generalService.showRequiredError("Số lượng") }}
+                </ng-container>
+                <!-- <ng-container *ngIf="f.quantity.hasError('minlength') || f.oldPassword.hasError('maxlength')">
+                    {{ generalService.showMinMaxLengthError("Mật khẩu", 4, 50) }}
+                </ng-container> -->
+                <ng-container *ngIf="f.quantity.hasError('pattern')">
+                    {{ generalService.showMinMaxLengthError("Mật khẩu", 4, 50) }}
+                </ng-container>
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+
+    <!-- New passord -->
+
+    <nz-form-item>
+        <nz-form-label nzRequired nzFor="reason" [nzSpan]="7">
+            <span class="font-size-18">Lý do:</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="reasonTpl">
+            <input formControlName="reason" type="text" nz-input #inputUnit [nzSize]="'large'" />
+            <ng-template #reasonTpl let-control>
+                <ng-container *ngIf="f.reason.hasError('required')">
+                    {{ generalService.showRequiredError("Lý do hủy") }}
+                </ng-container>
+                <!-- <ng-container *ngIf="f.reason.hasError('minlength') || f.oldPassword.hasError('maxlength')">
+                    {{ generalService.showMinMaxLengthError("Mật khẩu", 4, 50) }}
+                </ng-container> -->
+            </ng-template>
+        </nz-form-control>
+    </nz-form-item>
+    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
+    <button nz-button nzType="primary">Hủy thuốc</button>
+    
+</form>

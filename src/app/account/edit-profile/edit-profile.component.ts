@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Valida
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { Account } from 'src/app/shared/models/account';
-import { AccountDetailResponse } from 'src/app/shared/models/account-details-response';
+import { AccountDetailResponse } from 'src/app/shared/responses/account-details-response';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { HeaderService } from 'src/app/shared/services/header.service';
@@ -33,6 +33,8 @@ export class EditProfileComponent implements OnInit {
   fileName: string;
   url: any;
   reader = new FileReader();
+  isEditing = false;
+
   get f() { return this.editProfileForm.controls; }
 
 
@@ -47,9 +49,62 @@ export class EditProfileComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.editProfileForm = this.formBuilder.group({
+      email: [
+       '',
+        [Validators.required,
+        Validators.minLength(this.passwordMinLength),
+        Validators.maxLength(this.passwordMaxLength),
+        Validators.email,
+        ]
+      ],
+      displayName: [
+        '',
+        [Validators.required,
+        Validators.minLength(this.passwordMinLength),
+        Validators.maxLength(this.passwordMaxLength),
+          // Validators.pattern(this.pattern)
+        ]
+      ], internalCode: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.passwordMinLength),
+          Validators.maxLength(this.passwordMaxLength),
+          // Validators.pattern(this.pattern)
+        ]
+      ], phoneNumber: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.passwordMinLength),
+          Validators.maxLength(this.passwordMaxLength),
+          Validators.pattern(this.phoneNumberPattern),
+          // Validators.pattern(this.pattern)
+        ]
+      ], description: ['',
+      ],
+    });
     this.getProfile();
   }
 
+  disableUpdate() {
+    this.isEditing = false;
+    this.editProfileForm.controls['internalCode'].disable();
+    this.editProfileForm.controls['displayName'].disable();
+    this.editProfileForm.controls['email'].disable();
+    this.editProfileForm.controls['phoneNumber'].disable();
+    this.editProfileForm.controls['description'].disable();
+  }
+
+  enableUpdate() {
+    this.isEditing = true;
+    this.editProfileForm.controls['internalCode'].enable();
+    this.editProfileForm.controls['displayName'].enable();
+    this.editProfileForm.controls['email'].enable();
+    this.editProfileForm.controls['phoneNumber'].enable();
+    this.editProfileForm.controls['description'].enable();
+  }
 
   updateAccount() {
     if (this.editProfileForm.invalid) {
@@ -88,7 +143,7 @@ export class EditProfileComponent implements OnInit {
     );
   }
 
-  cancel(){
+  cancel() {
     this.router.navigate(['/account/profile']);
   }
 
@@ -96,43 +151,13 @@ export class EditProfileComponent implements OnInit {
     this.summaryService.getProfile().subscribe(
       (response) => {
         this.profile = response.data;
-
         console.log(this.profile);
-        this.imageUrl = this.profile.photoUrl;
-        this.editProfileForm = this.formBuilder.group({
-          email: [
-            this.profile.email,
-            [Validators.required,
-            Validators.minLength(this.passwordMinLength),
-            Validators.maxLength(this.passwordMaxLength),
-            Validators.email,
-            ]
-          ],
-          displayName: [
-            this.profile.displayName,
-            [Validators.required,
-            Validators.minLength(this.passwordMinLength),
-            Validators.maxLength(this.passwordMaxLength),
-              // Validators.pattern(this.pattern)
-            ]
-          ], internalCode: [
-            this.profile.role.accounts[0].internalCode,
-            [
-              Validators.required,
-              Validators.minLength(this.passwordMinLength),
-              Validators.maxLength(this.passwordMaxLength),
-              // Validators.pattern(this.pattern)
-            ]
-          ], phoneNumber: [
-            this.profile.phoneNumber,
-            [
-              Validators.required,
-              Validators.minLength(this.passwordMinLength),
-              Validators.maxLength(this.passwordMaxLength),
-              // Validators.pattern(this.pattern)
-            ]
-          ], description: [this.profile.description,
-          ],
+        this.editProfileForm.setValue({
+          internalCode: this.profile.role.accounts[0].internalCode,
+          displayName: this.profile.displayName,
+          email: this.profile.email,
+          phoneNumber: this.profile.phoneNumber,
+          description: this.profile.description
         });
         this.url = this.profile.photoUrl;
       },
@@ -140,30 +165,8 @@ export class EditProfileComponent implements OnInit {
         console.log(error);
       }
     );
+    this.disableUpdate();
   }
-
-
-  // selectFile(event: any) { //Angular 11, for stricter type
-  //   if (!event.target.files[0] || event.target.files[0].length == 0) {
-  //     this.msg = 'You must select an image';
-  //     return;
-  //   }
-
-  //   var mimeType = event.target.files[0].type;
-
-  //   if (mimeType.match(/image\/*/) == null) {
-  //     this.msg = "Only images are supported";
-  //     return;
-  //   }
-
-  //   var reader = new FileReader();
-  //   reader.readAsDataURL(event.target.files[0]);
-
-  //   reader.onload = (_event) => {
-  //     this.msg = "";
-  //     this.url = reader.result;
-  //   }
-  // }
 
   onFileSelected(event) {
     this.file = event.target.files[0];

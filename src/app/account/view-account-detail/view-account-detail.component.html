@@ -1,10 +1,10 @@
-<form nz-form nzLayout="horizontal" [formGroup]="accountDetailForm" *ngIf="accountDetailForm"
+<form nz-form nzLayout="horizontal" [formGroup]="accountDetailForm" *ngIf="accountDetailForm && accountDetail"
     (ngSubmit)="editAccount(accountDetailForm.value)">
     <nz-form-item>
         <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
             <span class="font-size-18">Ảnh đại diện</span>
         </nz-form-label>
-            <img  [src]="url" *ngIf="url" class="avatarImg" />
+        <img [src]="url" *ngIf="url" class="avatarImg" />
     </nz-form-item>
     <!-- Mã số -->
     <nz-form-item>
@@ -15,7 +15,7 @@
             <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
             <ng-template #internalCodeTpl let-control>
                 <ng-container *ngIf="f.internalCode.hasError('required')">
-                    Mã số không được để trống
+                    {{ generalService.showRequiredError("Mã số") }}
                 </ng-container>
 
             </ng-template>
@@ -30,7 +30,7 @@
             <input id="displayName" formControlName="displayName" nz-input [nzSize]="'large'" (input)="test()" />
             <ng-template #displayNameTpl let-control>
                 <ng-container *ngIf="f.displayName.hasError('required')">
-                   <span>Tên không được để trống</span>
+                    {{ generalService.showRequiredError("Tên") }}
                 </ng-container>
                 <ng-container *ngIf="f.displayName.hasError('minLength')">
                     <span class="error-text">minnnnnnnn</span>
@@ -47,10 +47,8 @@
             <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
             <ng-template #emailTpl let-control>
                 <ng-container *ngIf="f.email.hasError('required')">
-                    <span class="error-text">Tên không được để trống</span>
-
+                    {{ generalService.showRequiredError("Email") }}
                 </ng-container>
-
             </ng-template>
         </nz-form-control>
     </nz-form-item>
@@ -60,12 +58,7 @@
             <span class="font-size-18">Số điện thoại</span>
         </nz-form-label>
         <nz-form-control [nzErrorTip]="phoneNumberTpl">
-            <input formControlName="phoneNumber" type="text" nz-input [nzSize]="'large'" />
-            <ng-template #phoneNumberTpl let-control>
-                <ng-container *ngIf="f.email.hasError('required')">
-                    Mã số không được để trống
-                </ng-container>
-            </ng-template>
+            <input [disabled]="true" type="text" nz-input [nzSize]="'large'" value="{{accountDetail.phoneNumber}}" />
         </nz-form-control>
     </nz-form-item>
     <!-- Role -->
@@ -74,9 +67,8 @@
             <span class="font-size-18">Vai trò</span>
         </nz-form-label>
         <nz-form-control>
-            <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId"
-                [nzSize]="'large'" nzPlaceHolder="Nhập đơn vị"
-                style="display: flex; align-items: center; font-size: 18px;">
+            <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId" [nzSize]="'large'"
+                nzPlaceHolder="Vai trò" style="display: flex; align-items: center; font-size: 18px;">
                 <nz-option *ngFor="let item of roles" [nzLabel]="item.roleName" [nzValue]="item.id" nzCustomContent>
                     <span style="font-size: 18px;">{{ item.roleName }}</span>
                 </nz-option>
@@ -99,8 +91,8 @@
         </nz-form-label>
         <nz-form-control [nzErrorTip]="">
             <nz-textarea-count [nzMaxCharacterCount]="500">
-                <textarea id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
-                    formControlName="description" style="font-size: 18px;"></textarea>
+                <textarea [disabled]="true" id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
+                    style="font-size: 18px;">{{ accountDetail.description }}</textarea>
                 <ng-template #descriptionErrorTpl let-control>
                     <ng-container *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
                         <span class="error-text">Nhập độ dài từ 1 tới 500</span>
@@ -112,58 +104,18 @@
     <br><br>
     <nz-form-item>
         <nz-form-control>
-            <button class="font-size-18" type="submit" nz-button nzType="primary"
+            <button (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-18" nz-button nzType="primary"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Sửa thông tin
             </button>
-            <button class="font-size-18" nz-button (click)="getAccountForm()"
+            <button *ngIf="isEditing" class="font-size-18" type="submit" nz-button nzType="primary"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                Lưu
+            </button>
+            <button *ngIf="isEditing" class="font-size-18" nz-button (click)="getAccountDetails()"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Hủy
             </button>
         </nz-form-control>
     </nz-form-item>
 </form>
-
-<!-- <div class="profile" *ngIf="accountDetail">
-    <div class="img-container">
-        <img src="{{accountDetail.photoUrl}}" class="avatar">
-    </div>
-    <div class="info">
-        <p class="title">Mã số: </p>
-        <p class="content">{{accountDetail.role.accounts[0].internalCode}}</p>
-        <br>
-        <br>
-        <p class="title">Tên: </p>
-        <p class="content">{{accountDetail.displayName}}</p>
-        <br>
-        <br>
-        <p class="title">Email: </p>
-        <p class="content">{{accountDetail.email}}</p>
-        <br>
-        <br>
-        <p class="title">Số điện thoại:</p>
-        <p class="content">{{accountDetail.phoneNumber}}</p>
-        <br>
-        <br>
-        <p class="title">Mô tả:</p>
-        <p class="content">{{accountDetail.description}}</p>
-        <br>
-        <br>
-        <p class="title">Vai trò:</p>
-        <p class="content">{{accountDetail.role.roleName}}</p>
-        <br>
-        <br>
-        <p class="title">Trạng thái:</p> -->
-<!-- <p class="content">{{accountDetail.role.account[0].active}}</p> -->
-<!-- <br>
-        <br>
-    </div>
-    <div class="buttons">
-        <a [routerLink]="['/account/edit-account', accountDetail.accountId]"><button mat-raised-button
-                color="primary">Sửa thông tin tài
-                khoản</button></a>
-        <a [routerLink]="'/account/edit-profile'"><button mat-raised-button color="primary">Vô hiệu hóa tài
-                khoản</button></a> -->
-<!-- <a [routerLink]="'/account/change-password'"> <button mat-raised-button color="primary">Đổi mật khẩu</button></a> -->
-<!-- </div>
-</div> -->

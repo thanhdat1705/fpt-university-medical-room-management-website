@@ -1,5 +1,5 @@
 <form nz-form nzLayout="horizontal" [formGroup]="accountForm" *ngIf="accountForm"
-  (ngSubmit)="insertAccount(accountForm.value)">
+  (ngSubmit)="insertAccount(accountForm.value)" >
   <!-- Mã số -->
   <nz-form-item>
     <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
@@ -9,7 +9,7 @@
       <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
       <ng-template #internalCodeTpl let-control>
         <ng-container *ngIf="f.internalCode.hasError('required')">
-          Mã số không được để trống
+          {{ generalService.showRequiredError("Mã số") }}
         </ng-container>
         <ng-container *ngIf="f.internalCode.hasError('pattern')">
           Mã số không được chứa kí tự đặc biệt
@@ -26,7 +26,7 @@
       <input id="displayName" formControlName="displayName" type="text" nz-input [nzSize]="'large'" />
       <ng-template #displayNameTpl let-control>
         <ng-container *ngIf="f.displayName.hasError('required')">
-          Tên không được để trống
+          {{ generalService.showRequiredError("Tên") }}
         </ng-container>
       </ng-template>
     </nz-form-control>
@@ -40,10 +40,10 @@
       <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
       <ng-template #emailTpl let-control>
         <ng-container *ngIf="f.email.hasError('required')">
-          <span class="error-text">Email không được để trống</span>
+          {{ generalService.showRequiredError("Email") }}
         </ng-container>
         <ng-container *ngIf="f.email.hasError('email')">
-          <span class="error-text">Hãy nhập đúng định dạng email (example@fpt.edu.vn)</span>
+          {{ showEmailPatternError() }}
         </ng-container>
       </ng-template>
     </nz-form-control>
@@ -57,13 +57,14 @@
       <input id="username" formControlName="username" type="text" nz-input [nzSize]="'large'" />
       <ng-template #usernameTpl let-control>
         <ng-container *ngIf="f.username.hasError('required')">
-          Tên đăng nhập không được để trống
+          {{ generalService.showRequiredError("Tên đăng nhập") }}
+
         </ng-container>
         <ng-container *ngIf="f.username.hasError('pattern')">
           <span class="error-text">Tên đăng nhập không được chứa kí tự đặc biệt</span>
         </ng-container>
         <ng-container *ngIf="f.username.hasError('minlength') || f.username.hasError('maxlength')">
-          <span class="error-text">Tên nhập có độ dài từ 3 đến 50 kí tự</span>
+          {{ generalService.showMinMaxLengthError("Tên đăng nhập", 3, 50) }}
         </ng-container>
       </ng-template>
     </nz-form-control>
@@ -77,7 +78,7 @@
       <input id="password" formControlName="password" type="text" nz-input [nzSize]="'large'" />
       <ng-template #passwordTpl let-control>
         <ng-container *ngIf="f.password.hasError('required')">
-          Mật khẩu không được để trống
+          {{ generalService.showRequiredError("Mật khẩu") }}
         </ng-container>
         <ng-container *ngIf="f.password.hasError('pattern')">
           <span class="error-text">Mật khẩu không được chứa kí tự đặc biệt</span>

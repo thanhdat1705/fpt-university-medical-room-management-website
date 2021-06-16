@@ -8,7 +8,6 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { SearchAccountComponent } from './search-account/search-account.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { LinkToSocialAccountComponent } from './link-to-social-account/link-to-social-account.component';
-import { EditAccountComponent } from './edit-account/edit-account.component';
 import { ViewAccountDetailComponent } from './view-account-detail/view-account-detail.component';
 
 
@@ -21,7 +20,6 @@ import { ViewAccountDetailComponent } from './view-account-detail/view-account-d
     SearchAccountComponent,
     ChangePasswordComponent,
     LinkToSocialAccountComponent,
-    EditAccountComponent,
     ViewAccountDetailComponent,
   ],
   exports: [
@@ -31,7 +29,6 @@ import { ViewAccountDetailComponent } from './view-account-detail/view-account-d
     SearchAccountComponent,
     ChangePasswordComponent,
     LinkToSocialAccountComponent,
-    EditAccountComponent,
     ViewAccountDetailComponent,
   ],
   imports: [

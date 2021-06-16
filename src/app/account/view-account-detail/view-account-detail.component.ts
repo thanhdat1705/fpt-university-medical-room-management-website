@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Account } from 'src/app/shared/models/account';
-import { AccountDetailResponse } from 'src/app/shared/models/account-details-response';
+import { AccountDetailResponse } from 'src/app/shared/responses/account-details-response';
 import { Role } from 'src/app/shared/models/role';
 import { UpdateAccountRequest } from 'src/app/shared/requests/update-account-request';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
@@ -14,6 +14,7 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
   styleUrls: ['./view-account-detail.component.scss']
 })
 export class ViewAccountDetailComponent implements OnInit {
+
   url: string;
   id: any;
   accountDetail: AccountDetailResponse;
@@ -26,6 +27,8 @@ export class ViewAccountDetailComponent implements OnInit {
   medicineNameMinL = 3;
   updateAccountrequest: UpdateAccountRequest;
   activeStatus: string;
+  isEditing = false;
+
   constructor(
     private summaryService: SummaryService,
     private activatedroute: ActivatedRoute,
@@ -46,24 +49,17 @@ export class ViewAccountDetailComponent implements OnInit {
       ]],
       email: ['', [
         Validators.required,
-
-      ]],
-      phoneNumber: ['', [
-
       ]],
       roleId: ['', [
         Validators.required,
       ]],
       active: ['', [
         Validators.required,
-
       ]],
-      description: ['', [
-      ]]
     });
-    this.getAccountForm();
-    console.log(this.accountDetail.role.accounts[0].active);
-    this.activeStatus = this.checkActiveId(this.accountDetail.role.accounts[0].active);
+    this.getAccountDetails();
+    // console.log(this.accountDetail.role.accounts[0].active);
+    // this.activeStatus = this.checkActiveId(this.accountDetail.role.accounts[0].active);
   }
 
   get f() {
@@ -71,13 +67,17 @@ export class ViewAccountDetailComponent implements OnInit {
   }
 
   editAccount(data: UpdateAccountRequest) {
-    // this.updateAccountrequest = data;
+    if(this.accountDetailForm.invalid){
+      this.generalService.createErrorNotification("Hãy điền chính xác các thông tin");
+      return;
+    }
     this.generalService.openWaitingPopupNz();
     console.log(data);
     this.summaryService.updateAccount(this.id, data).subscribe(
       (response) => {
         console.log(response);
         this.generalService.messageNz('success', 'Thông tin tài khoản của "' + this.accountDetailForm.get("displayName").value + '" đã được cập nhật');
+        this.getAccountDetails();
       }, (error) => {
         console.log(error);
         this.generalService.createErrorNotification(error);
@@ -86,16 +86,24 @@ export class ViewAccountDetailComponent implements OnInit {
     this.generalService.closeWaitingPopupNz();
   }
 
-  disableAllField() {
-    // this.accountDetailForm.controls['internalCode'].disable();
-    // this.accountDetailForm.controls['displayName'].disable();
-    // this.accountDetailForm.controls['email'].disable();
-    // this.accountDetailForm.controls['phoneNumber'].disable();
-    // this.accountDetailForm.controls['roleId'].disable();
-    // this.accountDetailForm.controls['active'].disable();
-    // this.accountDetailForm.controls['description'].disable();
-
+  disableUpdate(){
+    this.isEditing = false;
+    this.accountDetailForm.controls['internalCode'].disable();
+    this.accountDetailForm.controls['displayName'].disable();
+    this.accountDetailForm.controls['email'].disable();
+    this.accountDetailForm.controls['roleId'].disable();
+    this.accountDetailForm.controls['active'].disable();
   }
+
+  enableUpdate(){
+    this.isEditing = true;
+    this.accountDetailForm.controls['internalCode'].enable();
+    this.accountDetailForm.controls['displayName'].enable();
+    this.accountDetailForm.controls['email'].enable();
+    this.accountDetailForm.controls['roleId'].enable();
+    this.accountDetailForm.controls['active'].enable();
+  }
+
 
   checkActiveId(id: boolean) {
     if (id) {
@@ -106,7 +114,7 @@ export class ViewAccountDetailComponent implements OnInit {
     }
   }
 
-  getAccountForm() {
+  getAccountDetails() {
     this.summaryService.getAccountDetail(this.id).subscribe(
       (response) => {
         this.accountDetail = response.data;
@@ -116,17 +124,16 @@ export class ViewAccountDetailComponent implements OnInit {
           internalCode: this.accountDetail.role.accounts[0].internalCode,
           displayName: this.accountDetail.displayName,
           email: this.accountDetail.email,
-          phoneNumber: this.accountDetail.phoneNumber,
+          // phoneNumber: this.accountDetail.phoneNumber,
           roleId: this.accountDetail.role.id,
           active: this.accountDetail.role.accounts[0].active,
-          description: this.accountDetail.description,
         });
       },
       (error) => {
         console.log(error);
       },
     );
-
+    this.disableUpdate();
   }
 
 }
