@@ -47,7 +47,7 @@
         </nz-form-label>
         <nz-form-control>
             <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'" style="width: 10%;"
-                value="{{ eliminatedMedicineDetails.batchMedicineInInventory.quantity }} {{ eliminatedMedicineDetails.medicine.medicineUnit.name }}"/>
+                value="{{ eliminatedMedicineDetails.medicineInInventory.quantity }} {{ eliminatedMedicineDetails.medicine.medicineUnit.name }}"/>
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
@@ -56,7 +56,7 @@
         </nz-form-label>
         <nz-form-control [nzErrorTip]="">
             <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
-                value="{{eliminatedMedicineDetails.batchMedicineInInventory.createdDate}}" />
+                value="{{eliminatedMedicineDetails.medicineInInventory.createdDate}}" />
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
@@ -65,7 +65,7 @@
         </nz-form-label>
         <nz-form-control>
             <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
-                value="{{ eliminatedMedicineDetails.batchMedicineInInventory.importBatchMedicine.insertDate }}" />
+                value="{{ eliminatedMedicineDetails.medicineInInventory.importMedicine.insertDate }}" />
         </nz-form-control>
     </nz-form-item>
     <!-- Email -->
@@ -77,7 +77,7 @@
         </nz-form-label>
         <nz-form-control>
             <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
-                value="{{ eliminatedMedicineDetails.batchMedicineInInventory.importBatchMedicine.expirationDate }}" />
+                value="{{ eliminatedMedicineDetails.medicineInInventory.importMedicine.expirationDate }}" />
         </nz-form-control>
     </nz-form-item>
     <!-- Role -->
@@ -111,14 +111,20 @@
     <br><br>
     <nz-form-item>
         <nz-form-control>
-            <button class="font-size-18" type="submit" nz-button nzType="primary"
+            <button (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-18" nz-button nzType="primary"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Sửa thông tin
             </button>
-            <button class="font-size-18" nz-button [routerLink]="['/batch-medicine-management/eliminated-medicine-details', eliminatedMedicineDetails.id]"
+            <button *ngIf="isEditing" class="font-size-18" type="submit" nz-button nzType="primary"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                Lưu
+            </button>
+            <button *ngIf="isEditing" class="font-size-18" nz-button (click)="getEliminatedMedicineDetails()"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Hủy
             </button>
         </nz-form-control>
+
+
     </nz-form-item>
 </form>

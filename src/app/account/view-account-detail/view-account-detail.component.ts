@@ -115,6 +115,7 @@ export class ViewAccountDetailComponent implements OnInit {
   }
 
   getAccountDetails() {
+    this.disableUpdate();
     this.summaryService.getAccountDetail(this.id).subscribe(
       (response) => {
         this.accountDetail = response.data;
@@ -133,7 +134,6 @@ export class ViewAccountDetailComponent implements OnInit {
         console.log(error);
       },
     );
-    this.disableUpdate();
   }
 
 }

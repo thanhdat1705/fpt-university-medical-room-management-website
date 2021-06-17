@@ -76,6 +76,8 @@ export class SearchAccountComponent implements OnInit {
     },
   ];
 
+  sortColumn = "";
+  sortOrder = 0;
   selectedSearchAttribute: string;
   accountList: Account[];
   loading = true;
@@ -85,6 +87,16 @@ export class SearchAccountComponent implements OnInit {
   activeStatus = null;
   role = null;
   searchForm: FormGroup;
+  selectField = "Id, InternalCode, DisplayName, Role, Active";
+
+  ngOnInit(): void {
+    console.log(this.searchAccountRequest);
+    this.searchRecord['RoleId'] = null;
+    this.searchRecord['Active'] = null;
+    this.loading = true;
+    this.searchAccount();
+
+  }
 
   onSearchRole(value: string) {
     if (value == null) {
@@ -112,7 +124,7 @@ export class SearchAccountComponent implements OnInit {
   }
 
   onSearchAccountAttribute() {
-    this.searchAccountValue ='';
+    this.searchAccountValue = '';
   }
 
   search() {
@@ -133,9 +145,9 @@ export class SearchAccountComponent implements OnInit {
     limit: this.pageSize,
     page: this.pageIndex,
     searchValue: this.searchRecord,
-    sortField: '',
-    selectFields: "Id, InternalCode, DisplayName, Role, Active",
-    sortOrder: 0,
+    sortField: this.sortColumn,
+    selectFields: this.selectField,
+    sortOrder: this.sortOrder,
   };
 
   listOfColumn = [
@@ -157,7 +169,19 @@ export class SearchAccountComponent implements OnInit {
   ];
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    // this.searchAccountRequest.limit = params.pageSize;
+    console.log("param ne: " + JSON.stringify(params));
+    this.sortColumn = params.sort.find(item => item.value !== null).key;
+    console.log("Sort field: " + this.sortColumn);
+    const sortParam = params.sort.find(item => item.value !== null).value;
+    if (sortParam == "ascend") {
+      this.sortOrder = 1;
+    } else if (sortParam == "descend") {
+      this.sortOrder = 0;
+    } else {
+      this.sortOrder = 0;
+    }
+    console.log("Sort field: " + this.sortOrder);
+
     this.loading = true;
     this.searchAccountRequest.page = params.pageIndex;
     console.log("request: " + this.searchAccountRequest.page);
@@ -201,7 +225,14 @@ export class SearchAccountComponent implements OnInit {
   searchAccount() {
     this.accountList = [];
     console.log(JSON.stringify(this.searchAccountRequest));
-
+    this.searchAccountRequest = {
+      limit: this.pageSize,
+      page: this.pageIndex,
+      searchValue: this.searchRecord,
+      sortField: this.sortColumn,
+      selectFields: this.selectField,
+      sortOrder: this.sortOrder,
+    };
     this.summaryService.searchAccount(this.searchAccountRequest).subscribe(
       (response) => {
         console.log(response.data);
@@ -215,12 +246,5 @@ export class SearchAccountComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {
-    console.log(this.searchAccountRequest);
-    this.searchRecord['RoleId'] = null;
-    this.searchRecord['Active'] = null;
-    this.loading = true;
-    this.searchAccount();
 
-  }
 }

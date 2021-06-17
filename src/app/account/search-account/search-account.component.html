@@ -24,10 +24,10 @@ Lọc theo:
   [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false">
   <thead>
     <tr>
-      <th>Mã số</th>
-      <th>Tên</th>
-      <th>Vai trò</th>
-      <th>Trạng thái</th>
+      <th nzColumnKey="InternalCode" [nzSortFn]="true">Mã số</th>
+      <th nzColumnKey="DisplayName" [nzSortFn]="true">Tên</th>
+      <th nzColumnKey="RoleID" [nzSortFn]="true">Vai trò</th>
+      <th nzColumnKey="Active" [nzSortFn]="true">Trạng thái</th>
       <th></th>
     </tr>
   </thead>
