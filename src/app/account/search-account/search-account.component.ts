@@ -81,7 +81,7 @@ export class SearchAccountComponent implements OnInit {
   selectedSearchAttribute: string;
   accountList: Account[];
   loading = true;
-  pageSize = 10;
+  pageSize = 2;
   pageIndex = 1;
   total = 0;
   activeStatus = null;
@@ -169,24 +169,20 @@ export class SearchAccountComponent implements OnInit {
   ];
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    console.log("param ne: " + JSON.stringify(params));
-    this.sortColumn = params.sort.find(item => item.value !== null).key;
-    console.log("Sort field: " + this.sortColumn);
-    const sortParam = params.sort.find(item => item.value !== null).value;
-    if (sortParam == "ascend") {
+    this.loading = true;
+    const currentSort = params.sort.find(item => item.value !== null);
+    const sortField = (currentSort && currentSort.key) || null;
+    const sortOrder = (currentSort && currentSort.value) || null;
+    sortOrder === 'ascend' || null ? this.sortOrder = 0 : this.sortOrder = 1;
+    sortField == null ? this.sortColumn = 'CreatedDate' : this.sortColumn = sortField;
+    if (sortOrder == "ascend") {
       this.sortOrder = 1;
-    } else if (sortParam == "descend") {
-      this.sortOrder = 0;
-    } else {
+    } else if (sortOrder == "descend") {
       this.sortOrder = 0;
     }
-    console.log("Sort field: " + this.sortOrder);
 
-    this.loading = true;
     this.searchAccountRequest.page = params.pageIndex;
-    console.log("request: " + this.searchAccountRequest.page);
     this.pageIndex = this.searchAccountRequest.page;
-    console.log("request: " + this.pageIndex);
     this.searchAccount();
   }
 
@@ -203,24 +199,10 @@ export class SearchAccountComponent implements OnInit {
     console.log('total: ' + this.total);
   }
 
-  map = new Map<string, ValueCompare>();
-
-  convertMapToObject(metricArguments: Map<string, ValueCompare>): Record<string, ValueCompare> {
-    let newObject: Record<string, ValueCompare> = {}
-    for (let [key, value] of metricArguments) {
-      newObject[key] = value;
-    }
-    return newObject;
-  }
-
-
   constructor(
     private summaryService: SummaryService,
     private generalService: GeneralHelperService,
-  ) {
-
-
-  }
+  ) {}
 
   searchAccount() {
     this.accountList = [];

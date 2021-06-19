@@ -35,7 +35,9 @@ import {
   UrlServerAPISearchEliminatedMedicine,
   UrlServerAPIGetEliminatedMedicineDetails,
   UrlServerAPIUpdateEliminatedMedicineDetails,
-  UrlServerAPIDeleteEliminatedMedicineDetails
+  UrlServerAPIDeleteEliminatedMedicineDetails,
+  UrlServerAPISearchMedicineInInventory,
+  UrlServerAPIGetMedicineInInventoryDetails
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -248,7 +250,16 @@ export class SummaryService {
 
   }
 
-  
+  // Medicine in inventory
+
+  public searchMedicineInInventory(data: any) {
+    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineInInventory, data);
+  }
+
+  public getMedicineInInventoryDetails(id: any) {
+    return this.http.get<ResponseServer>(UrlServerAPIGetMedicineInInventoryDetails + "/" + id);
+
+  }
 
   /*===========================================================================================================*/
 

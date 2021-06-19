@@ -8,6 +8,7 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 
 @Component({
   selector: 'app-view-eliminated-medicine',
@@ -20,7 +21,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   selectFields = "Id, Quantity, CreateDate, Reason, Medicine.Name, Medicine.MedicineUnit, medicineInInventory, Medicine.MedicineSubgroup, Medicine.MedicineClassification";
   eliminatedMedicineList: EliminatedMedicineResponse[];
   loading = false;
-  pageSize = 10;
+  pageSize = 3;
   pageIndex = 1;
   total = 0;
   searchRecord: Record<string, ValueCompare> = {};
@@ -31,9 +32,9 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   medicineSubGroupList: MedicineSubgroupResponse[];
   //value
   searchMedicineValue: string;
-  unitValue: string;
-  classificationValue: string;
-  subgroupValue: string;
+  filterUnitValue: string;
+  filterClassificationValue: string;
+  filterSubgroupValue: string;
 
 
   searchEliminatedMedicineRequest: SearchRequest = {
@@ -49,6 +50,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   constructor(
     private summaryService: SummaryService,
     private medicineService: MedicineService,
+    private generalService: GeneralHelperService
   ) { }
 
   ngOnInit(): void {
@@ -65,8 +67,8 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   searchEliminatedMedicineName() {
 
     if (this.searchMedicineValue != null) {
-      this.searchName.value = this.searchMedicineValue;
-      this.searchRecord['Medicine.Name'] = this.searchName;
+      this.searchNameValue.value = this.searchMedicineValue;
+      this.searchRecord['Medicine.Name'] = this.searchNameValue;
       console.log(this.searchEliminatedMedicineRequest);
     } else {
       this.searchRecord['Medicine.Name'] = null;
@@ -74,53 +76,35 @@ export class ViewEliminatedMedicineComponent implements OnInit {
     this.searchEliminatedMedicine();
   }
 
-  searchName: ValueCompare = {
+  searchNameValue: ValueCompare = {
     value: '',
     compare: 'Contains'
   }
-  searchUnit: ValueCompare = {
+  unitValueCompare: ValueCompare = {
     value: '',
     compare: 'Equals'
   }
-  searchSubgroup: ValueCompare = {
+  subgroupValueCompare: ValueCompare = {
     value: '',
     compare: 'Equals'
   }
-  searchClassification: ValueCompare = {
+  classificationValueCompare: ValueCompare = {
     value: '',
     compare: 'Equals'
   }
 
   onSearchUnit() {
-    if (this.unitValue != null) {
-      this.searchUnit.value = this.unitValue;
-      this.searchRecord['Medicine.MedicineUnit.Id'] = this.searchUnit;
-      console.log(this.searchEliminatedMedicineRequest);
-    } else {
-      this.searchRecord['Medicine.MedicineUnit.Id'] = null;
-    }
+    this.generalService.getValueCompare(this.filterUnitValue, this.unitValueCompare, 'Medicine.MedicineUnit.Id', this.searchRecord);
     this.searchEliminatedMedicine();
   }
 
   onSearchClassification() {
-    if (this.classificationValue != null) {
-      this.searchClassification.value = this.classificationValue;
-      this.searchRecord['Medicine.MedicineClassification.Id'] = this.searchClassification;
-      console.log(this.searchEliminatedMedicineRequest);
-    } else {
-      this.searchRecord['Medicine.MedicineClassification.Id'] = null;
-    }
+    this.generalService.getValueCompare(this.filterClassificationValue, this.classificationValueCompare, 'Medicine.MedicineClassification.Id', this.searchRecord);
     this.searchEliminatedMedicine();
   }
 
   onSearchSubGroup() {
-    if (this.subgroupValue != null) {
-      this.searchSubgroup.value = this.subgroupValue
-      this.searchRecord['Medicine.MedicineSubgroup.Id'] = this.searchSubgroup;
-      console.log(this.searchEliminatedMedicineRequest);
-    } else {
-      this.searchRecord['Medicine.MedicineSubgroup.Id'] = null;
-    }
+    this.generalService.getValueCompare(this.filterSubgroupValue, this.subgroupValueCompare, 'Medicine.MedicineSubgroup.Id', this.searchRecord);
     this.searchEliminatedMedicine();
   }
 
@@ -131,7 +115,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
       (response) => {
         this.medicineSubGroupList = response.data;
       }, (error) => {
-
+        this.generalService.createErrorNotification(error);
       }
     );
   }
@@ -141,7 +125,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
       (response) => {
         this.medicineClassificationList = response.data;
       }, (error) => {
-
+        this.generalService.createErrorNotification(error);
       }
     );
   }
@@ -152,22 +136,41 @@ export class ViewEliminatedMedicineComponent implements OnInit {
         console.log(response.data);
         this.medicineUnitList = response.data;
       }, (error) => {
-
+        this.generalService.createErrorNotification(error);
       }
     );
   }
 
-  onQueryParamsChange(param: NzTableQueryParams) {
+  onQueryParamsChange(params: NzTableQueryParams) {
+    this.loading = true;
+    const currentSort = params.sort.find(item => item.value !== null);
+    const sortField = (currentSort && currentSort.key) || null;
+    const sortOrder = (currentSort && currentSort.value) || null;
+    sortOrder === 'ascend' || null ? this.sortOrder = 0 : this.sortOrder = 1;
+    sortField == null ? this.sortField = 'CreatedDate' : this.sortField = sortField;
 
+    if (sortOrder == "ascend") {
+      this.sortOrder = 1;
+    } else if (sortOrder == "descend") {
+      this.sortOrder = 0;
+    }
+
+    this.searchEliminatedMedicineRequest.page = params.pageIndex;
+    this.searchEliminatedMedicineRequest.sortField = this.sortField;
+    this.searchEliminatedMedicineRequest.sortOrder = this.sortOrder;
+    this.searchEliminatedMedicine();
   }
 
   searchEliminatedMedicine() {
     this.summaryService.searchEliminateMedicine(this.searchEliminatedMedicineRequest).subscribe(
       (response) => {
         this.getData(response.data);
-        console.log(this.eliminatedMedicineList);
+        this.loading = false;
+
       }, (error) => {
         console.log(error);
+        this.loading = false;
+
       }
     );
   }

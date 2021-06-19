@@ -6,6 +6,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { WaitingComponent } from '../components/waiting/waiting.component';
 import { DateTime } from '../models/date-time';
+import { ValueCompare } from '../requests/search-request';
 import { AuthService } from './auth-service/auth.service';
 
 
@@ -17,7 +18,6 @@ export class GeneralHelperService {
     minCharacterLength = 3;
     maxInputCharacterLength = 50;
     maxTextAreaCharacterLength = 50;
-    
 
     constructor(
         private router: Router,
@@ -62,6 +62,10 @@ export class GeneralHelperService {
         return "Số điện thoại phải là số";
     }
 
+    showNumberPatternError(fieldName: string){
+        return fieldName+" phải là số";
+    }
+
     showEmailPatternError(){
         "Email phải được nhập đúng format (example@email.com)"
     }
@@ -69,6 +73,16 @@ export class GeneralHelperService {
     showPatternError(fieldName: string){
         return fieldName + " không được chứa kí tự đặc biệt";
     }
+    
+
+    getValueCompare(value: string, valueCompare: ValueCompare, searchRecordAttribute: string, searchRecord: Record<string, ValueCompare> = {}) {
+        if (value != null) {
+          valueCompare.value = value;
+          searchRecord[searchRecordAttribute] = valueCompare;
+        } else {
+          searchRecord[searchRecordAttribute] = null;
+        }
+      }
 
     createErrorNotification(error: any) {
         if (error.status != undefined) {

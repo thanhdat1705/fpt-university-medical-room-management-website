@@ -6,16 +6,16 @@
 
 Lọc theo:
 <div *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList">
-  <nz-select class="filter-select" nzPlaceHolder="Đơn vị" [(ngModel)]="unitValue" nzAllowClear (ngModelChange)="onSearchUnit()">
+  <nz-select class="filter-select" nzPlaceHolder="Đơn vị" [(ngModel)]="filterUnitValue" nzAllowClear (ngModelChange)="onSearchUnit()">
     <nz-option *ngFor="let option of medicineUnitList" [nzLabel]="option.name" [nzValue]="option.id">
     </nz-option>
   </nz-select>
-  <nz-select class="filter-select" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="classificationValue"
+  <nz-select class="filter-select" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
     (ngModelChange)="onSearchClassification($event)">
     <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
     </nz-option>
   </nz-select>
-  <nz-select class="filter-select" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="subgroupValue"
+  <nz-select class="filter-select" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
   (ngModelChange)="onSearchSubGroup($event)">
     <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
   </nz-select>

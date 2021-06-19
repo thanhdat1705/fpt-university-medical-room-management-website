@@ -1,0 +1,103 @@
+<!-- Mã số -->
+<div *ngIf="medicineInInventoryDetails">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Tên thuốc</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
+                value="{{medicineInInventoryDetails.importMedicine.medicine.name}}" />
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Số lượng</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" type="text" nz-input [nzSize]="'large'" style="width: 10%;"
+                value="{{medicineInInventoryDetails.quantity}}" />
+            <span style="margin-left: 10px;">{{ medicineInInventoryDetails.importMedicine.medicine.medicineUnit.name }}
+            </span>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Thuộc loại</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" type="text" nz-input [nzSize]="'large'" 
+                value="{{ medicineInInventoryDetails.importMedicine.medicine.medicineClassification.name }}" />
+            <span style="margin-left: 10px;">
+            </span>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Thuộc nhóm</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
+                value="{{ medicineInInventoryDetails.importMedicine.medicine.medicineSubgroup.name }}" />
+            <span style="margin-left: 10px;">
+            </span>
+        </nz-form-control>
+    </nz-form-item>
+   
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Thuộc lô</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'" 
+            value="{{ medicineInInventoryDetails.importMedicine.importBatch.createDate }}" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Ngày nhập</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
+                value="{{ medicineInInventoryDetails.createdDate }}" /><span class="font-size-18"> </span>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Ngày hết hạn</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
+                value="{{ medicineInInventoryDetails.importMedicine.expirationDate }}" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7">
+            <span class="font-size-18">Thuộc kì</span>
+        </nz-form-label>
+        <nz-form-control>
+            <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
+                value="{{ medicineInInventoryDetails.periodicInventory.month}}/{{ medicineInInventoryDetails.periodicInventory.year}}" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label nzFor="reason" [nzSpan]="7">
+            <span class="font-size-18 m-l-11">Mô tả</span>
+        </nz-form-label>
+        <nz-form-control [nzErrorTip]="reasonTpl">
+            <nz-textarea-count [nzMaxCharacterCount]="500">
+                <textarea [disabled]="true" nz-input rows="4" style="font-size: 18px;">
+                    {{ medicineInInventoryDetails.importMedicine.description}}
+                </textarea>
+                <ng-template #reasonTpl let-control>
+                    <!-- <ng-container *ngIf="f.reason.hasError('minlength') || f.reason.hasError('maxlength')">
+                        <span class="error-text">Nhập độ dài từ 1 tới 500</span>
+                    </ng-container> -->
+                </ng-template>
+            </nz-textarea-count>
+        </nz-form-control>
+    </nz-form-item>
+    <br><br>
+</div>

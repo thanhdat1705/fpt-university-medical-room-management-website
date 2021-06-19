@@ -29,6 +29,7 @@ import { HeaderService } from './shared/services/header.service';
 
 import { SideNavService } from './shared/services/side-nav.service';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { EliminateMedicineComponent } from './batch-medicine-management/medicine-elimination/eliminate-medicine.component';
 
 
 registerLocaleData(en);

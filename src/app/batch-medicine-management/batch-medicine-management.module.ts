@@ -8,6 +8,8 @@ import { AddBatchMedicineComponent } from './batch-medicine-list/add-batch-medic
 import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
 import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eliminated-medicine/view-eliminated-medicine.component';
 import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
+import { MedicineInInventoryListComponent } from './medicine-in-inventory-list/medicine-in-inventory-list.component';
+import { MedicineInInventoryDetailsComponent } from './medicine-in-inventory-list/medicine-in-inventory-details/medicine-in-inventory-details.component';
 
 
 @NgModule({
@@ -17,6 +19,8 @@ import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/v
     EliminateMedicineComponent,
     ViewEliminatedMedicineComponent,
     ViewEliminatedMedicineDetailsComponent,
+    MedicineInInventoryListComponent,
+    MedicineInInventoryDetailsComponent,
   ],
   imports: [
     CommonModule,

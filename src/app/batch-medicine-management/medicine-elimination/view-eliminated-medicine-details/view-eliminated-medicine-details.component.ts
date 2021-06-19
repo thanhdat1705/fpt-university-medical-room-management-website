@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { updateEliminatedMedicineRequest } from 'src/app/shared/requests/update-eliminate-medicine-request';
 import { EliminatedMedicineResponse } from 'src/app/shared/responses/eliminated-medicine-response';
@@ -19,6 +19,7 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
   eliminatedMedicineDetails: EliminatedMedicineResponse;
   numberPattern = '[0-9]*';
   isEditing = false;
+  totalQuantity: number;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,27 +33,24 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
     this.eliminatedMedicineDetailsForm = this.formBuilder.group(
       {
-        batchMedicineId: ['',
-        ],
-        quantity: ['', [
-          Validators.required,
-          Validators.pattern(this.numberPattern),
+        medicineInInventoryId: [''],
+        quantity: [''
           // Validators.max(this.eliminatedMedicineDetails.batchMedicineInInventory.quantity),
-        ]],
+        ],
         reason: [''],
       }
     );
     this.getEliminatedMedicineDetails();
   }
 
-  disableUpdate(){
+  disableUpdate() {
     this.isEditing = false;
     this.eliminatedMedicineDetailsForm.controls['quantity'].disable();
     this.eliminatedMedicineDetailsForm.controls['reason'].disable();
 
   }
 
-  enableUpdate(){
+  enableUpdate() {
     this.isEditing = true;
     this.eliminatedMedicineDetailsForm.controls['quantity'].enable();
     this.eliminatedMedicineDetailsForm.controls['reason'].enable();
@@ -71,36 +69,39 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
         this.eliminatedMedicineDetails = response.data;
         console.log(this.eliminatedMedicineDetails);
         this.eliminatedMedicineDetailsForm.setValue({
-          batchMedicineId: this.eliminatedMedicineDetails.batchMedicineId,
+          medicineInInventoryId: this.eliminatedMedicineDetails.medicineInInventory.id,
           quantity: this.eliminatedMedicineDetails.quantity,
           reason: this.eliminatedMedicineDetails.reason,
         });
-        this.eliminatedMedicineDetailsForm.controls["quantity"].setValidators([Validators.max(this.eliminatedMedicineDetails.medicineInInventory.quantity)]);
+        this.totalQuantity = this.eliminatedMedicineDetails.medicineInInventory.quantity + this.eliminatedMedicineDetails.quantity
+        this.eliminatedMedicineDetailsForm.controls['quantity'].setValidators([
+          Validators.pattern(this.numberPattern),
+          Validators.required,
+          Validators.min(1), Validators.max(this.totalQuantity)]);
 
         console.log(response);
       }, (error) => {
         console.log(error);
+        this.generalService.createErrorNotification(error);
       }
     );
   }
 
-  updatetEliminatedMedicine(data: updateEliminatedMedicineRequest) {
+  updatetEliminatedMedicine(data: any) {
     if (this.eliminatedMedicineDetailsForm.invalid) {
       this.generalService.createErrorNotification("Hãy điền chính xác các thông tin");
       return;
     }
-    if (data.quantity == 0) {
-      this.eliminateMedicineService.deleteEliminatedMedicine(this.id);
-    } else {
-      this.summaryService.updateEliminatedMedicineDetails(this.id, data).subscribe(
-        (response) => {
-          console.log(response);
-        }, (error) => {
-          console.log(error);
-        }
-      );
-      this.getEliminatedMedicineDetails();
-    }
+    console.log(data);
+    this.summaryService.updateEliminatedMedicineDetails(this.id, data).subscribe(
+      (response) => {
+        console.log(response);
+        this.getEliminatedMedicineDetails();
+      }, (error) => {
+        console.log(error);
+        this.generalService.createErrorNotification(error);
+      }
+    );
   }
 
 }

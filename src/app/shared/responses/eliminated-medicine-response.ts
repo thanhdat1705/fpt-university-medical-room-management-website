@@ -1,6 +1,6 @@
 import { Medicine } from "../models/medicine";
 import { MedicineClassificationResponse } from "./medicine-classification/medicine-classification-response";
-import { MedicineInInventoryResponse } from "./medicine-in-inventory";
+import { MedicineInInventoryResponse } from "./medicine-in-inventory/medicine-in-inventory";
 import { MedicineSubgroupResponse } from "./medicine-subgroup/medicine-subgroup-response";
 import { MedicineUnitResponse } from "./medicine-unit/medicine-unit-response";
 
