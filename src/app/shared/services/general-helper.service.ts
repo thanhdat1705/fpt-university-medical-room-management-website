@@ -17,7 +17,7 @@ export class GeneralHelperService {
     minCharacterLength = 3;
     maxInputCharacterLength = 50;
     maxTextAreaCharacterLength = 50;
-    
+
 
     constructor(
         private router: Router,
@@ -58,15 +58,15 @@ export class GeneralHelperService {
         return fieldName + " phải từ " + minLength + " đến " + maxLength + " kí tự";
     }
 
-    showNumberPatternError(fieldName: string){
+    showNumberPatternError(fieldName: string) {
         return fieldName + " phải là số";
     }
 
-    showEmailPatternError(fieldName: string){
+    showEmailPatternError(fieldName: string) {
         return fieldName + " phải theo định dạng tenban@fpt.edu.vn";
     }
 
-    showPatternError(fieldName: string){
+    showPatternError(fieldName: string) {
         return fieldName + " không được chứa kí tự đặc biệt";
     }
 
@@ -201,6 +201,11 @@ export class GeneralHelperService {
 
         }
         return result;
+    }
+
+    removeDotInString(text: string) {
+        var removeDot = text.replace(/\./g, '');
+        return removeDot;
     }
 
     MustMatch(controlName: string, matchingControlName: string) {

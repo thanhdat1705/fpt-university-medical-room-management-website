@@ -16,17 +16,49 @@ import { IBreadcrumb } from "../../shared/interfaces/breadcrumb.type";
 
 export class CommonLayoutComponent {
 
+    breadcrumbs$: Observable<IBreadcrumb[]>;
+
     isCollapsed: boolean;
     isVisible = false;
     constructor(
         private router: Router,
         private sidenav: SideNavService,
-        private modal: NzModalService,
-        private notification: NzNotificationService,
+        private activatedRoute: ActivatedRoute,
     ) { }
 
     ngOnInit() {
         this.sidenav.isMenuCollapsedChanges.subscribe(isisCollapsed => this.isCollapsed = isisCollapsed);
+        this.breadcrumbs$ = this.router.events.pipe(
+            startWith(new NavigationEnd(0, '/', '/')),
+            filter(event => event instanceof NavigationEnd), distinctUntilChanged(),
+            map(data => this.buildBreadCrumb(this.activatedRoute.root))
+        );
+        // console.log('this.activatedRoute.root ', this.activatedRoute.root)
+    }
+
+    private buildBreadCrumb(route: ActivatedRoute, url: string = '', breadcrumbs: IBreadcrumb[] = []): IBreadcrumb[] {
+        let label = '', path = '/', display = null;
+
+        if (route.routeConfig) {
+            if (route.routeConfig.data) {
+                label = route.routeConfig.data['title'];
+                path += route.routeConfig.path;
+            }
+        } else {
+            label = 'Trang chính';
+            path += '/medicine-management/medicine-list';
+        }
+
+        const nextUrl = path && path !== '//medicine-management/medicine-list' ? `${url}${path}` : url;
+        const breadcrumb = <IBreadcrumb>{
+            label: label, url: nextUrl
+        };
+
+        const newBreadcrumbs = label ? [...breadcrumbs, breadcrumb] : [...breadcrumbs];
+        if (route.firstChild) {
+            return this.buildBreadCrumb(route.firstChild, nextUrl, newBreadcrumbs);
+        }
+        return newBreadcrumbs;
     }
 
     // changeLayoutOnDevice() {

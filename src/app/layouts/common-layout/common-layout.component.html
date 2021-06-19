@@ -1,7 +1,7 @@
 <nz-layout class="app-layout">
-    <nz-sider class="menu-sidebar" [(nzCollapsed)]="isCollapsed" nzWidth="18%" nzTheme="light">
+    <nz-sider class="menu-sidebar" [(nzCollapsed)]="isCollapsed" nzWidth="17%" nzTheme="light">
         <div class="sidebar-logo">
-            <a href="">
+            <a href="/medicine-management/medicine-list">
                 <img src="/assets/images/logo/logo-browser.png" alt="logo" />
                 <h1>FHCS</h1>
             </a>
@@ -17,7 +17,7 @@
             <li nz-submenu nzTitle="Quản lý dược phẩm" nzIcon="dollar">
                 <ul>
                     <li nz-menu-item>
-                        <a [routerLink]="'medicine-management/medicine-list'" >Danh sách thuốc</a>
+                        <a [routerLink]="'medicine-management/medicine-list'">Danh sách thuốc</a>
                     </li>
                     <li nz-menu-item>
                         <a [routerLink]="'medicine-management/medicine-unit-list'">Danh sách đơn vị thuốc</a>
@@ -33,7 +33,7 @@
             <li nz-submenu nzTitle="Quản lô dược phẩm" nzIcon="dollar">
                 <ul>
                     <li nz-menu-item>
-                        <a [routerLink]="'batch-medicine-management/batch-medicine-list'" >Danh sách lô</a>
+                        <a [routerLink]="'batch-medicine-management/batch-medicine-list'">Danh sách lô</a>
                     </li>
                 </ul>
             </li>
@@ -56,11 +56,18 @@
     <nz-layout>
         <app-header></app-header>
         <nz-content class="main-content">
-            <nz-breadcrumb>
-                <nz-breadcrumb-item>User</nz-breadcrumb-item>
-                <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
-            </nz-breadcrumb>
-            <div class="inner-content">
+            <div class="main-content-header">
+                <h4 class="page-title" *ngIf="breadcrumbs$ | async; let breadcrumbs">{{(breadcrumbs[breadcrumbs.length - 1].label)}}</h4>
+                <nz-breadcrumb nzSeparator=">">
+                    <!-- <i class="m-r-5 text-gray" nz-icon nzType="home"></i> -->
+                    <nz-breadcrumb-item *ngFor="let breadcrumb of breadcrumbs$ | async">
+                        <a style="text-decoration: none;" [routerLink]="breadcrumb.url">
+                            {{ breadcrumb.label }}
+                        </a>
+                    </nz-breadcrumb-item>
+                </nz-breadcrumb>
+            </div>
+            <div>
                 <router-outlet></router-outlet>
             </div>
         </nz-content>

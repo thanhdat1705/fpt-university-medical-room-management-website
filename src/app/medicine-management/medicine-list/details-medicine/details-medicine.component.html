@@ -1,11 +1,11 @@
 <div class="inner-content">
-  <nz-spin [nzSpinning]="addMedicineLoading" nzTip="Loading...">
+  <nz-spin [nzSpinning]="updateMedicineLoading" nzTip="Đang tải...">
     <form nz-form nzLayout="horizontal" [formGroup]="medicineForm" class="form"
-      (ngSubmit)="addNewMedicine(medicineForm.value)">
+      (ngSubmit)="updateMedicine(medicineForm.value)">
       <!---------------------- Medicine Name ----------------------------->
       <nz-form-item>
         <nz-form-label nzRequired nzFor="name" class="text-label" [nzSpan]="7">
-          <span class="font-size-18">Tên dược phẩm</span>
+          <span class="font-size-18">Tên thuốc</span>
         </nz-form-label>
         <nz-form-control [nzErrorTip]="medicineNameErrorTpl">
           <input id="name" nz-input placeholder="Nhập tên dược phẩm" style="font-size: 18px;" [nzSize]="'large'"
@@ -23,21 +23,6 @@
           </ng-template>
         </nz-form-control>
       </nz-form-item>
-      <!---------------------- Quantity ----------------------------->
-      <!-- <nz-form-item>
-      <nz-form-label nzRequired nzFor="quantity" class="text-label" [nzSpan]="7">
-        <span class="font-size-18">Số lượng</span>
-      </nz-form-label>
-      <nz-form-control [nzErrorTip]="quantityErrorTpl">
-        <nz-input-number id="quantity" formControlName="quantity" [nzMin]="1" [nzMax]="500" [nzStep]="1"
-          [nzSize]="'large'" style="width: 100%;display: flex; align-items: center; font-size: 18px;"></nz-input-number>
-        <ng-template #quantityErrorTpl let-control>
-          <ng-container *ngIf="f.quantity.hasError('required')">
-            <span class="error-text">Hãy nhập số lượng</span>
-          </ng-container>
-        </ng-template>
-      </nz-form-control>
-    </nz-form-item> -->
       <!---------------------- Medicine Classification ----------------------------->
       <nz-form-item>
         <nz-form-label nzRequired nzFor="medicineClassificationId" class="text-label" [nzSpan]="7">
@@ -111,7 +96,7 @@
             </nz-spin>
           </ng-template>
           <ng-template #unitErrorTpl let-control>
-            <ng-container *ngIf="f.unitId.hasError('required')">
+            <ng-container *ngIf="f.medicineUnitId.hasError('required')">
               <span class="error-text">Hãy nhập đơn vị</span>
             </ng-container>
           </ng-template>
@@ -132,15 +117,29 @@
               </ng-container>
             </ng-template>
           </nz-textarea-count>
-
         </nz-form-control>
       </nz-form-item>
       <br><br>
       <nz-form-item>
         <nz-form-control>
-          <button class="font-size-18" nz-button nzType="primary"
-            style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Thêm
-            thuốc</button>
+          <div *ngIf="isDisable" class="d-flex flex-row justify-content-start flex-wrap">
+            <a class="font-size-18" nz-button nzType="primary" (click)="isDiable(false)"
+              style="height: 42px; width: 150px; display: flex; align-items: center; justify-content: center; margin-right: 5px; margin-bottom: 10px;">
+              Chỉnh sửa</a>
+            <a class="font-size-18" nz-button nzType="primary" (click)="delete()"
+              style="height: 42px; width: 150px; display: flex; align-items: center; justify-content: center;">
+              Xóa</a>
+          </div>
+
+          <ng-container *ngIf="!isDisable">
+            <div class="d-flex flex-row justify-content-start flex-wrap">
+              <a class="font-size-18" nz-button nzType="primary" (click)="cancel()"
+                style="height: 42px; width: 150px; display: flex; align-items: center; justify-content: center; margin-right: 5px; margin-bottom: 10px;">Hủy</a>
+              <button class="font-size-18" nz-button nzType="primary"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Cập
+                nhật</button>
+            </div>
+          </ng-container>
         </nz-form-control>
       </nz-form-item>
     </form>

@@ -24,12 +24,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '404',
-  },
-  {
-    path: '404',
-    component: ErrorComponent,
-    children: CommonLayout_ROUTES
+    component: ErrorComponent
   },
 
 ];

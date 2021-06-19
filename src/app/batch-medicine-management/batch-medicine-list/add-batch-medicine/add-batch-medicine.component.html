@@ -1,147 +1,241 @@
-<ng-template #noId>
-    <nz-spin [nzSpinning]="addBatchMedicineLoading" nzTip="Loading...">
-      <form nz-form nzLayout="horizontal" [formGroup]="batchMedicineForm" class="form"
-        (ngSubmit)="addBatchMedicine(medicineForm.value)">
-        <!---------------------- Medicine Name ----------------------------->
+<div class="container d-flex flex-wrap justify-content-between h-100">
+  <div class="container-left col-md-12 col-lg-8">
+    <div class="bg-white d-flex flex-column p-h-20 p-v-10">
+      <span class="text-teal-green font-size-18 font-weight-semibold">Mục nhập</span>
+      <dividing-line></dividing-line>
+      <!-- <div class="auto-flex align-items-center p-h-15 justify-content-between h-100">
+        <button nz-button nzType="primary"
+          class="font-size-16 d-flex align-items-center justify-content-center p-20">Nhập thuốc</button>
+        <div>
+          <label class="required">Kỳ (tháng):</label>
+          <nz-input-number [nzMin]="1" [nzMax]="12" [nzStep]="1" nzPlaceHolder="Nhập kỳ" (ngModelChange)="periodic()"
+            style="width: 100%; display: flex; align-items: center; font-size: 16px;">
+          </nz-input-number>
+        </div>
+        <div style="right: 0;">
+          <label class="required">Năm:</label>
+          <nz-input-number [nzMin]="1" [nzStep]="1" nzPlaceHolder="Nhập năm"
+            style="width: 100%; display: flex; align-items: center; font-size: 16px;">
+          </nz-input-number>
+        </div>
+      </div> -->
+      <form nz-form nzLayout="horizontal" [formGroup]="timeBatchForm" class="timeForm">
         <nz-form-item>
-          <nz-form-label nzRequired nzFor="name" class="text-label" [nzSpan]="7">
-            <span class="font-size-18">Tên dược phẩm</span>
+          <nz-form-label nzRequired class="text-time-label">
+            <span class="font-size-16">Kỳ (tháng)</span>
           </nz-form-label>
-          <nz-form-control [nzErrorTip]="medicineNameErrorTpl">
-            <input id="name" nz-input placeholder="Nhập tên dược phẩm" style="font-size: 18px;" [nzSize]="'large'"
-              formControlName="name" />
-            <ng-template #medicineNameErrorTpl let-control>
-              <ng-container *ngIf="f.name.hasError('required')">
-                <span class="error-text">Hãy nhập tên thuốc</span>
-              </ng-container>
-              <ng-container *ngIf="f.name.hasError('minlength') || f.name.hasError('maxlength')">
-                <span class="error-text">Nhập độ dài từ 3 tới 50</span>
-              </ng-container>
-              <ng-container *ngIf="f.name.hasError('pattern')">
-                <span class="error-text">Không nhập ký tự đặc biệt</span>
+          <nz-form-control [nzErrorTip]="monthErrorTpl">
+            <nz-date-picker formControlName="monthBatch" nzSize="large" nzMode="month"
+              [nzDisabledDate]="disabledInsertDate" nzPlaceHolder="Ngày nhập" nzFormat="MM" style="width: 100%;">
+            </nz-date-picker>
+            <ng-template #monthErrorTpl let-control>
+              <ng-container *ngIf="timef.monthBatch.hasError('required')">
+                <span class="error-text">Hãy nhập kỳ dược phẩm</span>
               </ng-container>
             </ng-template>
           </nz-form-control>
         </nz-form-item>
-        <!---------------------- Quantity ----------------------------->
-        <!-- <nz-form-item>
-        <nz-form-label nzRequired nzFor="quantity" class="text-label" [nzSpan]="7">
-          <span class="font-size-18">Số lượng</span>
-        </nz-form-label>
-        <nz-form-control [nzErrorTip]="quantityErrorTpl">
-          <nz-input-number id="quantity" formControlName="quantity" [nzMin]="1" [nzMax]="500" [nzStep]="1"
-            [nzSize]="'large'" style="width: 100%;display: flex; align-items: center; font-size: 18px;"></nz-input-number>
-          <ng-template #quantityErrorTpl let-control>
-            <ng-container *ngIf="f.quantity.hasError('required')">
-              <span class="error-text">Hãy nhập số lượng</span>
-            </ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item> -->
-        <!---------------------- Medicine Classification ----------------------------->
         <nz-form-item>
-          <nz-form-label nzRequired nzFor="medicineClassificationId" class="text-label" [nzSpan]="7">
-            <span class="font-size-18">Loại dược</span>
+          <nz-form-label nzRequired class="text-time-label">
+            <span class="font-size-16">Năm</span>
           </nz-form-label>
-          <nz-form-control [nzErrorTip]="classificationErrorTpl">
-            <nz-select id="medicineClassificationId" formControlName="medicineClassificationId" nzAllowClear
-              [nzSize]="'large'" nzPlaceHolder="Chọn loại dược phẩm"
-              style="display: flex; align-items: center; font-size: 18px;">
-              <nz-option *ngFor="let item of classList" [nzLabel]="item.name" [nzValue]="item.id" nzCustomContent>
-                <span style="font-size: 18px;">{{ item.name }}</span>
-              </nz-option>
-            </nz-select>
-            <ng-template #classificationErrorTpl let-control>
-              <ng-container *ngIf="f.medicineClassificationId.hasError('required')">
-                <span class="error-text">Hãy chọn loại dược phẩm</span>
+          <nz-form-control [nzErrorTip]="yearErrorTpl">
+            <nz-date-picker formControlName="yearBatch" nzSize="large" nzMode="year"
+              [nzDisabledDate]="disabledInsertDate" nzPlaceHolder="Ngày nhập" nzFormat="yyy" style="width: 100%;">
+            </nz-date-picker>
+            <ng-template #yearErrorTpl let-control>
+              <ng-container *ngIf="timef.yearBatch.hasError('required')">
+                <span class="error-text">Hãy nhập năm dược phẩm</span>
               </ng-container>
             </ng-template>
-          </nz-form-control>
-        </nz-form-item>
-        <!---------------------- Medicine Subgroup ----------------------------->
-        <nz-form-item>
-          <nz-form-label nzRequired nzFor="medicineSubgroupId" class="text-label" [nzSpan]="7">
-            <span class="font-size-18">Nhóm dược</span>
-          </nz-form-label>
-          <nz-form-control [nzErrorTip]="subgroupErrorTpl">
-            <nz-select id="medicineSubgroupId" nzShowSearch nzAllowClear formControlName="medicineSubgroupId"
-              [nzDropdownRender]="renderSubgroupL" [nzSize]="'large'" nzPlaceHolder="Nhập nhóm dược"
-              style="display: flex; align-items: center; font-size: 18px;">
-              <nz-option *ngFor="let item of subgroupList" [nzLabel]="item.name" [nzValue]="item.id" nzCustomContent>
-                <span style="font-size: 18px;">{{ item.name }}</span>
-              </nz-option>
-            </nz-select>
-            <ng-template #renderSubgroupL>
-              <nz-divider></nz-divider>
-              <nz-spin [nzSpinning]="addItemLoading" nzTip="Loading...">
-                <div class="container">
-                  <input type="text" nz-input #inputSubgroup [nzSize]="'large'" />
-                  <a class="add-item" (click)="addSubgroup(inputSubgroup.value)"><i nz-icon nzType="plus"></i> Thêm
-                    mới</a>
-                </div>
-              </nz-spin>
-            </ng-template>
-            <ng-template #subgroupErrorTpl let-control>
-              <ng-container *ngIf="f.medicineSubgroupId.hasError('required')">
-                <span class="error-text">Hãy nhập nhóm dược phẩm</span>
-              </ng-container>
-            </ng-template>
-          </nz-form-control>
-        </nz-form-item>
-        <!---------------------- Medicine Unit ----------------------------->
-        <nz-form-item>
-          <nz-form-label nzRequired nzFor="unitId" class="text-label" [nzSpan]="7">
-            <span class="font-size-18">Đơn vị</span>
-          </nz-form-label>
-          <nz-form-control [nzErrorTip]="unitErrorTpl">
-            <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="unitId" [nzDropdownRender]="renderUnitL"
-              [nzSize]="'large'" nzPlaceHolder="Nhập đơn vị" style="display: flex; align-items: center; font-size: 18px;">
-              <nz-option *ngFor="let item of unitList" [nzLabel]="item.name" [nzValue]="item.id" nzCustomContent>
-                <span style="font-size: 18px;">{{ item.name }}</span>
-              </nz-option>
-            </nz-select>
-            <ng-template #renderUnitL>
-              <nz-divider></nz-divider>
-              <nz-spin [nzSpinning]="addItemLoading" nzTip="Loading...">
-                <div class="container">
-                  <input type="text" nz-input #inputUnit [nzSize]="'large'" />
-                  <a class="add-item" (click)="addUnit(inputUnit.value)"><i nz-icon nzType="plus"></i> Thêm mới</a>
-                </div>
-              </nz-spin>
-            </ng-template>
-            <ng-template #unitErrorTpl let-control>
-              <ng-container *ngIf="f.unitId.hasError('required')">
-                <span class="error-text">Hãy nhập đơn vị</span>
-              </ng-container>
-            </ng-template>
-          </nz-form-control>
-        </nz-form-item>
-        <!---------------------- Description ----------------------------->
-        <nz-form-item>
-          <nz-form-label nzFor="description" class="text-label" [nzSpan]="7">
-            <span class="font-size-18 m-l-11">Mô tả</span>
-          </nz-form-label>
-          <nz-form-control [nzErrorTip]="descriptionErrorTpl">
-            <nz-textarea-count [nzMaxCharacterCount]="500">
-              <textarea id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
-                formControlName="description" style="font-size: 18px;"></textarea>
-              <ng-template #descriptionErrorTpl let-control>
-                <ng-container *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
-                  <span class="error-text">Nhập độ dài từ 1 tới 500</span>
-                </ng-container>
-              </ng-template>
-            </nz-textarea-count>
-  
-          </nz-form-control>
-        </nz-form-item>
-        <br><br>
-        <nz-form-item>
-          <nz-form-control>
-            <button class="font-size-18" nz-button nzType="primary"
-              style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Thêm
-              thuốc</button>
           </nz-form-control>
         </nz-form-item>
       </form>
-    </nz-spin>
-  </ng-template>
+    </div>
+    <div class="bg-white m-t-22 m-b-20 p-10 d-flex flex-column p-h-20 p-v-10" >
+      <span class="text-teal-green font-size-18 font-weight-semibold">Thêm lô</span>
+      <dividing-line></dividing-line>
+      <!-- <nz-divider style="height: 5px;" ></nz-divider> -->
+      <br>
+      <nz-spin [nzSpinning]="addImportMedicineLoading" nzTip="Loading...">
+        <form nz-form nzLayout="horizontal" [formGroup]="importMedicineForm" class="form"
+          (ngSubmit)="addImportMedicine(importMedicineForm.value)">
+          <!---------------------- Medicine Name ----------------------------->
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="medicine" class="text-label">
+              <span class="font-size-16">Tên dược phẩm</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="medicineNameErrorTpl">
+              <input placeholder="Nhập tên dược phẩm" nz-input formControlName="medicine" id="medicine"
+                (ngModelChange)="medicineChange($event)" [nzAutocomplete]="autoMedicine"
+                (input)="inputChange(inputValue.value)" #inputValue nzSize="large" />
+              <nz-autocomplete #autoMedicine>
+                <ng-container *ngFor="let option of medicineList">
+                  <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option"
+                    [nzLabel]="option.name">
+                    {{option.name}}
+                  </nz-auto-option>
+                </ng-container>
+                <nz-auto-option *ngIf="isLoading" nzDisabled nzCustomContent>
+                  <i nz-icon nzType="loading" class="loading-icon"></i> Đang tìm kiếm...
+                </nz-auto-option>
+                <ng-container *ngIf="inputValue.value != ''">
+                  <nz-auto-option *ngIf="medicineList.length <= 0" nzDisabled nzCustomContent>
+                    Không thấy kết quả tìm kiếm
+                  </nz-auto-option>
+                </ng-container>
+
+              </nz-autocomplete>
+              <ng-template #medicineNameErrorTpl let-control>
+                <ng-container *ngIf="f.medicine.hasError('required')">
+                  <span class="error-text">Hãy nhập tên dược phẩm</span>
+                </ng-container>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+          <div nz-row class="justify-content-between">
+            <!---------------------- Quantity ----------------------------->
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="quantity" class="text-label">
+                <span class="font-size-16">Số lượng <span style="color: #1397B6;">({{ unit }})</span></span>
+              </nz-form-label>
+              <nz-form-control [nzErrorTip]="quantityErrorTpl">
+                <nz-input-number id="quantity" formControlName="quantity" [nzMin]="1" [nzStep]="1"
+                  nzPlaceHolder="Nhập số lượng" [nzSize]="'large'"
+                  style="width: 100%; display: flex; align-items: center; font-size: 16px;">
+                </nz-input-number>
+                <ng-template #quantityErrorTpl let-control>
+                  <ng-container *ngIf="f.quantity.hasError('required')">
+                    <span class="error-text">Hãy nhập số lượng</span>
+                  </ng-container>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+            <!---------------------- Price ----------------------------->
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="price" class="text-label">
+                <span class="font-size-16">Đơn giá (₫)</span>
+              </nz-form-label>
+              <nz-form-control [nzErrorTip]="priceErrorTpl">
+                <input nz-input id="price" formControlName="price" placeholder="Nhập đơn giá" [nzSize]="'large'"
+                  style="width: 100%; display: flex; align-items: center; font-size: 16px;" />
+                <ng-template #priceErrorTpl let-control>
+                  <ng-container *ngIf="f.price.hasError('required')">
+                    <span class="error-text">Hãy nhập đơn giá</span>
+                  </ng-container>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-row class="justify-content-between">
+            <!-- -------------------- Insert --------------------------- -->
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="insertDate" class="text-label">
+                <span class="font-size-16">Ngày nhập</span>
+              </nz-form-label>
+              <nz-form-control [nzErrorTip]="insertErrorTpl">
+                <nz-date-picker nzId="insertDate" class="date-width" formControlName="insertDate" nzSize="large"
+                  nzPlaceHolder="Ngày nhập" nzFormat="dd-MM-yyy" [nzDisabledDate]="disabledInsertDate"></nz-date-picker>
+                <ng-template #insertErrorTpl let-control>
+                  <ng-container *ngIf="f.insertDate.hasError('required')">
+                    <span class="error-text">Hãy nhập ngày tạo</span>
+                  </ng-container>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+            <!-- -------------------- expired --------------------------- -->
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="expirationDate" class="text-label">
+                <span class="font-size-16">Hết hạn</span>
+              </nz-form-label>
+              <nz-form-control [nzErrorTip]="expiryErrorTpl">
+                <nz-date-picker nzId="expirationDate" class="date-width" formControlName="expirationDate" nzSize="large"
+                  nzPlaceHolder="Ngày hết hạn" nzFormat="dd-MM-yyy" [nzDisabledDate]="disabledExpiryDate">
+                </nz-date-picker>
+                <ng-template #expiryErrorTpl let-control>
+                  <ng-container *ngIf="f.expirationDate.hasError('required')">
+                    <span class="error-text">Hãy nhập hạn sử dụng</span>
+                  </ng-container>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!---------------------- Description ----------------------------->
+          <nz-form-item>
+            <nz-form-label nzFor="description" class="text-label">
+              <span class="font-size-16 m-l-11">Mô tả</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="descriptionErrorTpl">
+              <nz-textarea-count [nzMaxCharacterCount]="500">
+                <textarea id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
+                  formControlName="description" style="font-size: 16px;"></textarea>
+                <ng-template #descriptionErrorTpl let-control>
+                  <ng-container *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
+                    <span class="error-text">Nhập độ dài từ 1 tới 500</span>
+                  </ng-container>
+                </ng-template>
+              </nz-textarea-count>
+
+            </nz-form-control>
+          </nz-form-item>
+          <br><br>
+          <nz-form-item>
+            <nz-form-control>
+              <button class="font-size-16" nz-button nzType="primary" [disabled]="!importMedicineForm.valid"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Thêm
+                thuốc</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </nz-spin>
+    </div>
+
+  </div>
+  <div class="container-right col-md-12 col-lg-4">
+    <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100">
+      <span class="text-teal-green font-size-18 font-weight-semibold">Thống kê</span>
+      <dividing-line></dividing-line>
+      <div class="m-h-15" style="display: block; flex-wrap: nowrap;">
+        <div class="row justify-content-between ">
+          <span>Lô hiên tại có:</span>
+          <span>{{ totalMedicine }} dược phẩm</span>
+        </div>
+        <div class="row justify-content-between m-t-15">
+          <span>Thành tiền:</span>
+          <span>{{ totalPrice }} ₫</span>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white d-flex flex-column p-h-20 p-v-10 m-t-22">
+      <span class="text-teal-green font-size-18 font-weight-semibold">Danh sách thuốc</span>
+      <dividing-line></dividing-line>
+      <div class="d-flex flex-column justify-content-between" style="height: 398px;">
+        <nz-table #nzTable [nzFrontPagination]="false" [nzData]="importMedicineList" [nzLoading]="tableLoading"
+          [nzScroll]="{ y: '255px' }">
+          <thead>
+            <tr>
+              <th>Tên thuốc</th>
+              <th>Số lượng</th>
+              <th>Đơn giá(₫)</th>
+            </tr>
+          </thead>
+          <!-- <ng-container *ngIf="importMedicineList.length > 0"> -->
+          <tbody>
+            <tr *ngFor="let data of importMedicineList; index as i" style="cursor: pointer;" (click)="detail(data.id)">
+              <td>{{ data.name }}</td>
+              <td>{{ data.quantity }}</td>
+              <td>{{ data.price.toLocaleString('vi') }}</td>
+            </tr>
+          </tbody>
+          <!-- </ng-container> -->
+        </nz-table>
+        <button class="font-size-16" nz-button nzType="primary" [disabled]="importMedicineList.length <= 0"
+          (click)="addImportBatch()"
+          style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">Thêm
+          vào lô
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

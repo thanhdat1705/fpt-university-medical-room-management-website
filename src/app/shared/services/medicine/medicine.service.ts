@@ -8,6 +8,9 @@ import { StoreNewMedicineRequest } from '../../requests/medicine/store-new';
 import { SearchMedicineSubgroupRequest } from '../../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../../requests/medicine-classification/search-request';
 import { SearchRequest } from '../../requests/search-request';
+import { Router } from '@angular/router';
+import { GeneralHelperService } from '../general-helper.service';
+import { MedicineResponse } from '../../responses/medicine/medicine';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +18,17 @@ import { SearchRequest } from '../../requests/search-request';
 export class MedicineService {
 
   isLoggedIn = false;
-  constructor(private service: SummaryService,) { }
+  // medicineDetail: MedicineResponse = null;
 
+  constructor(private service: SummaryService,
+    private router: Router,
+    private generalService: GeneralHelperService,) { }
 
   /*------------------------------------------------------------------------------------------*/
   /*--------------------------------------- Medicine -----------------------------------------*/
+  // getMedicineDetail(): MedicineResponse {
+  //   return this.medicineDetail;
+  // }
   storeNewMedicine(request: StoreNewMedicineRequest) {
     return this.service.storeNewMedicine(request);
   }
@@ -29,7 +38,26 @@ export class MedicineService {
   deleteMedicine(id: string) {
     return this.service.deleteMedicine(id);
   }
+  getMedicineDetailsFromMedicineDetails(id: string) {
+    return this.service.getMedicine(id);
+  }
   getMedicine(id: string) {
+
+    // this.service.getMedicine(id).subscribe(
+    //   (response) => {
+    //     this.medicineDetail = response.data;
+    //     console.log(this.medicineDetail);
+    //     this.router.navigate(['medicine-management/medicine-list/details-medicine'], {
+    //       queryParams: { id: id }
+    //     });
+    //   },
+    //   (error) => {
+    //     this.router.navigate(['medicine-management/medicine-list']);
+    //     console.log('get detail error');
+    //     this.generalService.createErrorNotification(error);
+    //   }
+    // )
+
     return this.service.getMedicine(id);
   }
   updateMedicine(request: StoreNewMedicineRequest, id: string) {

@@ -1,6 +1,6 @@
 <div class="container-fluid p-h-0 p-v-20 h-100 bg" style="background-image: url('assets/others/login-background.png');">
     <div class="d-flex flex-column justify-content-between h-100">
-        <div class="d-none d-md-block"></div> 
+        <div class="d-none d-md-block"></div>
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-sm-10 col-md-9 col-lg-6 col-xl-5 m-h-auto">
@@ -23,7 +23,8 @@
                             <nz-form-item class="m-b-20 relative">
                                 <nz-form-label nzRequired nzFor="password" style="font-weight: 500;">Password
                                 </nz-form-label>
-                                <a [routerLink]="['/authentication/forgot-password/verify-username']" class="text-link-forget font-size-14 text-muted"
+                                <a [routerLink]="['/authentication/forgot-password/verify-username']"
+                                    class="text-link-forget font-size-14 text-muted"
                                     style="position: absolute; right: 0;">Forget password?</a>
                                 <nz-form-control nzErrorTip="Please input your Password!">
                                     <nz-input-group class="p-10 rounded" nzPrefixIcon="lock">
@@ -35,18 +36,17 @@
                             <nz-form-item>
                                 <nz-form-control>
                                     <div class="d-flex align-items-center justify-content-between wrap">
-                                        <button
-                                            class="col-sm-7 col-md-7 col-lg- col-xl-7 p-2c5 btn border-radius button-link mb"
+                                        <a class="col-sm-7 col-md-7 col-lg- col-xl-7 p-2c5 btn border-radius button-link mb"
                                             (click)="authService.GoogleAuth()" style="background-color: #1397B6;">
                                             <div class="d-flex align-items-center justify-content-start">
                                                 <img src="/assets/others/google.svg" alt="Google" width="40px">
                                                 <h2 class="font-size-15 m-b-0 flex-grow-1 text-center"
                                                     style="color: white;">Login email @fpt.edu.vn</h2>
                                             </div>
-                                        </button>
+                                        </a>
                                         <button
                                             class="button-link btn border-radius font-size-15 p-v-10 col-sm-3 col-md-3 col-lg-3"
-                                            style="background-color: #3AC3DC; color: white; font-weight: 500;"
+                                            style="background-color: #1397B6; color: white; font-weight: 500;"
                                             type="submit">
                                             Log in
                                         </button>

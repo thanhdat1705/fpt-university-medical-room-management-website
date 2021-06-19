@@ -170,7 +170,7 @@ export class SummaryService {
   }
 
   public updateMedicine(data: any, id: string): Observable<ResponseServer> {
-    return this.http.put<ResponseServer>(UrlServerAPIUpdateMedicine + "/?id=" + id, data);
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateMedicine + "/" + id, data);
   }
 
   public storeNewMedicine(data: any): Observable<ResponseServer> {
@@ -178,7 +178,7 @@ export class SummaryService {
   }
 
   public deleteMedicine(id: string): Observable<ResponseServer> {
-    return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicine + "/?id=" + id);
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicine + "/" + id);
   }
 
   public getAllMedicineClassification(): Observable<ResponseServer> {

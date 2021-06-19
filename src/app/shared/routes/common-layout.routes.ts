@@ -4,14 +4,9 @@ export const CommonLayout_ROUTES: Routes = [
     {
         path: 'medicine-management',
         data: {
-            title: 'Medical Management'
+            title: 'Quản lý dược phẩm'
         },
         children: [
-            {
-                path: '',
-                redirectTo: '/test',
-                pathMatch: 'full'
-            },
             {
                 path: '',
                 loadChildren: () => import('../../medicine-management/medicine-management.module').then(m => m.MedicineManagementModule)
@@ -27,7 +22,7 @@ export const CommonLayout_ROUTES: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: '/test',
+                redirectTo: '/medicine-management',
                 pathMatch: 'full'
             },
             {
@@ -45,7 +40,7 @@ export const CommonLayout_ROUTES: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: '/test',
+                redirectTo: '/medicine-management',
                 pathMatch: 'full'
             },
             {
