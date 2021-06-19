@@ -23,7 +23,11 @@ export const UrlServerUpdateAccount = UrlServer + '/api/v1.0/Accounts/Admin/Upda
 export const UrlServerAPIGetProfile = UrlServer + '/api/v1.0/Accounts/Profile'
 export const UrlServerAPIVerifyingCodeForgotPassword = UrlServer + '/api/v1.0/Accounts/VerifyingCodeForgotPassword';
 export const UrlServerAPIChangingNewPasswordForgot = UrlServer + '/api/v1.0/Accounts/ChangingNewPasswordForgot';
-
+export const UrlServerAPIEliminateMedicine = UrlServer + '/api/v1.0/EliminateMedicines';
+export const UrlServerAPISearchEliminatedMedicine = UrlServer + '/api/v1.0/EliminateMedicines/Searching';
+export const UrlServerAPIGetEliminatedMedicineDetails = UrlServer +"/api/v1.0/EliminateMedicines";
+export const UrlServerAPIUpdateEliminatedMedicineDetails = UrlServer +"/api/v1.0/EliminateMedicines";
+export const UrlServerAPIDeleteEliminatedMedicineDetails = UrlServer +"/api/v1.0/EliminateMedicines";
 
 
 export const UrlServerAPISearchMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits/Searching';

@@ -47,7 +47,7 @@ export class InsertAccountComponent implements OnInit {
     this.summaryService.insertAccount(data).subscribe(
       (response) => {
         console.log(response);
-
+        this.generalService.messageNz('success', 'Tài khoản "'+ this.accountForm.get('usernanme').value +'" đã được tạo');
       },
       (error) => {
         console.log(error);

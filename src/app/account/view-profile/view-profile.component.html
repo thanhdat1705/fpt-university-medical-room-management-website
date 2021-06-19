@@ -1,6 +1,6 @@
 <div class="profile" *ngIf="profile">
     <div class="img-container">
-        <img src="{{profile.photoUrl}}" class="avatar">
+        <img [src]="url" *ngIf="url" style="width: 300px; height: 300px;" class="avatar">
     </div>
     <div class="info">
         <p class="title">Tên: </p>

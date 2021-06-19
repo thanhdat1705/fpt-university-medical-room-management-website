@@ -8,11 +8,18 @@ import { MedicineService } from '../shared/services/medicine/medicine.service';
 import { registerLocaleData } from '@angular/common';
 import localeVi from '@angular/common/locales/vi';
 registerLocaleData(localeVi);
+import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
+import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eliminated-medicine/view-eliminated-medicine.component';
+import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
+
 
 @NgModule({
   declarations: [
     BatchMedicineListComponent,
-    AddBatchMedicineComponent
+    AddBatchMedicineComponent,
+    EliminateMedicineComponent,
+    ViewEliminatedMedicineComponent,
+    ViewEliminatedMedicineDetailsComponent,
   ],
   imports: [
     CommonModule,

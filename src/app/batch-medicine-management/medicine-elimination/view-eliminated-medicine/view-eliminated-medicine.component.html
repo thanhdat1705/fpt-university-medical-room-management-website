@@ -1,0 +1,59 @@
+<input class="search-field" placeholder="Tìm tên thuốc" nz-input [(ngModel)]="searchMedicineValue" />
+<button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchEliminatedMedicineName()">
+  <i nz-icon nzType="search" nzTheme="outline"></i>
+</button>
+<br><br>
+
+Lọc theo:
+<div *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList">
+  <nz-select class="filter-select" nzPlaceHolder="Đơn vị" [(ngModel)]="unitValue" nzAllowClear (ngModelChange)="onSearchUnit()">
+    <nz-option *ngFor="let option of medicineUnitList" [nzLabel]="option.name" [nzValue]="option.id">
+    </nz-option>
+  </nz-select>
+  <nz-select class="filter-select" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="classificationValue"
+    (ngModelChange)="onSearchClassification($event)">
+    <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
+    </nz-option>
+  </nz-select>
+  <nz-select class="filter-select" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="subgroupValue"
+  (ngModelChange)="onSearchSubGroup($event)">
+    <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+  </nz-select>
+  <br><br>
+</div>
+<nz-table [nzScroll]="{ x: '1000px' }" [nzData]="eliminatedMedicineList" nzTableLayout="fixed" [nzLoading]="loading"
+  [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false"
+  (nzQueryParams)="onQueryParamsChange($event)">
+  <thead>
+    <tr>
+      <th nzWidth="150px" nzColumnKey="InternalCode" [nzSortFn]="true">Tên thuốc</th>
+      <th nzWidth="100px" nzColumnKey="quantity" [nzSortFn]="true">Số lượng</th>
+      <th nzWidth="100px" nzColumnKey="medicineUnit" [nzSortFn]="true">Đơn vị</th>
+      <th nzWidth="100px" nzColumnKey="medicineUnit" [nzSortFn]="true">Loại thuốc</th>
+      <th nzWidth="100px" nzColumnKey="medicineUnit" [nzSortFn]="true">Nhóm</th>
+      <th nzWidth="140px" nzColumnKey="createDate" [nzSortFn]="true">Ngày hủy</th>
+      <th nzWidth="140px" nzColumnKey="a" [nzSortFn]="true">Thuộc lô</th>
+      <th nzWidth="70px"></th>
+      <th nzWidth="70px"></th>
+      <!-- <th>Thuộc lô</th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let eliminatedMedicine of eliminatedMedicineList">
+      <td>{{ eliminatedMedicine.name }}</td>
+      <td>{{ eliminatedMedicine.quantity }}</td>
+      <td>{{ eliminatedMedicine.medicineUnit.name }}</td>
+      <td>{{ eliminatedMedicine.medicineClassification.name }}</td>
+      <td>{{ eliminatedMedicine.medicineSubgroup.name }}</td>
+      <td>{{ eliminatedMedicine.createDate }}</td>
+      <td>{{ eliminatedMedicine.medicineInInventory.createdDate }}</td>
+      <td>
+        <input type="hidden" nz-input #medicineId>
+        <a style="color: #1890ff;"
+          [routerLink]="['/batch-medicine-management/eliminated-medicine-details', eliminatedMedicine.id]">Detail</a>
+      </td>
+      <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
+          (nzOnConfirm)="deletedEliminatedMedicine(eliminatedMedicine.id)">Delete</a></td>
+    </tr>
+  </tbody>
+</nz-table>

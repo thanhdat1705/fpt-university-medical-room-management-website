@@ -1,26 +1,33 @@
-<form class="search-form" [formGroup]="searchForm" (ngSubmit)="Search()">
-  <mat-form-field class="example-full-width" class="search-field">
-    <input matInput formControlName="searchContent">
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Tìm theo </mat-label>
-    <mat-select [(ngModel)]="selectedValue" formControlName="searchAttribute">
-      <mat-option *ngFor="let attribute of accountAttribute" [value]="attribute.value">
-        {{attribute.viewValue}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button mat-raised-button color="primary">Tìm kiếm</button>
-</form>
+<input class="search-field" placeholder="Tìm kiếm" nz-input [(ngModel)]="searchAccountValue" />
+<nz-select class="search-select" [(ngModel)]="selectedSearchAttribute" nzAllowClear (ngModelChange)="onSearchAccountAttribute()"
+   nzPlaceHolder="Tỉm theo">
+  <nz-option *ngFor="let attribute of accountAttribute" [nzLabel]="attribute.viewValue" [nzValue]="attribute.value">
+  </nz-option>
+</nz-select>
+<button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="search()">
+  <i nz-icon nzType="search" nzTheme="outline"></i>
+</button>
+<br><br>
 
-<nz-table [nzData]="accountList" nzTableLayout="fixed" [nzLoading]="loading" [nzPageSize]="pageSize"
+Lọc theo: 
+<nz-select class="filter-select" nzPlaceHolder="Vai trò" nzAllowClear [(ngModel)]="role"
+  (ngModelChange)="onSearchRole($event)">
+  <nz-option *ngFor="let option of filterRole" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+</nz-select>
+<nz-select class="filter-select" nzPlaceHolder="Trạng thái" nzAllowClear [(ngModel)]="activeStatus"
+  (ngModelChange)="onSearchActiveStatus($event)">
+  <nz-option *ngFor="let option of filterActiveStatus" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+</nz-select>
+<br><br>
+
+<nz-table [nzScroll]="{ x: '1000px' }" [nzData]="accountList" nzTableLayout="fixed" [nzLoading]="loading" [nzPageSize]="pageSize"
   [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false">
   <thead>
     <tr>
-      <th>Mã số</th>
-      <th>Tên</th>
-      <th [nzFilters]="filterRole" [nzFilterFn]="true">Vai trò</th>
-      <th [nzFilters]="filterActiveStatus" [nzFilterFn]="true">Trạng thái</th>
+      <th nzColumnKey="InternalCode" [nzSortFn]="true">Mã số</th>
+      <th nzColumnKey="DisplayName" [nzSortFn]="true">Tên</th>
+      <th nzColumnKey="RoleID" [nzSortFn]="true">Vai trò</th>
+      <th nzColumnKey="Active" [nzSortFn]="true">Trạng thái</th>
       <th></th>
     </tr>
   </thead>
@@ -29,10 +36,16 @@
       <td>{{ account.internalCode }}</td>
       <td>{{ account.displayName }}</td>
       <td *ngIf="account.role.id === 1; else staff">Quản lí</td>
-      <ng-template #staff><td *ngIf="account.role.id === 2; else patient">Nhân viên y tế</td></ng-template>
-      <ng-template #patient><td>Bệnh nhân</td></ng-template>
+      <ng-template #staff>
+        <td *ngIf="account.role.id === 2; else patient">Nhân viên y tế</td>
+      </ng-template>
+      <ng-template #patient>
+        <td>Bệnh nhân</td>
+      </ng-template>
       <td *ngIf="account.active; else inActive">Hoạt động</td>
-      <ng-template #inActive><td>Dừng hoạt động</td></ng-template>
+      <ng-template #inActive>
+        <td>Dừng hoạt động</td>
+      </ng-template>
       <td><button nz-button nzType="default" nzSize="large" nzShape="round"
           [routerLink]="['/account/account-detail', account.id]">Chi tiết</button></td>
     </tr>

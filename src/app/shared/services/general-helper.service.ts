@@ -61,9 +61,12 @@ export class GeneralHelperService {
     showNumberPatternError(fieldName: string) {
         return fieldName + " phải là số";
     }
+    showPhoneNumberPatternError(){
+        return "Số điện thoại phải là số";
+    }
 
-    showEmailPatternError(fieldName: string) {
-        return fieldName + " phải theo định dạng tenban@fpt.edu.vn";
+    showEmailPatternError(){
+        return "Email phải được nhập đúng format (example@email.com)"
     }
 
     showPatternError(fieldName: string) {

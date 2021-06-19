@@ -12,13 +12,13 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 })
 export class ChangePasswordComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder, public generalService: GeneralHelperService, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
+  constructor(private formBuilder: FormBuilder, private generalService: GeneralHelperService, private generalHelper: GeneralHelperService, private summaryService: SummaryService) { }
 
   get f() { return this.changePasswordForm.controls; }
-  
+
   passwordMinLength = 3;
   passwordMaxLength = 50;
-  pattern = '[a-zA-Z0-9 ]*';
+  pattern = '[a-zA-Z0-9]*';
   changePasswordForm: FormGroup;
   matcher = new ErrorStateMatcher;
 
@@ -29,19 +29,16 @@ export class ChangePasswordComponent implements OnInit {
     this.changePasswordForm = this.formBuilder.group({
       oldPassword: ['', [
         Validators.required,
-        Validators.pattern(this.pattern),
         Validators.maxLength(this.passwordMaxLength),
         Validators.minLength(this.passwordMinLength),
       ]],
       newPassword: ['', [
         Validators.required,
-        Validators.pattern(this.pattern),
         Validators.maxLength(this.passwordMaxLength),
         Validators.minLength(this.passwordMinLength),
       ]],
       confirmNewPassword: ['', [
         Validators.required,
-        Validators.pattern(this.pattern),
         Validators.maxLength(this.passwordMaxLength),
         Validators.minLength(this.passwordMinLength),
       ]],
@@ -51,7 +48,6 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   changePassword(data: ChangePasswordRequest){
-    this.generalService.openWaitingPopupNz();
     if (this.changePasswordForm.invalid) {
       return ;
   }
@@ -59,12 +55,13 @@ export class ChangePasswordComponent implements OnInit {
     this.summaryService.changePassword(data).subscribe(
       (response) =>{
         console.log(response);
+        this.generalService.messageNz('success', `Mật khẩu đã được đổi`);
       },
       (error) =>{
         console.log(error);
         this.generalService.createErrorNotification(error);
       }
-    );
-    this.generalService.closeWaitingPopupNz();
+    )
   }
+
 }

@@ -1,12 +1,12 @@
 <form nz-form nzLayout="horizontal" [formGroup]="editProfileForm" *ngIf="editProfileForm" (ngSubmit)="updateAccount()">
     <!-- Avatar -->
     <nz-form-item *ngIf="url">
-        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+        <nz-form-label nzRequired [nzSpan]="7">
             <span class="font-size-18">Ảnh đại diện</span>
         </nz-form-label>
         <nz-form-control>
             <img class="avatar-img" [src]="url" *ngIf="url">
-            <input formControlName="internalCode" type="file" (change)="onFileSelected($event)" />
+            <input type="file" (change)="onFileSelected($event)" *ngIf="isEditing" />
         </nz-form-control>
     </nz-form-item>
     <!-- Mã số -->
@@ -18,11 +18,11 @@
             <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
             <ng-template #internalCodeTpl let-control>
                 <ng-container *ngIf="f.internalCode.hasError('required')">
-                    Mã số không được để trống
+                    {{ generalService.showRequiredError("Mã số") }}
                 </ng-container>
-                <ng-container *ngIf="f.internalCode.hasError('duplicated')">
+                <!-- <ng-container *ngIf="f.internalCode.hasError('duplicated')">
                     Mã số có độ dài từ ? đến ? kí tự
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </nz-form-control>
     </nz-form-item>
@@ -35,11 +35,11 @@
             <input id="displayName" formControlName="displayName" type="text" nz-input [nzSize]="'large'" />
             <ng-template #displayNameTpl let-control>
                 <ng-container *ngIf="f.displayName.hasError('required')">
-                    Tên không được để trống
+                    {{ generalService.showRequiredError("Tên") }}
                 </ng-container>
-                <ng-container *ngIf="f.displayName.hasError('duplicated')">
+                <!-- <ng-container *ngIf="f.displayName.hasError('duplicated')">
                     <span class="error-text">Mã số có độ dài từ ? đến ? kí tự</span>
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </nz-form-control>
     </nz-form-item>
@@ -52,11 +52,11 @@
             <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
             <ng-template #emailTpl let-control>
                 <ng-container *ngIf="f.email.hasError('required')">
-                    <span class="error-text">Email không được để trống</span>
+                    {{ generalService.showRequiredError("Email") }}
                 </ng-container>
-                <ng-container *ngIf="f.email.hasError('duplicated')">
+                <!-- <ng-container *ngIf="f.email.hasError('duplicated')">
                     <span class="error-text">Tên không được để trống</span>
-                </ng-container>
+                </ng-container> -->
             </ng-template>
         </nz-form-control>
     </nz-form-item>
@@ -68,8 +68,8 @@
         <nz-form-control [nzErrorTip]="phoneNumberTpl">
             <input formControlName="phoneNumber" type="text" nz-input [nzSize]="'large'" />
             <ng-template #phoneNumberTpl let-control>
-                <ng-container *ngIf="f.hasError('patern')">
-                    Số điện thoại phải là số
+                <ng-container *ngIf="f.phoneNumber.hasError('pattern')">
+                    {{ generalService.showPhoneNumberPatternError() }}
                 </ng-container>
             </ng-template>
         </nz-form-control>
@@ -88,82 +88,18 @@
     <br><br>
     <nz-form-item>
         <nz-form-control>
-            <button class="font-size-18" type="submit" nz-button nzType="primary"
+            <button (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-18" nz-button nzType="primary"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Sửa thông tin
             </button>
-            <button class="font-size-18" nz-button [routerLink]="'/account/profile'"
+            <button *ngIf="isEditing" class="font-size-18" type="submit" nz-button nzType="primary"
+                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                Lưu
+            </button>
+            <button *ngIf="isEditing" class="font-size-18" nz-button (click)="getProfile()"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
                 Hủy
             </button>
         </nz-form-control>
     </nz-form-item>
 </form>
-
-
-<!-- <form class="ko-co" [formGroup]="editProfileForm" *ngIf="editProfileForm" (ngSubmit)="updateAccount()">
-
-    <div class="profile">
-
-        <p class="title">Ảnh đại diện: </p>
-
-        <div class="img-container">
-
-        </div>
-
-
-        <div class="info">
-
-            <input type="file" name="profile" formControlName="avatarFile" (change)="onFileSelected($event)">
-            <br>
-            <br>
-            <p class="title">Tên: </p>
-            <mat-form-field class="example-full-width">
-                <input name="displayName" type="text" matInput formControlName="displayName"
-                    [errorStateMatcher]="matcher" />
-                <mat-error *ngIf="f.displayName.hasError('required')">
-                    Tên không được bỏ trống
-                </mat-error>
-                <mat-error *ngIf="f.displayName.hasError('pattern')">
-                    Tên không được có kí tự đặc biệt
-                </mat-error>
-            </mat-form-field>
-            <br>
-            <br>
-            <p class="title">Email: </p>
-            <mat-form-field class="example-full-width">
-                <input name="email" type="text" matInput formControlName="email" [errorStateMatcher]="matcher" />
-                <mat-error *ngIf="f.email.hasError('email')">
-                    Email phải được nhập đúng format (example@email.com)
-                </mat-error>
-            </mat-form-field>
-            <br>
-            <br>
-            <p class="title">Số điện thoại:</p>
-            <mat-form-field class="example-full-width">
-                <input name="phoneNumber" type="text" matInput formControlName="phoneNumber"
-                    [errorStateMatcher]="matcher" />
-                <mat-error *ngIf="f.phoneNumber.hasError('required')">
-                    Số điện thoại không được bỏ trống
-                </mat-error>
-                <mat-error *ngIf="f.phoneNumber.hasError('minlength') || f.phoneNumber.hasError('maxlength')">
-                    Số điện thoại phải từ ? đến ? số
-                </mat-error>
-                <mat-error *ngIf="f.phoneNumber.hasError('pattern')">
-                    Số điện thoại phải là số
-                </mat-error>
-            </mat-form-field>
-            <br>
-            <br>
-            <p class="title">Mô tả:</p>
-            <mat-form-field class="example-full-width">
-                <textarea matInput formControlName="description"
-                    cdkTextareaAutosize>{{profile.description}}</textarea>
-            </mat-form-field>
-        </div>
-        <div class="buttons">
-            <a [routerLink]="'/account/profile'"><button mat-button color="primary">Hủy</button></a>
-            <button type="submit" mat-raised-button color="primary">Hoàn thành</button>
-        </div>
-    </div>
-</form> -->
