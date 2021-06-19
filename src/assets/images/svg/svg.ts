@@ -1,0 +1,1 @@
+export const googleIcon = "https://firebasestorage.googleapis.com/v0/b/fucs-1ee4c.appspot.com/o/FUCS%2FImages%2Fsvg%2Fgoogle.svg?alt=media&token=9be29bd3-e290-4d1f-b3d2-44d287fae471";

@@ -15,6 +15,7 @@ import { StoreNewMedicineSubgroupRequest } from 'src/app/shared/requests/medicin
 import { StoreNewMedicineRequest } from 'src/app/shared/requests/medicine/store-new';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
+import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 
 @Component({
   selector: 'app-add-medicine',
@@ -38,7 +39,7 @@ export class AddMedicineComponent implements OnInit {
   patternUnit = "^[0-9]{1,5}$";
 
   unitList: MedicineUnitResponse[] = [];
-  classList: MedicineUnitResponse[] = [];
+  classList: MedicineClassificationResponse[] = [];
   subgroupList: MedicineSubgroupResponse[] = [];
   /*-----------------------------------------------------------------------------------------------------------*/
 
@@ -75,6 +76,12 @@ export class AddMedicineComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.activatedRoute.fragment.subscribe(
+      (response) => {
+        console.log('fragment: ', response);
+      }
+    );
+
     this.medicineForm = this.fb.group({
       name: ['', [
         Validators.required,
@@ -82,7 +89,7 @@ export class AddMedicineComponent implements OnInit {
         Validators.maxLength(this.medicineNameMaxL),
         Validators.pattern(this.patternMedicineName)
       ]],
-      unitId: ['', [
+      medicineUnitId: ['', [
         Validators.required
       ]],
       description: ['', [
@@ -102,41 +109,56 @@ export class AddMedicineComponent implements OnInit {
     this.getAllMedicineUnit();
 
     console.log('test id: -----------s', this.medicineId);
-    this.getDetailMedicine();
+    // this.getDetailMedicine();
 
   }
- 
-  edit() {
-    this.medicineForm.controls['name'].enable();
-    this.medicineForm.controls['description'].enable();
-    this.isDisable = false;
+
+  // edit() {
+  //   // this.medicineForm.controls['name'].enable();
+  //   // this.medicineForm.controls['description'].enable();
+  //   this.isDiable(true);
+  // }
+
+  isDiable(bool: boolean) {
+    if (bool) {
+      for (var control in this.medicineForm.controls) {
+        this.medicineForm.controls[control].disable();
+      }
+      this.isDisable = true;
+    }
+    if (!bool) {
+      for (var control in this.medicineForm.controls) {
+        this.medicineForm.controls[control].enable();
+      }
+      this.isDisable = false;
+    }
   }
   /*----------GET ALL------------------------------------------------------------------------------------------*/
 
-  getDetailMedicine() {
-    if (this.medicineId != null) {
-      this.medicineForm.controls['name'].disable();
-      this.medicineForm.controls['description'].disable();
-      this.isDisable = true;
-      this.service.getMedicine(this.medicineId).subscribe(
-        (response) => {
-          this.medicineDetail = response.data;
-          console.log(response.data);
-          this.medicineForm.setValue({
-            name: this.medicineDetail.name,
-            unitId: this.medicineDetail.unitId,
-            description: this.medicineDetail.description,
-            medicineSubgroupId: this.medicineDetail.medicineSubgroupId,
-            medicineClassificationId: this.medicineDetail.medicineClassificationId,
-          })
-        },
-        (error) => {
-          console.log('get detail error');
-          this.generalService.createErrorNotification(error);
-        }
-      )
-    }
-  }
+  // getDetailMedicine() {
+  //   if (this.medicineId != null) {
+  //     // this.medicineForm.controls['name'].disable();
+  //     // this.medicineForm.controls['description'].disable();
+  //     this.isDiable(true);
+  //     this.service.getMedicine(this.medicineId).subscribe(
+  //       (response) => {
+  //         this.medicineDetail = response.data;
+  //         console.log('details ', response.data);
+  //         this.medicineForm.setValue({
+  //           name: this.medicineDetail.name,
+  //           medicineUnitId: this.medicineDetail.medicineUnitId,
+  //           description: this.medicineDetail.description,
+  //           medicineSubgroupId: this.medicineDetail.medicineSubgroupId,
+  //           medicineClassificationId: this.medicineDetail.medicineClassificationId,
+  //         })
+  //       },
+  //       (error) => {
+  //         console.log('get detail error');
+  //         this.generalService.createErrorNotification(error);
+  //       }
+  //     )
+  //   }
+  // }
 
   getAllMedicineUnit() {
     this.service.getAllMedicineUnit().subscribe(
@@ -262,9 +284,9 @@ export class AddMedicineComponent implements OnInit {
           console.log('store new', data);
           this.generalService.messageNz('success', `Dược phẩm ${data.name.bold()} thêm thành công`);
           this.medicineForm.reset();
-          setTimeout(() => {
-            this.router.navigate(['medicine-management/medicine-list']);
-          }, 1000);
+          // setTimeout(() => {
+          this.router.navigate(['medicine-management/medicine-list']);
+          // }, 1000);
         },
         (error) => {
           this.addMedicineLoading = false;
@@ -275,33 +297,7 @@ export class AddMedicineComponent implements OnInit {
 
   }
 
-  updateMedicine(data: StoreNewMedicineRequest) {
-    if (this.medicineForm.invalid) {
-      for (const i in this.medicineForm.controls) {
-        this.medicineForm.controls[i].markAsDirty();
-        this.medicineForm.controls[i].updateValueAndValidity();
-      }
-    } else {
-      console.log(data);
-      this.addMedicineLoading = true;
-      this.service.updateMedicine(data, this.medicineId).subscribe(
-        (response) => {
-          console.log(response);
-          this.addMedicineLoading = false;
-          this.generalService.messageNz('success', `Dược phẩm ${data.name.bold()} cập nhật thành công`);
-          this.medicineForm.reset();
-          setTimeout(() => {
-            this.router.navigate(['medicine-management/medicine-list']);
-          }, 1000);
-        },
-        (error) => {
-          console.log('update medicine error');
-          this.addMedicineLoading = false;
-          this.generalService.createErrorNotification(error);
-        }
-      )
-    }
-  }
+  
 
 
 

@@ -5,7 +5,7 @@ import { MedicineUnitResponse } from "../medicine-unit/medicine-unit-response";
 export interface MedicineResponse {
     id: string;
     name: string;
-    unitId: string;
+    medicineUnitId: string;
     description: string;
     medicineSubgroupId: string;
     medicineClassificationId: string;

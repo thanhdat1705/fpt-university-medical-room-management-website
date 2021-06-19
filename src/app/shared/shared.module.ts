@@ -11,6 +11,7 @@ import { AuthService } from './services/auth-service/auth.service';
 import { SideNavService } from './services/side-nav.service';
 import { firebaseConfig } from 'src/environments/environment';
 import { ErrorComponent } from './components/error/error.component';
+import { DividingLineComponent } from './components/dividing-line/dividing-line.component';
 
 
 
@@ -23,6 +24,7 @@ const SHARE_MODULES = [
 const COMPONENTS = [
   WaitingComponent,
   ErrorComponent,
+  DividingLineComponent
 ];
 
 export const ANGULAR_MODULES = [

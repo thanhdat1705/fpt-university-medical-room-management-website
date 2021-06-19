@@ -34,7 +34,10 @@ export class InsertAccountComponent implements OnInit {
   // convenience getter for easy access to form fields
   get f() { return this.accountForm.controls; }
 
-  constructor(private formBuilder: FormBuilder, private generalService: GeneralHelperService, private summaryService: SummaryService) { }
+  constructor(
+    private formBuilder: FormBuilder, 
+    private generalService: GeneralHelperService, 
+    private summaryService: SummaryService) { }
 
   insertAccount(data: InsertAccountRequest) {
     console.log(data);
@@ -74,28 +77,24 @@ export class InsertAccountComponent implements OnInit {
         [Validators.required,
         Validators.minLength(this.passwordMinLength),
         Validators.maxLength(this.passwordMaxLength),
-        Validators.pattern(this.patternPassword)]
-      ],
+        Validators.pattern(this.patternPassword)
+      ]],
       internalCode: ['', [Validators.required,
       // Validators.minLength(this.usernameMinLength),
       // Validators.maxLength(this.usernameMaxLength),
       Validators.pattern(this.pattern),
       ]],
-      displayName: ['',
-        [ Validators.required,
+      displayName: ['',[
+          Validators.required,
           Validators.minLength(this.passwordMinLength),
           Validators.maxLength(this.passwordMaxLength),
           // Validators.pattern(this.pattern)
         ]],
-      roleId: ['',
-        [Validators.required]
-      ]
-
+      roleId: ['',[
+        Validators.required
+      ]],
     }
-
     );
   }
-
-  onSubmit() { }
 
 }

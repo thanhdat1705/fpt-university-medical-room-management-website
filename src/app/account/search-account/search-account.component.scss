@@ -1,23 +1,46 @@
-    .search-field{
-        width: 60%;
-        height: 40px;
-        margin-right: 1%;
+.search-field{
+    width: 60%;
+    height: 40px;
+    margin-right: 1%;
+    background-color: #e6e6e63e;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 100px;
+}
+
+
+
+
+.search-filter {
+    ::placeholder {
+        color: #8f9b99;
+        font-weight: 500;
+    }
+    .input {
         background-color: #e6e6e63e;
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
     }
-    .search-select{
-        width: 30%;
-        height: 40px;
-        margin-right: 1%;
+    .select-wrap {
+        .select-w {
+            // nz-select-top-control {
+            //     border: solid 1px teal !important;
+            // }
+            width: 240px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding-top: 1.5px;
+            padding-bottom: 1.5px;
+            padding-left: 1px;
+            padding-right: 2px;
+            border-radius: 2px;
+        }
     }
-
-    .filter-select{
-        width: 30%;
-        margin-right: 10px;
-    }
-
-    ::placeholder {
-        color: #8f9b99;
-        font-weight: 500;
-      }
+}

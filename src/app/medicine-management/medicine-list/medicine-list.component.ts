@@ -23,6 +23,10 @@ import { SideNavService } from 'src/app/shared/services/side-nav.service';
 })
 export class MedicineListComponent implements OnInit {
 
+  unitSelected = false;
+  classSelected = false;
+  subgroupSelected = false;
+
   detailLoading = false;
   tableLoading = false;
   checked = false;
@@ -85,11 +89,11 @@ export class MedicineListComponent implements OnInit {
     compare: 'Equals'
   }
 
-  searchFields = "id, name, medicineUnit, medicineClassification, medicineSubgroup, createdDate";
+  searchFields = "id, name, medicineUnit, medicineClassification, medicineSubgroup, createDate";
   searchMedicineRequest: SearchRequest = {
     limit: 10,
     page: 1,
-    sortField: "CreatedDate",
+    sortField: "Createdate",
     sortOrder: 0,
     searchValue: null,
     selectFields: this.searchFields,
@@ -106,7 +110,7 @@ export class MedicineListComponent implements OnInit {
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
   constructor(private fb: FormBuilder,
-    private service: MedicineService,
+    public service: MedicineService,
     private generalService: GeneralHelperService,
     private router: Router,
     private sidenav: SideNavService
@@ -120,9 +124,11 @@ export class MedicineListComponent implements OnInit {
     this.getAllClass();
 
     this.searchRecord['Name'] = null;
-    this.searchRecord['UnitId'] = null;
+    this.searchRecord['MedicineUnitId'] = null;
     this.searchRecord['MedicineSubgroupId'] = null;
     this.searchRecord['MedicineClassificationId'] = null;
+
+  
   }
 
 
@@ -193,9 +199,6 @@ export class MedicineListComponent implements OnInit {
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*------------------------------------------------ Change ------------------------------------------------------------*/
   inputChange(value: any) {
-    this.unitValue = null;
-    this.classValue = null;
-    this.subgroupValue = null;
     this.searchName.value = this.searchValue;
     this.searchRecord['Name'] = this.searchName;
     this.searchRecord['UnitId'] = null;
@@ -228,13 +231,15 @@ export class MedicineListComponent implements OnInit {
     console.log(value === null);
     if (value !== '' && value !== null) {
       this.resetTable();
+      this.unitSelected = true;
       this.searchUnit.value = value;
-      this.searchRecord['UnitId'] = this.searchUnit;
+      this.searchRecord['MedicineUnitId'] = this.searchUnit;
       this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
-      this.searchRecord['UnitId'] = null;
+      this.unitSelected = false;
+      this.searchRecord['MedicineUnitId'] = null;
       this.searchMedicineRequest.limit = 10;
 
     }
@@ -244,12 +249,14 @@ export class MedicineListComponent implements OnInit {
   onSearchClass(value: string) {
     if (value !== '' && value !== null) {
       this.resetTable();
+      this.classSelected = true;
       this.searchClass.value = value;
       this.searchRecord['MedicineClassificationId'] = this.searchClass;
       this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
+      this.classSelected = false;
       this.searchRecord['MedicineClassificationId'] = null;
       this.searchMedicineRequest.limit = 10;
 
@@ -260,28 +267,16 @@ export class MedicineListComponent implements OnInit {
   onSearchSubgroup(value: string) {
     if (value !== '' && value !== null) {
       this.resetTable();
+      this.subgroupSelected = true;
       this.searchSubgroup.value = value;
       this.searchRecord['MedicineSubgroupId'] = this.searchSubgroup;
-      this.searchMedicineRequest = {
-        limit: 10,
-        page: this.pageIndex,
-        sortField: this.sortFieldList,
-        sortOrder: this.sortOrderList,
-        searchValue: this.searchRecord,
-        selectFields: this.searchFields
-      }
+      this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
+      this.subgroupSelected = false;
       this.searchRecord['MedicineSubgroupId'] = null;
-      this.searchMedicineRequest = {
-        limit: 10,
-        page: this.pageIndex,
-        sortField: this.sortFieldList,
-        sortOrder: this.sortOrderList,
-        searchValue: this.searchRecord,
-        selectFields: this.searchFields
-      }
+      this.searchMedicineRequest.limit = 10;
 
     }
     this.searchMedicine();
@@ -290,7 +285,7 @@ export class MedicineListComponent implements OnInit {
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
   detailMedicine(id: string) {
-    this.router.navigate(['medicine-management/medicine-list/add-medicine'], { queryParams: { id: id } })
+    this.router.navigate(['medicine-management/medicine-list/details-medicine'], { queryParams: { id: id } })
   }
   // searchSuggest() {
   //   this.isLoading = true;
@@ -319,6 +314,7 @@ export class MedicineListComponent implements OnInit {
     this.service.deleteMedicine(id).subscribe(
       (response) => {
         this.searchMedicine();
+        this.tableLoading = false;
         this.generalService.messageNz('success', `Xóa thành công`);
       }, (error) => {
         console.log('delete error');

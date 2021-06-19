@@ -1,6 +1,9 @@
-// export const UrlServer = "https://fhcs-backend.online";
-export const UrlServer = "https://192.168.43.45:9000";
+export const UrlServer = "https://fhcs-backend.online";
+// export const UrlServer = "http://192.168.43.45:9000";
 // export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
+// export const UrlServer = "http://14.161.47.36:9000";
+// export const UrlServer = "http://192.168.43.45:9000";
+//  export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
 // export const UrlServer = "http://localhost:9000";
 // export const UrlServer = "http://14.161.47.36:9000";
 

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { AddBatchMedicineComponent } from './add-batch-medicine/add-batch-medicine.component';
 
 @Component({
   selector: 'app-batch-medicine-list',
@@ -11,5 +13,10 @@ export class BatchMedicineListComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  
+
+  
+
 
 }

@@ -58,19 +58,18 @@ export class GeneralHelperService {
         return fieldName + " phải từ " + minLength + " đến " + maxLength + " kí tự";
     }
 
+    showNumberPatternError(fieldName: string) {
+        return fieldName + " phải là số";
+    }
     showPhoneNumberPatternError(){
         return "Số điện thoại phải là số";
     }
 
-    showNumberPatternError(fieldName: string){
-        return fieldName+" phải là số";
-    }
-
     showEmailPatternError(){
-        "Email phải được nhập đúng format (example@email.com)"
+        return "Email phải được nhập đúng format (example@email.com)"
     }
 
-    showPatternError(fieldName: string){
+    showPatternError(fieldName: string) {
         return fieldName + " không được chứa kí tự đặc biệt";
     }
     
@@ -215,6 +214,11 @@ export class GeneralHelperService {
 
         }
         return result;
+    }
+
+    removeDotInString(text: string) {
+        var removeDot = text.replace(/\./g, '');
+        return removeDot;
     }
 
     MustMatch(controlName: string, matchingControlName: string) {

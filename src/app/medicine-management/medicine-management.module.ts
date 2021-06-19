@@ -9,6 +9,7 @@ import { MedicineService } from '../shared/services/medicine/medicine.service';
 import { MedicineUnitListComponent } from './medicine-unit-list/medicine-unit-list.component';
 import { MedicineSubgroupListComponent } from './medicine-subgroup-list/medicine-subgroup-list.component';
 import { MedicineClassificationListComponent } from './medicine-classification-list/medicine-classification-list.component';
+import { DetailsMedicineComponent } from './medicine-list/details-medicine/details-medicine.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MedicineClassificationListComponent } from './medicine-classification-l
     MedicineListComponent,
     MedicineUnitListComponent,
     MedicineSubgroupListComponent,
-    MedicineClassificationListComponent
+    MedicineClassificationListComponent,
+    DetailsMedicineComponent
   ],
   imports: [
     CommonModule,

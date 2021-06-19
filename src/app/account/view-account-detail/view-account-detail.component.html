@@ -1,121 +1,125 @@
-<form nz-form nzLayout="horizontal" [formGroup]="accountDetailForm" *ngIf="accountDetailForm && accountDetail"
-    (ngSubmit)="editAccount(accountDetailForm.value)">
-    <nz-form-item>
-        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
-            <span class="font-size-18">Ảnh đại diện</span>
-        </nz-form-label>
-        <img [src]="url" *ngIf="url" class="avatarImg" />
-    </nz-form-item>
-    <!-- Mã số -->
-    <nz-form-item>
-        <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
-            <span class="font-size-18">Mã số</span>
-        </nz-form-label>
-        <nz-form-control [nzErrorTip]="internalCodeTpl">
-            <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
-            <ng-template #internalCodeTpl let-control>
-                <ng-container *ngIf="f.internalCode.hasError('required')">
-                    {{ generalService.showRequiredError("Mã số") }}
-                </ng-container>
+<div class="inner-content">
+    <form nz-form nzLayout="horizontal" [formGroup]="accountDetailForm" *ngIf="accountDetailForm && accountDetail"
+        (ngSubmit)="editAccount(accountDetailForm.value)">
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+                <span class="font-size-18">Ảnh đại diện</span>
+            </nz-form-label>
+            <img [src]="url" *ngIf="url" class="avatarImg" />
+        </nz-form-item>
+        <!-- Mã số -->
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="internalCode" [nzSpan]="7">
+                <span class="font-size-18">Mã số</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="internalCodeTpl">
+                <input formControlName="internalCode" type="text" nz-input [nzSize]="'large'" />
+                <ng-template #internalCodeTpl let-control>
+                    <ng-container *ngIf="f.internalCode.hasError('required')">
+                        {{ generalService.showRequiredError("Mã số") }}
+                    </ng-container>
 
-            </ng-template>
-        </nz-form-control>
-    </nz-form-item>
-    <!-- Tên -->
-    <nz-form-item>
-        <nz-form-label nzRequired nzFor="displayName" [nzSpan]="7">
-            <span class="font-size-18">Tên</span>
-        </nz-form-label>
-        <nz-form-control [nzErrorTip]="displayNameTpl">
-            <input id="displayName" formControlName="displayName" nz-input [nzSize]="'large'" (input)="test()" />
-            <ng-template #displayNameTpl let-control>
-                <ng-container *ngIf="f.displayName.hasError('required')">
-                    {{ generalService.showRequiredError("Tên") }}
-                </ng-container>
-                <ng-container *ngIf="f.displayName.hasError('minLength')">
-                    <span class="error-text">minnnnnnnn</span>
-                </ng-container>
-            </ng-template>
-        </nz-form-control>
-    </nz-form-item>
-    <!-- Email -->
-    <nz-form-item>
-        <nz-form-label nzRequired nzFor="email" [nzSpan]="7">
-            <span class="font-size-18">Email</span>
-        </nz-form-label>
-        <nz-form-control [nzErrorTip]="emailTpl">
-            <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
-            <ng-template #emailTpl let-control>
-                <ng-container *ngIf="f.email.hasError('required')">
-                    {{ generalService.showRequiredError("Email") }}
-                </ng-container>
-            </ng-template>
-        </nz-form-control>
-    </nz-form-item>
-    <!-- Sdt -->
-    <nz-form-item>
-        <nz-form-label nzRequired nzFor="phoneNumber" [nzSpan]="7">
-            <span class="font-size-18">Số điện thoại</span>
-        </nz-form-label>
-        <nz-form-control [nzErrorTip]="phoneNumberTpl">
-            <input [disabled]="true" type="text" nz-input [nzSize]="'large'" value="{{accountDetail.phoneNumber}}" />
-        </nz-form-control>
-    </nz-form-item>
-    <!-- Role -->
-    <nz-form-item>
-        <nz-form-label nzRequired nzFor="roleId" [nzSpan]="7">
-            <span class="font-size-18">Vai trò</span>
-        </nz-form-label>
-        <nz-form-control>
-            <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId" [nzSize]="'large'"
-                nzPlaceHolder="Vai trò" style="display: flex; align-items: center; font-size: 18px;">
-                <nz-option *ngFor="let item of roles" [nzLabel]="item.roleName" [nzValue]="item.id" nzCustomContent>
-                    <span style="font-size: 18px;">{{ item.roleName }}</span>
-                </nz-option>
-            </nz-select>
-        </nz-form-control>
-    </nz-form-item>
-    <!-- Active -->
-    <nz-form-item>
-        <nz-form-label nzRequired nzFor="active" [nzSpan]="7">
-            <span class="font-size-18">Trạng thái</span>
-        </nz-form-label>
-        <nz-form-control [nzErrorTip]="">
-            <span class="font-size-18 m-l-11">{{ activeStatus }}</span>
-        </nz-form-control>
-    </nz-form-item>
-    <!-- Description -->
-    <nz-form-item>
-        <nz-form-label nzFor="description" [nzSpan]="7">
-            <span class="font-size-18 m-l-11">Mô tả</span>
-        </nz-form-label>
-        <nz-form-control [nzErrorTip]="">
-            <nz-textarea-count [nzMaxCharacterCount]="500">
-                <textarea [disabled]="true" id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
-                    style="font-size: 18px;">{{ accountDetail.description }}</textarea>
-                <ng-template #descriptionErrorTpl let-control>
-                    <ng-container *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
-                        <span class="error-text">Nhập độ dài từ 1 tới 500</span>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+        <!-- Tên -->
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="displayName" [nzSpan]="7">
+                <span class="font-size-18">Tên</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="displayNameTpl">
+                <input id="displayName" formControlName="displayName" nz-input [nzSize]="'large'" (input)="test()" />
+                <ng-template #displayNameTpl let-control>
+                    <ng-container *ngIf="f.displayName.hasError('required')">
+                        {{ generalService.showRequiredError("Tên") }}
+                    </ng-container>
+                    <ng-container *ngIf="f.displayName.hasError('minLength')">
+                        <span class="error-text">minnnnnnnn</span>
                     </ng-container>
                 </ng-template>
-            </nz-textarea-count>
-        </nz-form-control>
-    </nz-form-item>
-    <br><br>
-    <nz-form-item>
-        <nz-form-control>
-            <button (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-18" nz-button nzType="primary"
-                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
-                Sửa thông tin
-            </button>
-            <button *ngIf="isEditing" class="font-size-18" type="submit" nz-button nzType="primary"
-                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
-                Lưu
-            </button>
-            <button *ngIf="isEditing" class="font-size-18" nz-button (click)="getAccountDetails()"
-                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
-                Hủy
-            </button>
-        </nz-form-control>
-    </nz-form-item>
-</form>
+            </nz-form-control>
+        </nz-form-item>
+        <!-- Email -->
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="email" [nzSpan]="7">
+                <span class="font-size-18">Email</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="emailTpl">
+                <input formControlName="email" type="text" nz-input [nzSize]="'large'" />
+                <ng-template #emailTpl let-control>
+                    <ng-container *ngIf="f.email.hasError('required')">
+                        {{ generalService.showRequiredError("Email") }}
+                    </ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+        <!-- Sdt -->
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="phoneNumber" [nzSpan]="7">
+                <span class="font-size-18">Số điện thoại</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="phoneNumberTpl">
+                <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
+                    value="{{accountDetail.phoneNumber}}" />
+            </nz-form-control>
+        </nz-form-item>
+        <!-- Role -->
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="roleId" [nzSpan]="7">
+                <span class="font-size-18">Vai trò</span>
+            </nz-form-label>
+            <nz-form-control>
+                <nz-select id="unitId" nzShowSearch nzAllowClear formControlName="roleId" [nzSize]="'large'"
+                    nzPlaceHolder="Vai trò" style="display: flex; align-items: center; font-size: 18px;">
+                    <nz-option *ngFor="let item of roles" [nzLabel]="item.roleName" [nzValue]="item.id" nzCustomContent>
+                        <span style="font-size: 18px;">{{ item.roleName }}</span>
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <!-- Active -->
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="active" [nzSpan]="7">
+                <span class="font-size-18">Trạng thái</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="">
+                <span class="font-size-18 m-l-11">{{ activeStatus }}</span>
+            </nz-form-control>
+        </nz-form-item>
+        <!-- Description -->
+        <nz-form-item>
+            <nz-form-label nzFor="description" [nzSpan]="7">
+                <span class="font-size-18 m-l-11">Mô tả</span>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="">
+                <nz-textarea-count [nzMaxCharacterCount]="500">
+                    <textarea [disabled]="true" id="description" nz-input placeholder="Nhập mô tả dược phẩm" rows="4"
+                        style="font-size: 18px;">{{ accountDetail.description }}</textarea>
+                    <ng-template #descriptionErrorTpl let-control>
+                        <ng-container
+                            *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
+                            <span class="error-text">Nhập độ dài từ 1 tới 500</span>
+                        </ng-container>
+                    </ng-template>
+                </nz-textarea-count>
+            </nz-form-control>
+        </nz-form-item>
+        <br><br>
+        <nz-form-item>
+            <nz-form-control>
+                <button (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-18" nz-button nzType="primary"
+                    style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                    Sửa thông tin
+                </button>
+                <button *ngIf="isEditing" class="font-size-18" type="submit" nz-button nzType="primary"
+                    style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                    Lưu
+                </button>
+                <button *ngIf="isEditing" class="font-size-18" nz-button (click)="getAccountDetails()"
+                    style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                    Hủy
+                </button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>
