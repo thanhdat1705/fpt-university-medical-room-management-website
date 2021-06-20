@@ -19,7 +19,7 @@ import { SharedModule } from './shared/shared.module';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { TemplateModule } from './shared/template/template.module';
-import { AccountModule } from './account/account.module';
+import { AccountModule } from './account-management/account.module';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { AuthService } from './shared/services/auth-service/auth.service';
 import { GeneralHelperService } from './shared/services/general-helper.service';

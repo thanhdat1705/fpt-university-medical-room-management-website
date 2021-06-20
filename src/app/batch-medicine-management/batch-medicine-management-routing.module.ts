@@ -14,23 +14,35 @@ const routes: Routes = [
   },
   {
     path: 'eliminate-medicine',
-    component: EliminateMedicineComponent
+    component: EliminateMedicineComponent,
   },
   {
     path: 'eliminated-medicines-list',
-    component: ViewEliminatedMedicineComponent
+    component: ViewEliminatedMedicineComponent,
+    data: {
+      title: 'Danh sách thuốc đã hủy'
+    },
   },
   {
     path: 'eliminated-medicine-details/:id',
-    component: ViewEliminatedMedicineDetailsComponent
+    component: ViewEliminatedMedicineDetailsComponent,
+    data: {
+      title: 'chi tiết thuốc đã hủy'
+    },
   },
   {
     path: 'medicine-in-inventory',
-    component: MedicineInInventoryListComponent
+    component: MedicineInInventoryListComponent,
+    data: {
+      title: 'Danh sách thuốc hiện có'
+    },
   },
   {
     path: 'medicine-in-inventory-details/:id',
-    component: MedicineInInventoryDetailsComponent
+    component: MedicineInInventoryDetailsComponent,
+    data: {
+      title: 'Chi tiết thuốc hiện có'
+    },
   },
 ];
 

@@ -6,7 +6,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared.module';
 import { SideNavComponent } from './side-nav/side-nav.component';
-import { AccountModule } from 'src/app/account/account.module';
+import { AccountModule } from 'src/app/account-management/account.module';
 import { AuthService } from '../services/auth-service/auth.service';
 import { SideNavService } from '../services/side-nav.service';
 

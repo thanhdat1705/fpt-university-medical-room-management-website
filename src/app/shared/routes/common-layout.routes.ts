@@ -17,7 +17,7 @@ export const CommonLayout_ROUTES: Routes = [
     {
         path: 'account',
         data: {
-            title: 'Account Management'
+            title: 'Quản lí tài khoản'
         },
         children: [
             {
@@ -27,7 +27,7 @@ export const CommonLayout_ROUTES: Routes = [
             },
             {
                 path: '',
-                loadChildren: () => import('../../account/account.module').then(m => m.AccountModule)
+                loadChildren: () => import('../../account-management/account.module').then(m => m.AccountModule)
             },
         ]
     },

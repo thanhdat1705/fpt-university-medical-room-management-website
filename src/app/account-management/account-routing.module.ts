@@ -15,27 +15,40 @@ const routes: Routes = [
   },
   {
     path: 'edit-profile',
-    component: EditProfileComponent
+    component: EditProfileComponent,
+    data: {
+      tilte: "Sửa thông tin"
+    }
   },
   {
     path: 'insert-account',
-    component: InsertAccountComponent
+    component: InsertAccountComponent,
+    data: {
+      title: 'Tạo tài khoản mới'
+    },
   },
   {
     path: 'search-account',
-    component: SearchAccountComponent
+    component: SearchAccountComponent,
+    data: {
+      title: 'Danh sách tài khoản'
+    },
   },
   {
     path: 'change-password',
     component: ChangePasswordComponent
   },
-   {
+  {
     path: 'link-to-social-account',
     component: LinkToSocialAccountComponent
   },
   {
     path: 'account-detail/:id',
-    component: ViewAccountDetailComponent
+    component: ViewAccountDetailComponent,
+    data: {
+      title: "Thông tin tài khoản"
+    }
+
   },
 ];
 
