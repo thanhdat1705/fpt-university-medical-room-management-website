@@ -9,6 +9,11 @@ export const CommonLayout_ROUTES: Routes = [
         children: [
             {
                 path: '',
+                redirectTo: '/medicine-management/medicine-list',
+                pathMatch: 'full'
+            },
+            {
+                path: '',
                 loadChildren: () => import('../../medicine-management/medicine-management.module').then(m => m.MedicineManagementModule)
             },
         ]
@@ -17,7 +22,7 @@ export const CommonLayout_ROUTES: Routes = [
     {
         path: 'account',
         data: {
-            title: 'Account Management'
+            title: 'Quản lý tài khoản'
         },
         children: [
             {
@@ -35,12 +40,12 @@ export const CommonLayout_ROUTES: Routes = [
     {
         path: 'batch-medicine-management',
         data: {
-            title: 'Batch Medicine Management'
+            title: 'Quản lý lô'
         },
         children: [
             {
                 path: '',
-                redirectTo: '/medicine-management',
+                redirectTo: '/batch-medicine-management/batch-medicine-list',
                 pathMatch: 'full'
             },
             {

@@ -1,2 +1,85 @@
-<app-add-batch-medicine></app-add-batch-medicine>
-<!-- <p>batch-medicine-list works!</p> -->
+<div class="inner-content">
+
+    <!-- <div class="search-filter">
+            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
+                <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchValue"
+                    (input)="inputChange(inputValue.value)" #inputValue />
+            </nz-input-group>
+            <ng-template #searchIconButton>
+                <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton"
+                    (click)="searchMedicine()">
+                    <i nz-icon nzType="search" nzTheme="outline"></i>
+                </button>
+            </ng-template>
+            <br><br>
+            <div class="select-wrap">
+                <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
+                <nz-select class="select-w" nzPlaceHolder="Đơn vị" nzAllowClear [(ngModel)]="unitValue"
+                    (ngModelChange)="onSearchUnit($event)" [ngClass]="{'ant-select-selection': unitSelected}">
+                    <nz-option *ngFor="let option of filterUnit" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+                <nz-select class="select-w" nzPlaceHolder="Loại" nzAllowClear [(ngModel)]="classValue"
+                    (ngModelChange)="onSearchClass($event)" [ngClass]="{'ant-select-selection': classSelected}">
+                    <nz-option *ngFor="let option of filterClass" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+                <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="subgroupValue"
+                    (ngModelChange)="onSearchSubgroup($event)" [ngClass]="{'ant-select-selection': subgroupSelected}">
+                    <nz-option *ngFor="let option of filterSubgroup" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+        </div>
+
+        <br>
+
+        <nz-spin [nzSpinning]="detailLoading" nzTip="Loading...">
+            <nz-table #nzTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="medicineList"
+                [nzLoading]="tableLoading" [nzScroll]="{ x: '1000px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize"
+                [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px">No.</th>
+                        <th nzWidth="190px" nzColumnKey="Name" [nzSortFn]="true">Tên thuốc</th>
+                        <th nzWidth="140px" nzColumnKey="MedicineUnit" [nzSortFn]="true">Đơn vị</th>
+                        <th nzWidth="140px" nzColumnKey="MedicineClassification" [nzSortFn]="true">Loại thuốc</th>
+                        <th nzWidth="190px" nzColumnKey="MedicineSubgroup" [nzSortFn]="true">Nhóm</th>
+                        <th nzWidth="140px" nzColumnKey="CreatedDate" [nzSortFn]="true">Ngày thêm</th>
+                        <th nzWidth="70px"></th>
+                        <th nzWidth="75px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of medicineList; index as i">
+                        <td>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.medicineUnit.name }}</td>
+                        <td>{{ data.medicineClassification.name }}</td>
+                        <td>{{ data.medicineSubgroup.name }}</td>
+                        <td>{{ getCreateTime(data.createDate) }}</td>
+                        <td>
+                            <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
+                            <a style="color: #1890ff"
+                                [routerLink]="['/medicine-management/medicine-list/details-medicine', data.id]">
+                                Chi tiết
+                            </a>
+                        </td>
+                        <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
+                                (nzOnConfirm)="deleteMedicine(data.id)">Xóa</a></td>
+                    </tr>
+                </tbody>
+            </nz-table>
+            <div style="margin: 10px; width: 200px;">
+                <button nz-button nzType="primary" nzBlock nzSize="large"
+                    [routerLink]="'/batch-medicine-management/batch-medicine-list/add-import-batch'">
+                    <span>Thêm lô</span>
+                </button>
+            </div>
+        </nz-spin> -->
+
+    <button nz-button nzType="primary" nzBlock nzSize="large"
+        [routerLink]="'/batch-medicine-management/batch-medicine-list/add-import-batch'">
+        <span>Thêm lô</span>
+    </button>
+</div>

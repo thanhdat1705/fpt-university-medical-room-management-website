@@ -35,7 +35,8 @@ import {
   UrlServerAPISearchEliminatedMedicine,
   UrlServerAPIGetEliminatedMedicineDetails,
   UrlServerAPIUpdateEliminatedMedicineDetails,
-  UrlServerAPIDeleteEliminatedMedicineDetails
+  UrlServerAPIDeleteEliminatedMedicineDetails,
+  UrlServerAPIAddImportBatch
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -218,9 +219,13 @@ export class SummaryService {
   }
 
   /*----------------------------------------------------------------------------------------------------- */
-  /*---------------------------------------- ImportBatchMedicine ---------------------------------------- */
-  public searchImportBatchMedicine(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineUnit, data);
+  /*---------------------------------------- ImportBatch ---------------------------------------- */
+  // public searchImportBatch(data: any): Observable<ResponseServer> {
+  //   return this.http.post<ResponseServer>(UrlServerAPISearchMedicineUnit, data);
+  // }
+
+  public addImportBatch(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIAddImportBatch, data);
   }
 
   //  Medicine Elimination Management

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AddBatchMedicineComponent } from './add-batch-medicine/add-batch-medicine.component';
 
@@ -9,7 +10,7 @@ import { AddBatchMedicineComponent } from './add-batch-medicine/add-batch-medici
 })
 export class BatchMedicineListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }

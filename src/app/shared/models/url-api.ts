@@ -50,3 +50,4 @@ export const UrlServerAPIUpdateMedicine = UrlServer + '/api/v1.0/Medicines';
 
 
 export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';
+export const UrlServerAPIAddImportBatch = UrlServer + '/api/v1.0/ImportBatches';

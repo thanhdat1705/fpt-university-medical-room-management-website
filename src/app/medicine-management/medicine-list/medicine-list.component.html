@@ -56,7 +56,10 @@
                     <td>{{ getCreateTime(data.createDate) }}</td>
                     <td>
                         <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
-                        <a style="color: #1890ff" (click)="detailMedicine(medicineId.value)">Chi tiết</a>
+                        <a style="color: #1890ff"
+                            [routerLink]="['/medicine-management/medicine-list/details-medicine', data.id]">
+                            Chi tiết
+                        </a>
                     </td>
                     <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
                             (nzOnConfirm)="deleteMedicine(data.id)">Xóa</a></td>

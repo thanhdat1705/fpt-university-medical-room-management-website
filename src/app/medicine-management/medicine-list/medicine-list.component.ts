@@ -29,7 +29,7 @@ export class MedicineListComponent implements OnInit {
 
   detailLoading = false;
   tableLoading = false;
-  checked = false;
+
   medicineList: MedicineResponse[] = [];
   pageInfo: PageInfo = { isFirstPage: true, isLastPage: false, numberOfPage: 1, info: null };
   page: number;
@@ -284,29 +284,8 @@ export class MedicineListComponent implements OnInit {
 
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
-  detailMedicine(id: string) {
-    this.router.navigate(['medicine-management/medicine-list/details-medicine'], { queryParams: { id: id } })
-  }
-  // searchSuggest() {
-  //   this.isLoading = true;
-
-  //   this.service.searchMedicine(this.searchMedicineRequest).subscribe(
-  //     (response) => {
-  //       this.isLoading = false;
-  //       this.suggestList = response.data.data;
-  //       console.log(this.suggestList);
-  //       if (this.suggestList.length > 0) {
-  //         this.noSuggest = false;
-  //       }else {
-  //         this.noSuggest = true;
-  //       }
-  //     },
-  //     (error) => {
-  //       this.isLoading = false;
-  //       console.log('search error');
-  //       this.generalService.createErrorNotification(error);
-  //     }
-  //   )
+  // detailMedicine(id: string) {
+  //   this.router.navigate(['medicine-management/medicine-list/details-medicine'], { queryParams: { id: id } })
   // }
 
   deleteMedicine(id: string) {
@@ -364,9 +343,6 @@ export class MedicineListComponent implements OnInit {
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
     sortField == null ? this.sortFieldList = 'CreatedDate' : this.sortFieldList = sortField;
     this.searchName.value = this.searchValue;
-    // this.searchUnit.value = filter[0].value;
-    // this.searchClass.value = filter[1].value;
-    // this.searchSubgroup.value = filter[2].value;
     this.searchMedicineRequest = {
       limit: pageSize,
       page: pageIndex,

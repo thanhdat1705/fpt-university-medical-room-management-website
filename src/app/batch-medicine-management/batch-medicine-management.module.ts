@@ -8,9 +8,10 @@ import { MedicineService } from '../shared/services/medicine/medicine.service';
 import { registerLocaleData } from '@angular/common';
 import localeVi from '@angular/common/locales/vi';
 registerLocaleData(localeVi);
-import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
 import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eliminated-medicine/view-eliminated-medicine.component';
+import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
 import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
+import { CheckoutInsertBatchGuard } from '../shared/guards/checkout-insert-batch.guard';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/v
   providers: [
     MedicineService,
     CurrencyPipe,
+    CheckoutInsertBatchGuard,
     { provide: LOCALE_ID, useValue: 'vi' },
   ]
 })

@@ -4,16 +4,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router, NavigationStart, NavigationError, Event } from '@angular/router';
 import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
-import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
+import { MedicineResponse, MedicineResponseForImport } from 'src/app/shared/responses/medicine/medicine';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { differenceInCalendarDays, setHours } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@angular/common';
-import { ImportMedicine } from 'src/app/shared/models/importMedicine';
+import { ImportMedicineForAddBatch } from 'src/app/shared/models/importMedicine';
 import { v4 as uuidv4 } from 'uuid';
 import { GeneralStorage } from 'src/app/shared/services/storages/storages';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { Observable } from 'rxjs';
+import { ImportBatchService } from 'src/app/shared/services/import-batch/import-batch.service';
+import { AddImportBatchRequest } from 'src/app/shared/requests/ImportBatchMedicine/import-batch-medicine';
 
 @Component({
   selector: 'app-add-batch-medicine',
@@ -29,18 +32,22 @@ export class AddBatchMedicineComponent implements OnInit {
   totalMedicine = 0;
   totalPrice = "0";
   addImportMedicineLoading = false;
-  addItemLoading = false;
-  tableLoading = false;
+  addImportBatchLoading = false;
   isLoading = false;
+  isDestroy = true;
+  isDisable = true;
+  isDetails = false;
+  isFound = false;
 
   today = new Date();
   timeDefaultValue = setHours(new Date(), 0);
 
-  importMedicineList: ImportMedicine[] = [];
-  medicineList: MedicineResponse[] = [];
-  importMedicine: ImportMedicine;
+  importMedicineList: ImportMedicineForAddBatch[] = [];
+  medicineList: MedicineResponseForImport[] = [];
+  importMedicine: ImportMedicineForAddBatch;
   batchMedicineList: any;
   unit: string;
+  importMedicineId: string;
   medicineNameMinL = 3;
   medicineNameMaxL = 50;
   descriptionMinL = 1;
@@ -64,6 +71,13 @@ export class AddBatchMedicineComponent implements OnInit {
     selectFields: this.searchFields,
   };
 
+  addImportBatchRequest: AddImportBatchRequest = {
+    storeImportBatchMedicineRequest: this.importMedicineList,
+    totalPrice: 0,
+    periodicInventoryMonth: 0,
+    periodicInventoryYear: 0
+  }
+
   constructor(
     private fb: FormBuilder,
     private pb: FormBuilder,
@@ -73,6 +87,7 @@ export class AddBatchMedicineComponent implements OnInit {
     private currency: CurrencyPipe,
     private i18n: NzI18nService,
     private modal: NzModalService,
+    private service: ImportBatchService
   ) {
     this.i18n.setLocale(vi_VN);
     this.i18n.setDateLocale(vi);
@@ -104,32 +119,8 @@ export class AddBatchMedicineComponent implements OnInit {
       yearBatch: [this.today, [Validators.required]]
     })
 
-    this.router.events.subscribe((event: Event) => {
-      if (event instanceof NavigationStart) {
-        console.log('router 1');
-        if (localStorage.getItem('ImportMedicineList') != null) {
-          if (JSON.parse(localStorage.getItem('ImportMedicineList')).length >= 0) {
-            localStorage.removeItem('ImportMedicineList');
-            // console.log(event.);
-          }
-        }
-
-      }
-
-      if (event instanceof NavigationEnd) {
-        console.log('router 2');
-        console.log(event.toString());
-      }
-
-      if (event instanceof NavigationError) {
-        // Hide loading indicator
-        console.log('router 3');
-        // Present error to user
-        console.log(event.error);
-      }
-    });
-
   }
+
 
   ngOnInit(): void {
     this.importMedicineForm.valueChanges.subscribe(form => {
@@ -137,7 +128,6 @@ export class AddBatchMedicineComponent implements OnInit {
         this.importMedicineForm.patchValue({
           price: this.currency.transform(form.price.replace(/\D/g, '').replace(/^0+/, ''), '', '', '1.0-0', 'vi')
         }, { emitEvent: false });
-        // this.batchForm.get( 'controlName' ).updateValueAndValidity();
       }
     })
 
@@ -151,41 +141,34 @@ export class AddBatchMedicineComponent implements OnInit {
       console.log(JSON.parse(localStorage.getItem('ImportMedicineList')));
       this.importMedicineList = JSON.parse(localStorage.getItem('ImportMedicineList'));
       this.getTotalQuantityAndPrice();
-      // localStorage.removeItem('ImportMedicineList');
     }
-  }
-
-  // deleteImportMedicineBatch() {
-  //   this.confirmModal = this.modal.confirm({
-  //     nzTitle: 'Bạn có muốn xóa dược phẩm này khỏi hệ thống không?',
-  //     nzContent: this.medicineForm.controls['name'].value,
-  //     nzWidth: '35%',
-  //     nzMaskClosable: false,
-  //     nzClosable: false,
-  //     nzCancelText: 'Không',
-  //     nzOkText: 'Xác nhận xóa',
-  //     nzOnOk: () =>
-  //       new Promise((resolve, reject) =>
-  //         this.service.deleteMedicine(this.medicineId).subscribe(
-  //           (response) => {
-  //             this.modal.closeAll()
-  //             this.router.navigate(['medicine-management/medicine-list']);
-  //             this.generalService.messageNz('success', `Xóa thành công`);
-  //           }, (error) => {
-  //             console.log('delete error');
-  //             this.modal.closeAll();
-  //             this.generalService.createErrorNotification(error);
-  //           }
-  //         )
-  //       ).catch(() => console.log('Oops errors!'))
-  //   });
-
-  // }
-
-  periodic() {
 
   }
 
+
+
+  defaultFormValue() {
+    this.isDetails = false;
+    this.disable(false);
+    this.importMedicineForm.reset();
+    this.importMedicineForm.controls.insertDate.setValue(this.today);
+  }
+
+  disable(bool: boolean) {
+    if (bool) {
+      for (var control in this.importMedicineForm.controls) {
+        this.importMedicineForm.controls[control].disable();
+      }
+      this.isDisable = true;
+    }
+    if (!bool) {
+      for (var control in this.importMedicineForm.controls) {
+        this.importMedicineForm.controls[control].enable();
+      }
+      this.isDisable = false;
+    }
+
+  }
 
   disabledInsertDate = (current: Date): boolean => {
     return differenceInCalendarDays(current, this.today) > 0;
@@ -245,34 +228,44 @@ export class AddBatchMedicineComponent implements OnInit {
   }
 
   addImportMedicine(data: any) {
-
     if (this.importMedicineForm.invalid) {
       for (const i in this.importMedicineForm.controls) {
         this.importMedicineForm.controls[i].markAsDirty();
         this.importMedicineForm.controls[i].updateValueAndValidity();
       }
     } else {
-      this.importMedicine = {
-        id: uuidv4(),
-        quantity: data.quantity,
-        price: Number(this.generalService.removeDotInString(data.price.toString())),
-        priceWithDot: data.price,
-        description: data.description,
-        insertDate: data.insertDate,
-        expirationDate: data.expirationDate,
-        medicineId: data.medicine.id,
-        name: data.medicine.name
-      }
-      console.log(this.importMedicine);
-      this.importMedicineList = [...this.importMedicineList, this.importMedicine]
-      localStorage.setItem('ImportMedicineList', JSON.stringify(this.importMedicineList));
-      this.getTotalQuantityAndPrice();
-      this.importMedicineForm.reset();
-      this.importMedicineForm.controls.insertDate.setValue(this.today);
+
+      this.addImportMedicineLoading = true;
+      setTimeout(() => {
+        this.importMedicine = {
+          id: uuidv4(),
+          quantity: data.quantity,
+          price: Number(this.generalService.removeDotInString(data.price.toString())),
+          description: data.description,
+          insertDate: data.insertDate,
+          expirationDate: data.expirationDate,
+          medicineId: data.medicine.id,
+          medicine: data.medicine
+        }
+        this.importMedicineList = [...this.importMedicineList, this.importMedicine]
+        localStorage.setItem('ImportMedicineList', JSON.stringify(this.importMedicineList));
+        this.getTotalQuantityAndPrice();
+
+        this.defaultFormValue();
+        this.addImportMedicineLoading = false;
+        this.generalService.messageNz('success', 'Thêm thành công');
+        console.log(this.importMedicine);
+      }, 2000);
     }
+
+
 
   }
 
+  convertList(): any[] {
+    const newArray = this.importMedicineList.map(({ description, id, medicine, ...keepAttrs }) => keepAttrs)
+    return newArray;
+  }
 
   addImportBatch() {
     if (this.timeBatchForm.invalid) {
@@ -280,12 +273,140 @@ export class AddBatchMedicineComponent implements OnInit {
         this.timeBatchForm.controls[i].markAsDirty();
         this.timeBatchForm.controls[i].updateValueAndValidity();
       }
+    } else {
+      this.addImportBatchLoading = true;
+      this.addImportBatchRequest = {
+        storeImportBatchMedicineRequest: this.convertList(),
+        totalPrice: Number(this.generalService.removeDotInString(this.totalPrice)),
+        periodicInventoryMonth: this.timeBatchForm.controls.monthBatch.value.getMonth() + 1,
+        periodicInventoryYear: this.timeBatchForm.controls.yearBatch.value.getFullYear()
+      }
+      console.log(this.addImportBatchRequest);
+      this.service.addImportBatch(this.addImportBatchRequest).subscribe(
+        (response) => {
+          console.log(response);
+          this.addImportBatchLoading = false;
+          localStorage.removeItem('ImportMedicineList');
+          this.generalService.messageNz('success', `Lô thuốc mới được thêm thành công`);
+          this.router.navigate(['batch-medicine-management/batch-medicine-list']);
+        },
+        (error) => {
+          console.log('add import batch error');
+          this.addImportBatchLoading = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
     }
 
   }
 
-  detail(id: string) {
-    console.log(id);
+  detailImportMedicine(data: any) {
+    this.importMedicineId = data.id;
+    this.importMedicine = data;
+    this.isDetails = true;
+
+    console.log(data);
+    this.medicineList = [];
+    this.medicineList = [...this.medicineList, data.medicine];
+
+    this.importMedicineForm.setValue({
+      medicine: data.medicine.name,
+      quantity: data.quantity,
+      price: data.price.toLocaleString('vi'),
+      insertDate: data.insertDate,
+      expirationDate: data.expirationDate,
+      description: data.description,
+    })
+    this.medicineChange(data.medicine);
+    this.disable(true);
+
+  }
+
+  cancel() {
+    this.detailImportMedicine(this.importMedicine);
+  }
+
+  edit() {
+    this.importMedicineForm.controls['medicine'].setValue(this.importMedicine.medicine);
+    this.disable(false);
+  }
+
+  updateImportMedicine(data: any) {
+    console.log(data);
+    if (this.importMedicineForm.invalid) {
+      for (const i in this.importMedicineForm.controls) {
+        this.importMedicineForm.controls[i].markAsDirty();
+        this.importMedicineForm.controls[i].updateValueAndValidity();
+      }
+    } else {
+      this.addImportMedicineLoading = true;
+      setTimeout(() => {
+        this.importMedicineList.forEach(item => {
+          if (item.id == this.importMedicineId) {
+            item.id = this.importMedicineId,
+              item.quantity = data.quantity,
+              item.price = Number(this.generalService.removeDotInString(data.price.toString())),
+              item.description = data.description,
+              item.insertDate = data.insertDate,
+              item.expirationDate = data.expirationDate,
+              item.medicineId = data.medicine.id,
+              item.medicine = data.medicine
+          }
+        })
+        this.importMedicineList = this.importMedicineList;
+        localStorage.setItem('ImportMedicineList', JSON.stringify(this.importMedicineList));
+        this.disable(true);
+        this.getTotalQuantityAndPrice();
+        // this.defaultFormValue();
+        this.addImportMedicineLoading = false;
+        this.generalService.messageNz('success', 'Cập nhật thành công');
+        console.log(this.importMedicine);
+      }, 2000);
+    }
+  }
+
+  deleteImportMedicine() {
+    this.confirmModal = this.modal.confirm({
+      nzTitle: 'Bạn có muốn xóa dược phẩm này khỏi danh sách không?',
+      nzContent: this.importMedicineForm.controls.medicine.value,
+      nzWidth: '35%',
+      nzMaskClosable: false,
+      nzClosable: false,
+      nzCancelText: 'Không',
+      nzOkText: 'Xác nhận xóa',
+      nzOnOk: () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            this.importMedicineList.forEach((item, index) => {
+              if (item.id === this.importMedicineId) {
+                this.isFound = true;
+                this.importMedicineList.splice(index, 1);
+                this.modal.closeAll()
+                this.generalService.messageNz('success', 'Xóa thành công');
+                this.importMedicineList = this.importMedicineList;
+                localStorage.setItem('ImportMedicineList', JSON.stringify(this.importMedicineList));
+                this.getTotalQuantityAndPrice();
+                this.defaultFormValue();
+                return;
+              } else {
+                this.isFound = false;
+                return;
+              }
+            });
+          }, 2000)
+        }
+        ).catch(() => console.log('Oops errors!')),
+      nzOnCancel: () => {
+        this.isFound = true;
+      }
+    });
+
+    this.confirmModal.afterClose.subscribe(() => {
+      if (!this.isFound) {
+        this.generalService.messageNz('error', 'Dược phẩm không tồn tại');
+      }
+    })
+
   }
 
 }

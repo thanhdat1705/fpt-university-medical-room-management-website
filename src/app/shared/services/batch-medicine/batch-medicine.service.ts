@@ -7,4 +7,7 @@ import { SummaryService } from '../summary.service';
 export class BatchMedicineService {
 
   constructor(private service: SummaryService) { }
+
+
+
 }

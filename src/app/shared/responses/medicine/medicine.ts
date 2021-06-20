@@ -21,3 +21,9 @@ export interface MedicineResponse {
     importBatchMedicines: any
     treatmentInformationDetails: any
 }
+
+export interface MedicineResponseForImport {
+    id: string;
+    name: string;
+    medicineUnit: string;
+}

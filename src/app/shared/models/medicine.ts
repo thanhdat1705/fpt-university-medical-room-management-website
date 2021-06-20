@@ -3,3 +3,9 @@ export interface Medicine {
     quantity: number;
     cate: string;
 }
+
+export interface MedicineForImport {
+    id: string;
+    name: string;
+    medicineUnit: string;
+}

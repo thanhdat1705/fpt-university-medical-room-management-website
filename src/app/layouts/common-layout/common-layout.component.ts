@@ -38,7 +38,6 @@ export class CommonLayoutComponent {
 
     private buildBreadCrumb(route: ActivatedRoute, url: string = '', breadcrumbs: IBreadcrumb[] = []): IBreadcrumb[] {
         let label = '', path = '/', display = null;
-
         if (route.routeConfig) {
             if (route.routeConfig.data) {
                 label = route.routeConfig.data['title'];
@@ -46,10 +45,10 @@ export class CommonLayoutComponent {
             }
         } else {
             label = 'Trang chính';
-            path += '/medicine-management/medicine-list';
+            path += 'medicine-management/medicine-list';
         }
 
-        const nextUrl = path && path !== '//medicine-management/medicine-list' ? `${url}${path}` : url;
+        const nextUrl = path && path !== '/medicine-management/medicine-list' ? `${url}${path}` : url;
         const breadcrumb = <IBreadcrumb>{
             label: label, url: nextUrl
         };

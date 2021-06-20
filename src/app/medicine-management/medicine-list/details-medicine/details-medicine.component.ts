@@ -21,6 +21,7 @@ export class DetailsMedicineComponent implements OnInit {
   updateMedicineLoading = false;
   addItemLoading = false;
   deleteLoading = false;
+  isUpdating = false;
   medicineForm!: FormGroup;
 
   medicineNameMinL = 3;
@@ -43,7 +44,7 @@ export class DetailsMedicineComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private modal: NzModalService,) {
-    this.medicineId = activatedRoute.snapshot.queryParamMap.get('id');
+    this.medicineId = activatedRoute.snapshot.paramMap.get('id');
 
     this.medicineForm = this.fb.group({
       name: ['', [
@@ -165,12 +166,15 @@ export class DetailsMedicineComponent implements OnInit {
       for (var control in this.medicineForm.controls) {
         this.medicineForm.controls[control].disable();
       }
+      this.isUpdating = false;
       this.isDisable = true;
     }
     if (!bool) {
       for (var control in this.medicineForm.controls) {
         this.medicineForm.controls[control].enable();
       }
+
+      this.isUpdating = true;
       this.isDisable = false;
     }
 
@@ -196,7 +200,7 @@ export class DetailsMedicineComponent implements OnInit {
           // setTimeout(() => {
           //   this.router.navigate(['medicine-management/medicine-list']);
           // }, 1000);
-          this.isDiable(false);
+          this.isDiable(true);
         },
         (error) => {
           console.log('update medicine error');
