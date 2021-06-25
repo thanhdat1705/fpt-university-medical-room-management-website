@@ -1,0 +1,87 @@
+<!-- <nz-table #colSpanTable [nzScroll]="{ x: '1000px' }" [nzData]="listOfData" nzBordered (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"> -->
+  <div class="search-filter">
+    <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
+        <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchNameValue"/>
+    </nz-input-group>
+    <ng-template #searchIconButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicineName()">
+            <i nz-icon nzType="search" nzTheme="outline"></i>
+        </button>
+    </ng-template>
+    <br><br>
+    <div class="select-wrap">
+        <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
+      <!--   <nz-select class="select-w" nzPlaceHolder="Đơn vị" nzAllowClear [(ngModel)]="unitValue"
+            (ngModelChange)="onSearchUnit($event)" [ngClass]="{'ant-select-selection': unitSelected}">
+            <nz-option *ngFor="let option of filterUnit" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+        </nz-select>-->
+        <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
+        (ngModelChange)="onSearchClassification()">
+        <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
+        </nz-option>
+      </nz-select>
+      <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
+        (ngModelChange)="onSearchSubGroup()">
+        <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
+        </nz-option>
+      </nz-select>
+    </div>
+</div>
+
+  <nz-table *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize"
+ [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)"
+nzBordered>
+
+  <thead>
+    <tr>
+      <th nzWidth="60px"></th>
+      <th>Thuốc</th>
+      <th>Số lượng</th>
+      <th>Ngày hết hạn</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let data of treatmentDetailsTableData">
+      <tr>
+        <td [nzExpand]="expandSet.has(data.medicineInInventory.medicineId)"
+          (nzExpandChange)="onExpandChange(data.medicineInInventory.medicineId, $event)"></td>
+        <td> {{ data.medicineInInventory.name }} </td>
+        <td>{{ data.medicineInInventory.quantity }}</td>
+        <td></td>
+      </tr>
+      <ng-container *ngFor="let item of data.medicineInInventoryDetails">
+        <tr [nzExpand]="expandSet.has(data.medicineInInventory.medicineId)">
+
+          <td [nzChecked]="setOfCheckedId.has(item.id)" (nzCheckedChange)="onItemChecked(item.id, $event)"></td>
+          <td style="padding-left: 30px;">
+            {{item.name}}
+          </td>
+          <td> 
+            <!-- <nz-input-number [nzMin]="0" [nzMax]="item.quantity" [nzStep]="1"  style=" margin-left: 80px; width: 20%;" nz-input #inputValue
+            (keyup)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)" [nzDisabled]="!setOfCheckedId.has(item.id)"
+            (keydown)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)"
+            value="!setOfCheckedId.has(item.id) ? 0 : getTreatmentDetailsQuantity(item.id)"></nz-input-number> -->
+            <input style=" margin-left: 90px; width: 20%;" nz-input #inputValue formControlName="quantity"
+              (input)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)" [disabled]="!setOfCheckedId.has(item.id)"
+              [value]="!setOfCheckedId.has(item.id) ? item.quantity : getTreatmentDetailsQuantity(item.id)" />
+            <span> /{{item.quantity}}</span>
+          </td>
+          <td>{{ generalService.getDate(item.expirationDate )}}</td>
+        </tr>
+
+      </ng-container>
+      <!-- <ng-container *ngFor="let item of data.medicines">
+        <tr [nzExpand]="expandSet.has(data.id)">
+          <th  [nzChecked]="setOfCheckedId.has(item.id)" (nzCheckedChange)="onItemChecked(item.id, $event)"></th>
+          <td>
+            {{ item.name }}
+          </td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.expiredDay }}</td>
+        </tr>
+      </ng-container> -->
+    </ng-container>
+  </tbody>
+
+</nz-table>
+<button nz-button nzType="primary" [disabled]="setOfCheckedId.size === 0" (click)="sendRequest()">Gửi</button>

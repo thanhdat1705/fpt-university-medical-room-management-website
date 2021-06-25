@@ -54,7 +54,6 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
     this.isEditing = true;
     this.eliminatedMedicineDetailsForm.controls['quantity'].enable();
     this.eliminatedMedicineDetailsForm.controls['reason'].enable();
-
   }
 
 

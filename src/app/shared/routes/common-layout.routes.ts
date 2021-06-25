@@ -50,4 +50,23 @@ export const CommonLayout_ROUTES: Routes = [
         ],
 
     },
+
+    {
+        path: 'treatment-information-management',
+        data: {
+            title: 'Quản lí đơn điều trị'
+        },
+        children: [
+            {
+                path: '',
+                redirectTo: '/medicine-management',
+                pathMatch: 'full'
+            },
+            {
+                path: '',
+                loadChildren: () => import('../../treatment-information-management/treatment-information-management.module').then(m => m.TreatmentInformationManagementModule)
+            }
+        ],
+
+    },
 ];

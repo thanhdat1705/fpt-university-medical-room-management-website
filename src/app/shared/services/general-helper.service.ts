@@ -74,7 +74,7 @@ export class GeneralHelperService {
     }
     
 
-    getValueCompare(value: string, valueCompare: ValueCompare, searchRecordAttribute: string, searchRecord: Record<string, ValueCompare> = {}) {
+    getValueCompare(value: any, valueCompare: ValueCompare, searchRecordAttribute: string, searchRecord: Record<string, ValueCompare> = {}) {
         if (value != null) {
           valueCompare.value = value;
           searchRecord[searchRecordAttribute] = valueCompare;

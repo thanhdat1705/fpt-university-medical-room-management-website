@@ -5,14 +5,17 @@ import { MedicineSubgroupResponse } from "../medicine-subgroup/medicine-subgroup
 import { MedicineUnitResponse } from "../medicine-unit/medicine-unit-response";
 import { MedicineResponse } from "../medicine/medicine";
 
-export interface MedicineInInventoryResponse {
+export class MedicineInInventoryResponse {
     id: string;
     quantity: number;
     createdDate: Date;
     importMedicine: ImportMedicineResponse;
     medicine: MedicineResponse;
+    medicineId: string;
+
     medicineUnit: MedicineUnitResponse;
     medicineClassification: MedicineClassificationResponse;
     medicineSubgroup: MedicineSubgroupResponse;
     periodicInventory: PeriodicInventory;   
+
 }

@@ -4,7 +4,7 @@
       <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchMedicineNameValue"/>
   </nz-input-group>
   <ng-template #searchIconButton>
-      <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchEliminatedMedicineName()">
+      <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicineName()">
           <i nz-icon nzType="search" nzTheme="outline"></i>
       </button>
   </ng-template>
@@ -47,8 +47,6 @@
         <th nzWidth="100px" nzColumnKey="MedicineUnit.Name" [nzSortFn]="true">Đơn vị</th>
         <th nzWidth="100px" nzColumnKey="MedicineClassification.Name" [nzSortFn]="true">Loại thuốc</th>
         <th nzWidth="100px" nzColumnKey="MedicineSubgroup.Name" [nzSortFn]="true">Nhóm</th>
-        <th nzWidth="140px" nzColumnKey="CreatedDate" [nzSortFn]="true">Ngày nhập</th>
-        <th nzWidth="140px" nzColumnKey="ImportMedicine.expirationDate" [nzSortFn]="true">Ngày hết hạn</th>
         <th nzWidth="60px"></th>
         <th nzWidth="100px"></th>
         <!-- <th>Thuộc lô</th> -->
@@ -61,11 +59,9 @@
         <td>{{ medicineInInventory.medicineUnit.name }}</td>
         <td>{{ medicineInInventory.medicineClassification.name }}</td>
         <td>{{ medicineInInventory.medicineSubgroup.name }}</td>
-        <td>{{ medicineInInventory.createdDate }}</td>
-        <td>{{ medicineInInventory.importMedicine.expirationDate }}</td>
         <td>
           <a style="color: #1890ff;"
-            [routerLink]="['/batch-medicine-management/medicine-in-inventory-details', medicineInInventory.id]">Detail</a>
+            [routerLink]="['/batch-medicine-management/medicine-in-inventory-details', medicineInInventory.id]">Xem lô thuốc</a>
         </td>
         <td> <a style="color: #1890ff"
             (click)="showEliminateMedicineModel(medicineInInventory.id, medicineInInventory.medicine.name,medicineInInventory.medicineUnit.name,  medicineInInventory.quantity)">Hủy

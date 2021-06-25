@@ -64,7 +64,7 @@
             </nz-form-label>
             <nz-form-control [nzErrorTip]="">
                 <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
-                    value="{{eliminatedMedicineDetails.medicineInInventory.createdDate}}" />
+                    value="{{ generalService.getDate(eliminatedMedicineDetails.medicineInInventory.createdDate) }}" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -73,7 +73,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
-                    value="{{ eliminatedMedicineDetails.medicineInInventory.importMedicine.insertDate }}" />
+                    value="{{ generalService.getDate(eliminatedMedicineDetails.medicineInInventory.importMedicine.insertDate) }}" />
             </nz-form-control>
         </nz-form-item>
         <!-- Email -->

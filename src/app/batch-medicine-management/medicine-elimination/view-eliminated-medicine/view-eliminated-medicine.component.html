@@ -54,8 +54,8 @@
         <td>{{ eliminatedMedicine.medicineUnit.name }}</td>
         <td>{{ eliminatedMedicine.medicineClassification.name }}</td>
         <td>{{ eliminatedMedicine.medicineSubgroup.name }}</td>
-        <td>{{ eliminatedMedicine.createDate }}</td>
-        <td>{{ eliminatedMedicine.medicineInInventory.createdDate }}</td>
+        <td>{{ generalService.getDate(eliminatedMedicine.createDate) }}</td>
+        <td>{{ generalService.getDate(eliminatedMedicine.medicineInInventory.createdDate) }}</td>
         <td>
           <input type="hidden" nz-input #medicineId>
           <a style="color: #1890ff;"

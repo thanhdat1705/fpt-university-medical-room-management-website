@@ -32,6 +32,9 @@ export const UrlServerAPIGetEliminatedMedicineDetails = UrlServer +"/api/v1.0/El
 export const UrlServerAPIUpdateEliminatedMedicineDetails = UrlServer +"/api/v1.0/EliminateMedicines";
 export const UrlServerAPIDeleteEliminatedMedicineDetails = UrlServer +"/api/v1.0/EliminateMedicines";
 
+export const UrlServerAPIAddDepartment = UrlServer +"/api/v1.0/Departments";
+export const UrlServerAPISearchDepartment = UrlServer +"/api/v1.0/Departments/Searching";
+
 
 export const UrlServerAPISearchMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits/Searching';
 export const UrlServerAPIStoreNewMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits';
@@ -49,6 +52,10 @@ export const UrlServerAPISearchMedicine = UrlServer + '/api/v1.0/Medicines/Searc
 export const UrlServerAPIDeleteMedicine = UrlServer + '/api/v1.0/Medicines';
 export const UrlServerAPIGetMedicine = UrlServer + '/api/v1.0/Medicines/';
 export const UrlServerAPIUpdateMedicine = UrlServer + '/api/v1.0/Medicines';
+
+export const UrlServerAPISearchMedicineInInventoryDetails = UrlServer + '/api/v1.0/MedicineInInventoryDetails/Searching';
+
+export const UrlServerAPIAddTreatmentInformation = UrlServer + '/api/v1.0/Treatments';
 
 
 export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';

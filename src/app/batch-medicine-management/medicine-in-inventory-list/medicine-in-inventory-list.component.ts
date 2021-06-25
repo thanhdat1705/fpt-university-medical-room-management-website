@@ -29,7 +29,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   searchRecord: Record<string, ValueCompare> = {}
   total: number;
   pageIndex = 1;
-  selectFields = "id, quantity, createdDate, importMedicine, medicine, medicine.medicineUnit, medicine.medicineClassification, medicine.medicineSubgroup, periodicInventory";
+  selectFields = "quantity, medicine, periodicInventory, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit";
   sortField = "";
   sortOrder = 0;
   searchMedicineNameValue: string;
@@ -131,7 +131,7 @@ export class MedicineInInventoryListComponent implements OnInit {
     this.searchMedicineInInventory();
   }
 
-  searchEliminatedMedicineName() {
+  searchMedicineName() {
     this.loading = true;
     this.generalService.getValueCompare(this.searchMedicineNameValue, this.NameValueCompare, 'Medicine.Name', this.searchRecord);
     this.searchMedicineInInventory();
@@ -178,7 +178,7 @@ export class MedicineInInventoryListComponent implements OnInit {
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrder = 0 : this.sortOrder = 1;
-    sortField == null ? this.sortField = 'CreatedDate' : this.sortField = sortField;
+    sortField == null ? this.sortField = '' : this.sortField = sortField;
 
     if (sortOrder == "ascend") {
       this.sortOrder = 1;

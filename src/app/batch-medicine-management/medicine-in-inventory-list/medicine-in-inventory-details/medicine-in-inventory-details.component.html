@@ -55,7 +55,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
-                    value="{{ medicineInInventoryDetails.importMedicine.importBatch.createDate }}" />
+                    value="{{ generalService.getDate(medicineInInventoryDetails.importMedicine.importBatch.createDate) }}" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -64,7 +64,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
-                    value="{{ medicineInInventoryDetails.createdDate }}" /><span class="font-size-18"> </span>
+                    value="{{ generalService.getDate(medicineInInventoryDetails.createdDate) }}" /><span class="font-size-18"> </span>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -73,7 +73,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
-                    value="{{ medicineInInventoryDetails.importMedicine.expirationDate }}" />
+                    value="{{ generalService.getDate(medicineInInventoryDetails.importMedicine.expirationDate) }}" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

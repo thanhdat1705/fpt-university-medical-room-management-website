@@ -1,10 +1,23 @@
 <div class="inner-content">
     <div class="profile" *ngIf="profile">
-        <div class="img-container">
-            <img [src]="url" *ngIf="url" style="width: 300px; height: 300px;" class="avatar">
-        </div>
+        <img
+        nz-image
+        width="200px"
+        height="200px"
+        nzSrc="url"
+        alt=""
+      />
         <div class="info">
-            <p class="title">Tên: </p>
+            <nz-descriptions nzTitle="User Info" [nzSize]="'large'">
+                <nz-descriptions-item nzTitle="Tên">{{profile.displayName}}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Số điện thoại">{{profile.phoneNumber}}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Email">{{profile.email}}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Mô tả">{{profile.description}}</nz-descriptions-item>
+
+            </nz-descriptions>
+
+
+            <!--     <p class="title">Tên: </p>
             <p class="content">{{profile.displayName}}</p>
             <br>
             <br>
@@ -17,13 +30,13 @@
             <br>
             <br>
             <p class="title">Mô tả:</p>
-            <p class="content">{{profile.description}}</p>
+            <p class="content">{{profile.description}}</p>-->
 
         </div>
         <div class="buttons">
-            <a [routerLink]="'/account/edit-profile'"><button mat-raised-button color="primary">Sửa thông tin cá
+            <a [routerLink]="'/account/edit-profile'"><button nz-button nzType="default">Sửa thông tin cá
                     nhân</button></a>
-            <a [routerLink]="'/account/change-password'"> <button mat-raised-button color="primary">Đổi mật
+            <a [routerLink]="'/account/change-password'"> <button nz-button nzType="default">Đổi mật
                     khẩu</button></a>
 
             <!-- <button mat-raised-button color="primary">Change password</button> -->

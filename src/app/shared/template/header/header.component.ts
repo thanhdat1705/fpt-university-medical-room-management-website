@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
     this.authService.SignOut();
   }
 
-  getImgAvatar() {
-    return this.sidenav.getImgUrl();
-  }
+  // getImgAvatar() {
+  //   return this.sidenav.getImgUrl();
+  // }
 }

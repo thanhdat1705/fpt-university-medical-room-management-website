@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class MedicineInInventoryDetailsComponent implements OnInit {
   constructor(
     private summaryService: SummaryService,
     private activatedroute: ActivatedRoute,
+    private generalService: GeneralHelperService
   ) { }
 
   medicineInInventoryDetails : MedicineInInventoryResponse;
