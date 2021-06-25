@@ -49,5 +49,11 @@ export const UrlServerAPIGetMedicine = UrlServer + '/api/v1.0/Medicines/';
 export const UrlServerAPIUpdateMedicine = UrlServer + '/api/v1.0/Medicines';
 
 
-export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';
+export const UrlServerAPISearchImportBatch = UrlServer + '/api/v1.0/ImportBatches/Searching';
 export const UrlServerAPIAddImportBatch = UrlServer + '/api/v1.0/ImportBatches';
+export const UrlServerAPIGetDetailImportBatch = UrlServer + '/api/v1.0/ImportBatches/';
+export const UrlServerAPIDeleteImportBatch = UrlServer + '/api/v1.0/ImportBatches/';
+export const UrlServerAPIAddImportMedicine = UrlServer + '/api/v1.0/ImportMedicines/';
+export const UrlServerAPIUpdateImportMedicine = UrlServer + '/api/v1.0/ImportMedicines/';
+export const UrlServerAPIDeleteImportMedicine = UrlServer + '/api/v1.0/ImportMedicines/';
+export const UrlServerAPISearchImportMedicine = UrlServer + '/api/v1.0/ImportMedicines/Searching';

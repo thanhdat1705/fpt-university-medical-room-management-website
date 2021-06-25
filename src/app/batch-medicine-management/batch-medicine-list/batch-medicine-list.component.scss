@@ -1,0 +1,100 @@
+a {
+    &:hover {
+        color: #40a9ff !important;
+    }
+}
+
+.form {
+    max-width: 500px;
+    min-width: 150px;
+    // width: 100%;
+    line-height: 20px;
+    height: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .form {
+        max-width: 500px;
+        min-width: 150px;
+        // width: 100%;
+        line-height: 20px;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 100px;
+}
+
+.search-filter {
+    ::placeholder {
+        color: #8f9b99;
+        font-weight: 500;
+    }
+    .input {
+        background-color: #e6e6e63e;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    .select-wrap {
+        .select-w {
+            // nz-select-top-control {
+            //     border: solid 1px teal !important;
+            // }
+            width: 240px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding-top: 1.5px;
+            padding-bottom: 1.5px;
+            padding-left: 1px;
+            padding-right: 2px;
+            border-radius: 2px;
+        }
+    }
+}
+
+.filter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 500px;
+    nz-form-item {
+        margin-bottom: 0px !important;
+    }
+    .label {
+        margin-right: 10px !important;
+        width: 90px;
+        margin-bottom: 5px;
+        font-size: 15px;
+
+        .width-filter {
+            width: 300px !important;
+            @media only screen and (max-width: 600px) {
+                width: 250px !important;
+            }
+        }
+        @media only screen and (max-width: 600px) {
+            margin-right: 190px !important;
+        }
+    }
+    // margin-right: 50px;
+}
+
+.ant-input.demo-input-right {
+    width: 110px;
+    text-align: center;
+    border-left-width: 0px;
+}
+
+.ant-input.ant-input-rtl.demo-input-right {
+    border-right-width: 0px;
+}

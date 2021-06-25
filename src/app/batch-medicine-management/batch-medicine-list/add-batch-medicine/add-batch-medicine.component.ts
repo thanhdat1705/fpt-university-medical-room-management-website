@@ -65,14 +65,14 @@ export class AddBatchMedicineComponent implements OnInit {
   searchMedicineRequest: SearchRequest = {
     limit: 1,
     page: 0,
-    sortField: "CreatedDate",
+    sortField: "CreateDate",
     sortOrder: 0,
     searchValue: this.searchRecord,
     selectFields: this.searchFields,
   };
 
   addImportBatchRequest: AddImportBatchRequest = {
-    storeImportBatchMedicineRequest: this.importMedicineList,
+    storeImportMedicines: this.importMedicineList,
     totalPrice: 0,
     periodicInventoryMonth: 0,
     periodicInventoryYear: 0
@@ -118,10 +118,9 @@ export class AddBatchMedicineComponent implements OnInit {
       monthBatch: [this.today, [Validators.required]],
       yearBatch: [this.today, [Validators.required]]
     })
-
   }
 
-
+  
   ngOnInit(): void {
     this.importMedicineForm.valueChanges.subscribe(form => {
       if (form.price) {
@@ -167,7 +166,6 @@ export class AddBatchMedicineComponent implements OnInit {
       }
       this.isDisable = false;
     }
-
   }
 
   disabledInsertDate = (current: Date): boolean => {
@@ -276,7 +274,7 @@ export class AddBatchMedicineComponent implements OnInit {
     } else {
       this.addImportBatchLoading = true;
       this.addImportBatchRequest = {
-        storeImportBatchMedicineRequest: this.convertList(),
+        storeImportMedicines: this.convertList(),
         totalPrice: Number(this.generalService.removeDotInString(this.totalPrice)),
         periodicInventoryMonth: this.timeBatchForm.controls.monthBatch.value.getMonth() + 1,
         periodicInventoryYear: this.timeBatchForm.controls.yearBatch.value.getFullYear()
@@ -319,6 +317,8 @@ export class AddBatchMedicineComponent implements OnInit {
     })
     this.medicineChange(data.medicine);
     this.disable(true);
+
+    console.log(this.medicineList);
 
   }
 

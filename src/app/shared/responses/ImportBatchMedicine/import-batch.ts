@@ -1,3 +1,4 @@
+import { PeriodicInventory } from "../../models/periodic-inventory";
 import { MedicineResponse } from "../medicine/medicine";
 
 export interface BatchMedicine {
@@ -11,4 +12,12 @@ export interface BatchMedicine {
     medicineId: string;
     periodicInventoryId: string;
     medicine: MedicineResponse;
+}
+
+export interface ImportBatchResponse {
+    id: string;
+    numberOfSpecificMedicine: number;
+    totalPrice: number;
+    createDate: string;
+    periodicInventory: PeriodicInventory;
 }

@@ -8,6 +8,8 @@ import { distinctUntilChanged, filter, map, startWith } from "rxjs/operators";
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SideNavService } from 'src/app/shared/services/side-nav.service';
 import { IBreadcrumb } from "../../shared/interfaces/breadcrumb.type";
+import { HostListener } from "@angular/core";
+
 
 @Component({
     selector: 'app-common-layout',
@@ -15,7 +17,8 @@ import { IBreadcrumb } from "../../shared/interfaces/breadcrumb.type";
 })
 
 export class CommonLayoutComponent {
-
+    screenHeight: number;
+    screenWidth: number;
     breadcrumbs$: Observable<IBreadcrumb[]>;
 
     isCollapsed: boolean;
@@ -24,7 +27,9 @@ export class CommonLayoutComponent {
         private router: Router,
         private sidenav: SideNavService,
         private activatedRoute: ActivatedRoute,
-    ) { }
+    ) {
+        this.getScreenSize();
+    }
 
     ngOnInit() {
         this.sidenav.isMenuCollapsedChanges.subscribe(isisCollapsed => this.isCollapsed = isisCollapsed);
@@ -36,6 +41,19 @@ export class CommonLayoutComponent {
         // console.log('this.activatedRoute.root ', this.activatedRoute.root)
     }
 
+    @HostListener('window:resize', ['$event'])
+    getScreenSize(event?) {
+        this.screenHeight = window.innerHeight;
+        this.screenWidth = window.innerWidth;
+        // console.log(this.screenHeight, this.screenWidth);
+
+        if (this.screenWidth == 850) {
+            console.log('check');
+            // this.isCollapsed = !this.isCollapsed;
+            this.sidenav.toggleCollapse(true);
+
+        }
+    }
     private buildBreadCrumb(route: ActivatedRoute, url: string = '', breadcrumbs: IBreadcrumb[] = []): IBreadcrumb[] {
         let label = '', path = '/', display = null;
         if (route.routeConfig) {

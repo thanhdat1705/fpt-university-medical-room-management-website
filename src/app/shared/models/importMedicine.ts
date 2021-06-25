@@ -1,4 +1,7 @@
-import { MedicineForImport } from "./medicine";
+import { MedicineUnitResponse } from "../responses/medicine-unit/medicine-unit-response";
+import { MedicineResponseForImport } from "../responses/medicine/medicine";
+import { MedicineDetail } from "./medicine";
+import { Status } from "./status";
 
 export interface ImportMedicineForAddBatch {
     id: string;
@@ -8,20 +11,20 @@ export interface ImportMedicineForAddBatch {
     insertDate: string;
     expirationDate: string;
     medicineId: string;
-    medicine: MedicineForImport;
+    medicine: MedicineResponseForImport;
 }
 
 export interface ImportMedicine {
     id: string;
-    importBatchId: string;
     quantity: number;
     price: number;
     description: string;
+    statusId: number;
     insertDate: string;
     expirationDate: string;
     medicineId: string;
-    medicine: any;
-    medicineInInventories: any;
-    status: any;
-    statusId: number;
+    importBatchId: string;
+    medicine: MedicineDetail;
+    medicineUnit: MedicineUnitResponse;
+    status: Status;
 }

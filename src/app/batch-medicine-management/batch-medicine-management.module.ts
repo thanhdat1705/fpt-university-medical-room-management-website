@@ -12,6 +12,9 @@ import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eli
 import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
 import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
 import { CheckoutInsertBatchGuard } from '../shared/guards/checkout-insert-batch.guard';
+import { DetailBatchMedicineComponent } from './batch-medicine-list/detail-batch-medicine/detail-batch-medicine.component';
+import { AddImportMedicineComponent } from './batch-medicine-list/detail-batch-medicine/add-import-medicine/add-import-medicine.component';
+import { DetailImportMedicineComponent } from './batch-medicine-list/detail-batch-medicine/detail-import-medicine/detail-import-medicine.component';
 
 
 @NgModule({
@@ -21,6 +24,9 @@ import { CheckoutInsertBatchGuard } from '../shared/guards/checkout-insert-batch
     EliminateMedicineComponent,
     ViewEliminatedMedicineComponent,
     ViewEliminatedMedicineDetailsComponent,
+    DetailBatchMedicineComponent,
+    AddImportMedicineComponent,
+    DetailImportMedicineComponent,
   ],
   imports: [
     CommonModule,

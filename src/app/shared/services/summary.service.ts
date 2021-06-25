@@ -36,7 +36,13 @@ import {
   UrlServerAPIGetEliminatedMedicineDetails,
   UrlServerAPIUpdateEliminatedMedicineDetails,
   UrlServerAPIDeleteEliminatedMedicineDetails,
-  UrlServerAPIAddImportBatch
+  UrlServerAPIAddImportBatch,
+  UrlServerAPISearchImportBatch,
+  UrlServerAPIGetDetailImportBatch,
+  UrlServerAPIAddImportMedicine,
+  UrlServerAPIUpdateImportMedicine,
+  UrlServerAPISearchImportMedicine,
+  UrlServerAPIDeleteImportMedicine
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -220,13 +226,33 @@ export class SummaryService {
 
   /*----------------------------------------------------------------------------------------------------- */
   /*---------------------------------------- ImportBatch ---------------------------------------- */
-  // public searchImportBatch(data: any): Observable<ResponseServer> {
-  //   return this.http.post<ResponseServer>(UrlServerAPISearchMedicineUnit, data);
-  // }
+  public searchImportBatch(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchImportBatch, data);
+  }
 
   public addImportBatch(data: any): Observable<ResponseServer> {
     return this.http.post<ResponseServer>(UrlServerAPIAddImportBatch, data);
   }
+
+  public getDetailImportBatch(id: string): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetDetailImportBatch + id);
+  }UrlServerAPIAddImportMedicine
+
+  //  Import Medicine
+  
+  public addImportMedicine(data: any, id: string): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPIAddImportMedicine + id, data);
+  }
+  public updateImportMedicine(data: any, id: string): Observable<ResponseServer> {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateImportMedicine + id, data);
+  }
+  public deleteImportMedicine(id: string): Observable<ResponseServer> {
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteImportMedicine + id);
+  }
+  public searchImportMedicine(data: any): Observable<ResponseServer> {
+    return this.http.post<ResponseServer>(UrlServerAPISearchImportMedicine, data);
+  }
+
 
   //  Medicine Elimination Management
   public eliminateMedicine(data: any): Observable<ResponseServer> {

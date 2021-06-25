@@ -77,7 +77,7 @@
           "options": {
             "browserTarget": "fpt-university-medical-room-management-website:build",
             "host": "0.0.0.0",
-            "ssl": true,
+            "ssl": false,
             "sslCert":"ssl/server.crt",
             "sslKey":"ssl/server.key"
           },
