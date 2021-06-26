@@ -10,6 +10,8 @@ import { MedicineUnitListComponent } from './medicine-unit-list/medicine-unit-li
 import { MedicineSubgroupListComponent } from './medicine-subgroup-list/medicine-subgroup-list.component';
 import { MedicineClassificationListComponent } from './medicine-classification-list/medicine-classification-list.component';
 import { DetailsMedicineComponent } from './medicine-list/details-medicine/details-medicine.component';
+import { CheckoutDetailMedicineGuard } from '../shared/guards/checkout-detail-medicine.guard';
+import { CheckoutInsertMedicineGuard } from '../shared/guards/checkout-insert-medicine.guard';
 
 
 @NgModule({
@@ -28,6 +30,8 @@ import { DetailsMedicineComponent } from './medicine-list/details-medicine/detai
   ],
   providers: [
     MedicineService,
+    CheckoutDetailMedicineGuard,
+    CheckoutInsertMedicineGuard
   ]
 })
 export class MedicineManagementModule { }

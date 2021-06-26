@@ -5,5 +5,4 @@ export interface PeriodicInventory {
     month: number;
     year: number;
     createDate: string;
-    batchMedicineInInventories: any;
 }

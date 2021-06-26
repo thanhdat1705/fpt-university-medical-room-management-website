@@ -1,3 +1,6 @@
+import { ImportMedicineForAddBatch } from "../../models/importMedicine";
+
+
 export interface SearchImportBatchMedicine {
     QuantityHigher: number;
     QuantityLower: number;
@@ -15,4 +18,19 @@ export interface SearchImportBatchMedicine {
     Page: number;
     SortField: string;
     SortOrder: number;
+}
+
+export interface AddImportBatchRequest {
+    storeImportMedicines: ImportMedicineForAddBatch[],
+    totalPrice: number,
+    periodicInventoryMonth: number,
+    periodicInventoryYear: number
+}
+
+export interface ImportMedicineRequest {
+    quantity: number;
+    price: number;
+    insertDate: string;
+    expirationDate: string;
+    medicineId: string;
 }

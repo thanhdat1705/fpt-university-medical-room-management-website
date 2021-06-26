@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CheckoutDetailMedicineGuard } from '../shared/guards/checkout-detail-medicine.guard';
+import { CheckoutInsertMedicineGuard } from '../shared/guards/checkout-insert-medicine.guard';
 import { MedicineClassificationListComponent } from './medicine-classification-list/medicine-classification-list.component';
 import { AddMedicineComponent } from './medicine-list/add-medicine/add-medicine.component';
 import { DetailsMedicineComponent } from './medicine-list/details-medicine/details-medicine.component';
@@ -20,16 +22,16 @@ const routes: Routes = [
     component: AddMedicineComponent,
     data: {
       title: 'Thêm dược phẩm',
-
-    }
+    },
+    canDeactivate: [CheckoutInsertMedicineGuard]
   },
   {
-    path: 'medicine-list/details-medicine',
+    path: 'medicine-list/details-medicine/:id',
     component: DetailsMedicineComponent,
     data: {
       title: 'Chi tiết dược phẩm',
-
-    }
+    },
+    canDeactivate: [CheckoutDetailMedicineGuard]
   },
   {
     path: 'medicine-unit-list',

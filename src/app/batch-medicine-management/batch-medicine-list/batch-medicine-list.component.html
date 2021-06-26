@@ -1,2 +1,119 @@
-<app-add-batch-medicine></app-add-batch-medicine>
-<!-- <p>batch-medicine-list works!</p> -->
+<div class="inner-content">
+    <!-- <div class="search-filter">
+        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
+            <input class="input" placeholder="Nhập tên dược phẩm" nz-input #inputValue />
+        </nz-input-group>
+        <ng-template #searchIconButton>
+            <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton">
+                <i nz-icon nzType="search" nzTheme="outline"></i>
+            </button>
+        </ng-template>
+        <br><br>
+        <div class="select-wrap">
+            <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
+        </div>
+    </div> -->
+    <div class="d-flex flex-column ">
+        <div class="filter">
+            <span style="width: 130px;">Bộ lọc tím kiếm:</span>
+            <button nz-button nzType="primary" (click)="setToDefaultFilter()">
+                <span>Thiết lập lại</span>
+            </button>
+        </div>
+        <div class="d-flex flex-column justify-content-between">
+            <div class="d-flex flex-row flex-wrap justify-content-start align-items-center">
+                <div class="filter">
+                    <span class="label">Ngày nhập: </span>
+                    <nz-range-picker [ngClass]="{'border-selected': dateRangeSelected}" [nzRanges]="ranges"
+                        [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)" style="width: 250px;"
+                        nzFormat="dd-MM-yyyy"></nz-range-picker>
+                </div>
+                <div class="filter">
+                    <span class="label">Kỳ nhập: </span>
+                    <nz-date-picker [ngClass]="{'border-selected': dateSelected}" nzMode="month"
+                        nzPlaceHolder="Tháng - Năm" nzFormat="MM-yyyy" [(ngModel)]="date"
+                        (ngModelChange)="onDateChange($event)" style="width: 250px;">
+                    </nz-date-picker>
+                </div>
+            </div>
+            <div class="d-flex flex-row flex-wrap justify-content-start align-items-center">
+                <form [formGroup]="priceForm" class="filter">
+                    <nz-input-group nzCompact>
+                        <span class="label">Tổng giá (₫): </span>
+                        <nz-form-item>
+                            <input type="text" nz-input placeholder="Tối thiểu" formControlName="minPrice"
+                                [ngClass]="{'border-selected': priceSelected}" style="width:110px; text-align: center;"
+                                (ngModelChange)="minPriceChange($event)" />
+                        </nz-form-item>
+                        <input type="text" disabled nz-input placeholder="~" class="demo-input-split"
+                            [ngClass]="{'border-selected': priceSelected}"
+                            style="width: 30px; border-left: 0px; border-right: 0px; pointer-events: none; background-color: rgb(255, 255, 255);" />
+                        <nz-form-item>
+                            <input type="text" nz-input placeholder="Tối đa" class="demo-input-right"
+                                [ngClass]="{'border-selected': priceSelected}" formControlName="maxPrice"
+                                (ngModelChange)="maxPriceChange($event)" />
+                        </nz-form-item>
+                    </nz-input-group>
+                </form>
+                <div class="filter">
+                    <span class="label">Số lượng </span>
+                    <nz-input-number [ngClass]="{'border-selected': quantitySelected}" id="quantity" [nzMin]="1"
+                        [nzStep]="1" nzPlaceHolder="Nhập số lượng" [ngModel]="quantity"
+                        (ngModelChange)="quantityChange($event)" style="width: 250px;">
+                    </nz-input-number>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <nz-spin [nzSpinning]="importBatchLoading" nzTip="Đang xử lý...">
+        <div class="d-flex flex-column justify-content-between" style="min-height: 350px;">
+            <nz-table #nzTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="importBatchList"
+                [nzScroll]="{ x: '1000px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+                (nzQueryParams)="onQueryParamsChange($event)">
+                <thead>
+                    <tr>
+                        <th nzAlign='left' nzWidth='90px'>No.</th>
+                        <th nzAlign='center' nzColumnKey="CreateDate" [nzSortFn]="true">Lô nhập (ngày)</th>
+                        <th nzAlign='center' nzColumnKey="NumberOfSpecificMedicine" [nzSortFn]="true">Số dược phẩm</th>
+                        <th nzAlign='center'>Kì nhập (tháng-năm)</th>
+                        <th nzAlign='right' nzColumnKey="TotalPrice" [nzSortFn]="true">Tổng giá</th>
+                        <!-- <th nzWidth="70px"></th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of importBatchList; index as i">
+                        <td nzAlign='left'>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+                        <td nzAlign='center'>
+                            <span class="text-link font-weight-semibold"
+                                [routerLink]="['/batch-medicine-management/batch-medicine-list/detail-batch', data.id]">{{
+                                getCreateTime(data.createDate) }}</span>
+                        </td>
+                        <td nzAlign='center'>{{ data.numberOfSpecificMedicine }}</td>
+                        <td nzAlign='center'>{{ data.periodicInventory.month }} - {{ data.periodicInventory.year }}</td>
+                        <td nzAlign='right'>{{ data.totalPrice.toLocaleString('vi') }} ₫</td>
+                        <!-- <td>
+                            <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
+                            <a style="color: #1890ff"
+                                [routerLink]="['/batch-medicine-management/batch-medicine-list/detail-batch', data.id]">
+                                Chi tiết
+                            </a>
+                        </td> -->
+                    </tr>
+                </tbody>
+            </nz-table>
+            <div style="margin: 10px; width: 200px;">
+                <button nz-button nzType="primary" nzBlock nzSize="large"
+                    [routerLink]="'/batch-medicine-management/batch-medicine-list/add-batch'">
+                    <span>Thêm lô</span>
+                </button>
+            </div>
+        </div>
+    </nz-spin>
+
+    <!-- <button nz-button nzType="primary" nzBlock nzSize="large"
+        [routerLink]="'/batch-medicine-management/batch-medicine-list/add-batch'">
+        <span>Thêm lô</span>
+    </button> -->
+</div>

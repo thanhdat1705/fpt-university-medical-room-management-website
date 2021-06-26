@@ -61,11 +61,11 @@ export class GeneralHelperService {
     showNumberPatternError(fieldName: string) {
         return fieldName + " phải là số";
     }
-    showPhoneNumberPatternError(){
+    showPhoneNumberPatternError() {
         return "Số điện thoại phải là số";
     }
 
-    showEmailPatternError(){
+    showEmailPatternError() {
         return "Email phải được nhập đúng format (example@email.com)"
     }
 
@@ -214,6 +214,15 @@ export class GeneralHelperService {
 
         }
         return result;
+    }
+
+    getYMD(date: string) {
+        var dt = new Date(date);
+        var newDate = '';
+        // return newdate.toLocaleString().replace('/', '-').split(',')[1].replace('/', '-');
+        // return newdate.toISOString().split('T')[0];
+        newDate = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+        return newDate;
     }
 
     removeDotInString(text: string) {

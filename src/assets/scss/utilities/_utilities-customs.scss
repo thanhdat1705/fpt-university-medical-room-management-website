@@ -3311,3 +3311,20 @@
         border-color: $focus-logo-color !important;
     }
 }
+
+.text-link {
+    cursor: pointer;
+    color: $teal-green;
+
+    &:hover {
+        color: $text-link-hover !important;
+    }
+
+    &:active {
+        color: $text-link-active !important;
+    }
+}
+
+.border-selected {
+    border: 2px solid $teal-green;
+}

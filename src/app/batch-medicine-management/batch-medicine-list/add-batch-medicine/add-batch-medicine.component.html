@@ -41,7 +41,7 @@
           </nz-form-label>
           <nz-form-control [nzErrorTip]="yearErrorTpl">
             <nz-date-picker formControlName="yearBatch" nzSize="large" nzMode="year"
-              [nzDisabledDate]="disabledInsertDate" nzPlaceHolder="Ngày nhập" nzFormat="yyy" style="width: 100%;">
+              [nzDisabledDate]="disabledInsertDate" nzPlaceHolder="Ngày nhập" style="width: 100%;">
             </nz-date-picker>
             <ng-template #yearErrorTpl let-control>
               <ng-container *ngIf="timef.yearBatch.hasError('required')">
@@ -52,12 +52,12 @@
         </nz-form-item>
       </form>
     </div>
-    <div class="bg-white m-t-22 m-b-20 p-10 d-flex flex-column p-h-20 p-v-10" >
+    <div class="bg-white m-t-22 m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
       <span class="text-teal-green font-size-18 font-weight-semibold">Thêm lô</span>
       <dividing-line></dividing-line>
       <!-- <nz-divider style="height: 5px;" ></nz-divider> -->
       <br>
-      <nz-spin [nzSpinning]="addImportMedicineLoading" nzTip="Loading...">
+      <nz-spin [nzSpinning]="addImportMedicineLoading" nzTip="Đang xử lý...">
         <form nz-form nzLayout="horizontal" [formGroup]="importMedicineForm" class="form"
           (ngSubmit)="addImportMedicine(importMedicineForm.value)">
           <!---------------------- Medicine Name ----------------------------->
@@ -68,7 +68,7 @@
             <nz-form-control [nzErrorTip]="medicineNameErrorTpl">
               <input placeholder="Nhập tên dược phẩm" nz-input formControlName="medicine" id="medicine"
                 (ngModelChange)="medicineChange($event)" [nzAutocomplete]="autoMedicine"
-                (input)="inputChange(inputValue.value)" #inputValue nzSize="large" />
+                (input)="inputChange(inputMedicine.value)" #inputMedicine nzSize="large" />
               <nz-autocomplete #autoMedicine>
                 <ng-container *ngFor="let option of medicineList">
                   <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option"
@@ -79,7 +79,7 @@
                 <nz-auto-option *ngIf="isLoading" nzDisabled nzCustomContent>
                   <i nz-icon nzType="loading" class="loading-icon"></i> Đang tìm kiếm...
                 </nz-auto-option>
-                <ng-container *ngIf="inputValue.value != ''">
+                <ng-container *ngIf="inputMedicine.value != ''">
                   <nz-auto-option *ngIf="medicineList.length <= 0" nzDisabled nzCustomContent>
                     Không thấy kết quả tìm kiếm
                   </nz-auto-option>
@@ -150,7 +150,7 @@
               </nz-form-label>
               <nz-form-control [nzErrorTip]="expiryErrorTpl">
                 <nz-date-picker nzId="expirationDate" class="date-width" formControlName="expirationDate" nzSize="large"
-                  nzPlaceHolder="Ngày hết hạn" nzFormat="dd-MM-yyy" [nzDisabledDate]="disabledExpiryDate">
+                  nzPlaceHolder="Ngày hết hạn" nzFormat="dd-MM-yyyy" [nzDisabledDate]="disabledExpiryDate">
                 </nz-date-picker>
                 <ng-template #expiryErrorTpl let-control>
                   <ng-container *ngIf="f.expirationDate.hasError('required')">
@@ -175,15 +175,34 @@
                   </ng-container>
                 </ng-template>
               </nz-textarea-count>
-
             </nz-form-control>
           </nz-form-item>
           <br><br>
           <nz-form-item>
             <nz-form-control>
-              <button class="font-size-16" nz-button nzType="primary" [disabled]="!importMedicineForm.valid"
+              <button *ngIf="!isDetails" class="font-size-16" nz-button nzType="primary"
+                [disabled]="!importMedicineForm.valid"
                 style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Thêm
                 thuốc</button>
+              <ng-container *ngIf="isDetails">
+                <div *ngIf="isDisable" class="d-flex flex-row justify-content-start flex-wrap">
+                  <a class="font-size-18 button-a" nz-button nzType="primary" (click)="defaultFormValue()">
+                    Tiếp tục thêm thuốc</a>
+                  <a class="font-size-18 button-a" nz-button nzType="primary" (click)="edit()">
+                    Chỉnh sửa</a>
+                  <a class="font-size-18" nz-button nzType="primary" (click)="deleteImportMedicine()"
+                    style="height: 42px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                    Xóa</a>
+                </div>
+                <ng-container *ngIf="!isDisable">
+                  <div class="d-flex flex-row justify-content-start flex-wrap">
+                    <a class="font-size-18 button-a" nz-button nzType="primary" (click)="cancel()">Hủy</a>
+                    <a class="font-size-18 button-a" nz-button nzType="primary"
+                      (click)="updateImportMedicine(importMedicineForm.value)">Cập
+                      nhật</a>
+                  </div>
+                </ng-container>
+              </ng-container>
             </nz-form-control>
           </nz-form-item>
         </form>
@@ -209,33 +228,34 @@
     <div class="bg-white d-flex flex-column p-h-20 p-v-10 m-t-22">
       <span class="text-teal-green font-size-18 font-weight-semibold">Danh sách thuốc</span>
       <dividing-line></dividing-line>
-      <div class="d-flex flex-column justify-content-between" style="height: 398px;">
-        <nz-table #nzTable [nzFrontPagination]="false" [nzData]="importMedicineList" [nzLoading]="tableLoading"
-          [nzScroll]="{ y: '255px' }">
-          <thead>
-            <tr>
-              <th>Tên thuốc</th>
-              <th>Số lượng</th>
-              <th>Đơn giá(₫)</th>
-            </tr>
-          </thead>
-          <!-- <ng-container *ngIf="importMedicineList.length > 0"> -->
-          <tbody>
-            <tr *ngFor="let data of importMedicineList; index as i" style="cursor: pointer;" (click)="detail(data.id)">
-              <td>{{ data.name }}</td>
-              <td>{{ data.quantity }}</td>
-              <td>{{ data.price.toLocaleString('vi') }}</td>
-            </tr>
-          </tbody>
-          <!-- </ng-container> -->
-        </nz-table>
-        <button class="font-size-16" nz-button nzType="primary" [disabled]="importMedicineList.length <= 0"
-          (click)="addImportBatch()"
-          style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">Thêm
-          vào lô
-        </button>
-      </div>
-
+      <nz-spin [nzSpinning]="addImportBatchLoading" nzTip="Đang xử lý...">
+        <div class="d-flex flex-column justify-content-between" style="height: 398px;">
+          <nz-table #nzTable [nzFrontPagination]="false" [nzData]="importMedicineList" [nzScroll]="{ y: '255px' }">
+            <thead>
+              <tr>
+                <th>Tên thuốc</th>
+                <th>Số lượng</th>
+                <th>Đơn giá(₫)</th>
+              </tr>
+            </thead>
+            <!-- <ng-container *ngIf="importMedicineList.length > 0"> -->
+            <tbody>
+              <tr *ngFor="let data of importMedicineList; index as i" style="cursor: pointer;"
+                (click)="detailImportMedicine(data)">
+                <td>{{ data.medicine.name }}</td>
+                <td>{{ data.quantity }}</td>
+                <td>{{ data.price.toLocaleString('vi') }}</td>
+              </tr>
+            </tbody>
+            <!-- </ng-container> -->
+          </nz-table>
+          <button class="font-size-16" nz-button nzType="primary" [disabled]="importMedicineList.length <= 0"
+            (click)="addImportBatch()"
+            style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+            Thêm vào lô
+          </button>
+        </div>
+      </nz-spin>
     </div>
   </div>
 </div>

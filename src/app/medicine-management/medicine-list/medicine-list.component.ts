@@ -14,7 +14,6 @@ import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/med
 import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
-import { SideNavService } from 'src/app/shared/services/side-nav.service';
 
 @Component({
   selector: 'app-medicine-list',
@@ -29,7 +28,7 @@ export class MedicineListComponent implements OnInit {
 
   detailLoading = false;
   tableLoading = false;
-  checked = false;
+
   medicineList: MedicineResponse[] = [];
   pageInfo: PageInfo = { isFirstPage: true, isLastPage: false, numberOfPage: 1, info: null };
   page: number;
@@ -40,7 +39,7 @@ export class MedicineListComponent implements OnInit {
   pageIndex = 1;
 
   sortOrderList = 0;
-  sortFieldList = "CreatedDate";
+  sortFieldList = "CreateDate";
 
   isLoading = false;
   noSuggest = false;
@@ -58,17 +57,6 @@ export class MedicineListComponent implements OnInit {
 
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
-  // searchMedicineRequest: SearchMedicineRequest = {
-  //   Name: '',
-  //   UnitId: '',
-  //   MedicineSubgroupId: '',
-  //   MedicineClassificationId: '',
-  //   Limit: 10,
-  //   Page: 1,
-  //   SortField: "createdDate",
-  //   SortOrder: 0
-  // };
-
   searchRecord: Record<string, ValueCompare> = {};
 
 
@@ -113,7 +101,6 @@ export class MedicineListComponent implements OnInit {
     public service: MedicineService,
     private generalService: GeneralHelperService,
     private router: Router,
-    private sidenav: SideNavService
   ) { }
 
 
@@ -142,7 +129,7 @@ export class MedicineListComponent implements OnInit {
     this.pageSize = 10;
     this.pageIndex = 1;
     this.sortOrderList = 0;
-    this.sortFieldList = "CreatedDate";
+    this.sortFieldList = "CreateDate";
   }
 
   /*---------------------------------------------------------------------------------------------------------------------*/
@@ -284,29 +271,8 @@ export class MedicineListComponent implements OnInit {
 
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
-  detailMedicine(id: string) {
-    this.router.navigate(['medicine-management/medicine-list/details-medicine'], { queryParams: { id: id } })
-  }
-  // searchSuggest() {
-  //   this.isLoading = true;
-
-  //   this.service.searchMedicine(this.searchMedicineRequest).subscribe(
-  //     (response) => {
-  //       this.isLoading = false;
-  //       this.suggestList = response.data.data;
-  //       console.log(this.suggestList);
-  //       if (this.suggestList.length > 0) {
-  //         this.noSuggest = false;
-  //       }else {
-  //         this.noSuggest = true;
-  //       }
-  //     },
-  //     (error) => {
-  //       this.isLoading = false;
-  //       console.log('search error');
-  //       this.generalService.createErrorNotification(error);
-  //     }
-  //   )
+  // detailMedicine(id: string) {
+  //   this.router.navigate(['medicine-management/medicine-list/details-medicine'], { queryParams: { id: id } })
   // }
 
   deleteMedicine(id: string) {
@@ -362,11 +328,8 @@ export class MedicineListComponent implements OnInit {
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
-    sortField == null ? this.sortFieldList = 'CreatedDate' : this.sortFieldList = sortField;
+    sortField == null ? this.sortFieldList = 'CreateDate' : this.sortFieldList = sortField;
     this.searchName.value = this.searchValue;
-    // this.searchUnit.value = filter[0].value;
-    // this.searchClass.value = filter[1].value;
-    // this.searchSubgroup.value = filter[2].value;
     this.searchMedicineRequest = {
       limit: pageSize,
       page: pageIndex,
@@ -380,9 +343,6 @@ export class MedicineListComponent implements OnInit {
 
   }
 
-  confirmAdd() {
-    this.sidenav.setImgUrl('assets/images/avatar/user-avatar.png');
-  }
 
 
 }

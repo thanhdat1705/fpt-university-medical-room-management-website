@@ -28,7 +28,7 @@ export class AddMedicineComponent implements OnInit {
 
   addMedicineLoading = false;
   addItemLoading = false;
-
+  isInserting = true;
   medicineForm!: FormGroup;
 
   medicineNameMinL = 3;
@@ -240,6 +240,7 @@ export class AddMedicineComponent implements OnInit {
 
   addUnit(value: any): void {
     let data;
+    this.isInserting = false;
     console.log('value', value);
     this.storeNewMedicineUnitRequest.Name = value;
     this.storeNewMedicineUnitRequest.AcronymUnit = value.substring(0, 1);
