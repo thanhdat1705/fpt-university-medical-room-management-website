@@ -61,7 +61,7 @@
         <td>{{ medicineInInventory.medicineSubgroup.name }}</td>
         <td>
           <a style="color: #1890ff;"
-            [routerLink]="['/batch-medicine-management/medicine-in-inventory-details', medicineInInventory.id]">Xem lô thuốc</a>
+            [routerLink]="['/batch-medicine-management/batch-of-medicine', medicineInInventory.medicine.id]">Xem lô thuốc</a>
         </td>
         <td> <a style="color: #1890ff"
             (click)="showEliminateMedicineModel(medicineInInventory.id, medicineInInventory.medicine.name,medicineInInventory.medicineUnit.name,  medicineInInventory.quantity)">Hủy

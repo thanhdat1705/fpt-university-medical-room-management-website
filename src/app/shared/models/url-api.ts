@@ -61,4 +61,4 @@ export const UrlServerAPIAddTreatmentInformation = UrlServer + '/api/v1.0/Treatm
 export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';
 
 export const UrlServerAPISearchMedicineInInventory = UrlServer + '/api/v1.0/MedicineInInventories/Searching';
-export const UrlServerAPIGetMedicineInInventoryDetails = UrlServer + '/api/v1.0/MedicineInInventories';
+export const UrlServerAPIGetMedicineInInventoryDetails = UrlServer + '/api/v1.0/MedicineInInventoryDetails';

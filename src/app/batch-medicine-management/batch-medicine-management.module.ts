@@ -13,6 +13,7 @@ import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eli
 import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
 import { MedicineInInventoryListComponent } from './medicine-in-inventory-list/medicine-in-inventory-list.component';
 import { MedicineInInventoryDetailsComponent } from './medicine-in-inventory-list/medicine-in-inventory-details/medicine-in-inventory-details.component';
+import { ViewBatchOfTheMedicineComponent } from './medicine-in-inventory-list/view-batch-of-the-medicine/view-batch-of-the-medicine.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { MedicineInInventoryDetailsComponent } from './medicine-in-inventory-lis
     ViewEliminatedMedicineDetailsComponent,
     MedicineInInventoryListComponent,
     MedicineInInventoryDetailsComponent,
+    ViewBatchOfTheMedicineComponent,
   ],
   imports: [
     CommonModule,
