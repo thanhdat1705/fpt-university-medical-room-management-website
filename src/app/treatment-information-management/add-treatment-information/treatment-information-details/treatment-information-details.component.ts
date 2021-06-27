@@ -4,6 +4,7 @@ import { Data } from '@angular/router';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
+import { TreatmentInformation } from 'src/app/shared/models/treatment-information';
 import { TreatmentInformationDetail } from 'src/app/shared/models/treatment-information-details';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
@@ -44,7 +45,6 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
   medicineInInventoryDetails: MedicineInInventoryDetailsResponse[];
   arrayTreatmentDetails: ReadonlyArray<MedicineInInventoryDetailsResponse> = [];
-  quantity: number;
   treatmentDetaisList: TreatmentInformationDetail[] = [];
   isExistInDetails: boolean;
   medicineInInventoryList: MedicineInInventoryResponse[];
@@ -56,14 +56,13 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   filterClassificationValue: string;
   medicineClassificationList: MedicineClassificationResponse[];
   medicineSubGroupList: MedicineSubgroupResponse[];
-
-
+  treatmentInformation: TreatmentInformation[]
 
   medicineInInventoryRequest: SearchRequest = {
     limit: this.pageSize,
     page: this.pageIndex,
     searchValue: this.MedicineInInventorySearchRecord,
-    selectFields: "medicineId,medicine.Name,quantity",
+    selectFields: "medicineId,medicine.Name,quantity, medicine.medicineUnit ",
     sortField: "",
     sortOrder: 0
   }
@@ -141,9 +140,22 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
 
 
+
     console.log('data luc init', this.chkTreatmentDetail);
     this.searchMedicineInInventory();
+    this.getTreatmentInformationFromTable();
 
+  }
+
+  getTreatmentInformationFromTable() {
+
+    this.treatmentInformation = this.treatmentService.getTreatmentInformation();
+    if (this.treatmentInformation.length == 0) {
+      return;
+    } else {
+      for (let i = 0; i < this.treatmentInformation.length; i++)
+        this.onExpandChange(this.treatmentInformation[i].medicineId, true);
+    }
   }
 
   onExpandChange(id: string, checked: boolean): void {
@@ -223,6 +235,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
       (response) => {
         console.log(response.data);
         this.getData(response.data);
+        
         // this.generalService.closeWaitingPopupNz();
 
       }, (error) => {
@@ -232,7 +245,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     );
   }
 
-  createTreatmentDetails(id: string, quantity: number, medicineId: string, medicineName: string) {
+  createTreatmentDetails(id: string, quantity: any, medicineId: string, medicineName: string, unitName: string) {
+
     this.isExistInDetails = false;
     if (this.setOfCheckedId.has(id)) {
       if (this.treatmentDetaisList.length == 0) {
@@ -242,6 +256,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
         treatmentDetailsObj.medicineInInventoryDetailId = id;
         treatmentDetailsObj.medicineId = medicineId;
         treatmentDetailsObj.medicineName = medicineName;
+        treatmentDetailsObj.unitName = unitName;
         console.log(treatmentDetailsObj.medicineId);
         this.treatmentDetaisList.push(treatmentDetailsObj);
         this.isExistInDetails = true;
@@ -264,6 +279,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
         treatmentObj.medicineName = medicineName;
         treatmentObj.quantity = quantity;
         treatmentObj.medicineInInventoryDetailId = id;
+        treatmentObj.unitName = unitName;
+
         this.treatmentDetaisList.push(treatmentObj);
       }
 
@@ -274,6 +291,10 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     console.log(this.treatmentDetaisList);
 
 
+  }
+
+  destroyModal(): void {
+    this.modal.destroy();
   }
 
   sendRequest(): void {
@@ -356,6 +377,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
       treatmentDetailsRowData.medicineInInventoryDetails = [];
       this.treatmentDetailsTableData.push(treatmentDetailsRowData);
     }
+    this.getTreatmentInformationFromTable();
     console.log(this.treatmentDetailsTableData);
   }
 

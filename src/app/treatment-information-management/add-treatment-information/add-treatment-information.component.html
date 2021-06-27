@@ -124,7 +124,8 @@
             </nz-form-control>
         </nz-form-item>
 
-        <button nz-button nzType="default" (click)="showMedicineModal()">Thêm thuốc</button>
+        <button nz-button nzType="default" style="margin: 30px; float: right;" (click)="showMedicineModal()">Thêm
+            thuốc</button>
 
         <nz-table class="medicine-table" #basicTable [nzData]="treatmentInformation" nzTableLayout="fixed"
             [nzFrontPagination]="false">
@@ -138,13 +139,13 @@
             <tbody>
                 <tr *ngFor="let medicine of treatmentInformation">
                     <td>{{ medicine.medicineName }}</td>
-                    <td>{{ medicine.quantity }}</td>
-                    <td><input type="text" #inputValue nzInput
+                    <td>{{ medicine.quantity }} {{medicine.unitName}}</td>
+                    <td><input #inputValue nzInput
                             (input)="insertIndicationToDrink(medicine.medicineId, inputValue.value)"></td>
                 </tr>
             </tbody>
         </nz-table>
-        <nz-form-item>
+        <!-- <nz-form-item>
             <nz-form-label nzRequired [nzSpan]="7">
                 <span class="font-size-18">Chữ kí xác nhận</span>
             </nz-form-label>
@@ -154,12 +155,31 @@
                 <br>
                 <input type="file" (change)="onFileSelected($event)" />
             </nz-form-control>
-        </nz-form-item>
+        </nz-form-item> -->
+        <br>
+        <br>
 
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSpan]="7">
+                <span class="font-size-18">Chữ kí xác nhận</span>
+            </nz-form-label>
+            
+            <nz-form-control>
+                <nz-upload class="avatar-uploader" nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload"
+                    (nzChange)="handleChange($event)">
+                    <ng-container *ngIf="!avatarUrl">
+                        <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                        <div class="ant-upload-text">Upload</div>
+                    </ng-container>
+                    <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+                </nz-upload>
+            </nz-form-control>
+        </nz-form-item>
         <br><br>
         <nz-form-item>
             <nz-form-control>
-                <button class="font-size-18" nz-button nzType="primary"
+                <button class="font-size-18" nz-button nzType="primary" type="submit"
                     style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Tạo
                     đơn</button>
             </nz-form-control>

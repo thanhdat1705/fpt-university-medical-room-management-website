@@ -1,36 +1,36 @@
 <!-- <nz-table #colSpanTable [nzScroll]="{ x: '1000px' }" [nzData]="listOfData" nzBordered (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"> -->
-  <div class="search-filter">
-    <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
-        <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchNameValue"/>
-    </nz-input-group>
-    <ng-template #searchIconButton>
-        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicineName()">
-            <i nz-icon nzType="search" nzTheme="outline"></i>
-        </button>
-    </ng-template>
-    <br><br>
-    <div class="select-wrap">
-        <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
-      <!--   <nz-select class="select-w" nzPlaceHolder="Đơn vị" nzAllowClear [(ngModel)]="unitValue"
+<div class="search-filter">
+  <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
+    <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchNameValue" />
+  </nz-input-group>
+  <ng-template #searchIconButton>
+    <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicineName()">
+      <i nz-icon nzType="search" nzTheme="outline"></i>
+    </button>
+  </ng-template>
+  <br><br>
+  <div class="select-wrap">
+    <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
+    <!--   <nz-select class="select-w" nzPlaceHolder="Đơn vị" nzAllowClear [(ngModel)]="unitValue"
             (ngModelChange)="onSearchUnit($event)" [ngClass]="{'ant-select-selection': unitSelected}">
             <nz-option *ngFor="let option of filterUnit" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
         </nz-select>-->
-        <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
-        (ngModelChange)="onSearchClassification()">
-        <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
-        </nz-option>
-      </nz-select>
-      <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
-        (ngModelChange)="onSearchSubGroup()">
-        <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
-        </nz-option>
-      </nz-select>
-    </div>
+    <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
+      (ngModelChange)="onSearchClassification()">
+      <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
+      </nz-option>
+    </nz-select>
+    <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
+      (ngModelChange)="onSearchSubGroup()">
+      <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
+      </nz-option>
+    </nz-select>
+  </div>
 </div>
 
-  <nz-table *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize"
- [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)"
-nzBordered>
+<nz-table *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)"
+  nzBordered>
 
   <thead>
     <tr>
@@ -46,25 +46,35 @@ nzBordered>
         <td [nzExpand]="expandSet.has(data.medicineInInventory.medicineId)"
           (nzExpandChange)="onExpandChange(data.medicineInInventory.medicineId, $event)"></td>
         <td> {{ data.medicineInInventory.name }} </td>
-        <td>{{ data.medicineInInventory.quantity }}</td>
+        <td>{{ data.medicineInInventory.quantity }} {{ data.medicineInInventory.medicineUnit.name }}</td>
         <td></td>
       </tr>
       <ng-container *ngFor="let item of data.medicineInInventoryDetails">
         <tr [nzExpand]="expandSet.has(data.medicineInInventory.medicineId)">
 
           <td [nzChecked]="setOfCheckedId.has(item.id)" (nzCheckedChange)="onItemChecked(item.id, $event)"></td>
-          <td style="padding-left: 30px;">
+          <td style="padding-left: 30px; width: 40%;">
             {{item.name}}
           </td>
-          <td> 
+          <td style=" width: 30%">
+            <!-- Bug ko insert dc xuong list   -->
             <!-- <nz-input-number [nzMin]="0" [nzMax]="item.quantity" [nzStep]="1"  style=" margin-left: 80px; width: 20%;" nz-input #inputValue
             (keyup)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)" [nzDisabled]="!setOfCheckedId.has(item.id)"
             (keydown)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)"
             value="!setOfCheckedId.has(item.id) ? 0 : getTreatmentDetailsQuantity(item.id)"></nz-input-number> -->
-            <input style=" margin-left: 90px; width: 20%;" nz-input #inputValue formControlName="quantity"
-              (input)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)" [disabled]="!setOfCheckedId.has(item.id)"
-              [value]="!setOfCheckedId.has(item.id) ? item.quantity : getTreatmentDetailsQuantity(item.id)" />
-            <span> /{{item.quantity}}</span>
+            <form>
+              <!-- <nz-form-item>
+                <nz-form-control> -->
+                  <input [nzMin]="0" [nzMax]="item.quantity" style=" margin-left: 10px;width: 35%;" nz-input #inputValue
+                    formControlName="quantity"
+                    (input)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name)"
+                    [disabled]="!setOfCheckedId.has(item.id)"
+                    [value]="!setOfCheckedId.has(item.id) ? item.quantity : getTreatmentDetailsQuantity(item.id)" />
+                  <span *ngIf="setOfCheckedId.has(item.id)"> /{{item.quantity}}</span>
+                <!-- </nz-form-control>
+              </nz-form-item> -->
+            </form>
+
           </td>
           <td>{{ generalService.getDate(item.expirationDate )}}</td>
         </tr>
@@ -84,4 +94,9 @@ nzBordered>
   </tbody>
 
 </nz-table>
-<button nz-button nzType="primary" [disabled]="setOfCheckedId.size === 0" (click)="sendRequest()">Gửi</button>
+<div *nzModalFooter>
+  <button nz-button nzType="default" (click)="destroyModal()">Hủy</button>
+
+  <button nz-button nzType="primary" [disabled]="setOfCheckedId.size === 0" (click)="sendRequest()">Gửi</button>
+
+</div>

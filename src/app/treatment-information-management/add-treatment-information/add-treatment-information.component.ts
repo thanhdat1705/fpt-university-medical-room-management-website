@@ -11,6 +11,9 @@ import { TreatmentInformationDetailsComponent } from './treatment-information-de
 import { Patient } from 'src/app/shared/models/patient';
 import { TreatmentInformation } from 'src/app/shared/models/treatment-information';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { Observable, Observer } from 'rxjs';
 
 
 @Component({
@@ -29,15 +32,7 @@ export class AddTreatmentInformationComponent implements OnInit {
     description: '',
   };
 
-  patient: Patient = {
-    Id: '',
-    DepartmentId: '',
-    AllergyDescription: '',
-    Gender: '',
-    InternalCode: '',
-    Name: '',
 
-  };
 
   reader = new FileReader();
   url: any;
@@ -50,7 +45,6 @@ export class AddTreatmentInformationComponent implements OnInit {
   getTreatmentInformationDetails() {
     this.treatmentInformationDetails = this.treatmentService.getTreatmentInformationDetails();
     console.log('treatmentInformationDetails ', this.treatmentInformationDetails);
-
   }
 
   getTreatmentInformation() {
@@ -68,14 +62,6 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   ]
 
-  TreatmentInformationAddRequest: InsertTreatmentInformationRequest = {
-    patient: this.patient,
-    diseaseStatusNames: [],
-    treatmentInformations: null,
-    confirmSignatureImg: '',
-    treatmentInformationDetails: null,
-  }
-
   searchDepartmentRequest: SearchRequest = {
     limit: 100,
     page: 0,
@@ -90,7 +76,8 @@ export class AddTreatmentInformationComponent implements OnInit {
     private summaryService: SummaryService,
     private modalService: NzModalService,
     public treatmentService: TreatmentInformationService,
-    private generalService: GeneralHelperService
+    private generalService: GeneralHelperService,
+    private msg: NzMessageService
   ) {
     this.treatmentService.treatmentInformationComponent.subscribe(res => {
       this.getTreatmentInformation();
@@ -230,12 +217,12 @@ export class AddTreatmentInformationComponent implements OnInit {
     this.summaryService.addTreatmentInformation(treatmentInformationForm).subscribe(
       (response) => {
         console.log(response);
-        this.generalService.closeWaitingPopupNz();
+        // this.generalService.closeWaitingPopupNz();
         this.generalService.messageNz('success', `Đơn điều trị đã được tạo`);
 
       }, (error) => {
         console.log(error);
-        this.generalService.closeWaitingPopupNz();
+        // this.generalService.closeWaitingPopupNz();
 
       }
     );
@@ -276,4 +263,53 @@ export class AddTreatmentInformationComponent implements OnInit {
     );
   }
 
+//Upload image
+ loading = false;
+  avatarUrl?: string;
+
+
+
+  beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]) => {
+    return new Observable((observer: Observer<boolean>) => {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      if (!isJpgOrPng) {
+        this.msg.error('You can only upload JPG file!');
+        observer.complete();
+        return;
+      }
+      const isLt2M = file.size! / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.msg.error('Image must smaller than 2MB!');
+        observer.complete();
+        return;
+      }
+      observer.next(isJpgOrPng && isLt2M);
+      observer.complete();
+    });
+  };
+
+  private getBase64(img: File, callback: (img: string) => void): void {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result!.toString()));
+    reader.readAsDataURL(img);
+  }
+
+  handleChange(info: { file: NzUploadFile }): void {
+    switch (info.file.status) {
+      case 'uploading':
+        this.loading = true;
+        break;
+      case 'done':
+        // Get this url from response in real world.
+        this.getBase64(info.file!.originFileObj!, (img: string) => {
+          this.loading = false;
+          this.avatarUrl = img;
+        });
+        break;
+      case 'error':
+        this.msg.error('Network error');
+        this.loading = false;
+        break;
+    }
+  }
 }

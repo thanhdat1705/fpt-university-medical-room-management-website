@@ -8,7 +8,7 @@ export class MedicineEliminationService {
 
   id: any;
   unitName: any;
-  name: any;
+  batch: any;
   quantity: number;
 
   constructor(private summaryService: SummaryService) { }
@@ -35,11 +35,11 @@ export class MedicineEliminationService {
   getMedicineUnit() {
     return this.unitName;
   }
-  setMedicineName(name: any) {
-    this.name = name;
+  setMedicineName(batch: any) {
+    this.batch = batch;
   }
   getMedicineName() {
-    return this.name;
+    return this.batch;
   }
   setMedicineQuantity(quantity: any) {
     this.quantity = quantity;

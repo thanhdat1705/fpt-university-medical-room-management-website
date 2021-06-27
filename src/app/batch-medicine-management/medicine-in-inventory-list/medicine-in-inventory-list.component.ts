@@ -66,8 +66,6 @@ export class MedicineInInventoryListComponent implements OnInit {
   constructor(
     private summaryService: SummaryService,
     private generalService: GeneralHelperService,
-    private modalService: NzModalService,
-    private medicineEliminateService: MedicineEliminationService
   ) { }
 
   ngOnInit(): void {
@@ -192,14 +190,5 @@ export class MedicineInInventoryListComponent implements OnInit {
     this.searchMedicineInInventory();
   }
 
-  showEliminateMedicineModel(id: any, name: any, unitName: any, quantity: number): void {
-    this.medicineEliminateService.setMedicineId(id);
-    this.medicineEliminateService.setMedicineUnit(unitName);
-    this.medicineEliminateService.setMedicineName(name);
-    this.medicineEliminateService.setMedicineQuantity(quantity);
-    this.modalService.create({
-      nzTitle: 'Hủy thuốc ' + name,
-      nzContent: EliminateMedicineComponent,
-    });
-  }
+
 }

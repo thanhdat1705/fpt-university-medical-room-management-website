@@ -1,65 +1,64 @@
-<!-- <div class="inner-content">
-    <div class="search-filter">
-      <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
-        <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchMedicineNameValue"/>
-    </nz-input-group>
-    <ng-template #searchIconButton>
-        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicineName()">
-            <i nz-icon nzType="search" nzTheme="outline"></i>
-        </button>
-    </ng-template>
-      <input class="search-field" placeholder="Tìm tên thuốc" nz-input [(ngModel)]="searchMedicineNameValue" />
-      <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton"
-        (click)="searchEliminatedMedicineName()">
-        <i nz-icon nzType="search" nzTheme="outline"></i>
-      </button>
-      <br><br>
-  
-  
-      <div *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList" class="select-wrap">
-        <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
-        <nz-select class="select-w" nzPlaceHolder="Đơn vị" [(ngModel)]="filterUnitValue" nzAllowClear
-          (ngModelChange)="onSearchUnit()">
-          <nz-option *ngFor="let option of medicineUnitList" [nzLabel]="option.name" [nzValue]="option.id">
-          </nz-option>
-        </nz-select>
-        <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
-          (ngModelChange)="onSearchClassification()">
-          <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
-          </nz-option>
-        </nz-select>
-        <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
-          (ngModelChange)="onSearchSubGroup()">
-          <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
-          </nz-option>
-        </nz-select>
-        <br><br>
+<div class="inner-content">
+
+  <div class="header-content d-flex flex-column" *ngIf="medicineInInventory">
+    <nz-divider [nzText]="heading" nzOrientation="left">
+      <ng-template #heading>
+        <span class="font-weight-semibold font-size-18">Thuốc</span>
+      </ng-template>
+    </nz-divider>
+    <div class="info-wrapper">
+      <div class="header-info">
+        <span class="font-weight-semibold font-size-16 text-teal-green">Tên</span>
+        <span>{{ medicineInInventory.name }}</span>
       </div>
-    </div> -->
-<nz-table [nzScroll]="{ x: '1000px' }" [nzData]="medicineInInventoryDetails" nzTableLayout="fixed" [nzLoading]="loading"
-    [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false">
+      <div class="header-info">
+        <span class="font-weight-semibold font-size-16 text-teal-green">Hiện Có</span>
+        <span>{{ medicineInInventory.quantity }}  {{ medicineInInventory.medicineUnit.name }}</span>
+      </div>
+      <div class="header-info">
+        <span class="font-weight-semibold font-size-16 text-teal-green">Thuộc loại</span>
+        <span>{{ medicineInInventory.medicineClassification.name }}</span>
+      </div>
+      <div class="header-info">
+        <span class="font-weight-semibold font-size-16 text-teal-green">Thuộc nhóm</span>
+        <span>{{ medicineInInventory.medicineSubgroup.name }}</span>
+      </div>
+      <div class="header-info">
+        <span class="font-weight-semibold font-size-16 text-teal-green">Tổng số lô thuốc</span>
+        <span>{{ total }} lô</span>
+      </div>
+    </div>
+    <nz-divider style="border: 1px solid #f0f0f0ba"></nz-divider>
+  </div>
+ 
+  <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="medicineInInventoryDetails" nzTableLayout="fixed"
+    [nzLoading]="loading" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
+    [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
-        <tr>
-            <!-- <th nzWidth="40px" nzColumnKey="InternalCode" [nzSortFn]="true">Stt</th> -->
-            <th nzWidth="150px" nzColumnKey="Name" [nzSortFn]="true">Lô</th>
-            <th nzWidth="100px" nzColumnKey="Quantity" [nzSortFn]="true">Số lượng</th>
-            <th nzWidth="100px">Đơn vị</th>
-            <th nzWidth="60px">Ngày nhập</th>
-            <th nzWidth="60px">Giá</th>
-            <th nzWidth="60px">Ngày nhập</th>
-            <th nzWidth="100px" nzColumnKey="MedicineSubgroup.Name" [nzSortFn]="true">Ngày hết hạn</th>
-            <!-- <th>Thuộc lô</th> -->
-        </tr>
+      <tr>
+        <!-- <th nzWidth="40px" nzColumnKey="InternalCode" [nzSortFn]="true">Stt</th> -->
+        <th nzWidth="60px" nzColumnKey="importBatch.createDate" [nzSortFn]="true">Lô</th>
+        <th nzWidth="60px" nzColumnKey="quantity" [nzSortFn]="true">Số lượng</th>
+        <th nzWidth="30px">Đơn vị</th>
+        <th nzWidth="80px" nzColumnKey="importMedicine.insertDate" [nzSortFn]="true">Ngày nhập</th>
+        <!-- <th nzWidth="60px" nzColumnKey="price" [nzSortFn]="true"> Giá</th> -->
+        <th nzWidth="80px" nzColumnKey="importMedicine.expirationDate" [nzSortFn]="true">Ngày hết hạn</th>
+        <th nzWidth="60px"></th>
+
+      </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let medicineInInventory of medicineInInventoryDetails">
-            <td>{{ medicineInInventory.name }}</td>
-            <td>{{ medicineInInventory.quantity }}</td>
-            <td>{{ medicineInInventory.medicineUnit.name }}</td>
-            <td>{{ medicineInInventory.importMedicine.insertDate }}</td>
-
-            <td>{{ generalService.getDate(medicineInInventory.importMedicine.ExpirationDate) }}</td>
-            <!-- <td>
+      <tr *ngFor="let detail of medicineInInventoryDetails">
+        <td>{{ generalService.getDate(detail.importBatch.createDate) }}</td>
+        <td>{{ detail.quantity }}</td>
+        <td>{{ detail.medicineUnit.name }}</td>
+        <td>{{ generalService.getDate(detail.importMedicine.insertDate) }}</td>
+        <!-- <td>{{ detail.importMedicine.price }} đ</td> -->
+        <td>{{ generalService.getDate(detail.importMedicine.expirationDate) }}</td>
+        <td> <a style="color: #1890ff"
+          (click)="showEliminateMedicineModel(detail.id, generalService.getDate(detail.importBatch.createDate), medicineInInventory.medicineUnit.name,  detail.quantity)">Hủy
+          thuốc</a></td>
+        <!-- <td>
             <a style="color: #1890ff;"
               [routerLink]="['/batch-medicine-management/batch-of-medicine', medicineInInventoryDetails.medicine.id]">Xem lô thuốc</a>
           </td>
@@ -68,5 +67,5 @@
               thuốc</a></td>
         </tr> -->
     </tbody>
-</nz-table>
-<!-- </div> -->
+  </nz-table>
+</div>

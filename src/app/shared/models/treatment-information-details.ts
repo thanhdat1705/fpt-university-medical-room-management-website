@@ -5,7 +5,7 @@ export class TreatmentInformationDetail {
     medicineName: string;
     medicineInInventoryDetailId: string;
     quantity: number;
-
+    unitName: string;
     // constructor(medicineInInventoryId: string, quantity: number, indicateToDrink: string) {
     //     this.medicineInInventoryId = medicineInInventoryId;
     //     this.quantity = quantity;
