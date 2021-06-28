@@ -13,6 +13,7 @@ import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DetailImportMedicineComponent } from './detail-import-medicine/detail-import-medicine.component';
+import { SearchImportMedicine } from 'src/app/shared/requests/ImportBatchMedicine/import-batch-medicine';
 
 @Component({
   selector: 'app-detail-batch-medicine',
@@ -34,13 +35,16 @@ export class DetailBatchMedicineComponent implements OnInit {
   importMedicineLoading = false;
   checked = false;
   updateDetail = false;
+  detailMedicineLoading = false;
+
 
   importBatchId: string;
   importBatchDetail: ImportBatch;
-  importMedicineList: ImportMedicine[]
-
+  importMedicineList: SearchImportMedicine[]
+  searchFieldDetailImportMedicine = "Id, Quantity,Price, InsertDate, ExpirationDate, Description, MedicineId, Medicine, Medicine.MedicineUnit.Name as MedicineUnit, ImportMedicineStatus.StatusImportMedicine";
+  searchFieldDetailImportBatch = "Id, NumberOfSpecificMedicine, TotalPrice, PeriodicInventory.Month as PeriodicByMonth, PeriodicInventory.Year as PeriodicByYear, CreateDate, UpdateDate";
   searchRecord: Record<string, ValueCompare> = {};
-  searchFields = "id, quantity, price, description, statusId, insertDate, expirationDate, medicineId, importBatchId, medicine, medicine.MedicineUnit as medicineUnit, importMedicineStatus";
+  searchFields = "id, quantity, price, description, insertDate, expirationDate, importBatchId, medicine.name as medicineName, medicine.MedicineUnit as medicineUnit, importMedicineStatus.statusImportMedicine";
   searchImportMedicineRequest: SearchRequest = {
     limit: 10,
     page: 0,
@@ -59,7 +63,8 @@ export class DetailBatchMedicineComponent implements OnInit {
     private service: ImportBatchService,
     private router: Router,
     private generalService: GeneralHelperService,
-    private modal: NzModalService,) {
+    private modalAdd: NzModalService,
+    private modalDetail: NzModalService,) {
 
     this.i18n.setLocale(vi_VN);
     this.i18n.setDateLocale(vi);
@@ -105,7 +110,7 @@ export class DetailBatchMedicineComponent implements OnInit {
   }
 
   getDetailImportBatch() {
-    this.service.getDetailImportBatch(this.importBatchId).subscribe(
+    this.service.getDetailImportBatch(this.importBatchId, this.searchFieldDetailImportBatch).subscribe(
       (response) => {
         console.log(response.data);
         this.importBatchDetail = response.data;
@@ -142,7 +147,7 @@ export class DetailBatchMedicineComponent implements OnInit {
 
   addImportMedicine(id: string) {
     this.checked = true;
-    this.modal.create({
+    this.modalAdd.create({
       nzTitle: "Thêm Dược Phẩm Mới",
       nzContent: AddImportMedicineComponent,
       nzMaskClosable: false,
@@ -154,7 +159,8 @@ export class DetailBatchMedicineComponent implements OnInit {
         importBatchId: id
       }
     });
-    this.modal.afterAllClose.subscribe(() => {
+    this.modalAdd.afterAllClose.subscribe(() => {
+      console.log(this.checked = true);
       if (this.checked == true) {
         this.getDetailImportBatch();
         this.searchImportMedicine();
@@ -165,30 +171,43 @@ export class DetailBatchMedicineComponent implements OnInit {
     })
   }
 
-  detailImportMedicine(id: string, importMedicine: ImportMedicine) {
-    this.updateDetail = true;
-    this.modal.create({
-      nzTitle: "Chi Tiết Dược Phẩm Nhập",
-      nzContent: DetailImportMedicineComponent,
-      nzMaskClosable: false,
-      nzClosable: true,
-      nzWidth: "450px",
-      nzFooter: null,
-      // nzOnCancel: () => this.confirmAdd(),
-      nzComponentParams: {
-        importBatchId: id,
-        importMedicine: importMedicine
+  detailImportMedicine(id: string, importMedicineId: string) {
+    this.detailMedicineLoading = true;
+    this.service.getDetailImportMedicine(importMedicineId, this.searchFieldDetailImportMedicine).subscribe(
+      (response) => {
+        this.detailMedicineLoading = false;
+        this.modalDetail.create({
+          nzTitle: "Chi Tiết Dược Phẩm Nhập",
+          nzContent: DetailImportMedicineComponent,
+          nzMaskClosable: false,
+          nzClosable: true,
+          nzWidth: "450px",
+          nzFooter: null,
+          // nzOnCancel: () => this.confirmAdd(),
+          nzComponentParams: {
+            importBatchId: id,
+            importMedicine: response.data
+          }
+        });
+      },
+      (error) => {
+        this.detailMedicineLoading = false;
+        console.log('get detail import medicine error');
+        this.generalService.createErrorNotification(error);
       }
-    });
-    // this.modal.afterAllClose.subscribe(() => {
-    //   if (this.updateDetail == true) {
-    //     this.getDetailImportBatch();
-    //     this.searchImportMedicine();
-    //   } else {
-    //     console.log('cc');
-    //   }
+    )
 
-    // })
+    this.modalDetail.afterAllClose.subscribe(() => {
+      console.log(this.service.getIsUpdate())
+      if (this.service.getIsUpdate() == true) {
+        this.getDetailImportBatch();
+        this.searchImportMedicine();
+        this.service.setIsUpdate(false);
+      } else {
+        console.log('cc');
+      }
+
+    })
   }
 
 

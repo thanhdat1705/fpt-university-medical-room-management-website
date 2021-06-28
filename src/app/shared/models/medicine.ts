@@ -9,8 +9,5 @@ export interface Medicine {
 export interface MedicineDetail {
     id: string;
     name: string;
-    medicineUnitId: string;
-    medicineSubgroupId: string;
-    medicineClassificationId: string;
     medicineUnit: MedicineUnitResponse;
 }

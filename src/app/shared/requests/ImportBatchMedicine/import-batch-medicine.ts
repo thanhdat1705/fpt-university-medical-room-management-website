@@ -1,24 +1,8 @@
 import { ImportMedicineForAddBatch } from "../../models/importMedicine";
+import { MedicineDetail } from "../../models/medicine";
+import { Status } from "../../models/status";
+import { MedicineUnitResponse } from "../../responses/medicine-unit/medicine-unit-response";
 
-
-export interface SearchImportBatchMedicine {
-    QuantityHigher: number;
-    QuantityLower: number;
-    PriceHigher: number;
-    PriceLower: number;
-    Description: string;
-    InsertDateFromDate: string;
-    InsertDateToDate: string;
-    ExpirationFromDate: string;
-    ExpirationToDate: string;
-    MedicineName: string;
-    PeriodicInventoryMonth: number;
-    PeriodicInventoryYear: number;
-    Limit: number;
-    Page: number;
-    SortField: string;
-    SortOrder: number;
-}
 
 export interface AddImportBatchRequest {
     storeImportMedicines: ImportMedicineForAddBatch[],
@@ -33,4 +17,30 @@ export interface ImportMedicineRequest {
     insertDate: string;
     expirationDate: string;
     medicineId: string;
+}
+
+export interface ImportMedicineForAdd {
+    id: string;
+    quantity: number;
+    price: number;
+    description: string;
+    insertDate: string;
+    expirationDate: string;
+    medicineId: string;
+    importBatchId: string;
+    medicine: MedicineDetail;
+    medicineUnit: MedicineUnitResponse;
+}
+
+export interface SearchImportMedicine {
+    id: string;
+    quantity: number;
+    price: number;
+    description: string;
+    insertDate: string;
+    expirationDate: string;
+    importBatchId: string;
+    medicineName: string;
+    medicineUnit: string;
+    statusImportMedicine: string
 }

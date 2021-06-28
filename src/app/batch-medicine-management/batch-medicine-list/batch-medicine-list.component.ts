@@ -259,8 +259,15 @@ export class BatchMedicineListComponent implements OnInit {
     }
   }
 
+  resetTable() {
+    this.pageSize = 10;
+    this.pageIndex = 1;
+    this.sortOrderList = 1;
+    this.sortFieldList = "CreateDate";
+  }
 
   setToDefaultFilter() {
+    this.resetTable();
     this.dateRangeSelected = false;
     this.dateSelected = false;
     this.priceSelected = false;
