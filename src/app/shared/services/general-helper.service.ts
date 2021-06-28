@@ -77,7 +77,7 @@ export class GeneralHelperService {
         if (error.status != undefined) {
             if (error.status == 404) {
                 this.notification.error(
-                    'Error code: ' + error.status,
+                    'Lỗi Hệ thống: ' + error.status,
                     error.statusText,
                     {
                         nzPlacement: 'bottomRight',
@@ -108,7 +108,21 @@ export class GeneralHelperService {
             }
             else if (error.status == 400) {
                 this.notification.error(
-                    'Error code: ' + error.status,
+                    'Lỗi Hệ thống: ' + error.status,
+                    error.error.message,
+                    {
+                        nzPlacement: 'bottomRight',
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: '#ffccc7',
+                        },
+                    },
+                );
+            }
+            else if (error.status == 500) {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.status,
                     error.error.message,
                     {
                         nzPlacement: 'bottomRight',
@@ -122,7 +136,7 @@ export class GeneralHelperService {
             }
             else if (error.status == 0) {
                 this.notification.error(
-                    'Error code: ' + error.status,
+                    'Lỗi Hệ thống: ' + error.status,
                     'Server Error!!',
                     {
                         nzPlacement: 'bottomRight',
@@ -137,7 +151,7 @@ export class GeneralHelperService {
             else {
                 this.notification.error(
                     // 'Error code: ' + error.error.statusCode,
-                    'Error code: ' + error.statusCode,
+                    'Lỗi Hệ thống: ' + error.statusCode,
                     // error.error.message,
                     error.message,
                     { nzPlacement: 'bottomRight' }
@@ -145,7 +159,7 @@ export class GeneralHelperService {
             }
         } else {
             this.notification.error(
-                'Error system',
+                'Lỗi Hệ thống: ',
                 error,
                 {
                     nzPlacement: 'bottomRight',

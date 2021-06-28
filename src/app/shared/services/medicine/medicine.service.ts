@@ -11,6 +11,7 @@ import { SearchRequest } from '../../requests/search-request';
 import { Router } from '@angular/router';
 import { GeneralHelperService } from '../general-helper.service';
 import { MedicineResponse } from '../../responses/medicine/medicine';
+import { StoreNewMedicineClassificationRequest } from '../../requests/medicine-classification/store-new-request';
 
 @Injectable({
   providedIn: 'root'
@@ -96,6 +97,9 @@ export class MedicineService {
   }
   searchClass(searchRequest: SearchRequest) {
     return this.service.searchClassification(searchRequest);
+  }
+  storeNewMedicineClassification(storeRequest: StoreNewMedicineClassificationRequest) {
+    return this.service.storeNewMedicineClassification(storeRequest);
   }
   /*------------------------------------------------------------------------------------------*/
 }

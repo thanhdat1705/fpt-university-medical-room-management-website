@@ -27,3 +27,8 @@ export interface MedicineResponseForImport {
     name: string;
     medicineUnit: string;
 }
+
+export interface MedicineResponseForBuy {
+    id: string;
+    name: string;
+}

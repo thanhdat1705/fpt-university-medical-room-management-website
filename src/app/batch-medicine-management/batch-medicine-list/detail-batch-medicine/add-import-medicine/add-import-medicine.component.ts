@@ -1,7 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ImportMedicine } from 'src/app/shared/models/importMedicine';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineResponseForImport } from 'src/app/shared/responses/medicine/medicine';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
@@ -9,7 +8,7 @@ import { ImportBatchService } from 'src/app/shared/services/import-batch/import-
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { differenceInCalendarDays, setHours } from 'date-fns';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { ImportMedicineRequest } from 'src/app/shared/requests/ImportBatchMedicine/import-batch-medicine';
+import { ImportMedicineForAdd, ImportMedicineRequest } from 'src/app/shared/requests/ImportBatchMedicine/import-batch-medicine';
 
 @Component({
   selector: 'app-add-import-medicine',
@@ -37,7 +36,7 @@ export class AddImportMedicineComponent implements OnInit {
   patternMedicineName = "^[a-zA-Z0-9\\s]+$";
   patternUnit = "^[0-9]{1,5}$";
 
-
+  selectFieldsUpdateImportMedicine = "Id, Quantity,Price, InsertDate, ExpirationDate, Description, MedicineId, Medicine.Name as MedicineName, Medicine.MedicineUnit.Name as MedicineUnit, ImportMedicineStatus.StatusImportMedicine";
 
   searchImportMedicineRecord: Record<string, ValueCompare> = {};
   searchImportMedicinFields = "id, quantity, price, insertDate, expirationDate, medicineId, ImportBatchId";
@@ -195,8 +194,8 @@ export class AddImportMedicineComponent implements OnInit {
   parseInsertDate: string;
   parseExpirationDate: string;
   price: number;
-  found: ImportMedicine[] = [];
-  addImportMedicine(data: ImportMedicine) {
+  found: ImportMedicineForAdd[] = [];
+  addImportMedicine(data: ImportMedicineForAdd) {
     console.log(data);
     this.parseInsertDate = this.generalService.getYMD(data.insertDate);
     this.parseExpirationDate = this.generalService.getYMD(data.expirationDate);
@@ -239,7 +238,7 @@ export class AddImportMedicineComponent implements OnInit {
               nzCancelText: 'Không',
               nzOkText: 'Có',
               nzOnOk: () => {
-                // data.quantity = data.quantity + this.found[0].quantity;
+                data.quantity = data.quantity + this.found[0].quantity;
                 this.updateImportMedicineMethod(data, this.found[0].id);
               }
 
@@ -256,7 +255,7 @@ export class AddImportMedicineComponent implements OnInit {
     }
   }
 
-  addImportMedicineMethod(data: ImportMedicine) {
+  addImportMedicineMethod(data: ImportMedicineForAdd) {
     this.addImportMedicineLoading = true;
     this.addImportMedicineRequest = {
       quantity: data.quantity,
@@ -280,7 +279,7 @@ export class AddImportMedicineComponent implements OnInit {
     )
   }
 
-  updateImportMedicineMethod(data: ImportMedicine, idImportMedicine: string) {
+  updateImportMedicineMethod(data: ImportMedicineForAdd, idImportMedicine: string) {
     this.addImportMedicineLoading = true;
     this.updateImportMedicineRequest = {
       quantity: data.quantity,
@@ -289,8 +288,9 @@ export class AddImportMedicineComponent implements OnInit {
       expirationDate: this.parseExpirationDate,
       medicineId: data.medicine.id
     }
-    this.service.updateImportMedicine(this.updateImportMedicineRequest, idImportMedicine).subscribe(
+    this.service.updateImportMedicine(this.updateImportMedicineRequest, idImportMedicine, this.selectFieldsUpdateImportMedicine).subscribe(
       (response) => {
+        console.log(response.data);
         this.addImportMedicineLoading = false;
         this.modal.closeAll();
         this.generalService.messageNz('success', 'Cập nhật thành công');

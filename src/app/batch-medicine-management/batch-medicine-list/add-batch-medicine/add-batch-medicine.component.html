@@ -21,26 +21,26 @@
       </div> -->
       <form nz-form nzLayout="horizontal" [formGroup]="timeBatchForm" class="timeForm">
         <nz-form-item>
-          <nz-form-label nzRequired class="text-time-label">
-            <span class="font-size-16">Kỳ (tháng)</span>
+          <nz-form-label class="text-time-label">
+            <span class="font-size-16">Ngày tạo</span>
           </nz-form-label>
-          <nz-form-control [nzErrorTip]="monthErrorTpl">
-            <nz-date-picker formControlName="monthBatch" nzSize="large" nzMode="month"
-              [nzDisabledDate]="disabledInsertDate" nzPlaceHolder="Ngày nhập" nzFormat="MM" style="width: 100%;">
+          <nz-form-control>
+            <nz-date-picker formControlName="insertDateBatch" nzSize="large" nzDisabled nzFormat="dd-MM-yyy"
+              nzPlaceHolder="Ngày tạo" style="width: 100%;">
             </nz-date-picker>
-            <ng-template #monthErrorTpl let-control>
+            <!-- <ng-template #monthErrorTpl let-control>
               <ng-container *ngIf="timef.monthBatch.hasError('required')">
                 <span class="error-text">Hãy nhập kỳ dược phẩm</span>
               </ng-container>
-            </ng-template>
+            </ng-template> -->
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label nzRequired class="text-time-label">
-            <span class="font-size-16">Năm</span>
+            <span class="font-size-16">Kỳ (tháng - năm)</span>
           </nz-form-label>
           <nz-form-control [nzErrorTip]="yearErrorTpl">
-            <nz-date-picker formControlName="yearBatch" nzSize="large" nzMode="year"
+            <nz-date-picker formControlName="periodicBatch" nzSize="large" nzMode="month" nzFormat="MM-yyyy"
               [nzDisabledDate]="disabledInsertDate" nzPlaceHolder="Ngày nhập" style="width: 100%;">
             </nz-date-picker>
             <ng-template #yearErrorTpl let-control>
@@ -186,20 +186,21 @@
                 thuốc</button>
               <ng-container *ngIf="isDetails">
                 <div *ngIf="isDisable" class="d-flex flex-row justify-content-start flex-wrap">
-                  <a class="font-size-18 button-a" nz-button nzType="primary" (click)="defaultFormValue()">
+                  <a class="font-size-16 button-a" nz-button nzType="primary" (click)="defaultFormValue()">
                     Tiếp tục thêm thuốc</a>
-                  <a class="font-size-18 button-a" nz-button nzType="primary" (click)="edit()">
+                  <a class="font-size-16 button-a" style="width: 140px;" nz-button nzType="primary" (click)="edit()">
                     Chỉnh sửa</a>
-                  <a class="font-size-18" nz-button nzType="primary" (click)="deleteImportMedicine()"
-                    style="height: 42px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                  <a class="font-size-16 button-a" style="width: 140px;" nz-button nzType="primary"
+                    (click)="deleteImportMedicine()">
                     Xóa</a>
                 </div>
                 <ng-container *ngIf="!isDisable">
                   <div class="d-flex flex-row justify-content-start flex-wrap">
-                    <a class="font-size-18 button-a" nz-button nzType="primary" (click)="cancel()">Hủy</a>
-                    <a class="font-size-18 button-a" nz-button nzType="primary"
-                      (click)="updateImportMedicine(importMedicineForm.value)">Cập
-                      nhật</a>
+                    <a class="font-size-16 button-a" style="width: 140px;" nz-button nzType="primary"
+                      (click)="cancel()">Hủy</a>
+                    <a class="font-size-16 button-a" style="width: 140px;" nz-button nzType="primary"
+                      (click)="updateImportMedicine(importMedicineForm.value)">Cập nhật
+                    </a>
                   </div>
                 </ng-container>
               </ng-container>
@@ -233,18 +234,18 @@
           <nz-table #nzTable [nzFrontPagination]="false" [nzData]="importMedicineList" [nzScroll]="{ y: '255px' }">
             <thead>
               <tr>
-                <th>Tên thuốc</th>
-                <th>Số lượng</th>
-                <th>Đơn giá(₫)</th>
+                <th nzWidth="34%" nzAlign='left'>Tên thuốc</th>
+                <th nzWidth="33%" nzAlign='center'>Số lượng</th>
+                <th nzWidth="33%" nzAlign='right'>Đơn giá</th>
               </tr>
             </thead>
             <!-- <ng-container *ngIf="importMedicineList.length > 0"> -->
             <tbody>
               <tr *ngFor="let data of importMedicineList; index as i" style="cursor: pointer;"
                 (click)="detailImportMedicine(data)">
-                <td>{{ data.medicine.name }}</td>
-                <td>{{ data.quantity }}</td>
-                <td>{{ data.price.toLocaleString('vi') }}</td>
+                <td nzAlign='left'>{{ data.medicine.name }}</td>
+                <td nzAlign='center'>{{ data.quantity }}</td>
+                <td nzAlign='right'>{{ data.price.toLocaleString('vi') }}₫</td>
               </tr>
             </tbody>
             <!-- </ng-container> -->
