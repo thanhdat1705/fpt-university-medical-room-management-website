@@ -50,7 +50,8 @@ import {
   UrlServerAPIAddImportBatch,
   UrlServerAPISearchImportBatch,
   UrlServerAPIDetailImportMedicine,
-  UrlServerAPIStoreNewMedicineClassification
+  UrlServerAPIStoreNewMedicineClassification,
+  UrlServerAPIAddRequestBuyMedicine
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -306,7 +307,13 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails, data);
 
   }
-  
+
+
+  //Request To Buy Medicine
+  public addRquestBuyMedicine(data: any) {
+    return this.http.post<ResponseServer>(UrlServerAPIAddRequestBuyMedicine, data);
+
+  }
 
 
   // Department

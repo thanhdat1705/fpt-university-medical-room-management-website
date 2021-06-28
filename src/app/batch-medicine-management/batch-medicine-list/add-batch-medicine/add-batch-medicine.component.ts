@@ -228,7 +228,6 @@ export class AddBatchMedicineComponent implements OnInit {
   }
 
   addImportMedicine(data: ImportMedicineForAddBatch) {
-    console.log(data);
     if (this.importMedicineForm.invalid) {
       for (const i in this.importMedicineForm.controls) {
         this.importMedicineForm.controls[i].markAsDirty();
@@ -307,20 +306,25 @@ export class AddBatchMedicineComponent implements OnInit {
         periodicInventoryYear: this.timeBatchForm.controls.periodicBatch.value.getFullYear()
       }
       console.log(this.addImportBatchRequest);
-      this.service.addImportBatch(this.addImportBatchRequest).subscribe(
-        (response) => {
-          console.log(response);
-          this.addImportBatchLoading = false;
-          localStorage.removeItem('ImportMedicineList');
-          this.generalService.messageNz('success', `Lô thuốc mới được thêm thành công`);
-          this.router.navigate(['batch-medicine-management/batch-medicine-list']);
-        },
-        (error) => {
-          console.log('add import batch error');
-          this.addImportBatchLoading = false;
-          this.generalService.createErrorNotification(error);
-        }
-      )
+      setTimeout(() => {
+        this.service.addImportBatch(this.addImportBatchRequest).subscribe(
+          (response) => {
+            console.log(response);
+            this.addImportBatchLoading = false;
+            localStorage.removeItem('ImportMedicineList');
+            this.generalService.messageNz('success', `Lô thuốc mới được thêm thành công`);
+            // this.router.navigate(['batch-medicine-management/batch-medicine-list']);
+            this.router.navigate(['batch-medicine-management/batch-medicine-list/detail-batch', response.data.id]);
+            // [routerLink]="['/batch-medicine-management/batch-medicine-list/detail-batch', data.id]"
+          },
+          (error) => {
+            console.log('add import batch error');
+            this.addImportBatchLoading = false;
+            this.generalService.createErrorNotification(error);
+          }
+        )
+      }, 1000)
+
     }
 
   }
@@ -403,7 +407,7 @@ export class AddBatchMedicineComponent implements OnInit {
     }
   }
 
-  updateImportMedicineToArray(newItem: ImportMedicineForAddBatch, addQauntity: number ,index: number, isRemove: boolean) {
+  updateImportMedicineToArray(newItem: ImportMedicineForAddBatch, addQauntity: number, index: number, isRemove: boolean) {
     this.addImportMedicineLoading = true;
     setTimeout(() => {
       this.addImportMedicineLoading = false;

@@ -48,12 +48,16 @@
                                 <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
                                     <i nz-icon nzType="loading" class="loading-icon"></i> Đang tìm kiếm...
                                 </nz-option>
-                                <!-- <ng-container *ngIf="this.buyMedicineForm.controls['medicine'].value != ''">
-                                <nz-option *ngIf="medicineList.length <= 0" nzDisabled nzCustomContent>
-                                  Không thấy kết quả tìm kiếm
-                                </nz-option>
-                              </ng-container> -->
                             </nz-select>
+                            <!-- <nz-select nzMode="tags" nzPlaceHolder="Select users" [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" nzAllowClear nzShowSearch 
+                                nzServerSearch (nzOnSearch)="inputChange($event)">
+                                <ng-container *ngFor="let o of medicineList">
+                                    <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o.name"></nz-option>
+                                </ng-container>
+                                <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+                                    <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                                </nz-option>
+                            </nz-select> -->
                             <ng-template #renderMedicine>
                                 <nz-divider style="margin: 4px 0 !important;"></nz-divider>
                                 <nz-spin [nzSpinning]="addItemLoading" nzTip="Loading...">
@@ -139,9 +143,17 @@
                     </nz-form-item>
                     <nz-form-item style="margin-bottom: 0px; margin-top: 20px;">
                         <nz-form-control>
-                            <button class="font-size-16" nz-button nzType="primary" nzSize="large"
+                            <button *ngIf="!isDetail" class="font-size-16" nz-button nzType="primary" nzSize="large"
                                 [disabled]="!buyMedicineForm.valid">
                                 Thêm thuốc</button>
+                            <ng-container *ngIf="isDetail">
+                                <div class="d-flex flex-row justify-content-start flex-wrap">
+                                    <a class="font-size-16 m-r-10" nz-button nzType="primary" nzSize="large"
+                                        (click)="cancel()">Hủy</a>
+                                    <a class="font-size-16 m-r-10" nz-button nzType="primary" nzSize="large"
+                                        (click)="updateRequestDetail(buyMedicineForm.value)">Cập nhật</a>
+                                </div>
+                            </ng-container>
                         </nz-form-control>
                     </nz-form-item>
                 </form>
@@ -188,11 +200,16 @@
                         </tbody>
                         <!-- </ng-container> -->
                     </nz-table>
-                    <button class="font-size-16" nz-button nzType="primary"
+                    <button *ngIf="!isSaveRequest" class="font-size-16" nz-button nzType="primary"
                         [disabled]="buyMedicineListDisplay.length <= 0" nzSize="large" (click)="makeRequest()"
                         style="width: 140px;">
                         Lưu yêu cầu
                     </button>
+                    <ng-container *ngIf="isSaveRequest">
+                        <button class="font-size-16" nz-button nzType="primary" nzSize="large" style="width: 160px;">
+                            Cập nhật yêu cầu
+                        </button>
+                    </ng-container>
                 </div>
             </nz-spin>
         </div>
@@ -201,5 +218,3 @@
 
 
 </div>
-
-

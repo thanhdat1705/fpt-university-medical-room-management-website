@@ -1,9 +1,9 @@
-export interface RequestBuyMedicine {
-    medicineId: string,
-    medicineUnitId: string,
-    quantity: number,
-    note: string
-}
+// export interface RequestBuyMedicine {
+//     medicineId: string,
+//     medicineUnitId: string,
+//     quantity: number,
+//     note: string
+// }
 
 export interface RequestBuyMedicineDisplay {
     id: string,

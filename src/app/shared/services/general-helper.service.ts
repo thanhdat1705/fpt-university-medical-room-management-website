@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzNotificationPlacement, NzNotificationService } from 'ng-zorro-antd/notification';
 import { WaitingComponent } from '../components/waiting/waiting.component';
 import { DateTime } from '../models/date-time';
 import { ValueCompare } from '../requests/search-request';
@@ -72,29 +72,58 @@ export class GeneralHelperService {
     showPatternError(fieldName: string) {
         return fieldName + " không được chứa kí tự đặc biệt";
     }
-    
+
 
     getValueCompare(value: any, valueCompare: ValueCompare, searchRecordAttribute: string, searchRecord: Record<string, ValueCompare> = {}) {
         if (value != null) {
-          valueCompare.value = value;
-          searchRecord[searchRecordAttribute] = valueCompare;
+            valueCompare.value = value;
+            searchRecord[searchRecordAttribute] = valueCompare;
         } else {
-          searchRecord[searchRecordAttribute] = null;
+            searchRecord[searchRecordAttribute] = null;
         }
-      }
+    }
+
+    createSuccessNotification(content: string) {
+        let backgroundColorSuccess = "#f6ffed";
+        let posion: NzNotificationPlacement = 'topRight';
+        let border = 'thin solid #b7eb8f';
+        let duration = 3000;
+        this.notification.success(
+            'Thành công',
+            content,
+            {
+                nzPlacement: posion,
+                nzDuration: duration,
+                nzStyle: {
+                    width: '400px',
+                    marginLeft: '-265px',
+                    backgroundColor: backgroundColorSuccess,
+                    border: border
+                },
+            }
+        )
+    }
 
     createErrorNotification(error: any) {
+        let backgroundColorError = "#fff2f0";
+        let backgroundColorWarrning = "#fffbe6";
+        let posion: NzNotificationPlacement = 'bottomRight';
+        let borderError = 'thin solid #ffccc7';
+        let borderWarning = 'thin solid #ffe58f';
+        let duration = 3000;
         if (error.status != undefined) {
             if (error.status == 404) {
                 this.notification.error(
                     'Lỗi Hệ thống: ' + error.status,
                     error.statusText,
                     {
-                        nzPlacement: 'bottomRight',
+                        nzPlacement: posion,
+                        nzDuration: duration,
                         nzStyle: {
                             width: '400px',
                             marginLeft: '-265px',
-                            backgroundColor: '#ffccc7',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
                         },
                     }
                 );
@@ -104,11 +133,13 @@ export class GeneralHelperService {
                     'Opp!',
                     'Phiên đăng nhập của bạn đã hết hạn',
                     {
-                        nzPlacement: 'bottomRight',
+                        nzPlacement: posion,
+                        nzDuration: duration,
                         nzStyle: {
                             width: '400px',
                             marginLeft: '-265px',
-                            backgroundColor: '#f0d1a9',
+                            backgroundColor: backgroundColorWarrning,
+                            border: borderWarning
                         },
                     }
                 );
@@ -121,11 +152,13 @@ export class GeneralHelperService {
                     'Lỗi Hệ thống: ' + error.status,
                     error.error.message,
                     {
-                        nzPlacement: 'bottomRight',
+                        nzPlacement: posion,
+                        nzDuration: duration,
                         nzStyle: {
                             width: '400px',
                             marginLeft: '-265px',
-                            backgroundColor: '#ffccc7',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
                         },
                     },
                 );
@@ -135,11 +168,13 @@ export class GeneralHelperService {
                     'Lỗi Hệ thống: ' + error.status,
                     error.error.message,
                     {
-                        nzPlacement: 'bottomRight',
+                        nzPlacement: posion,
+                        nzDuration: duration,
                         nzStyle: {
                             width: '400px',
                             marginLeft: '-265px',
-                            backgroundColor: '#ffccc7',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
                         },
                     },
                 );
@@ -149,22 +184,31 @@ export class GeneralHelperService {
                     'Lỗi Hệ thống: ' + error.status,
                     'Server Error!!',
                     {
-                        nzPlacement: 'bottomRight',
+                        nzPlacement: posion,
+                        nzDuration: duration,
                         nzStyle: {
                             width: '400px',
                             marginLeft: '-265px',
-                            backgroundColor: '#ffccc7',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
                         },
                     }
                 );
             }
             else {
                 this.notification.error(
-                    // 'Error code: ' + error.error.statusCode,
                     'Lỗi Hệ thống: ' + error.statusCode,
-                    // error.error.message,
                     error.message,
-                    { nzPlacement: 'bottomRight' }
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    }
                 );
             }
         } else {
@@ -172,11 +216,13 @@ export class GeneralHelperService {
                 'Lỗi Hệ thống: ',
                 error,
                 {
-                    nzPlacement: 'bottomRight',
+                    nzPlacement: posion,
+                    nzDuration: duration,
                     nzStyle: {
                         width: '400px',
                         marginLeft: '-265px',
-                        backgroundColor: '#ffccc7',
+                        backgroundColor: backgroundColorError,
+                        border: borderError
                     },
                 }
             );

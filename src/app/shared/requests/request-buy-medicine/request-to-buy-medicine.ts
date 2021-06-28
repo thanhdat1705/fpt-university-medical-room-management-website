@@ -1,5 +1,5 @@
-import { RequestBuyMedicine } from "../../models/request-buy-medicine";
+import { RequestBuyMedicineDisplay } from "../../models/request-buy-medicine";
 
 export interface RequestToBuyMedicine {
-    requestBuyMedicineDetails: RequestBuyMedicine[]
+    requestBuyMedicineDetails: RequestBuyMedicineDisplay[]
 }
