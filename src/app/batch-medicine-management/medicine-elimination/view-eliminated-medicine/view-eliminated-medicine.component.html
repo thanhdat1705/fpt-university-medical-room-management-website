@@ -35,13 +35,13 @@
     (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
-        <th nzWidth="150px" nzColumnKey="InternalCode" [nzSortFn]="true">Tên thuốc</th>
+        <th nzWidth="150px" nzColumnKey="medicine.name" [nzSortFn]="true">Tên thuốc</th>
         <th nzWidth="100px" nzColumnKey="quantity" [nzSortFn]="true">Số lượng</th>
-        <th nzWidth="100px" nzColumnKey="medicineUnit" [nzSortFn]="true">Đơn vị</th>
-        <th nzWidth="100px" nzColumnKey="medicineUnit" [nzSortFn]="true">Loại thuốc</th>
-        <th nzWidth="100px" nzColumnKey="medicineUnit" [nzSortFn]="true">Nhóm</th>
+        <th nzWidth="100px" nzColumnKey="medicine.medicineUnit.name" [nzSortFn]="true">Đơn vị</th>
+        <th nzWidth="100px" nzColumnKey="medicine.medicineClassification.name" [nzSortFn]="true">Loại thuốc</th>
+        <th nzWidth="100px" nzColumnKey="medicine.medicineSubgroup.name" [nzSortFn]="true">Nhóm</th>
         <th nzWidth="140px" nzColumnKey="createDate" [nzSortFn]="true">Ngày hủy</th>
-        <th nzWidth="140px" nzColumnKey="a" [nzSortFn]="true">Thuộc lô</th>
+        <th nzWidth="140px" nzColumnKey="medicineInInventoryDetail.createdDate" [nzSortFn]="true">Thuộc lô</th>
         <th nzWidth="70px"></th>
         <th nzWidth="70px"></th>
         <!-- <th>Thuộc lô</th> -->
@@ -55,7 +55,7 @@
         <td>{{ eliminatedMedicine.medicineClassification.name }}</td>
         <td>{{ eliminatedMedicine.medicineSubgroup.name }}</td>
         <td>{{ generalService.getDate(eliminatedMedicine.createDate) }}</td>
-        <td>{{ generalService.getDate(eliminatedMedicine.medicineInInventory.createdDate) }}</td>
+        <td>{{ generalService.getDate(eliminatedMedicine.medicineInInventoryDetail.createdDate) }}</td>
         <td>
           <input type="hidden" nz-input #medicineId>
           <a style="color: #1890ff;"

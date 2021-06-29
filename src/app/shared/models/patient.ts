@@ -1,11 +1,11 @@
 import { Department } from "./department";
 
 export interface Patient{
-    Id: string,
-    InternalCode: string,
-    Name: string;
-    Gender: string;
-    Department?: Department;
-    DepartmentId: string;
-    AllergyDescription: string;
+    id: string,
+    internalCode: string,
+    name: string;
+    gender: string;
+    department?: Department;
+    departmentId: string;
+    allergyDescription: string;
 }

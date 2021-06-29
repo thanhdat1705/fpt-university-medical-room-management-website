@@ -57,6 +57,7 @@ export const UrlServerAPIUpdateMedicine = UrlServer + '/api/v1.0/Medicines';
 export const UrlServerAPISearchMedicineInInventoryDetails = UrlServer + '/api/v1.0/MedicineInInventoryDetails/Searching';
 
 export const UrlServerAPIAddTreatmentInformation = UrlServer + '/api/v1.0/Treatments';
+export const UrlServerAPISearchTreatment = UrlServer + '/api/v1.0/Treatments/Searching';
 
 
 export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';
@@ -77,3 +78,8 @@ export const UrlServerAPIDetailImportMedicine = UrlServer + '/api/v1.0/ImportMed
 
 //Request To Buy Medicine
 export const UrlServerAPIAddRequestBuyMedicine = UrlServer + '/api/v1.0/RequestBuyMedicines';
+
+export const UrlServerAPISearchPatient = UrlServer + '/api/v1.0/Patients/Searching';
+
+
+export const UrlServerAPISearchDeseaseStatus = UrlServer + '/api/v1.0/DiseaseStatuses/Searching';

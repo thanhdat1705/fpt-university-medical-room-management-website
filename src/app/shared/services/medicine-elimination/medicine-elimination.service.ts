@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { SummaryService } from '../summary.service';
 
 @Injectable({
@@ -10,6 +11,9 @@ export class MedicineEliminationService {
   unitName: any;
   batch: any;
   quantity: number;
+  eliminateMedicineComponentSource = new Subject<boolean>();
+  eliminateMedicineComponent = this.eliminateMedicineComponentSource.asObservable();
+  name: any;
 
   constructor(private summaryService: SummaryService) { }
 
@@ -23,10 +27,15 @@ export class MedicineEliminationService {
     );
   }
 
-  setMedicineId(id: any) {
+  reloadMedicineTableAfterEliminate() {
+    this.eliminateMedicineComponentSource.next(null);
+
+  }
+
+  setMedicineInInventoryDetailsId(id: any) {
     this.id = id;
   }
-  getMedicineId() {
+  getMedicineInInventoryDetailsId() {
     return this.id;
   }
   setMedicineUnit(unitName: any) {
@@ -35,10 +44,10 @@ export class MedicineEliminationService {
   getMedicineUnit() {
     return this.unitName;
   }
-  setMedicineName(batch: any) {
+  setMedicineBatch(batch: any) {
     this.batch = batch;
   }
-  getMedicineName() {
+  getMedicineBatch() {
     return this.batch;
   }
   setMedicineQuantity(quantity: any) {
@@ -47,4 +56,11 @@ export class MedicineEliminationService {
   getMedicineQuantity() {
     return this.quantity;
   }
+  setMedicineName(name: any) {
+    this.name = name;
+  }
+  getMedicineName(){
+    return this.name;
+  }
+
 }

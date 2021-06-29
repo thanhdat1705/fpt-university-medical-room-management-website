@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
       (response) => {
         localStorage.setItem('avatar', response.data.photoUrl);
         console.log('avatar' + response.data.photoUrl);
+        localStorage.setItem('user', response.data);
         
         localStorage.setItem("token", response.data.token);
         this.summaryService.setTokenHeader();

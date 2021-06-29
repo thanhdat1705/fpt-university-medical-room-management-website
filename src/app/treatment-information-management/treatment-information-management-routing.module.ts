@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddBatchMedicineComponent } from '../batch-medicine-management/batch-medicine-list/add-batch-medicine/add-batch-medicine.component';
 import { AddTreatmentInformationComponent } from './add-treatment-information/add-treatment-information.component';
+import { ViewTreatmentInformationListComponent } from './view-treatment-information-list/view-treatment-information-list.component';
 
 
 const routes: Routes = [
@@ -10,6 +11,13 @@ const routes: Routes = [
     component: AddTreatmentInformationComponent,
     data: {
       title: "Tạo đơn điều trị"
+    }
+  },
+  {
+    path: 'view-treatment-information',
+    component: ViewTreatmentInformationListComponent,
+    data: {
+      title: "Danh sách đơn điều trị"
     }
   }
 ];

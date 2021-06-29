@@ -5,10 +5,11 @@ import { SharedModule } from '../shared/shared.module';
 import { TreatmentInformationManagementRoutingModule } from './treatment-information-management-routing.module';
 import { AddTreatmentInformationComponent } from './add-treatment-information/add-treatment-information.component';
 import { TreatmentInformationDetailsComponent } from './add-treatment-information/treatment-information-details/treatment-information-details.component';
+import { ViewTreatmentInformationListComponent } from './view-treatment-information-list/view-treatment-information-list.component';
 
 
 @NgModule({
-  declarations: [AddTreatmentInformationComponent, TreatmentInformationDetailsComponent],
+  declarations: [AddTreatmentInformationComponent, TreatmentInformationDetailsComponent, ViewTreatmentInformationListComponent],
   
   imports: [
     CommonModule,

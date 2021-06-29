@@ -17,7 +17,7 @@ import { SideNavService } from '../../services/side-nav.service';
 export class HeaderComponent implements OnInit {
 
   avatar = this.headerService.getAvatar();
-  user: Account;
+  user: Account = JSON.parse(localStorage.getItem("user"));
   toggleActive: boolean = false;
   isCollapsed: boolean;
 

@@ -19,6 +19,7 @@ export class EliminateMedicineComponent implements OnInit {
   medicineName: string;
   medicineQuantity: number;
   isConfirmLoading = false;
+  batch: string;
 
   constructor(
     private modalService: NzModalService,
@@ -27,15 +28,19 @@ export class EliminateMedicineComponent implements OnInit {
     private summaryService: SummaryService,
     private medicineEliminateService: MedicineEliminationService,
     private modal: NzModalRef
-  ) { }
+  ) {
+
+
+  }
 
   ngOnInit(): void {
-    this.medicineID = this.medicineEliminateService.getMedicineId();
+    this.medicineID = this.medicineEliminateService.getMedicineInInventoryDetailsId();
     this.medicineUnitName = this.medicineEliminateService.getMedicineUnit();
     this.medicineName = this.medicineEliminateService.getMedicineName();
     this.medicineQuantity = this.medicineEliminateService.getMedicineQuantity();
+    this.batch = this.medicineEliminateService.getMedicineBatch();
     this.eliminateMedicineForm = this.formBuider.group({
-      medicineInInventoryId: [this.medicineID],
+      medicineInInventoryDetailId: [this.medicineID],
       quantity: ['', [
         Validators.pattern(this.numberPattern),
         Validators.required,
@@ -59,7 +64,7 @@ export class EliminateMedicineComponent implements OnInit {
     });
   }
 
-  eliminateMedicine(data: any) { 
+  eliminateMedicine(data: any) {
     this.isConfirmLoading = true;
     if (this.eliminateMedicineForm.invalid) {
       return;
@@ -67,8 +72,9 @@ export class EliminateMedicineComponent implements OnInit {
     this.summaryService.eliminateMedicine(data).subscribe(
       (response) => {
         console.log(response);
-        this.generalService.messageNz('success', "Đã hủy " + this.eliminateMedicineForm.get("quantity").value + " " + this.medicineUnitName + " " +this.medicineName );
+        this.generalService.messageNz('success', "Đã hủy " + this.eliminateMedicineForm.get("quantity").value + " " + this.medicineUnitName + " " + this.medicineName + " của lô " + this.batch);
         this.isConfirmLoading = false;
+        this.medicineEliminateService.reloadMedicineTableAfterEliminate();
         this.modal.destroy();
       }, (error) => {
         console.log(error);

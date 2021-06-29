@@ -9,7 +9,7 @@ import { Injectable, NgZone } from '@angular/core';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
-import 'firebase/storage'; 
+import 'firebase/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoginSocialRequest } from '../../requests/login/login-social-request';
 import { GeneralHelperService } from '../general-helper.service';
@@ -126,6 +126,8 @@ export class AuthService {
                 localStorage.setItem("token", response.data.token);
                 this.summaryService.setTokenHeader();
                 console.log(localStorage.getItem("token"));
+                localStorage.setItem('user', response.data);
+
                 this.summaryService.setTokenHeader();
                 this.generalService.closeWaitingPopupNz();
                 this.ngZone.run(() => {
