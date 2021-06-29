@@ -55,8 +55,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   filterSubgroupValue: string;
   filterClassificationValue: string;
   medicineClassificationList: MedicineClassificationResponse[];
-  medicineSubGroupList: MedicineSubgroupResponse[];
-  treatmentInformation: TreatmentInformation[]
+  medicineSubGroupList: MedicineSubgroupResponse[] = [];
+  treatmentInformation: TreatmentInformation[] = [];
 
   medicineInInventoryRequest: SearchRequest = {
     limit: this.pageSize,
@@ -118,6 +118,13 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.treatmentDetailsForm = this.formBuilder.group({
+      quantity: ['',
+        [
+          Validators.required,
+          Validators.pattern(this.numberPattern)
+        ]],
+    });
     this.chkTreatmentDetail = this.treatmentService.getTreatmentInformationDetails();
     this.getAllMedicineClassification();
     this.getAllMedicineSubgroup();
@@ -127,30 +134,18 @@ export class TreatmentInformationDetailsComponent implements OnInit {
         this.setOfCheckedId.add(this.chkTreatmentDetail[i].medicineInInventoryDetailId);
       }
 
-      this.treatmentDetailsForm = this.formBuilder.group({
-        quantity: ['',
-          [
-            Validators.required,
-            Validators.pattern(this.numberPattern)
-          ]],
-      });
-
-
+      
     }
-
-
-
 
     console.log('data luc init', this.chkTreatmentDetail);
     this.searchMedicineInInventory();
     this.getTreatmentInformationFromTable();
-
   }
 
   getTreatmentInformationFromTable() {
 
     this.treatmentInformation = this.treatmentService.getTreatmentInformation();
-    if (this.treatmentInformation.length == 0) {
+    if (this.treatmentInformation == null) {
       return;
     } else {
       for (let i = 0; i < this.treatmentInformation.length; i++)
@@ -257,7 +252,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
         treatmentDetailsObj.medicineId = medicineId;
         treatmentDetailsObj.medicineName = medicineName;
         treatmentDetailsObj.unitName = unitName;
-        treatmentDetailsObj.ExpiredDate = expiredDate;
+        treatmentDetailsObj.expiredDate = expiredDate;
         console.log(treatmentDetailsObj.medicineId);
         this.treatmentDetaisList.push(treatmentDetailsObj);
         this.isExistInDetails = true;
@@ -281,6 +276,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
         treatmentObj.quantity = quantity;
         treatmentObj.medicineInInventoryDetailId = id;
         treatmentObj.unitName = unitName;
+        treatmentObj.expiredDate = expiredDate;
 
         this.treatmentDetaisList.push(treatmentObj);
       }

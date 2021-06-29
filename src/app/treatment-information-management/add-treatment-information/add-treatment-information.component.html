@@ -140,7 +140,7 @@
                         <span class="font-size-16">Tình trạng bệnh</span>
                     </nz-form-label>
                     <nz-form-control>
-                        <nz-select nzSize="large" nzMode="tags" [(ngModel)]="patientDeseaseStatusList"
+                        <nz-select nzPlaceHolder="Tình trạng bệnh" nzSize="large" nzMode="tags" [(ngModel)]="patientDeseaseStatusList"
                             (nzOnSearch)="onSearchDeseaseStatus($event)" [ngModelOptions]="{standalone: true}"
                             nzAllowClear nzShowSearch nzServerSearch>
                             <ng-container *ngFor="let o of diseaseStatusList">
@@ -204,7 +204,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let medicine of treatmentInformation">
-                        <td nzTooltipTitle="displayTipTreatmentInformationDetails(medicine.medicineId)"
+                        <td nzTooltipColor="green" nzTooltipTitle="{{displayTipTreatmentInformationDetails(medicine.medicineId)}}"
                             nzTooltipPlacement="leftTop" nz-tooltip>
                             {{ medicine.medicineName }}</td>
                         <td>{{ medicine.quantity }} {{medicine.unitName}}</td>

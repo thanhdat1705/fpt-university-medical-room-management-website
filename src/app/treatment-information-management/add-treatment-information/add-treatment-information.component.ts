@@ -67,7 +67,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   url: any;
   fileName: string;
 
-  treatmentInformation: TreatmentInformation[];
+  treatmentInformation: TreatmentInformation[]=[];
   treatmentInformationDetails: TreatmentInformationDetail[];
 
   getTreatmentInformationDetails() {
@@ -427,9 +427,13 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   displayTipTreatmentInformationDetails(id: any) {
     const treatment = this.treatmentInformationDetails.filter(treatment => treatment.medicineId.includes(id));
-    var tip;
+    var tip = '';
     for (let i = 0; i < treatment.length; i++) {
-      tip += tip[i].quantity + ' ' + tip[i].unitName + ' có hạn sử dụng' + tip[i].ExpiredDate
+      if(i == treatment.length-1){
+        tip += treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate +'.'
+      }else{
+        tip += treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate + ', '
+      }
     }
     return tip;
   }

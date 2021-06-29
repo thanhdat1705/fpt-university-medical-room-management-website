@@ -6,6 +6,7 @@ import { GeneralHelperService } from 'src/app/shared/services/general-helper.ser
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Department } from 'src/app/shared/models/department';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 export interface treatmentSearchTable {
   date: string;
@@ -35,6 +36,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   selectedSearchAttribute = '';
   searchTreatmentValue;
   selectedSearchRole = '';
+  
   searchAttributelist = [
     {
       id: 'name',
@@ -276,6 +278,16 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     } else{
       this.generalService.createErrorNotification("Hãy chọn đầy đủ mục tìm kiếm")
     }
+  }
+
+  onQueryParamsChange(params: NzTableQueryParams){
+    this.treatmentSearchRequest.page = params.pageIndex;
+    console.log(params.pageIndex);
+    this.searchTreatment();
+  }
+
+  getDetails(id: any){
+    
   }
 
 }
