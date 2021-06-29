@@ -33,6 +33,7 @@ export class DetailImportMedicineComponent implements OnInit {
   isLoading = false;
   isDisable = true;
 
+  searchFieldDetailImportMedicine = "Id, Quantity,Price, InsertDate, ExpirationDate, Description, MedicineId, Medicine, Medicine.MedicineUnit.Name as MedicineUnit, ImportMedicineStatus.StatusImportMedicine";
   searchRecord: Record<string, ValueCompare> = {};
   searchFields = "id, name, medicineUnit.name as medicineUnit";
   searchMedicineRequest: SearchRequest = {
@@ -108,7 +109,6 @@ export class DetailImportMedicineComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.importMedicine);
     this.importMedicineForm = this.fb.group({
       medicine: ['', [
         Validators.required,
@@ -141,7 +141,7 @@ export class DetailImportMedicineComponent implements OnInit {
     this.searchImportMedicineRecord['ExpirationDate'] = null;
     this.searchImportMedicineRecord['MedicineId'] = null;
     this.searchImportMedicineRecord['Id'] = null;
-    this.defaultDetailValue();
+    this.detailImportMedicine(this.importMedicine);
   }
 
   get form() { return this.importMedicineForm.controls; }
@@ -149,49 +149,48 @@ export class DetailImportMedicineComponent implements OnInit {
     return this.generalService.getDate(time);
   }
 
-  defaultDetailValue() {
-    this.searchMedicine(this.importMedicine.medicine.name, false);
+  detailImportMedicine(data: ImportMedicine) {
+    console.log(data);
     this.medicineDisplay = {
-      id: this.importMedicine.medicine.id,
-      name: this.importMedicine.medicine.name,
-      medicineUnit: this.importMedicine.medicineUnit.name
+      id: data.medicine.id,
+      name: data.medicine.name,
+      medicineUnit: data.medicineUnit
     }
+    this.medicineList = [];
+    this.medicineList = [...this.medicineList, this.medicineDisplay];
     this.importMedicineForm.setValue({
       medicine: this.medicineDisplay.name,
-      quantity: this.importMedicine.quantity,
-      price: this.importMedicine.price.toLocaleString('vi'),
-      insertDate: this.importMedicine.insertDate,
-      expirationDate: this.importMedicine.expirationDate,
-      description: this.importMedicine.description,
+      quantity: data.quantity,
+      price: data.price.toLocaleString('vi'),
+      insertDate: data.insertDate,
+      expirationDate: data.expirationDate,
+      description: data.description,
     })
-    // this.unit = this.importMedicine.medicineUnit.name;
 
-    console.log(this.importMedicineForm.controls['medicine'].value);
     this.medicineChange(this.medicineDisplay);
     this.disable(true);
   }
 
-  // detailImportMedicine(data: ImportMedicine) {
-  //   this.importMedicineId = data.id;
-  //   this.importMedicine = data;
-  //   this.isDetails = true;
+  detailImportMedicineAfterUpdate(data: ImportMedicine) {
+    this.medicineDisplay = {
+      id: data.medicine.id,
+      name: data.medicine.name,
+      medicineUnit: data.medicineUnit
+    }
+    this.medicineList = [];
+    this.medicineList = [...this.medicineList, this.medicineDisplay];
+    this.importMedicineForm.setValue({
+      medicine: this.medicineDisplay.name,
+      quantity: data.quantity,
+      price: data.price.toLocaleString('vi'),
+      insertDate: data.insertDate,
+      expirationDate: data.expirationDate,
+      description: data.description,
+    })
 
-  //   console.log(data);
-  //   this.medicineList = [];
-  //   this.medicineList = [...this.medicineList, data.medicine];
-
-  //   this.importMedicineForm.setValue({
-  //     medicine: data.medicine,
-  //     quantity: data.quantity,
-  //     price: data.price.toLocaleString('vi'),
-  //     insertDate: data.insertDate,
-  //     expirationDate: data.expirationDate,
-  //     description: data.description,
-  //   })
-  //   this.medicineChange(data.medicine);
-  //   this.disable(true);
-
-  // }
+    this.medicineChange(this.medicineDisplay);
+    this.disable(true);
+  }
 
   disable(bool: boolean) {
     if (bool) {
@@ -223,7 +222,7 @@ export class DetailImportMedicineComponent implements OnInit {
   inputChange(value: string) {
     if (value !== '') {
       this.isLoading = true;
-      this.searchMedicine(value, false);
+      this.searchMedicine(value);
 
     } else {
       this.isLoading = false;
@@ -232,16 +231,16 @@ export class DetailImportMedicineComponent implements OnInit {
 
   }
 
-  searchMedicine(value: string, loading: boolean) {
+  searchMedicine(value: string) {
     this.searchMedicineName.value = value;
     this.searchRecord['Name'] = this.searchMedicineName;
     this.medicineService.searchMedicine(this.searchMedicineRequest).subscribe(
       (response) => {
         this.medicineList = response.data.data;
-        this.isLoading = loading;
+        this.isLoading = false;
       },
       (error) => {
-        this.isLoading = loading;
+        this.isLoading = false;
         console.log('search medicine error');
         this.generalService.createErrorNotification(error);
       });
@@ -257,13 +256,29 @@ export class DetailImportMedicineComponent implements OnInit {
 
   edit() {
     this.importMedicineForm.controls['medicine'].setValue(this.medicineDisplay);
-    // this.defaultDetailValue();
-    // console.log(this.importMedicine.medicine)
     this.disable(false);
   }
 
   cancel() {
-    this.defaultDetailValue();
+    this.getDetailImportMedicine(this.importMedicine.id, this.searchFieldDetailImportMedicine);
+  }
+
+  getDetailImportMedicine(id: string, selectFields: string) {
+    this.updateImportMedicineLoading = true;
+    this.service.getDetailImportMedicine(id, selectFields).subscribe(
+      (response) => {
+        console.log(response.data)
+        this.importMedicine = response.data;
+        this.updateImportMedicineLoading = false;
+        this.detailImportMedicine(this.importMedicine);
+      },
+      (error) => {
+        this.updateImportMedicineLoading = false;
+        console.log('get detail import medicine error');
+        this.generalService.createErrorNotification(error);
+      }
+    )
+
   }
 
 
@@ -276,12 +291,13 @@ export class DetailImportMedicineComponent implements OnInit {
       nzOnOk: () => new Promise((resolve, reject) => {
         this.service.deleteImportMedicine(this.importMedicine.id).subscribe(
           (response) => {
+            this.service.setIsUpdate(true);
             this.modal.closeAll();
             this.generalService.messageNz('success', 'Xóa dược phẩm thành công');
           },
           (error) => {
             this.modal.closeAll();
-            console.log('update import medicine error');
+            console.log('delete import medicine error');
             this.generalService.createErrorNotification(error);
           }
         )
@@ -332,12 +348,12 @@ export class DetailImportMedicineComponent implements OnInit {
               nzOkText: 'Có',
               nzOnOk: () => {
                 data.quantity = data.quantity + this.found[0].quantity;
-                this.updateImportMedicineMethod(data);
+                this.updateImportMedicineMethod(data, true, this.found[0].id);
               }
 
             })
           } else {
-            this.updateImportMedicineMethod(data);
+            this.updateImportMedicineMethod(data, false, null);
           }
         },
         (error) => {
@@ -349,7 +365,7 @@ export class DetailImportMedicineComponent implements OnInit {
     }
   }
 
-  updateImportMedicineMethod(data: ImportMedicine) {
+  updateImportMedicineMethod(data: ImportMedicine, isDelete: boolean, idDelete: string) {
     this.updateImportMedicineLoading = true;
     this.updateImportMedicineRequest = {
       quantity: data.quantity,
@@ -358,18 +374,37 @@ export class DetailImportMedicineComponent implements OnInit {
       expirationDate: this.parseExpirationDate,
       medicineId: data.medicine.id
     }
-    this.service.updateImportMedicine(this.updateImportMedicineRequest, data.id).subscribe(
-      (response) => {
-        this.updateImportMedicineLoading = false;
-        this.modal.closeAll();
-        this.generalService.messageNz('success', 'Cập nhật thành công');
-      },
-      (error) => {
-        this.updateImportMedicineLoading = false;
-        this.modal.closeAll();
-        console.log('update import medicine error');
-        this.generalService.createErrorNotification(error);
-      }
-    )
+    if (isDelete) {
+      this.service.deleteImportMedicine(idDelete).subscribe(
+        (response) => {
+          console.log('delete success medicine');
+          this.service.updateImportMedicine(this.updateImportMedicineRequest, this.importMedicine.id, this.searchFieldDetailImportMedicine).subscribe(
+            (response) => {
+              console.log('update ', response.data);
+              this.importMedicine = response.data;
+              this.updateImportMedicineLoading = false;
+              this.detailImportMedicineAfterUpdate(response.data);
+              this.service.setIsUpdate(true);
+              this.generalService.messageNz('success', 'Cập nhật thành công');
+
+            },
+            (error) => {
+              this.service.setIsUpdate(true);
+              console.log(error.error.message);
+              this.updateImportMedicineLoading = false;
+              console.log('update import medicine error');
+              this.generalService.createErrorNotification(error);
+            }
+          )
+        },
+        (error) => {
+          this.modal.closeAll();
+          console.log('delete alter update import medicine error');
+          this.generalService.createErrorNotification(error);
+        }
+      )
+    }
+
+
   }
 }

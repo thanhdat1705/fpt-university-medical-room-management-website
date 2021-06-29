@@ -72,6 +72,24 @@ export const CommonLayout_ROUTES: Routes = [
                 path: '',
                 loadChildren: () => import('../../treatment-information-management/treatment-information-management.module').then(m => m.TreatmentInformationManagementModule)
             }
+        ]
+    },
+
+    {
+        path: 'request-buy-medicine',
+        data: {
+            title: 'Yêu cầu mua dược phẩm'
+        },
+        children: [
+            // {
+            //     path: '',
+            //     redirectTo: '/request-buy-medicine/buy-medicine-list',
+            //     pathMatch: 'full'
+            // },
+            {
+                path: '',
+                loadChildren: () => import('../../request-buy-medicine/request-buy-medicine.module').then(m => m.RequestBuyMedicineModule)
+            }
         ],
 
     },

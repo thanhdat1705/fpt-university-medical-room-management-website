@@ -86,8 +86,7 @@ export class AddMedicineComponent implements OnInit {
       name: ['', [
         Validators.required,
         Validators.minLength(this.medicineNameMinL),
-        Validators.maxLength(this.medicineNameMaxL),
-        Validators.pattern(this.patternMedicineName)
+        Validators.maxLength(this.medicineNameMaxL)
       ]],
       medicineUnitId: ['', [
         Validators.required

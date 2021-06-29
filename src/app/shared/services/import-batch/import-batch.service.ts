@@ -7,9 +7,16 @@ import { SummaryService } from '../summary.service';
   providedIn: 'root'
 })
 export class ImportBatchService {
-
+  isUpdate = false;
   constructor(private service: SummaryService) { }
 
+  setIsUpdate(update: boolean) {
+    this.isUpdate = update;
+  }
+
+  getIsUpdate() {
+    return this.isUpdate;
+  }
 
   addImportBatch(data: AddImportBatchRequest) {
     return this.service.addImportBatch(data);
@@ -19,16 +26,16 @@ export class ImportBatchService {
     return this.service.searchImportBatch(data);
   }
 
-  getDetailImportBatch(id: string) {
-    return this.service.getDetailImportBatch(id);
+  getDetailImportBatch(id: string, selectFields: string) {
+    return this.service.getDetailImportBatch(id, selectFields);
   }
 
   //  Import Medicine
   addImportMedicine(data: any, id: string) {
     return this.service.addImportMedicine(data, id);
   }
-  updateImportMedicine(data: any, id: string) {
-    return this.service.updateImportMedicine(data, id);
+  updateImportMedicine(data: any, id: string,  selectFields: string) {
+    return this.service.updateImportMedicine(data, id,  selectFields);
   }
   deleteImportMedicine(id: string) {
     return this.service.deleteImportMedicine(id);
@@ -36,5 +43,9 @@ export class ImportBatchService {
   searchImportMedicine(data: SearchRequest) {
     return this.service.searchImportMedicine(data);
   }
-  
+
+  getDetailImportMedicine(id: string, selectFields: string) {
+    return this.service.getDetailImportMedicine(id, selectFields);
+  }
+
 }

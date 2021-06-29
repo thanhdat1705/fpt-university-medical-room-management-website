@@ -18,13 +18,11 @@ export interface ImportMedicine {
     id: string;
     quantity: number;
     price: number;
-    description: string;
-    statusId: number;
     insertDate: string;
     expirationDate: string;
+    description: string;
     medicineId: string;
-    importBatchId: string;
     medicine: MedicineDetail;
-    medicineUnit: MedicineUnitResponse;
-    status: Status;
+    medicineUnit: string;
+    statusImportMedicine: string;
 }

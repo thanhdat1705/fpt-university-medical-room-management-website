@@ -4,10 +4,12 @@ import { SummaryService } from '../summary.service';
 @Injectable({
   providedIn: 'root'
 })
-export class BatchMedicineService {
+export class RequestBuyMedicineService {
 
   constructor(private service: SummaryService) { }
 
 
-
+  addRequestBuyMedicine(data: any) {
+    return this.service.addRquestBuyMedicine(data);
+  }
 }

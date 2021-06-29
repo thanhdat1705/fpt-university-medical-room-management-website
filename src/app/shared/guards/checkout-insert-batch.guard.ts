@@ -25,12 +25,11 @@ export class CheckoutInsertBatchGuard implements CanDeactivate<CanComponentDeact
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    var result = true;
     if (localStorage.getItem('ImportMedicineList') != null) {
       if (JSON.parse(localStorage.getItem('ImportMedicineList')).length > 0) {
         this.confirmModal = this.modal.confirm({
-          nzTitle: 'Bạn chưa nhập thuốc vào lô xong?',
-          nzContent: 'Bạn có chắc bạn muốn hủy và đóng cửa sổ này không?',
+          nzTitle: '<i>Bạn chưa nhập thuốc vào lô xong?</i>',
+          nzContent: 'Bạn có chắc bạn muốn xóa và đóng cửa sổ này không?',
           nzWidth: '35%',
           nzMaskClosable: false,
           nzClosable: false,

@@ -26,56 +26,61 @@
             <div class="header-info">
                 <span class="font-weight-semibold font-size-16 text-teal-green">Nhập Kì (tháng - năm)</span>
                 <span>
-                    {{ importBatchDetail.periodicInventory.month }} -
-                    {{ importBatchDetail.periodicInventory.year }}
+                    {{ importBatchDetail.periodicByMonth }} -
+                    {{ importBatchDetail.periodicByYear }}
                 </span>
             </div>
         </div>
-        <nz-divider style="border: 1px solid #f0f0f0ba"></nz-divider>
+        <nz-divider class="divider-border"></nz-divider>
     </div>
     <div>
-        <nz-spin [nzSpinning]="importMedicineLoading" nzTip="Đang xử lý...">
-            <div class="d-flex flex-column justify-content-between" style="min-height: 350px;">
-                <nz-table #nzTable [nzData]="importMedicineList" [nzFrontPagination]="false"
-                    [nzScroll]="{ x: '1100px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize"
-                    [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
-                    <thead>
-                        <tr>
-                            <th>Dược phẩm</th>
-                            <th nzAlign='center'>Số lượng</th>
-                            <th nzAlign='center'>Đơn vị</th>
-                            <th nzAlign='center'>Trạng thái</th>
-                            <th nzAlign='right'>Đơn giá</th>
-                            <!-- <th nzWidth="80px" nzRight></th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let data of importMedicineList; index as i">
-                            <td>
-                                <span class="text-link font-weight-semibold"
-                                    (click)="detailImportMedicine(importBatchDetail.id, data)"> {{ data.medicine.name }}
-                                </span>
-                            </td>
-                            <td nzAlign='center'>{{ data.quantity }}</td>
-                            <td nzAlign='center'>{{data.medicineUnit.name}}</td>
-                            <td nzAlign='center'>{{ data.importMedicineStatus.statusImportMedicine }}</td>
-                            <td nzAlign='right'>{{ data.price.toLocaleString('vi') }} ₫</td>
+        <nz-spin [nzSpinning]="detailMedicineLoading" nzTip="Đang lấy dữ liệu...">
+            <nz-spin [nzSpinning]="importMedicineLoading" nzTip="Đang xử lý...">
+                <div class="d-flex flex-column justify-content-between" style="min-height: 350px;">
+                    <nz-table #nzTable [nzData]="importMedicineList" [nzFrontPagination]="false"
+                        [nzScroll]="{ x: '1100px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize"
+                        [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
+                        <thead>
+                            <tr>
+                                <th>Dược phẩm</th>
+                                <th nzAlign='center'>Số lượng</th>
+                                <th nzAlign='center'>Đơn vị</th>
+                                <th nzAlign='center'>Trạng thái</th>
+                                <th nzAlign='right'>Đơn giá</th>
+                                <!-- <th nzWidth="80px" nzRight></th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                            <!-- <td nzRight>
+                            <tr *ngFor="let data of importMedicineList; index as i">
+                                <td>
+                                    <span class="text-link font-weight-semibold"
+                                        (click)="detailImportMedicine(importBatchDetail.id, data.id)"> {{
+                                        data.medicineName }}
+                                    </span>
+                                </td>
+                                <td nzAlign='center'>{{ data.quantity }}</td>
+                                <td nzAlign='center'>{{data.medicineUnit.name}}</td>
+                                <td nzAlign='center'>{{ data.statusImportMedicine }}</td>
+                                <td nzAlign='right'>{{ data.price.toLocaleString('vi') }} ₫</td>
+
+                                <!-- <td nzRight>
                                 <a style="color: #1890ff" (click)="detailImportMedicine(importBatchDetail.id, data)">
                                     Chi tiết
                                 </a>
                             </td> -->
-                        </tr>
-                    </tbody>
-                </nz-table>
-                <div style="margin: 10px; width: 200px;">
-                    <button nz-button nzType="primary" nzBlock nzSize="large"
-                        (click)="addImportMedicine(importBatchDetail.id)">
-                        <span>Thêm dược phẩm</span>
-                    </button>
+                            </tr>
+
+                        </tbody>
+                    </nz-table>
+                    <div style="margin: 10px; width: 200px;">
+                        <button nz-button nzType="primary" nzBlock nzSize="large"
+                            (click)="addImportMedicine(importBatchDetail.id)">
+                            <span>Thêm dược phẩm</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </nz-spin>
         </nz-spin>
     </div>
 

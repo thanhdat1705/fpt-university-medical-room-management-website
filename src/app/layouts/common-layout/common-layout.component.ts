@@ -62,7 +62,7 @@ export class CommonLayoutComponent {
                 path += route.routeConfig.path;
             }
         } else {
-            label = 'Trang chính';
+            label = 'Trang chủ';
             path += 'medicine-management/medicine-list';
         }
 
