@@ -6,6 +6,7 @@ export class TreatmentInformationDetail {
     medicineInInventoryDetailId: string;
     quantity: number;
     unitName: string;
+    ExpiredDate: string
     // constructor(medicineInInventoryId: string, quantity: number, indicateToDrink: string) {
     //     this.medicineInInventoryId = medicineInInventoryId;
     //     this.quantity = quantity;

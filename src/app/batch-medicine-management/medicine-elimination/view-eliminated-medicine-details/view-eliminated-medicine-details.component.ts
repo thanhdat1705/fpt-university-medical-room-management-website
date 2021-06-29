@@ -20,6 +20,7 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
   numberPattern = '[0-9]*';
   isEditing = false;
   totalQuantity: number;
+  param = 'quantity, medicine.name, createDate, updateDate, reason, medicineInInventoryDetail.importMedicine, medicineInInventoryDetail, medicine.medicineSubGroup, medicine.medicineClassification, medicine.medicineUnit';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,7 +34,7 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
     this.eliminatedMedicineDetailsForm = this.formBuilder.group(
       {
-        medicineInInventoryId: [''],
+        medicineInInventoryDetailId: [''],
         quantity: [''
           // Validators.max(this.eliminatedMedicineDetails.batchMedicineInInventory.quantity),
         ],
@@ -63,16 +64,16 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
 
   getEliminatedMedicineDetails() {
     this.disableUpdate();
-    this.summaryService.getEliminatedMedicineDetails(this.id).subscribe(
+    this.summaryService.getEliminatedMedicineDetails(this.id, this.param).subscribe(
       (response) => {
         this.eliminatedMedicineDetails = response.data;
         console.log(this.eliminatedMedicineDetails);
         this.eliminatedMedicineDetailsForm.setValue({
-          medicineInInventoryId: this.eliminatedMedicineDetails.medicineInInventory.id,
+          medicineInInventoryDetailId: this.eliminatedMedicineDetails.medicineInInventoryDetail.id,
           quantity: this.eliminatedMedicineDetails.quantity,
           reason: this.eliminatedMedicineDetails.reason,
         });
-        this.totalQuantity = this.eliminatedMedicineDetails.medicineInInventory.quantity + this.eliminatedMedicineDetails.quantity
+        this.totalQuantity = this.eliminatedMedicineDetails.medicineInInventoryDetail.quantity + this.eliminatedMedicineDetails.quantity
         this.eliminatedMedicineDetailsForm.controls['quantity'].setValidators([
           Validators.pattern(this.numberPattern),
           Validators.required,

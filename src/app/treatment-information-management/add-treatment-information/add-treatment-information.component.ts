@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Department } from 'src/app/shared/models/department';
 import { TreatmentInformationDetail } from 'src/app/shared/models/treatment-information-details'
-import { SearchRequest } from 'src/app/shared/requests/search-request';
+import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { InsertTreatmentInformationRequest } from 'src/app/shared/requests/treatment-information/insert-treatment-informationn-request';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { TreatmentInformationService } from 'src/app/shared/services/treatment-information/treatment-information.service';
@@ -14,6 +14,7 @@ import { GeneralHelperService } from 'src/app/shared/services/general-helper.ser
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Observer } from 'rxjs';
+import { Account } from 'src/app/shared/models/account';
 
 
 @Component({
@@ -25,21 +26,48 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   insertTreatmentInformationForm: FormGroup;
   departmentList: Department[] = [];
-  listDiseaseStatus = ['Tim', 'Gans'];
+  diseaseStatusList = [];
+  patientDeseaseStatusList = [];
   file: File;
+  searchRecord: Record<string, ValueCompare> = {};
+  DeseaseStatusSearchRecord: Record<string, ValueCompare> = {};
+  patientList: Patient[];
+  patient: Patient;
+  medicalStaff : Account = JSON.parse(localStorage.getItem("user"));
   insertDepartmentRequest: Department = {
     name: '',
     description: '',
   };
 
+  searchPatientRequest: SearchRequest = {
+    limit: 1,
+    page: 0,
+    searchValue: this.searchRecord,
+    selectFields: "id, internalCode, name, gender, departmentId, allergyDescription",
+    sortField: '',
+    sortOrder: 0
+  }
 
+  patientInternalCodeSearchValueCompare: ValueCompare = {
+    value: '',
+    compare: 'Contains'
+  }
+
+  patientDetailsValueCompare: ValueCompare = {
+    value: '',
+    compare: 'Equals'
+  }
+
+  deseaseStatusValueCompare: ValueCompare = {
+    value: '',
+    compare: 'Contains'
+  }
 
   reader = new FileReader();
   url: any;
   fileName: string;
 
   treatmentInformation: TreatmentInformation[];
-
   treatmentInformationDetails: TreatmentInformationDetail[];
 
   getTreatmentInformationDetails() {
@@ -62,6 +90,8 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   ]
 
+
+
   searchDepartmentRequest: SearchRequest = {
     limit: 100,
     page: 0,
@@ -69,6 +99,17 @@ export class AddTreatmentInformationComponent implements OnInit {
     selectFields: "id, name",
     sortField: "",
     sortOrder: 0
+  }
+
+  searchDeseaseStatusRequest: SearchRequest = {
+
+    limit: 10,
+    page: 0,
+    searchValue: this.DeseaseStatusSearchRecord,
+    selectFields: "id, name",
+    sortField: "",
+    sortOrder: 0
+
   }
 
   constructor(
@@ -85,29 +126,8 @@ export class AddTreatmentInformationComponent implements OnInit {
     })
   }
 
-  onFileSelected(event) {
-    this.file = event.target.files[0];
-    console.log('Got file' + this.file);
-    if (this.file) {
-      this.reader.readAsDataURL(this.file);
-      this.reader.onload = (_event) => {
-        this.url = this.reader.result;
-      }
-      this.fileName = this.file.name;
-    }
-  }
-
-  insertIndicationToDrink(id: any, indicationToDrink: any) {
-    for (let i = 0; i < this.treatmentInformation.length; i++) {
-      if (this.treatmentInformation[i].medicineId == id) {
-        this.treatmentInformation[i].IndicationToDrink = indicationToDrink;
-        break;
-      }
-    }
-  }
-
   ngOnInit(): void {
-    this.showMedicineModal();
+    
     this.getTreatmentInformationDetails();
     this.getAllDepartment();
     this.insertTreatmentInformationForm = this.formBuilder.group({
@@ -131,22 +151,112 @@ export class AddTreatmentInformationComponent implements OnInit {
         [
 
         ]],
-      diseaseStatusNames: ['',
-        [
-          Validators.required,
-        ]]
+      diseaseStatusNames: [[],
+      [
+        Validators.required,
+      ]]
     });
     console.log(this.treatmentInformation);
 
   }
 
+
+  searchPatient() {
+    this.summaryService.searchPatient(this.searchPatientRequest).subscribe(
+      (response) => {
+        console.log(response);
+        this.patientList = response.data.data;
+        if (this.patientList.length != 0) {
+          this.patient = this.patientList[0];
+          console.log(this.patient);
+          this.insertTreatmentInformationForm.setValue({
+            internalCode: this.patient.internalCode,
+            name: this.patient.name,
+            gender: this.patient.gender,
+            departmentId: this.patient.departmentId,
+            allergyDescription: this.patient.allergyDescription,
+            diseaseStatusNames: this.diseaseStatusList
+          });
+        } else {
+          this.insertTreatmentInformationForm.setValue({
+            internalCode: '',
+            name: '',
+            gender: '',
+            departmentId: '',
+            allergyDescription: '',
+            diseaseStatusNames: this.diseaseStatusList
+          });
+        }
+
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+  searchDeseaseStatus() {
+    this.summaryService.searchDeseaseStatus(this.searchDeseaseStatusRequest).subscribe(
+      (response) => {
+        this.diseaseStatusList = response.data.data;
+        console.log('diseaseStatusList', this.diseaseStatusList);
+        console.log('patient desease: ' + this.patientDeseaseStatusList)
+      }, (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+  onSearchDeseaseStatus(value: any) {
+    console.log(value);
+    this.generalService.getValueCompare(value, this.deseaseStatusValueCompare, 'name', this.DeseaseStatusSearchRecord);
+    this.searchDeseaseStatus();
+
+  }
+
+  patientIntetrnalCodeInputChange(value: string) {
+    console.log('value: ' + value)
+    if (value !== '') {
+      this.generalService.getValueCompare(value, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
+      this.searchPatient();
+    }
+  }
+
+  getPatientDetails() {
+
+  }
+
+  onFileSelected(event) {
+    this.file = event.target.files[0];
+    console.log('Got file' + this.file);
+    if (this.file) {
+      this.reader.readAsDataURL(this.file);
+      this.reader.onload = (_event) => {
+        this.url = this.reader.result;
+      }
+      this.fileName = this.file.name;
+    }
+  }
+
+  insertIndicationToDrink(id: any, indicationToDrink: any) {
+    for (let i = 0; i < this.treatmentInformation.length; i++) {
+      if (this.treatmentInformation[i].medicineId == id) {
+        this.treatmentInformation[i].IndicationToDrink = indicationToDrink;
+        break;
+      }
+    }
+  }
+
+
   chk() {
-    console.log(this.listDiseaseStatus);
+    console.log(this.insertTreatmentInformationForm.get('diseaseStatusNames').value);
   }
 
   get f() {
     return this.insertTreatmentInformationForm.controls;
   }
+
+
 
   addTreatmentInformation(data: any) {
 
@@ -177,21 +287,21 @@ export class AddTreatmentInformationComponent implements OnInit {
     //   treatmentInformationForm.append('TreatmentInformations', JSON.stringify(s));
     // });
 
-    for (let i = 0; i < this.listDiseaseStatus.length; i++) {
-      treatmentInformationForm.append('DiseaseStatusNames['+i+']', this.listDiseaseStatus[i]);
+    for (let i = 0; i < this.patientDeseaseStatusList.length; i++) {
+      treatmentInformationForm.append('DiseaseStatusNames[' + i + ']', this.patientDeseaseStatusList[i]);
     }
 
     for (let i = 0; i < this.treatmentInformation.length; i++) {
-      treatmentInformationForm.append('TreatmentInformations['+i+'].medicineId', this.treatmentInformation[i].medicineId);
-      treatmentInformationForm.append('TreatmentInformations['+i+'].quantity', this.treatmentInformation[i].quantity.toString());
-      treatmentInformationForm.append('TreatmentInformations['+i+'].indicationToDrink', this.treatmentInformation[i].IndicationToDrink);
+      treatmentInformationForm.append('TreatmentInformations[' + i + '].medicineId', this.treatmentInformation[i].medicineId);
+      treatmentInformationForm.append('TreatmentInformations[' + i + '].quantity', this.treatmentInformation[i].quantity.toString());
+      treatmentInformationForm.append('TreatmentInformations[' + i + '].indicationToDrink', this.treatmentInformation[i].IndicationToDrink);
 
     }
 
     for (let i = 0; i < this.treatmentInformationDetails.length; i++) {
-      treatmentInformationForm.append('TreatmentInformationDetails['+i+'].medicineInInventoryDetailId', this.treatmentInformationDetails[i].medicineInInventoryDetailId);
-      treatmentInformationForm.append('TreatmentInformationDetails['+i+'].quantity', this.treatmentInformationDetails[i].quantity.toString());
-      
+      treatmentInformationForm.append('TreatmentInformationDetails[' + i + '].medicineInInventoryDetailId', this.treatmentInformationDetails[i].medicineInInventoryDetailId);
+      treatmentInformationForm.append('TreatmentInformationDetails[' + i + '].quantity', this.treatmentInformationDetails[i].quantity.toString());
+
     }
 
     // treatmentInformationForm.append('TreatmentInformations', JSON.stringify(this.treatmentInformation));
@@ -199,12 +309,14 @@ export class AddTreatmentInformationComponent implements OnInit {
     console.log("code" + treatmentInformationForm.get('Patient.InternalCode'));
     console.log("department" + treatmentInformationForm.get('Patient.DepartmentId'));
 
-    console.log("TreatmentInformationDetails" + treatmentInformationForm.get('TreatmentInformationDetails'));
-    console.log("TreatmentInformations" + treatmentInformationForm.get('TreatmentInformations'));
+    // console.log("TreatmentInformationDetails" + treatmentInformationForm.get('TreatmentInformationDetails'));
+    // console.log("TreatmentInformations" + treatmentInformationForm.get('TreatmentInformations'));
 
 
 
-    console.log(treatmentInformationForm.getAll('TreatmentInformationDetails'));
+    // console.log(treatmentInformationForm.getAll('TreatmentInformationDetails'));
+    // console.log(treatmentInformationForm.getAll('DiseaseStatusNames'));
+
     // this.TreatmentInformationAddRequest.patient.Name = data.name;
     // this.TreatmentInformationAddRequest.patient.DepartmentId = data.departmentId;
     // this.TreatmentInformationAddRequest.patient.AllergyDescription = data.allergyDescription;
@@ -263,8 +375,8 @@ export class AddTreatmentInformationComponent implements OnInit {
     );
   }
 
-//Upload image
- loading = false;
+  //Upload image
+  loading = false;
   avatarUrl?: string;
 
 
@@ -311,5 +423,14 @@ export class AddTreatmentInformationComponent implements OnInit {
         this.loading = false;
         break;
     }
+  }
+
+  displayTipTreatmentInformationDetails(id: any) {
+    const treatment = this.treatmentInformationDetails.filter(treatment => treatment.medicineId.includes(id));
+    var tip;
+    for (let i = 0; i < treatment.length; i++) {
+      tip += tip[i].quantity + ' ' + tip[i].unitName + ' có hạn sử dụng' + tip[i].ExpiredDate
+    }
+    return tip;
   }
 }

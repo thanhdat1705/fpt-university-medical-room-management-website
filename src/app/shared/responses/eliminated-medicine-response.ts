@@ -1,5 +1,6 @@
 import { Medicine } from "../models/medicine";
 import { MedicineClassificationResponse } from "./medicine-classification/medicine-classification-response";
+import { MedicineInInventoryDetailsResponse } from "./medicine-in-inventory-details/medicine-in-inventory-details";
 import { MedicineInInventoryResponse } from "./medicine-in-inventory/medicine-in-inventory";
 import { MedicineSubgroupResponse } from "./medicine-subgroup/medicine-subgroup-response";
 import { MedicineUnitResponse } from "./medicine-unit/medicine-unit-response";
@@ -12,7 +13,7 @@ export interface EliminatedMedicineResponse {
     createDate: Date;
     reason: string;
     medicineUnit: MedicineUnitResponse;
-    medicineInInventory: MedicineInInventoryResponse;
+    medicineInInventoryDetail: MedicineInInventoryDetailsResponse;
     medicineSubgroup: MedicineSubgroupResponse;
     medicineClassification: MedicineClassificationResponse;
     medicine: Medicine;

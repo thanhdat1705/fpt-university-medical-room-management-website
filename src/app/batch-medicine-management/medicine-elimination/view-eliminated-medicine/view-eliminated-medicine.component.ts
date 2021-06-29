@@ -9,6 +9,7 @@ import { MedicineClassificationResponse } from 'src/app/shared/responses/medicin
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
+import { MedicineEliminationService } from 'src/app/shared/services/medicine-elimination/medicine-elimination.service';
 
 @Component({
   selector: 'app-view-eliminated-medicine',
@@ -18,7 +19,7 @@ import { GeneralHelperService } from 'src/app/shared/services/general-helper.ser
 
 export class ViewEliminatedMedicineComponent implements OnInit {
 
-  selectFields = "Id, Quantity, CreateDate, Reason, Medicine.Name, Medicine.MedicineUnit, medicineInInventory, Medicine.MedicineSubgroup, Medicine.MedicineClassification";
+  selectFields = "id, quantity, createDate, medicine.name, medicine.medicineUnit, medicineInInventoryDetail, medicine.medicineClassification, medicine.medicineSubgroup";
   eliminatedMedicineList: EliminatedMedicineResponse[];
   loading = false;
   pageSize = 3;
@@ -49,7 +50,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
 
   constructor(
     private summaryService: SummaryService,
-    private medicineService: MedicineService,
+    private medicineEliminationService: MedicineEliminationService,
     private generalService: GeneralHelperService
   ) { }
 
@@ -147,7 +148,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrder = 0 : this.sortOrder = 1;
-    sortField == null ? this.sortField = 'CreatedDate' : this.sortField = sortField;
+    sortField == null ? this.sortField = 'medicineInInventoryDetail.createdDate' : this.sortField = sortField;
 
     if (sortOrder == "ascend") {
       this.sortOrder = 1;
@@ -164,6 +165,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   searchEliminatedMedicine() {
     this.summaryService.searchEliminateMedicine(this.searchEliminatedMedicineRequest).subscribe(
       (response) => {
+        console.log(response);
         this.getData(response.data);
         this.loading = false;
 
@@ -178,8 +180,14 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   deletedEliminatedMedicine(id: any) {
     this.summaryService.deleteEliminatedMedicineDetails(id).subscribe(
       (response) => {
-        this.getData(response.data);
+        this.pageIndex = 1;
+        this.sortOrder = 0;
+        this.searchRecord = null;
+        this.sortField = "CreateDate";
         this.searchEliminatedMedicine();
+        this.generalService.messageNz('success', `Đã xóa lô hủy`);
+
+        // this.
       }, (error) => {
         console.log(error);
       }
@@ -198,7 +206,5 @@ export class ViewEliminatedMedicineComponent implements OnInit {
     this.total = responseData.info.totalRecord;
     console.log('total: ' + this.total);
   }
-
-
 
 }

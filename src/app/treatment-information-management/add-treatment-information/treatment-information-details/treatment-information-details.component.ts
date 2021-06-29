@@ -245,7 +245,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     );
   }
 
-  createTreatmentDetails(id: string, quantity: any, medicineId: string, medicineName: string, unitName: string) {
+  createTreatmentDetails(id: string, quantity: any, medicineId: string, medicineName: string, unitName: string, expiredDate: string) {
 
     this.isExistInDetails = false;
     if (this.setOfCheckedId.has(id)) {
@@ -257,6 +257,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
         treatmentDetailsObj.medicineId = medicineId;
         treatmentDetailsObj.medicineName = medicineName;
         treatmentDetailsObj.unitName = unitName;
+        treatmentDetailsObj.ExpiredDate = expiredDate;
         console.log(treatmentDetailsObj.medicineId);
         this.treatmentDetaisList.push(treatmentDetailsObj);
         this.isExistInDetails = true;

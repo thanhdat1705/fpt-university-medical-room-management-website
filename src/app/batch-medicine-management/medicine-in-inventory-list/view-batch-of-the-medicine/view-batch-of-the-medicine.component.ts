@@ -72,7 +72,10 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
     private medicineEliminateService: MedicineEliminationService,
     private modalService: NzModalService,
   ) {
-
+    this.medicineEliminateService.eliminateMedicineComponent.subscribe(res => {
+      this.searchMedicineInInventoryDetails();
+      this.getMedicineInInventory();
+    })
   }
 
   getMedicineInInventory(){
@@ -89,9 +92,10 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
     );
   }
 
-  showEliminateMedicineModel(id: any, name: any, unitName: any, quantity: number): void {
-    this.medicineEliminateService.setMedicineId(id);
+  showEliminateMedicineModel(id: any, batch: any, name: any, unitName: any, quantity: number): void {
+    this.medicineEliminateService.setMedicineInInventoryDetailsId(id);
     this.medicineEliminateService.setMedicineUnit(unitName);
+    this.medicineEliminateService.setMedicineBatch(batch);
     this.medicineEliminateService.setMedicineName(name);
     this.medicineEliminateService.setMedicineQuantity(quantity);
     this.modalService.create({

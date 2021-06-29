@@ -48,7 +48,10 @@ import {
   UrlServerAPIAddImportMedicine,
   UrlServerAPIGetDetailImportBatch,
   UrlServerAPIAddImportBatch,
-  UrlServerAPISearchImportBatch
+  UrlServerAPISearchImportBatch,
+  UrlServerAPISearchTreatment,
+  UrlServerAPISearchPatient,
+  UrlServerAPISearchDeseaseStatus
 
 
 } from '../models/url-api';
@@ -273,8 +276,8 @@ export class SummaryService {
 
   }
 
-  public getEliminatedMedicineDetails(id: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPIGetEliminatedMedicineDetails + "/" + id, { headers: this.headers });
+  public getEliminatedMedicineDetails(id: any, param: any): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPIGetEliminatedMedicineDetails + "/" + id+"?SelectFields="+param, { headers: this.headers });
   }
 
   public updateEliminatedMedicineDetails(id: any, data: any): Observable<ResponseServer> {
@@ -319,6 +322,18 @@ export class SummaryService {
 
   public addTreatmentInformation(data: any){
     return this.http.post<ResponseServer>(UrlServerAPIAddTreatmentInformation, data, { headers: this.headers });
+  }
+
+  public searchTreatment(data: any){
+    return this.http.post<ResponseServer>(UrlServerAPISearchTreatment, data);
+  }
+
+  public searchPatient(data: any){
+    return this.http.post<ResponseServer>(UrlServerAPISearchPatient, data);
+  }
+
+  public searchDeseaseStatus(data: any){
+    return this.http.post<ResponseServer>(UrlServerAPISearchDeseaseStatus, data);
 
   }
 
