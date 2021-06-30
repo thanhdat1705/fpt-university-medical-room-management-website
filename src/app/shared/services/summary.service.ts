@@ -54,7 +54,8 @@ import {
   UrlServerAPIAddRequestBuyMedicine,
   UrlServerAPISearchTreatment,
   UrlServerAPISearchPatient,
-  UrlServerAPISearchDeseaseStatus
+  UrlServerAPISearchDeseaseStatus,
+  UrlServerAPIGgetTreatment
 
 
 } from '../models/url-api';
@@ -251,7 +252,7 @@ export class SummaryService {
 
   public getDetailImportBatch(id: string, selectFields: string): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIGetDetailImportBatch + id + '?SelectFields=' + selectFields);
-  } 
+  }
 
   //  Import Medicine
 
@@ -283,7 +284,7 @@ export class SummaryService {
   }
 
   public getEliminatedMedicineDetails(id: any, param: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPIGetEliminatedMedicineDetails + "/" + id+"?SelectFields="+param, { headers: this.headers });
+    return this.http.get<ResponseServer>(UrlServerAPIGetEliminatedMedicineDetails + "/" + id + "?SelectFields=" + param, { headers: this.headers });
   }
 
   public updateEliminatedMedicineDetails(id: any, data: any): Observable<ResponseServer> {
@@ -323,29 +324,35 @@ export class SummaryService {
 
   // Department
 
-  public addDepartment(data: any){
+  public addDepartment(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPIAddDepartment, data);
   }
 
-  public searchDepartment(data: any){
+  public searchDepartment(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPISearchDepartment, data);
   }
 
   //treatment information
 
-  public addTreatmentInformation(data: any){
+  public addTreatmentInformation(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPIAddTreatmentInformation, data, { headers: this.headers });
   }
 
-  public searchTreatment(data: any){
+  public searchTreatment(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPISearchTreatment, data);
   }
 
-  public searchPatient(data: any){
+  public searchPatient(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPISearchPatient, data);
   }
 
-  public searchDeseaseStatus(data: any){
+  public getTreatmentDetails(id: any, params: any) {
+    return this.http.get<ResponseServer>(UrlServerAPIGgetTreatment + "/" + id + "?SelectFields=" + params);
+
+  }
+
+
+  public searchDeseaseStatus(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPISearchDeseaseStatus, data);
 
   }

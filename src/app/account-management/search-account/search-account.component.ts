@@ -89,6 +89,8 @@ export class SearchAccountComponent implements OnInit {
   searchForm: FormGroup;
   selectField = "Id, InternalCode, DisplayName, Role, Active";
 
+
+
   ngOnInit(): void {
     console.log(this.searchAccountRequest);
     this.searchRecord['RoleId'] = null;
@@ -174,7 +176,7 @@ export class SearchAccountComponent implements OnInit {
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrder = 0 : this.sortOrder = 1;
-    sortField == null ? this.sortColumn = 'CreatedDate' : this.sortColumn = sortField;
+    sortField == null ? this.sortColumn = '' : this.sortColumn = sortField;
     if (sortOrder == "ascend") {
       this.sortOrder = 1;
     } else if (sortOrder == "descend") {

@@ -1,6 +1,6 @@
 import { Patient } from "../../models/patient";
 
-export interface treatmentSearchResponse{
+export interface TreatmentSearchResponse{
     id: string,
     createAt: string,
     confirmSignature: string,

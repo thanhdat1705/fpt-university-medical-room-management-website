@@ -20,18 +20,8 @@
         </button>
     </ng-template>
 
-    <br><br>
     <div class="search-filter">
-        <!-- <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
-            <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchMedicineValue" />
-        </nz-input-group>
-        <ng-template #searchIconButton>
-            <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton"
-                (click)="searchEliminatedMedicineName()">
-                <i nz-icon nzType="search" nzTheme="outline"></i>
-            </button>
-        </ng-template> -->
-        <br><br>
+        <br>
 
         <div class="select-wrap">
             <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
@@ -41,23 +31,31 @@
                     [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)" style="width: 250px;"
                     nzFormat="dd-MM-yyyy"></nz-range-picker>
             </div>
-            <nz-select class="select-w" nzPlaceHolder="Giới tính" nzAllowClear [(ngModel)]="genderFilterValue"
-                (ngModelChange)="onSearchGender()">
-                <nz-option *ngFor="let option of gender" [nzLabel]="option.name" [nzValue]="option.id">
-                </nz-option>
-            </nz-select>
-            <nz-select class="select-w" nzPlaceHolder="Phòng bang" nzAllowClear [(ngModel)]="departmentFilterValue"
-                (ngModelChange)="onSearchDepartment()">
-                <nz-option *ngFor="let option of departmentList" [nzLabel]="option.name" [nzValue]="option.id">
-                </nz-option>
-            </nz-select>
+            <div class="filter">
+                <span class="label">Giới tính: </span>
+                <nz-select class="select-w" nzPlaceHolder="Giới tính" nzAllowClear [(ngModel)]="genderFilterValue"
+                    (ngModelChange)="onSearchGender()">
+                    <nz-option *ngFor="let option of gender" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+            <div class="filter">
+                <span class="label">Phòng ban: </span>
+                <nz-select class="select-w" nzPlaceHolder="Phòng bang" nzAllowClear [(ngModel)]="departmentFilterValue"
+                    (ngModelChange)="onSearchDepartment()">
+                    <nz-option *ngFor="let option of departmentList" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+
+
             <br><br>
         </div>
     </div>
 
     <nz-table class="medicine-table" #colSpanTable [nzData]="treatmentList" nzTableLayout="fixed" nzBordered
         [nzFrontPagination]="false" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
-        [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)">
+        [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)" [nzLoading]="loading">
         <thead>
             <tr>
                 <th nzWidth="10%" nzColumnKey="InternalCode">Ngày</th>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
-import { treatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
+import { TreatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { endOfMonth, startOfMonth } from 'date-fns';
@@ -10,7 +10,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 export interface treatmentSearchTable {
   date: string;
-  treatmentInfor: treatmentSearchResponse[];
+  treatmentInfor: TreatmentSearchResponse[];
 }
 
 
@@ -21,13 +21,14 @@ export interface treatmentSearchTable {
 })
 export class ViewTreatmentInformationListComponent implements OnInit {
 
-  treatmentList: treatmentSearchResponse[];
+  treatmentList: TreatmentSearchResponse[];
   treatmentTableData: treatmentSearchTable[] = [];
   pageSize = 10;
   pageIndex = 1;
   searchRecord: Record<string, ValueCompare> = {};
   searchRecordDepartment: Record<string, ValueCompare> = {};
   total = 0;
+  loading = true;
   ranges = { 'Hôm nay': [new Date(), new Date()], 'Tháng này': [startOfMonth(new Date()), endOfMonth(new Date())] };
   dateRange: Date[];
   genderFilterValue: string;
@@ -36,7 +37,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   selectedSearchAttribute = '';
   searchTreatmentValue;
   selectedSearchRole = '';
-  
+
   searchAttributelist = [
     {
       id: 'name',
@@ -145,8 +146,12 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     this.summaryService.searchTreatment(this.treatmentSearchRequest).subscribe(
       (response) => {
         this.getData(response.data);
+        this.loading = false;
+
       }, (error) => {
         console.log(error);
+        this.loading = false;
+
       }
     );
   }
@@ -168,7 +173,6 @@ export class ViewTreatmentInformationListComponent implements OnInit {
       this.treatmentSearchRequest.page = this.treatmentSearchRequest.page - 1;
       console.log("back 1 page");
       this.searchTreatment();
-
       return;
     }
     this.treatmentList = response.data;
@@ -219,7 +223,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     this.treatmentTableData = [];
 
     for (var i = 0; i < this.treatmentList.length; i++) {
-      var treatment: treatmentSearchResponse[] = [];
+      var treatment: TreatmentSearchResponse[] = [];
       treatment.push(JSON.parse(JSON.stringify(this.treatmentList[i])));
 
       var date;
@@ -275,19 +279,19 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
 
       this.searchTreatment();
-    } else{
+    } else {
       this.generalService.createErrorNotification("Hãy chọn đầy đủ mục tìm kiếm")
     }
   }
 
-  onQueryParamsChange(params: NzTableQueryParams){
+  onQueryParamsChange(params: NzTableQueryParams) {
     this.treatmentSearchRequest.page = params.pageIndex;
     console.log(params.pageIndex);
     this.searchTreatment();
   }
 
-  getDetails(id: any){
-    
+  getDetails(id: any) {
+
   }
 
 }

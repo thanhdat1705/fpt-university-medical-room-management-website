@@ -15,6 +15,7 @@ import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Observer } from 'rxjs';
 import { Account } from 'src/app/shared/models/account';
+import { patientInternalCodeResponse } from 'src/app/shared/responses/patient/patient';
 
 
 @Component({
@@ -31,19 +32,22 @@ export class AddTreatmentInformationComponent implements OnInit {
   file: File;
   searchRecord: Record<string, ValueCompare> = {};
   DeseaseStatusSearchRecord: Record<string, ValueCompare> = {};
-  patientList: Patient[];
+  patientInternalCodeList: patientInternalCodeResponse[];
   patient: Patient;
-  medicalStaff : Account = JSON.parse(localStorage.getItem("user"));
+  medicalStaff: Account = JSON.parse(localStorage.getItem("user"));
+  selectedInternalCode: string;
   insertDepartmentRequest: Department = {
     name: '',
     description: '',
   };
 
+  selectPatientInternalCode = "id, internalCode";
+  selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
   searchPatientRequest: SearchRequest = {
     limit: 1,
     page: 0,
     searchValue: this.searchRecord,
-    selectFields: "id, internalCode, name, gender, departmentId, allergyDescription",
+    selectFields: '',
     sortField: '',
     sortOrder: 0
   }
@@ -51,6 +55,11 @@ export class AddTreatmentInformationComponent implements OnInit {
   patientInternalCodeSearchValueCompare: ValueCompare = {
     value: '',
     compare: 'Contains'
+  }
+
+  patientIdValueCompare: ValueCompare = {
+    value: '',
+    compare: 'Equals'
   }
 
   patientDetailsValueCompare: ValueCompare = {
@@ -67,7 +76,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   url: any;
   fileName: string;
 
-  treatmentInformation: TreatmentInformation[]=[];
+  treatmentInformation: TreatmentInformation[] = [];
   treatmentInformationDetails: TreatmentInformationDetail[];
 
   getTreatmentInformationDetails() {
@@ -127,7 +136,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     this.getTreatmentInformationDetails();
     this.getAllDepartment();
     this.insertTreatmentInformationForm = this.formBuilder.group({
@@ -160,14 +169,19 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   }
 
+  getPatientDetails(value: any) {
+    console.log(this.selectedInternalCode);
+    this.searchPatientRequest.selectFields = this.selectPatientDetails;
+    this.generalService.getValueCompare(this.selectedInternalCode, this.patientIdValueCompare, 'id', this.searchRecord);
+    this.generalService.getValueCompare(null, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
 
-  searchPatient() {
     this.summaryService.searchPatient(this.searchPatientRequest).subscribe(
       (response) => {
-        console.log(response);
-        this.patientList = response.data.data;
-        if (this.patientList.length != 0) {
-          this.patient = this.patientList[0];
+        this.patient = response.data.data[0];
+        console.log('patient', this.patient);
+
+        if (this.patient != null) {
+          // this.patient = this.patientList[0];
           console.log(this.patient);
           this.insertTreatmentInformationForm.setValue({
             internalCode: this.patient.internalCode,
@@ -179,15 +193,31 @@ export class AddTreatmentInformationComponent implements OnInit {
           });
         } else {
           this.insertTreatmentInformationForm.setValue({
-            internalCode: '',
+            internalCode: value,
             name: '',
             gender: '',
             departmentId: '',
             allergyDescription: '',
             diseaseStatusNames: this.diseaseStatusList
           });
+          this.generalService.createErrorNotification('Mã số không có sẵn trông hệ thống');
         }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
 
+
+  }
+
+  searchPatientInternalCode() {
+    this.searchPatientRequest.selectFields = this.selectPatientInternalCode;
+
+    this.summaryService.searchPatient(this.searchPatientRequest).subscribe(
+      (response) => {
+        console.log(response);
+        this.patientInternalCodeList = response.data.data;
       },
       (error) => {
         console.log(error);
@@ -217,13 +247,11 @@ export class AddTreatmentInformationComponent implements OnInit {
   patientIntetrnalCodeInputChange(value: string) {
     console.log('value: ' + value)
     if (value !== '') {
+      this.generalService.getValueCompare(null, this.patientIdValueCompare, 'id', this.searchRecord);
+
       this.generalService.getValueCompare(value, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
-      this.searchPatient();
+      this.searchPatientInternalCode();
     }
-  }
-
-  getPatientDetails() {
-
   }
 
   onFileSelected(event) {
@@ -426,15 +454,6 @@ export class AddTreatmentInformationComponent implements OnInit {
   }
 
   displayTipTreatmentInformationDetails(id: any) {
-    const treatment = this.treatmentInformationDetails.filter(treatment => treatment.medicineId.includes(id));
-    var tip = '';
-    for (let i = 0; i < treatment.length; i++) {
-      if(i == treatment.length-1){
-        tip += treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate +'.'
-      }else{
-        tip += treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate + ', '
-      }
-    }
-    return tip;
+    return this.treatmentService.getTipTreatmentInformationDetails(id);
   }
 }

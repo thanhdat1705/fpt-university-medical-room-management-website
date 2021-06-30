@@ -3,17 +3,17 @@
         <div class="bg-white d-flex flex-column p-h-20 p-v-10">
             <span class="text-teal-green font-size-18 font-weight-semibold">Bác sĩ</span>
             <dividing-line></dividing-line>
-           
-              <div class="info-wrapper">
+
+            <div class="info-wrapper">
                 <div class="header-info">
-                  <span class="font-weight-semibold font-size-16 text-teal-green">Tên</span>
-                  <span>{{ medicalStaff.displayName }}</span>
+                    <span class="font-weight-semibold font-size-16 text-teal-green">Tên</span>
+                    <span>{{ medicalStaff.displayName }}</span>
                 </div>
                 <div class="header-info">
-                  <span class="font-weight-semibold font-size-16 text-teal-green">Mã số</span>
-                  <span>{{ medicalStaff.internalCode }}</span>
+                    <span class="font-weight-semibold font-size-16 text-teal-green">Mã số</span>
+                    <span>{{ medicalStaff.internalCode }}</span>
                 </div>
-              </div>
+            </div>
         </div>
 
         <div class="bg-white m-t-22 m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
@@ -25,29 +25,37 @@
                 <nz-form-item>
                     <nz-form-label nzRequired class="text-label" [nzSpan]="7">
                         <span class="font-size-16">Mã số</span>
-                    </nz-form-label>
+                    </nz-form-label> 
                     <nz-form-control [nzErrorTip]="internalCodeTpl">
-                        <input nz-input placeholder="Nhập mã số"
-                            (input)='patientIntetrnalCodeInputChange(inputInternalCode.value)' style="font-size: 16px;"
-                            [nzSize]="'large'" formControlName="internalCode" #inputInternalCode
-                            [nzAutocomplete]="autoInternalCode" />
-                        <nz-autocomplete #autoInternalCode>
-                            <ng-container *ngFor="let option of patientList">
-                                <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option"
-                                    [nzLabel]="option.internalCode">
-                                    {{option.internalCode}}
+                        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+                            <input nz-input placeholder="Nhập mã số"
+                                [(ngModel)]="selectedInternalCode"
+                                (input)='patientIntetrnalCodeInputChange(inputInternalCode.value)'
+                                style="font-size: 16px;" [nzSize]="'large'" formControlName="internalCode"
+                                #inputInternalCode [nzAutocomplete]="autoInternalCode" />
+                            <nz-autocomplete #autoInternalCode>
+                                <ng-container *ngFor="let option of patientInternalCodeList">
+                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.id"
+                                       [nzLabel]="option.internalCode">
+                                        {{option.internalCode}}
+                                    </nz-auto-option>
+                                </ng-container>
+                                <nz-auto-option nzDisabled nzCustomContent>
+                                    <i nz-icon></i> Đang tìm kiếm...
                                 </nz-auto-option>
-                            </ng-container>
-                            <nz-auto-option nzDisabled nzCustomContent>
-                                <i nz-icon></i> Đang tìm kiếm...
-                            </nz-auto-option>
-                            <!-- <ng-container *ngIf="patientList.value != ''">
-                          <nz-auto-option *ngIf="patientList.length <= 0" nzDisabled nzCustomContent>
+                                <!-- <ng-container *ngIf="patientList.value != ''">
+                            <nz-auto-option *ngIf="patientList.length <= 0" nzDisabled nzCustomContent>
                             Không thấy kết quả tìm kiếm
-                          </nz-auto-option>
-                        </ng-container> -->
+                            </nz-auto-option>
+                          </ng-container> -->
 
-                        </nz-autocomplete>
+                            </nz-autocomplete>
+                        </nz-input-group>
+                        <ng-template #suffixButton>
+                            <a nz-button nzType="primary" (click)="getPatientDetails(inputInternalCode.value)"
+                                nzSize="large" nzSearch>Truy xuất</a>
+                        </ng-template>
+
                         <ng-template #internalCodeTpl let-control>
                             <ng-container *ngIf="f.internalCode.hasError('required')">
                                 <span class="error-text"> {{ generalService.showRequiredError("Mã số") }}
@@ -140,9 +148,9 @@
                         <span class="font-size-16">Tình trạng bệnh</span>
                     </nz-form-label>
                     <nz-form-control>
-                        <nz-select nzPlaceHolder="Tình trạng bệnh" nzSize="large" nzMode="tags" [(ngModel)]="patientDeseaseStatusList"
-                            (nzOnSearch)="onSearchDeseaseStatus($event)" [ngModelOptions]="{standalone: true}"
-                            nzAllowClear nzShowSearch nzServerSearch>
+                        <nz-select nzPlaceHolder="Tình trạng bệnh" nzSize="large" nzMode="tags"
+                            [(ngModel)]="patientDeseaseStatusList" (nzOnSearch)="onSearchDeseaseStatus($event)"
+                            [ngModelOptions]="{standalone: true}" nzAllowClear nzShowSearch nzServerSearch>
                             <ng-container *ngFor="let o of diseaseStatusList">
                                 <nz-option [nzValue]="o.id" [nzLabel]="o.name"></nz-option>
                             </ng-container>
@@ -204,7 +212,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let medicine of treatmentInformation">
-                        <td nzTooltipColor="green" nzTooltipTitle="{{displayTipTreatmentInformationDetails(medicine.medicineId)}}"
+                        <td nzTooltipColor="green"
+                            nzTooltipTitle="{{displayTipTreatmentInformationDetails(medicine.medicineId)}}"
                             nzTooltipPlacement="leftTop" nz-tooltip>
                             {{ medicine.medicineName }}</td>
                         <td>{{ medicine.quantity }} {{medicine.unitName}}</td>
@@ -220,7 +229,7 @@
             <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100">
                 <span class="text-teal-green font-size-18 font-weight-semibold">Chữ kí xác nhận</span>
                 <dividing-line></dividing-line>
-                <nz-form-item  style="text-align: center;">
+                <nz-form-item style="text-align: center;">
                     <nz-form-control>
                         <nz-upload class="avatar-uploader" nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false"
