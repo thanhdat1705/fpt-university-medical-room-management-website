@@ -25,7 +25,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   treatmentTableData: treatmentSearchTable[] = [];
   pageSize = 10;
   pageIndex = 1;
-  searchRecord: Record<string, ValueCompare> = {};
+  searchRecord: Map<string, ValueCompare> = new Map;
   searchRecordMap: Map<string, ValueCompare> = new Map;
 
   searchRecordDepartment: Record<string, ValueCompare> = {};
@@ -87,33 +87,33 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     }
   ]
 
-  searchDepartmentRequest: SearchRequest = {
-    limit: 100,
-    page: 0,
-    searchValue: null,
-    selectFields: "id, name",
-    sortField: "",
-    sortOrder: 0,
-  }
+  // searchDepartmentRequest: SearchRequest = {
+  //   limit: 100,
+  //   page: 0,
+  //   searchValue: null,
+  //   selectFields: "id, name",
+  //   sortField: "",
+  //   sortOrder: 0,
+  // }
 
 
 
   sortField = "createAt";
   sortOrder = 0;
   selectFields = "id,confirmSignature,createAt,accountCreateBy,isDelivered,patient,patient.department";
-  treatmentSearchRequest: SearchRequest = {
-    limit: this.pageSize,
-    page: this.pageIndex,
-    searchValue: this.searchRecord,
-    selectFields: this.selectFields,
-    sortField: this.sortField,
-    sortOrder: this.sortOrder
-  }
+  // treatmentSearchRequest: SearchRequest = {
+  //   limit: this.pageSize,
+  //   page: this.pageIndex,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.selectFields,
+  //   sortField: this.sortField,
+  //   sortOrder: this.sortOrder
+  // }
 
-  treatmentSearchRequest1 = new SearchRequest1();
-
-  treatmentSearchRequestParam = "Limit=" + this.treatmentSearchRequest.limit + "&Page=" +  this.treatmentSearchRequest.page + "&SortField=" +
-  this.treatmentSearchRequest.sortField + "&SortOrder=" + this.treatmentSearchRequest.sortOrder + "&SelectFields="+ this.treatmentSearchRequest.selectFields
+  treatmentSearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchRecord,this.selectFields);
+  departmentSearchRequest = new SearchRequest1(1,0,'',0,null,'id, name');
+  // treatmentSearchRequestParam = "Limit=" + this.treatmentSearchRequest.limit + "&Page=" +  this.treatmentSearchRequest.page + "&SortField=" +
+  // this.treatmentSearchRequest.sortField + "&SortOrder=" + this.treatmentSearchRequest.sortOrder + "&SelectFields="+ this.treatmentSearchRequest.selectFields
 
     dateRangeSelected = false;
 
@@ -148,19 +148,14 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllDepartment();
-    this.treatmentSearchRequest1.limit = this.pageSize;
-    this.treatmentSearchRequest1.page = this.pageIndex;
-    this.searchValueCompare.value = 'test';
-    this.searchRecordMap.set('testKey', null);
-    console.log(this.searchRecordMap.get('testKey'));
-    
-    this.treatmentSearchRequest1.searchValue = this.searchRecordMap;
-    this.treatmentSearchRequest1.selectFields = this.selectFields;
-    this.treatmentSearchRequest1.sortOrder = 0;
-    this.treatmentSearchRequest1.sortField = this.sortField;
+   
+    // this.searchValueCompare.value = 'test';
+    // this.searchRecordMap.set('testKey', null);
+    // console.log(this.searchRecordMap.get('testKey'));
+    this.treatmentSearchRequest.searchValue = this.searchRecord;
     this.searchTreatment();
 
-    console.log('map: ', this.treatmentSearchRequest1.getParamsString());
+    console.log('map: ', this.treatmentSearchRequest.getParamsString());
   }
 
   onSearchTreatment() {
@@ -168,7 +163,9 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   searchTreatment() {
-    this.summaryService.searchTreatment(this.treatmentSearchRequest1.getParamsString()).subscribe(
+    console.log('searchMap',this.searchRecord);
+    this.treatmentSearchRequest.searchValue = this.searchRecord
+    this.summaryService.searchTreatment(this.treatmentSearchRequest.getParamsString()).subscribe(
       (response) => {
         this.getData(response.data);
         this.loading = false;
@@ -182,7 +179,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   getAllDepartment() {
-    this.summaryService.searchDepartment(this.searchDepartmentRequest).subscribe(
+    this.summaryService.searchDepartment(this.departmentSearchRequest).subscribe(
       (response) => {
         this.departmentList = response.data.data;
         console.log(this.departmentList);
@@ -219,8 +216,8 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     if (result.length > 0) {
       this.dateRangeSelected = true;
       console.log('Từ : ', this.generalService.getYMD(result[0].toString()), ', tới: ', this.generalService.getYMD(result[1].toString()));
-      this.generalService.getValueCompare(this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00', this.searchFromDateValueCompare, 'createAt|from', this.searchRecord);
-      this.generalService.getValueCompare(this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00', this.searchToDateValueCompare, 'createAt|to', this.searchRecord);
+      this.generalService.setValueCompare(this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00', this.searchFromDateValueCompare, 'createAt|from', this.searchRecord);
+      this.generalService.setValueCompare(this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00', this.searchToDateValueCompare, 'createAt|to', this.searchRecord);
 
       this.searchTreatment();
     }
@@ -235,12 +232,12 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   onSearchGender() {
-    this.generalService.getValueCompare(this.genderFilterValue, this.genderValueCompare, 'patient.gender', this.searchRecord);
+    this.generalService.setValueCompare(this.genderFilterValue, this.genderValueCompare, 'patient.gender', this.searchRecord);
     this.searchTreatment();
   }
 
   onSearchDepartment() {
-    this.generalService.getValueCompare(this.departmentFilterValue, this.departmentValueCompare, 'patient.department.id', this.searchRecord);
+    this.generalService.setValueCompare(this.departmentFilterValue, this.departmentValueCompare, 'patient.department.id', this.searchRecord);
     this.searchTreatment();
   }
 
@@ -274,32 +271,32 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   search() {
     console.log("search:", this.searchTreatmentValue)
     if (this.selectedSearchAttribute == 'name' && this.selectedSearchRole == 'doctor') {
-      this.generalService.getValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'accountCreateBy.displayName', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'accountCreateBy.displayName', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
 
       this.searchTreatment();
     } else if (this.selectedSearchAttribute == 'name' && this.selectedSearchRole == 'patient') {
-      this.generalService.getValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'patient.name', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
 
       this.searchTreatment();
     } else if (this.selectedSearchAttribute == 'internalCode' && this.selectedSearchRole == 'doctor') {
-      this.generalService.getValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
 
 
       this.searchTreatment();
     } else if (this.selectedSearchAttribute == 'internalCode' && this.selectedSearchRole == 'patient') {
-      this.generalService.getValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
-      this.generalService.getValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
+      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
 
 
 
@@ -310,8 +307,8 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    this.treatmentSearchRequest1.page = params.pageIndex;
-    console.log(this.treatmentSearchRequest1.page);
+    this.treatmentSearchRequest.page = params.pageIndex;
+    console.log(this.treatmentSearchRequest.page);
     
     console.log(params.pageIndex);
 

@@ -83,6 +83,15 @@ export class GeneralHelperService {
         }
     }
 
+    setValueCompare(value: any, valueCompare: ValueCompare, searchRecordAttribute: string, searchRecord: Map<string, ValueCompare> = new Map) {
+        if (value != null) {
+            valueCompare.value = value;
+            searchRecord.set(searchRecordAttribute, valueCompare);
+        } else {
+            searchRecord.set(searchRecordAttribute, null);
+        }
+    }
+
     createSuccessNotification(content: string) {
         let backgroundColorSuccess = "#f6ffed";
         let posion: NzNotificationPlacement = 'topRight';
