@@ -329,7 +329,7 @@ export class SummaryService {
   }
 
   public searchDepartment(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPISearchDepartment, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchDepartment+'?'+ data);
   }
 
   //treatment information
@@ -339,7 +339,7 @@ export class SummaryService {
   }
 
   public searchTreatment(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPISearchTreatment, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchTreatment+'?'+ data);
   }
 
   public searchPatient(data: any) {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { TreatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
@@ -26,6 +26,8 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   pageSize = 10;
   pageIndex = 1;
   searchRecord: Record<string, ValueCompare> = {};
+  searchRecordMap: Map<string, ValueCompare> = new Map;
+
   searchRecordDepartment: Record<string, ValueCompare> = {};
   total = 0;
   loading = true;
@@ -91,18 +93,29 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     searchValue: null,
     selectFields: "id, name",
     sortField: "",
-    sortOrder: 0
+    sortOrder: 0,
   }
 
+
+
+  sortField = "createAt";
+  sortOrder = 0;
+  selectFields = "id,confirmSignature,createAt,accountCreateBy,isDelivered,patient,patient.department";
   treatmentSearchRequest: SearchRequest = {
     limit: this.pageSize,
     page: this.pageIndex,
     searchValue: this.searchRecord,
-    selectFields: "id, confirmSignature,createAt,accountCreateBy, isDelivered, patient, patient.department",
-    sortField: "createAt",
-    sortOrder: 0
+    selectFields: this.selectFields,
+    sortField: this.sortField,
+    sortOrder: this.sortOrder
   }
-  dateRangeSelected = false;
+
+  treatmentSearchRequest1 = new SearchRequest1();
+
+  treatmentSearchRequestParam = "Limit=" + this.treatmentSearchRequest.limit + "&Page=" +  this.treatmentSearchRequest.page + "&SortField=" +
+  this.treatmentSearchRequest.sortField + "&SortOrder=" + this.treatmentSearchRequest.sortOrder + "&SelectFields="+ this.treatmentSearchRequest.selectFields
+
+    dateRangeSelected = false;
 
   constructor(
     private summaryService: SummaryService,
@@ -135,7 +148,19 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllDepartment();
+    this.treatmentSearchRequest1.limit = this.pageSize;
+    this.treatmentSearchRequest1.page = this.pageIndex;
+    this.searchValueCompare.value = 'test';
+    this.searchRecordMap.set('testKey', null);
+    console.log(this.searchRecordMap.get('testKey'));
+    
+    this.treatmentSearchRequest1.searchValue = this.searchRecordMap;
+    this.treatmentSearchRequest1.selectFields = this.selectFields;
+    this.treatmentSearchRequest1.sortOrder = 0;
+    this.treatmentSearchRequest1.sortField = this.sortField;
     this.searchTreatment();
+
+    console.log('map: ', this.treatmentSearchRequest1.getParamsString());
   }
 
   onSearchTreatment() {
@@ -143,7 +168,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   searchTreatment() {
-    this.summaryService.searchTreatment(this.treatmentSearchRequest).subscribe(
+    this.summaryService.searchTreatment(this.treatmentSearchRequest1.getParamsString()).subscribe(
       (response) => {
         this.getData(response.data);
         this.loading = false;
@@ -285,8 +310,11 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    this.treatmentSearchRequest.page = params.pageIndex;
+    this.treatmentSearchRequest1.page = params.pageIndex;
+    console.log(this.treatmentSearchRequest1.page);
+    
     console.log(params.pageIndex);
+
     this.searchTreatment();
   }
 
