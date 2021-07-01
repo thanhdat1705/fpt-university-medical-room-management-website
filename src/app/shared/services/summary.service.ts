@@ -51,7 +51,11 @@ import {
   UrlServerAPISearchImportBatch,
   UrlServerAPIDetailImportMedicine,
   UrlServerAPIStoreNewMedicineClassification,
-  UrlServerAPIAddRequestBuyMedicine
+  UrlServerAPIAddRequestBuyMedicine,
+  UrlServerAPIGetDetailBuyMedicine,
+  UrlServerAPIDetailRequestBuyMedicine,
+  UrlServerAPISearchRequestBuyMedicine,
+  UrlServerAPIUpdateRequestBuyMedicine
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -246,7 +250,7 @@ export class SummaryService {
 
   public getDetailImportBatch(id: string, selectFields: string): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIGetDetailImportBatch + id + '?SelectFields=' + selectFields);
-  } 
+  }
 
   //  Import Medicine
 
@@ -312,23 +316,36 @@ export class SummaryService {
   //Request To Buy Medicine
   public addRquestBuyMedicine(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPIAddRequestBuyMedicine, data);
-
+  }
+  public updateRequestBuyMedicine(data: any, id: string, selectFields: string) {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateRequestBuyMedicine + id + '?SelectFields=' + selectFields, data);
+  }
+  public getDetailBuyMedicine(id: string, selectFields: string) {
+    return this.http.get<ResponseServer>(UrlServerAPIGetDetailBuyMedicine + id + '?SelectFields=' + selectFields);
+  }
+  public searchRequestBuyMedicine(data: any) {
+    return this.http.post<ResponseServer>(UrlServerAPISearchRequestBuyMedicine, data);
+  }
+  
+  //Request Buy Medicine Detail
+  public searchRequestBuyMedicineDetail(data: any) {
+    return this.http.post<ResponseServer>(UrlServerAPIDetailRequestBuyMedicine, data);
   }
 
 
   // Department
 
-  public addDepartment(data: any){
+  public addDepartment(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPIAddDepartment, data);
   }
 
-  public searchDepartment(data: any){
+  public searchDepartment(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPISearchDepartment, data);
   }
 
   //treatment information
 
-  public addTreatmentInformation(data: any){
+  public addTreatmentInformation(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPIAddTreatmentInformation, data, { headers: this.headers });
 
   }

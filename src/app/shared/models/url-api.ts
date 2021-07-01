@@ -77,3 +77,9 @@ export const UrlServerAPIDetailImportMedicine = UrlServer + '/api/v1.0/ImportMed
 
 //Request To Buy Medicine
 export const UrlServerAPIAddRequestBuyMedicine = UrlServer + '/api/v1.0/RequestBuyMedicines';
+export const UrlServerAPIUpdateRequestBuyMedicine = UrlServer + '/api/v1.0/RequestBuyMedicines/';
+export const UrlServerAPIGetDetailBuyMedicine = UrlServer + '/api/v1.0/RequestBuyMedicines/';
+export const UrlServerAPISearchRequestBuyMedicine = UrlServer + '/api/v1.0/RequestBuyMedicines/Searching';
+
+//Request To Buy Medicine Detail
+export const UrlServerAPIDetailRequestBuyMedicine = UrlServer + '/api/v1.0/RequestBuyMedicineDetails/Searching';

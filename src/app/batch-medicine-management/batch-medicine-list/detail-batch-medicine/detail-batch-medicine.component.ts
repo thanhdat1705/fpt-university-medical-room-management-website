@@ -44,7 +44,7 @@ export class DetailBatchMedicineComponent implements OnInit {
   searchFieldDetailImportMedicine = "Id, Quantity,Price, InsertDate, ExpirationDate, Description, MedicineId, Medicine, Medicine.MedicineUnit.Name as MedicineUnit, ImportMedicineStatus.StatusImportMedicine";
   searchFieldDetailImportBatch = "Id, NumberOfSpecificMedicine, TotalPrice, PeriodicInventory.Month as PeriodicByMonth, PeriodicInventory.Year as PeriodicByYear, CreateDate, UpdateDate";
   searchRecord: Record<string, ValueCompare> = {};
-  searchFields = "id, quantity, price, description, insertDate, expirationDate, importBatchId, medicine.name as medicineName, medicine.MedicineUnit as medicineUnit, importMedicineStatus.statusImportMedicine";
+  searchFields = "id, quantity, price, description, insertDate, expirationDate, importBatchId, medicine.name as medicineName, medicine.MedicineUnit as medicineUnit, statusId, importMedicineStatus.statusImportMedicine";
   searchImportMedicineRequest: SearchRequest = {
     limit: 10,
     page: 0,
@@ -79,6 +79,23 @@ export class DetailBatchMedicineComponent implements OnInit {
 
     this.getDetailImportBatch();
 
+  }
+
+  getStatus(id: number): string {
+    let status = '';
+    if (id == 1) {
+      status = "warning";
+    }
+    if (id == 2) {
+      status = "success";
+    }
+    if (id == 3) {
+      status = "error";
+    }
+    if (id == 4) {
+      status = "default";
+    }
+    return status;
   }
 
   getCreateDate(time: string) {

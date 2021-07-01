@@ -179,6 +179,22 @@ export class GeneralHelperService {
                     },
                 );
             }
+            else if (error.status == 503) {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.status,
+                    'Server đang update, vui lòng đợi trong giây lát',
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    },
+                );
+            }
             else if (error.status == 0) {
                 this.notification.error(
                     'Lỗi Hệ thống: ' + error.status,

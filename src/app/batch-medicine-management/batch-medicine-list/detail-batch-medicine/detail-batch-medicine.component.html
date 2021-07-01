@@ -1,5 +1,4 @@
 <div class="inner-content">
-
     <div class="header-content d-flex flex-column">
         <nz-divider [nzText]="heading" nzOrientation="left">
             <ng-template #heading>
@@ -61,7 +60,9 @@
                                 </td>
                                 <td nzAlign='center'>{{ data.quantity }}</td>
                                 <td nzAlign='center'>{{data.medicineUnit.name}}</td>
-                                <td nzAlign='center'>{{ data.statusImportMedicine }}</td>
+                                <td nzAlign='center'>
+                                    <nz-badge [nzStatus]="getStatus(data.statusId)" >{{ data.statusImportMedicine }}</nz-badge>
+                                </td>
                                 <td nzAlign='right'>{{ data.price.toLocaleString('vi') }} ₫</td>
 
                                 <!-- <td nzRight>

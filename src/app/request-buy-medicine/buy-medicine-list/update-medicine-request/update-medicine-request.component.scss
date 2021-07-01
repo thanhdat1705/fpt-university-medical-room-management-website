@@ -1,0 +1,56 @@
+.text-label {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: auto;
+    width: 140px;
+    @media only screen and (max-width: 992px) {
+      width: 200px;
+    }
+    @media only screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
+  
+  .form {
+    max-width: 1000px;
+    min-width: 150px;
+    line-height: 20px;
+    height: auto;
+    nz-form-item {
+      margin-bottom: 15px;
+    }
+  }
+  
+  nz-select {
+    width: 240px;
+  }
+  //   nz-divider {
+  //     margin: 4px 0;
+  //   }
+  .container {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 8px;
+  }
+  .add-item {
+    flex: 0 0 auto;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .loading-icon {
+    margin-right: 8px;
+  }
+  
+  
+  .button-a {
+    height: 42px;
+    width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    margin-bottom: 10px;
+  }
