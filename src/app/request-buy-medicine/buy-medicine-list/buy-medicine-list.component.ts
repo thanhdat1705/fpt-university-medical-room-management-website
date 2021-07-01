@@ -35,6 +35,7 @@ export class BuyMedicineListComponent implements OnInit {
   sortFieldList = "CreateDate";
 
   searchRecord: Record<string, ValueCompare> = {};
+  searchValueMap: Map<string, ValueCompare> = new Map;
   searchFields = "id, createDate, updateDate, numberOfSpecificMedicine"
   searchMedicineRequest: SearchRequest = {
     limit: 1,
