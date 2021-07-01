@@ -55,9 +55,13 @@ import {
   UrlServerAPISearchTreatment,
   UrlServerAPISearchPatient,
   UrlServerAPISearchDeseaseStatus,
-  UrlServerAPIGgetTreatment
+  UrlServerAPIGgetTreatment,
 
 
+  UrlServerAPIGetDetailBuyMedicine,
+  UrlServerAPIDetailRequestBuyMedicine,
+  UrlServerAPISearchRequestBuyMedicine,
+  UrlServerAPIUpdateRequestBuyMedicine
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -318,7 +322,20 @@ export class SummaryService {
   //Request To Buy Medicine
   public addRquestBuyMedicine(data: any) {
     return this.http.post<ResponseServer>(UrlServerAPIAddRequestBuyMedicine, data);
-
+  }
+  public updateRequestBuyMedicine(data: any, id: string, selectFields: string) {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateRequestBuyMedicine + id + '?SelectFields=' + selectFields, data);
+  }
+  public getDetailBuyMedicine(id: string, selectFields: string) {
+    return this.http.get<ResponseServer>(UrlServerAPIGetDetailBuyMedicine + id + '?SelectFields=' + selectFields);
+  }
+  public searchRequestBuyMedicine(data: any) {
+    return this.http.post<ResponseServer>(UrlServerAPISearchRequestBuyMedicine, data);
+  }
+  
+  //Request Buy Medicine Detail
+  public searchRequestBuyMedicineDetail(data: any) {
+    return this.http.post<ResponseServer>(UrlServerAPIDetailRequestBuyMedicine, data);
   }
 
 

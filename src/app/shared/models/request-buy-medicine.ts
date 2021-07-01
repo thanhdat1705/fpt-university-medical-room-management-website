@@ -10,7 +10,14 @@ export interface RequestBuyMedicineDisplay {
     medicineId: string,
     medicineName: string,
     medicineUnitId: string,
-    madicineUnitName: string,
+    medicineUnitName: string,
     quantity: number,
     note: string
+}
+
+export interface RequestBuyMedicine {
+    id: string,
+    createDate: string,
+    updateDate: string,
+    numberOfSpecificMedicine: string
 }

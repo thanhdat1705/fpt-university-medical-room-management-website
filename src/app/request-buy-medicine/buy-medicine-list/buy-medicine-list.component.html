@@ -1,6 +1,101 @@
 <div class="inner-content">
-    <p>buy-medicine-list works!</p>
+    <div class="d-flex flex-column ">
+        <div class="filter">
+            <span class="label">Ngày nhập: </span>
+            <nz-range-picker [ngClass]="{'border-selected': dateRangeSelected}" [nzRanges]="ranges"
+                [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)" style="width: 250px;"
+                nzFormat="dd-MM-yyyy"></nz-range-picker>
+        </div>
+        <!-- <div class="d-flex flex-column justify-content-between">
+            <div class="d-flex flex-row flex-wrap justify-content-start align-items-center">
+                <div class="filter">
+                    <span class="label">Ngày nhập: </span>
+                    <nz-range-picker [ngClass]="{'border-selected': dateRangeSelected}" [nzRanges]="ranges"
+                        [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)" style="width: 250px;"
+                        nzFormat="dd-MM-yyyy"></nz-range-picker>
+                </div>
+                <div class="filter">
+                    <span class="label">Kỳ nhập: </span>
+                    <nz-date-picker [ngClass]="{'border-selected': dateSelected}" nzMode="month"
+                        nzPlaceHolder="Tháng - Năm" nzFormat="MM-yyyy" [(ngModel)]="date"
+                        (ngModelChange)="onDateChange($event)" style="width: 250px;">
+                    </nz-date-picker>
+                </div>
+            </div>
+            <div class="d-flex flex-row flex-wrap justify-content-start align-items-center">
+                <form [formGroup]="priceForm" class="filter">
+                    <nz-input-group nzCompact>
+                        <span class="label">Tổng giá (₫): </span>
+                        <nz-form-item>
+                            <input type="text" nz-input placeholder="Tối thiểu" formControlName="minPrice"
+                                [ngClass]="{'border-selected': priceSelected}" style="width:110px; text-align: center;"
+                                (ngModelChange)="minPriceChange($event)" />
+                        </nz-form-item>
+                        <input type="text" disabled nz-input placeholder="~" class="demo-input-split"
+                            [ngClass]="{'border-selected': priceSelected}"
+                            style="width: 30px; border-left: 0px; border-right: 0px; pointer-events: none; background-color: rgb(255, 255, 255);" />
+                        <nz-form-item>
+                            <input type="text" nz-input placeholder="Tối đa" class="demo-input-right"
+                                [ngClass]="{'border-selected': priceSelected}" formControlName="maxPrice"
+                                (ngModelChange)="maxPriceChange($event)" />
+                        </nz-form-item>
+                    </nz-input-group>
+                </form>
+                <div class="filter">
+                    <span class="label">Số lượng </span>
+                    <nz-input-number [ngClass]="{'border-selected': quantitySelected}" id="quantity" [nzMin]="1"
+                        [nzStep]="1" nzPlaceHolder="Nhập số lượng" [ngModel]="quantity"
+                        (ngModelChange)="quantityChange($event)" style="width: 250px;">
+                    </nz-input-number>
+                </div>
+            </div>
+        </div> -->
+    </div>
 
-    <button nz-button [routerLink]="'/request-buy-medicine/create-request'">create request</button>
+    <br>
+    <nz-spin [nzSpinning]="requestListLoading" nzTip="Đang xử lý...">
+        <div class="d-flex flex-column justify-content-between" style="min-height: 360px;">
+            <nz-table #nzTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="requestList"
+                [nzScroll]="{ x: '1000px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+                (nzQueryParams)="onQueryParamsChange($event)">
+                <thead>
+                    <tr>
+                        <th nzAlign='left' nzWidth="10%">No.</th>
+                        <th nzAlign='center' nzWidth="25%" nzColumnKey="CreateDate" [nzSortFn]="true">Ngày tạo</th>
+                        <th nzAlign='center' nzWidth="25%" nzColumnKey="UpdateDate" [nzSortFn]="true">Cập nhật</th>
+                        <th nzAlign='center' nzWidth="25%" nzColumnKey="NumberOfSpecificMedicine" [nzSortFn]="true">Số dược phẩm yêu cầu</th>
+                        <th nzAlign='right' nzWidth="15%" ></th>
+                        <!-- <th nzWidth="70px"></th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of requestList; index as i">
+                        <td nzAlign='left'>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+                        <td nzAlign='center'>
+                            <span class="text-link font-weight-semibold" (click)="goToDetailScreen(data.id)">
+                                {{ getCreateTime(data.createDate) }}
+                            </span>
+                        </td>
+                        <td nzAlign='center'>{{ getCreateTime(data.updateDate) }}</td>
+                        <td nzAlign='center'>{{ data.numberOfSpecificMedicine }}</td>
+                        <td nzAlign='right'>
+                            <!-- <a style="color: #1890ff">
+                                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                            </a> -->
+                            <span class="text-link font-weight-semibold" (click)="goToUpdateScreen(data.id)">
+                                Chỉnh sửa
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+            <div style="margin: 10px; width: 220px;">
+                <button nz-button nzType="primary" nzBlock nzSize="large"
+                [routerLink]="'/request-buy-medicine/buy-medicine-list/create-request'">
+                    <span>Tạo đơn mua dược phẩm</span>
+                </button>
+            </div>
+        </div>
+    </nz-spin>
+    <!-- <button nz-button [routerLink]="'/request-buy-medicine/create-request'">create request</button> -->
 </div>
-

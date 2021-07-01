@@ -312,7 +312,7 @@ export class AddBatchMedicineComponent implements OnInit {
             console.log(response);
             this.addImportBatchLoading = false;
             localStorage.removeItem('ImportMedicineList');
-            this.generalService.messageNz('success', `Lô thuốc mới được thêm thành công`);
+            this.generalService.createSuccessNotification("Lô thuốc mới được thêm thành công");
             // this.router.navigate(['batch-medicine-management/batch-medicine-list']);
             this.router.navigate(['batch-medicine-management/batch-medicine-list/detail-batch', response.data.id]);
             // [routerLink]="['/batch-medicine-management/batch-medicine-list/detail-batch', data.id]"

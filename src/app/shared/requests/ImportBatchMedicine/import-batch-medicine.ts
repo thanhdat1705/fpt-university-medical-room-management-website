@@ -42,5 +42,6 @@ export interface SearchImportMedicine {
     importBatchId: string;
     medicineName: string;
     medicineUnit: string;
+    statusId: number;
     statusImportMedicine: string
 }

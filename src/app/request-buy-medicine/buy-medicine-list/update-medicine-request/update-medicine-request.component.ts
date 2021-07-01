@@ -1,29 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { RequestBuyMedicineDisplay } from 'src/app/shared/models/request-buy-medicine';
-import { StoreNewMedicineUnitRequest } from 'src/app/shared/requests/medicine-unit/store-new-request';
-import { RequestToBuyMedicine } from 'src/app/shared/requests/request-buy-medicine/request-to-buy-medicine';
+import { PageInfo } from 'src/app/shared/models/page-info';
+import { RequestBuyMedicine, RequestBuyMedicineDisplay } from 'src/app/shared/models/request-buy-medicine';
+import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
 import { MedicineResponseForBuy } from 'src/app/shared/responses/medicine/medicine';
-import { BuyMedicineService } from 'src/app/shared/services/batch-medicine/buy-medicine.service';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { RequestBuyMedicineService } from 'src/app/shared/services/request-buy-medicine/request-buy-medicine.service';
+import { AddMedicineRequestComponent } from '../create-request/add-medicine-request/add-medicine-request.component';
 import { v4 as uuidv4 } from 'uuid';
-import { AddMedicineRequestComponent } from './add-medicine-request/add-medicine-request.component';
+import { RequestToBuyMedicine } from 'src/app/shared/requests/request-buy-medicine/request-to-buy-medicine';
 
 @Component({
-  selector: 'app-create-request',
-  templateUrl: './create-request.component.html',
-  styleUrls: ['./create-request.component.scss']
+  selector: 'app-update-medicine-request',
+  templateUrl: './update-medicine-request.component.html',
+  styleUrls: ['./update-medicine-request.component.scss']
 })
-export class CreateRequestComponent implements OnInit {
+export class UpdateMedicineRequestComponent implements OnInit {
 
   noteMinL = 1;
   noteMaxL = 500;
@@ -52,10 +52,26 @@ export class CreateRequestComponent implements OnInit {
   classList: MedicineClassificationResponse[] = [];
   subgroupList: MedicineSubgroupResponse[] = [];
 
-  searchRecord: Record<string, ValueCompare> = {};
+  requestId: string;
+
+  pageInfo: PageInfo = { isFirstPage: true, isLastPage: false, numberOfPage: 1, info: null };
+  page: number;
+  pageLimit: number;
+
+  totalRecord!: number;
+  pageSize = 5;
+  pageIndex = 1;
+  sortOrderList = 1;
+  sortFieldList = "medicine.name";
+
   searchMedicineName: ValueCompare = {
     value: '',
     compare: 'Contains'
+  }
+  searchRecord: Record<string, ValueCompare> = {};
+  searchRequestBuyMedicineId: ValueCompare = {
+    value: '',
+    compare: 'Equals'
   }
   searchFields = "id, name";
   searchMedicineRequest: SearchRequest = {
@@ -66,27 +82,34 @@ export class CreateRequestComponent implements OnInit {
     searchValue: this.searchRecord,
     selectFields: this.searchFields,
   };
+  searchFieldsRequest = "medicineId, medicine.name as medicineName, medicineUnitId, medicineUnit.name as medicineUnitName, quantity, note"
+  searchMedicineDetailInRequest: SearchRequest = {
+    limit: 1,
+    page: 0,
+    sortField: "medicine.name",
+    sortOrder: 0,
+    searchValue: this.searchRecord,
+    selectFields: this.searchFieldsRequest,
+  };
 
-  storeNewMedicineUnitRequest: StoreNewMedicineUnitRequest = {
-    Name: "",
-    AcronymUnit: "",
-  }
   requesToBuyMedicine: RequestToBuyMedicine = {
     requestBuyMedicineDetails: this.buyMedicineListDisplay
   };
 
   selectFieldDetail = "id, createDate, updateDate, numberOfSpecificMedicine";
-  
+
   constructor(
     private fb: FormBuilder,
     private medicineService: MedicineService,
     private generalService: GeneralHelperService,
     private service: RequestBuyMedicineService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private modal: NzModalService,
     private i18n: NzI18nService,
   ) {
     this.i18n.setLocale(vi_VN);
+    this.requestId = activatedRoute.snapshot.paramMap.get('id');
 
     this.buyMedicineForm = this.fb.group({
       medicine: ['', [Validators.required]],
@@ -97,23 +120,37 @@ export class CreateRequestComponent implements OnInit {
         Validators.maxLength(this.noteMaxL)
       ]],
     })
-
   }
-  // medicine = { id: "cbc73215-cdc0-40b2-a547-55deae1d0eab", name: "Alphchoi" }
+
   ngOnInit(): void {
+    console.log(this.requestId);
+    // this.activatedRoute.fragment.subscribe(
+    //   (response) => {
+    //     this.medicineInRequestDetail = JSON.parse(JSON.stringify(response));
+    //     if (this.medicineInRequestDetail === null) {
+    //       this.getDetailBuyMedicine(this.requestId, this.selectFieldDetail);
+    //     } else {
+    //       this.searchRequestBuyMedicineDetail(this.medicineInRequestDetail.id);
+    //     }
+    //   }
+    // );
+
     this.getAllMedicineUnit();
 
-    if (localStorage.getItem('BuyMedicineListDisplay') == null) {
-      localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-      this.buyMedicineListDisplay = JSON.parse(localStorage.getItem('BuyMedicineListDisplay'));
+    if (localStorage.getItem('UpdateBuyMedicineListDisplay') == null) {
+      this.searchRequestBuyMedicineDetail(this.requestId);
+
 
     } else {
 
-      this.buyMedicineListDisplay = JSON.parse(localStorage.getItem('BuyMedicineListDisplay'));
+      this.buyMedicineListDisplay = JSON.parse(localStorage.getItem('UpdateBuyMedicineListDisplay'));
 
     }
   }
 
+  resetFormValue() {
+    this.buyMedicineForm.reset();
+  }
   get form() { return this.buyMedicineForm.controls; }
   getAllMedicineUnit() {
     this.medicineService.getAllMedicineUnit().subscribe(
@@ -154,52 +191,37 @@ export class CreateRequestComponent implements OnInit {
     )
   }
 
-  resetFormValue() {
-    // this.disable(false);
-    this.buyMedicineForm.reset();
+
+  getDetailBuyMedicine(id: string, selectFields: string) {
+    this.service.getDetailBuyMedicine(id, selectFields).subscribe(
+      (response) => {
+        this.medicineInRequestDetail = response.data;
+        console.log('requestDetail after null: ', this.medicineInRequestDetail);
+        this.searchRequestBuyMedicineDetail(this.medicineInRequestDetail.id);
+      },
+      (error) => {
+        console.log('get detail error');
+        this.generalService.createErrorNotification(error);
+      }
+    )
   }
 
-  disable(bool: boolean) {
-    if (bool) {
-      for (var control in this.buyMedicineForm.controls) {
-        this.buyMedicineForm.controls[control].disable();
-      }
-      this.isDisable = true;
+  requestBuyDetail(data: RequestBuyMedicineDisplay) {
+    console.log(data);
+    this.medicineInRequestDetail = data;
+    this.isDetail = true;
+    this.medicine = {
+      id: data.medicineId,
+      name: data.medicineName
     }
-    if (!bool) {
-      for (var control in this.buyMedicineForm.controls) {
-        this.buyMedicineForm.controls[control].enable();
-      }
-      this.isDisable = false;
-    }
-  }
-
-  addUnit(value: string) {
-    console.log('value', value);
-    this.storeNewMedicineUnitRequest.Name = value;
-    this.storeNewMedicineUnitRequest.AcronymUnit = value.substring(0, 1);
-
-    if ((this.unitList.filter(item => item.name.toLocaleLowerCase() === value.toLocaleLowerCase())).length < 1) {
-      this.addItemLoading = true;
-      this.medicineService.storeNewMedicineUnit(this.storeNewMedicineUnitRequest).subscribe(
-        (response) => {
-          this.unit = response.data;
-          this.unitList = [...this.unitList, this.unit];
-          this.addItemLoading = false;
-          this.buyMedicineForm.controls.unit.setValue(this.unit.id);
-          this.generalService.messageNz('success', `Thêm mới đơn vị ${value.bold()} thành công`);
-        },
-        (error) => {
-          console.log("store unit error");
-          this.addItemLoading = false;
-          this.generalService.createErrorNotification(error);
-        }
-      )
-    } else {
-      this.generalService.messageNz('error', `Đơn vị ${value.bold()} đã có trong hệ thống`);
-      console.log('duplicate');
-    }
-
+    this.medicineList = [];
+    this.medicineList = [...this.medicineList, this.medicine];
+    this.buyMedicineForm.setValue({
+      medicine: this.medicine,
+      unit: data.medicineUnitId,
+      quantity: data.quantity,
+      note: data.note
+    })
   }
 
   inputChange(value: string) {
@@ -228,6 +250,54 @@ export class CreateRequestComponent implements OnInit {
     }
   }
 
+  addNewMedicineModal() {
+    console.log(this.inputMedicine);
+    const modal = this.modal.create({
+      nzTitle: 'Thêm dược phẩm',
+      nzContent: AddMedicineRequestComponent,
+      nzMaskClosable: false,
+      // nzClosable: false,
+      nzFooter: null,
+      nzComponentParams: {
+        inputMedicineName: this.inputMedicine
+      },
+    });
+    const instance = modal.getContentComponent();
+    modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
+
+    modal.afterClose.subscribe(result => {
+      if (result != undefined) {
+        this.medicine = {
+          id: result.id,
+          name: result.name
+        }
+        this.medicineList = [...this.medicineList, this.medicine];
+        this.buyMedicineForm.controls.medicine.setValue(this.medicine);
+      }
+      console.log('[afterClose] The result is:', result)
+    });
+  }
+
+  searchRequestBuyMedicineDetail(id: string) {
+    this.searchRequestBuyMedicineId.value = id;
+    this.searchRecord['RequestToBuyMedicineId'] = this.searchRequestBuyMedicineId;
+    this.service.searchRequestBuyMedicineDetail(this.searchMedicineDetailInRequest).subscribe(
+      (response) => {
+        localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(response.data.data));
+        this.buyMedicineListDisplay = JSON.parse(localStorage.getItem('UpdateBuyMedicineListDisplay'));
+      },
+      (error) => {
+        console.log('search detail error');
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+  cancel() {
+    this.isDetail = false;
+    this.medicineList = [];
+    this.buyMedicineForm.reset();
+  }
 
   addMedicineToRquestList(data: any) {
     console.log(data);
@@ -268,32 +338,12 @@ export class CreateRequestComponent implements OnInit {
           }
           console.log(this.medicineInRequestDetail);
           this.buyMedicineListDisplay = [...this.buyMedicineListDisplay, this.medicineInRequestDetail];
-          localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+          localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
           this.addRequestLoading = false;
           this.resetFormValue();
         }, 2000)
       }
     }
-  }
-
-  updateRequestToArray(newItem: RequestBuyMedicineDisplay, quantity: number, index: number, isRemove: boolean) {
-    this.addRequestLoading = true;
-    setTimeout(() => {
-      newItem.quantity = newItem.quantity + quantity;
-      this.buyMedicineListDisplay[index] = newItem;
-      if (isRemove) {
-        this.buyMedicineListDisplay.forEach((items, index) => {
-          if (items.id == this.found.id) {
-            console.log(index);
-            this.buyMedicineListDisplay.splice(index, 1);
-          }
-        })
-      }
-      localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-      this.requestBuyDetail(newItem);
-      this.generalService.messageNz('success', 'Cập nhật thành công');
-      this.addRequestLoading = false;
-    }, 2000);
   }
 
   updateRequestDetail(data: any) {
@@ -333,51 +383,28 @@ export class CreateRequestComponent implements OnInit {
       } else {
         this.updateRequestToArray(this.updateItem, 0, index, false);
       }
-      // setTimeout(() => {
-
-      //   let index = this.buyMedicineListDisplay.findIndex(item => item.id == this.updateItem.id);
-      //   console.log(index);
-      //   if (index > -1) {
-      //     this.medicine = {
-      //       id: data.medicine.id,
-      //       name: data.medicine.name
-      //     }
-      //     this.medicineList = [];
-      //     this.medicineList = [...this.medicineList, this.medicine];
-      //     this.buyMedicineListDisplay[index] = this.updateItem;
-      //     this.generalService.messageNz('success', 'Cập nhật thành công');
-      //   } else {
-      //     this.generalService.messageNz('error', 'Dược phẩm không tồn tại');
-      //   }
-
-      //   localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-      //   this.addRequestLoading = false;
-      //   // this.resetFormValue();
-      // }, 2000)
     }
   }
 
-  requestBuyDetail(data: RequestBuyMedicineDisplay) {
-    this.medicineInRequestDetail = data;
-    this.isDetail = true;
-    this.medicine = {
-      id: data.medicineId,
-      name: data.medicineName
-    }
-    this.medicineList = [];
-    this.medicineList = [...this.medicineList, this.medicine];
-    this.buyMedicineForm.setValue({
-      medicine: this.medicine,
-      unit: data.medicineUnitId,
-      quantity: data.quantity,
-      note: data.note
-    })
-  }
 
-  cancel() {
-    this.isDetail = false;
-    this.medicineList = [];
-    this.buyMedicineForm.reset();
+  updateRequestToArray(newItem: RequestBuyMedicineDisplay, quantity: number, index: number, isRemove: boolean) {
+    this.addRequestLoading = true;
+    setTimeout(() => {
+      newItem.quantity = newItem.quantity + quantity;
+      this.buyMedicineListDisplay[index] = newItem;
+      if (isRemove) {
+        this.buyMedicineListDisplay.forEach((items, index) => {
+          if (items.id == this.found.id) {
+            console.log(index);
+            this.buyMedicineListDisplay.splice(index, 1);
+          }
+        })
+      }
+      localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+      this.requestBuyDetail(newItem);
+      this.generalService.messageNz('success', 'Cập nhật thành công');
+      this.addRequestLoading = false;
+    }, 2000);
   }
 
   deleteRquest(id: string) {
@@ -392,38 +419,9 @@ export class CreateRequestComponent implements OnInit {
       else {
         this.generalService.messageNz('error', 'Dược phẩm này k tồn tại thành công');
       }
-      localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+      localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
       this.sendRequestToBuyMedicineLoading = false;
     }, 2000)
-  }
-
-
-  addNewMedicineModal() {
-    console.log(this.inputMedicine);
-    const modal = this.modal.create({
-      nzTitle: 'Thêm dược phẩm',
-      nzContent: AddMedicineRequestComponent,
-      nzMaskClosable: false,
-      // nzClosable: false,
-      nzFooter: null,
-      nzComponentParams: {
-        inputMedicineName: this.inputMedicine
-      },
-    });
-    const instance = modal.getContentComponent();
-    modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
-
-    modal.afterClose.subscribe(result => {
-      if (result != undefined) {
-        this.medicine = {
-          id: result.id,
-          name: result.name
-        }
-        this.medicineList = [...this.medicineList, this.medicine];
-        this.buyMedicineForm.controls.medicine.setValue(this.medicine);
-      }
-      console.log('[afterClose] The result is:', result)
-    });
   }
 
 
@@ -432,31 +430,34 @@ export class CreateRequestComponent implements OnInit {
     return newArray;
   }
 
-  makeRequest() {
+  updateRequest() {
     this.sendRequestToBuyMedicineLoading = true;
     this.requesToBuyMedicine = {
       requestBuyMedicineDetails: this.convertList(this.buyMedicineListDisplay)
     }
     // this.service.getDetailBuyMedicineToScreen('b7a7168f-c571-40e2-8cf3-ad2477b1681f', this.selectFieldDetail);
+    console.log(this.requestId);
     setTimeout(() => {
-      this.service.addRequestBuyMedicine(this.requesToBuyMedicine).subscribe(
+      this.service.updateRequestBuyMedicine(this.requesToBuyMedicine, this.requestId, this.selectFieldDetail).subscribe(
         (response) => {
           this.sendRequestToBuyMedicineLoading = false;
           this.isSaveRequest = true;
           console.log(response);
           this.resetFormValue();
-          this.generalService.createSuccessNotification("Lưu yêu cầu mua dược phẩm thành công");
-          localStorage.removeItem('BuyMedicineListDisplay');
+          this.router.navigate(['request-buy-medicine/buy-medicine-list/detail-request', response.data.id], {
+            fragment: response.data
+          });
+          this.generalService.createSuccessNotification("Cập nhật yêu cầu mua dược phẩm thành công");
+          localStorage.removeItem('UpdateBuyMedicineListDisplay');
           this.service.getDetailBuyMedicineToDetailScreen(response.data.id, this.selectFieldDetail);
         },
         (error) => {
           this.sendRequestToBuyMedicineLoading = false;
-          console.log('add request buy medicine error');
+          console.log('update request buy medicine error');
           this.generalService.createErrorNotification(error);
         }
       )
       this.sendRequestToBuyMedicineLoading = false;
     }, 1000)
   }
-
 }

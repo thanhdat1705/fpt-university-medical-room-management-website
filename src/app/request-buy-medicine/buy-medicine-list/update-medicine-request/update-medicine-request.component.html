@@ -12,30 +12,6 @@
                             <span class="font-size-16">Tên dược phẩm</span>
                         </nz-form-label>
                         <nz-form-control [nzErrorTip]="medicineNameErrorTpl">
-                            <!-- <input placeholder="Nhập tên dược phẩm" nz-input formControlName="medicine" id="medicine"
-                            [nzAutocomplete]="autoMedicine"
-                            (input)="inputChange(inputMedicine.value)" #inputMedicine nzSize="large" />
-                        <nz-autocomplete #autoMedicine>
-                            <ng-container *ngFor="let option of medicineList">
-                                <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option"
-                                    [nzLabel]="option.name">
-                                    {{option.name}}
-                                </nz-auto-option>
-                            </ng-container>
-                            <nz-auto-option *ngIf="isLoading" nzDisabled nzCustomContent>
-                                <i nz-icon nzType="loading" class="loading-icon"></i> Đang tìm kiếm...
-                            </nz-auto-option>
-                            <ng-container *ngIf="inputMedicine.value != ''">
-                                <nz-auto-option *ngIf="medicineList.length <= 0" nzDisabled nzCustomContent>
-                                    Không thấy kết quả tìm kiếm
-                                </nz-auto-option>
-                            </ng-container>
-                        </nz-autocomplete>
-                        <ng-template #medicineNameErrorTpl let-control>
-                            <ng-container *ngIf="form.medicine.hasError('required')">
-                                <span class="error-text">Hãy nhập tên dược phẩm</span>
-                            </ng-container>
-                        </ng-template> -->
                             <nz-select id="medicine" nzServerSearch nzShowSearch nzAllowClear formControlName="medicine"
                                 [nzShowArrow]="false" nzSize="large" (nzOnSearch)="inputChange($event)"
                                 nzPlaceHolder="Nhập dược phẩm" [nzDropdownRender]="renderMedicine">
@@ -49,15 +25,6 @@
                                     <i nz-icon nzType="loading" class="loading-icon"></i> Đang tìm kiếm...
                                 </nz-option>
                             </nz-select>
-                            <!-- <nz-select nzMode="tags" nzPlaceHolder="Select users" [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" nzAllowClear nzShowSearch 
-                                nzServerSearch (nzOnSearch)="inputChange($event)">
-                                <ng-container *ngFor="let o of medicineList">
-                                    <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o.name"></nz-option>
-                                </ng-container>
-                                <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-                                    <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
-                                </nz-option>
-                            </nz-select> -->
                             <ng-template #renderMedicine>
                                 <nz-divider style="margin: 4px 0 !important;"></nz-divider>
                                 <nz-spin [nzSpinning]="addItemLoading" nzTip="Loading...">
@@ -200,21 +167,13 @@
                         </tbody>
                         <!-- </ng-container> -->
                     </nz-table>
-                    <button *ngIf="!isSaveRequest" class="font-size-16" nz-button nzType="primary"
-                        [disabled]="buyMedicineListDisplay.length <= 0" nzSize="large" (click)="makeRequest()"
-                        style="width: 140px;">
-                        Lưu yêu cầu
+                    <button class="font-size-16" nz-button nzType="primary"
+                        [disabled]="buyMedicineListDisplay.length <= 0" nzSize="large" (click)="updateRequest()"
+                        style="width: 160px;">
+                        Xác nhận cập nhật
                     </button>
-                    <ng-container *ngIf="isSaveRequest">
-                        <button class="font-size-16" nz-button nzType="primary" nzSize="large" style="width: 160px;">
-                            Cập nhật yêu cầu
-                        </button>
-                    </ng-container>
                 </div>
             </nz-spin>
         </div>
-
     </div>
-
-
 </div>

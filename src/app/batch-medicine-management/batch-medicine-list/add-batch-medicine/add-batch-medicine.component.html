@@ -44,7 +44,7 @@
               [nzDisabledDate]="disabledInsertDate" nzPlaceHolder="Ngày nhập" style="width: 100%;">
             </nz-date-picker>
             <ng-template #yearErrorTpl let-control>
-              <ng-container *ngIf="timef.yearBatch.hasError('required')">
+              <ng-container *ngIf="timef.periodicBatch.hasError('required')">
                 <span class="error-text">Hãy nhập năm dược phẩm</span>
               </ng-container>
             </ng-template>

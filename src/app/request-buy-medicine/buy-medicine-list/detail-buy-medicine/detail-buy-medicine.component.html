@@ -1,0 +1,74 @@
+<div class="inner-content">
+    <div class="header-content d-flex flex-column">
+        <nz-divider [nzText]="heading" nzOrientation="left">
+            <ng-template #heading>
+                <span class="font-weight-semibold font-size-18">Đơn yêu cầu mua dược phẩm</span>
+            </ng-template>
+        </nz-divider>
+        <div class="info-wrapper" *ngIf="requestDetail != null">
+            <div class="header-info">
+                <span class="font-weight-semibold font-size-16 text-teal-green">Ngày tạo</span>
+                <span>{{ getCreateDate(requestDetail.createDate) }}</span>
+            </div>
+            <div class="header-info">
+                <span class="font-weight-semibold font-size-16 text-teal-green">Cập nhật lần cuối</span>
+                <span>{{ getCreateDate(requestDetail.updateDate) }}</span>
+            </div>
+            <div class="header-info">
+                <span class="font-weight-semibold font-size-16 text-teal-green">Dược phẩm yêu cầu</span>
+                <span>{{ requestDetail.numberOfSpecificMedicine }}</span>
+            </div>
+        </div>
+        <nz-divider class="divider-border"></nz-divider>
+    </div>
+    <div>
+        <nz-spin [nzSpinning]="requestMedicineLoading" nzTip="Đang xử lý...">
+            <div class="d-flex flex-column justify-content-between" style="min-height: 150px;" #TABLE>
+                <nz-table  id="requestTable" [nzData]="buyMedicineListDisplay" [nzFrontPagination]="false"
+                    [nzScroll]="{ x: '1100px' }">
+                    <thead>
+                        <tr>
+                            <th nzWidth="10%" nzAlign='left'>Stt</th>
+                            <th nzWidth="20%" nzAlign='center'>Dược phẩm</th>
+                            <th nzWidth="20%" nzAlign='center'>Đơn vị</th>
+                            <th nzWidth="20%" nzAlign='center'>Số lượng</th>
+                            <th nzWidth="30%" nzAlign='center'>Ghi chú</th>
+                            <!-- <th nzAlign='right'>Hành động</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let data of buyMedicineListDisplay; index as i">
+                            <td nzAlign='left'>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+                            <td nzAlign='center'>
+                                <span class="text-link font-weight-semibold">
+                                    {{ data.medicineName }}
+                                </span>
+                            </td>
+                            <td nzAlign='center'>{{ data.medicineUnitName }}</td>
+                            <td nzAlign='center'>{{ data.quantity }}</td>
+                            <td nzAlign='center'>{{ data.note }}</td>
+                            <!-- <td nzAlign='right'>
+                                <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
+                                    (nzOnConfirm)="deleteRequestDetail()">
+                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                </a>
+                            </td> -->
+                        </tr>
+
+                    </tbody>
+                </nz-table>
+                <div class="d-flex flex-row align-items-center justify-content-between" style="width: 280px;">
+                    <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large" (click)="exportExcel()">
+                        <span>Xuất ra Excel</span>
+                    </button>
+                    <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
+                        (click)="goToUpdateScreen()">
+                        <span>Cập nhật đơn</span>
+                    </button>
+                </div>
+            </div>
+        </nz-spin>
+    </div>
+
+</div>
