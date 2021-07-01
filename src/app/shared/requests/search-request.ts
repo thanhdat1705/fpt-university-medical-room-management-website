@@ -20,7 +20,21 @@ export class SearchRequest1 {
   searchValue: Map<string, ValueCompare>;
   selectFields: string;
 
-  constructor() { }
+  // constructor() { }
+ 
+  constructor(limit: number,
+    page: number,
+    sortField: string,
+    sortOrder: number,
+    searchValue: Map<string, ValueCompare>,
+    selectFields: string) {
+      this.limit= limit;
+      this.page= page;
+      this.sortField= sortField;
+      this.sortOrder= sortOrder;
+      this.searchValue= searchValue;
+      this.selectFields= selectFields;
+     }
 
   //1: descending
   //0: ascending
