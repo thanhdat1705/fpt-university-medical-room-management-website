@@ -39,6 +39,14 @@ export class ViewAccountDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
+    this.activatedroute.fragment.subscribe(
+      (response) => {
+        this.accountDetail = JSON.parse(JSON.stringify(response));
+        if (this.accountDetail === null) {
+          this.getAccountDetails(this.id);
+        }
+      }
+    );
     this.accountDetailForm = this.formsBuider.group({
       internalCode: ['', [
         Validators.required,
@@ -57,7 +65,7 @@ export class ViewAccountDetailComponent implements OnInit {
         Validators.required,
       ]],
     });
-    this.getAccountDetails();
+    this.getAccountDetails(this.id);
     // console.log(this.accountDetail.role.accounts[0].active);
     // this.activeStatus = this.checkActiveId(this.accountDetail.role.accounts[0].active);
   }
@@ -77,7 +85,7 @@ export class ViewAccountDetailComponent implements OnInit {
       (response) => {
         console.log(response);
         this.generalService.messageNz('success', 'Thông tin tài khoản của "' + this.accountDetailForm.get("displayName").value + '" đã được cập nhật');
-        this.getAccountDetails();
+        this.getAccountDetails(this.id);
       }, (error) => {
         console.log(error);
         this.generalService.createErrorNotification(error);
@@ -114,9 +122,9 @@ export class ViewAccountDetailComponent implements OnInit {
     }
   }
 
-  getAccountDetails() {
+  getAccountDetails(id: any) {
     this.disableUpdate();
-    this.summaryService.getAccountDetail(this.id).subscribe(
+    this.summaryService.getAccountDetail(id).subscribe(
       (response) => {
         this.accountDetail = response.data;
         console.log(this.accountDetail);

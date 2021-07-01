@@ -6,7 +6,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { TreatmentInformation } from 'src/app/shared/models/treatment-information';
 import { TreatmentInformationDetail } from 'src/app/shared/models/treatment-information-details';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineInInventoryDetailsResponse } from 'src/app/shared/responses/medicine-in-inventory-details/medicine-in-inventory-details';
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
@@ -40,8 +40,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   selectFields = "id, quantity, medicine.medicineUnit, importMedicine.expirationDate";
   sortField = "";
   sortOrder = 0;
-  MedicineInInventorySearchRecord: Record<string, ValueCompare> = {}
-  MedicineInInventoryDetailsSearchRecord: Record<string, ValueCompare> = {}
+  MedicineInInventorySearchValueMap: Map<string, ValueCompare> = new Map;
+  MedicineInInventoryDetailsSearchValueMap: Map<string, ValueCompare> = new Map;
 
   medicineInInventoryDetails: MedicineInInventoryDetailsResponse[];
   arrayTreatmentDetails: ReadonlyArray<MedicineInInventoryDetailsResponse> = [];
@@ -58,23 +58,29 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   medicineSubGroupList: MedicineSubgroupResponse[] = [];
   treatmentInformation: TreatmentInformation[] = [];
 
-  medicineInInventoryRequest: SearchRequest = {
-    limit: this.pageSize,
-    page: this.pageIndex,
-    searchValue: this.MedicineInInventorySearchRecord,
-    selectFields: "medicineId,medicine.Name,quantity, medicine.medicineUnit ",
-    sortField: "",
-    sortOrder: 0
-  }
+  // medicineInInventoryRequest: SearchRequest = {
+  //   limit: this.pageSize,
+  //   page: this.pageIndex,
+  //   searchValue: this.MedicineInInventorySearchRecord,
+  //   selectFields: "medicineId,medicine.Name,quantity, medicine.medicineUnit ",
+  //   sortField: "",
+  //   sortOrder: 0
+  // }
 
-  medicineInInventoryDetailsSearchRequest: SearchRequest = {
-    limit: 100,
-    page: 0,
-    searchValue: this.MedicineInInventoryDetailsSearchRecord,
-    selectFields: "id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate",
-    sortField: "importMedicine.ExpirationDate",
-    sortOrder: 0
-  }
+  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,"",0,this.MedicineInInventorySearchValueMap,'medicineId,medicine.Name,quantity, medicine.medicineUnit');
+   
+
+  // medicineInInventoryDetailsSearchRequest: SearchRequest = {
+  //   limit: 100,
+  //   page: 0,
+  //   searchValue: this.MedicineInInventoryDetailsSearchRecord,
+  //   selectFields: "id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate",
+  //   sortField: "importMedicine.ExpirationDate",
+  //   sortOrder: 0
+  // }
+
+  medicineInInventoryDetailsSearchRequest = new SearchRequest1(1,0,"importMedicine.ExpirationDate",0,this.MedicineInInventoryDetailsSearchValueMap,'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate');
+
 
   medicineIdValueCompare: ValueCompare = {
     value: '',
@@ -164,8 +170,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
   searchMedicineInInventoryDetails(id: string) {
     // this.generalService.openWaitingPopupNz()
-    this.generalService.getValueCompare(id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchRecord);
-    this.summaryService.searchMedicineInInventoryDetails(this.medicineInInventoryDetailsSearchRequest).subscribe(
+    this.generalService.setValueCompare(id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchValueMap);
+    this.summaryService.searchMedicineInInventoryDetails(this.medicineInInventoryDetailsSearchRequest.getParamsString()).subscribe(
       (response) => {
         this.medicineInInventoryDetails = response.data.data;
         console.log('treatmentdetails', this.medicineInInventoryDetails)
@@ -209,24 +215,24 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   }
 
   searchMedicineName() {
-    this.generalService.getValueCompare(this.searchNameValue, this.medicineNnameValueCompare, 'medicine.Name', this.MedicineInInventorySearchRecord);
+    this.generalService.setValueCompare(this.searchNameValue, this.medicineNnameValueCompare, 'medicine.Name', this.MedicineInInventorySearchValueMap);
     this.searchMedicineInInventory();
   }
 
   onSearchClassification() {
-    this.generalService.getValueCompare(this.filterClassificationValue, this.classificationValueCompare, 'Medicine.MedicineClassification.Id', this.MedicineInInventorySearchRecord);
+    this.generalService.setValueCompare(this.filterClassificationValue, this.classificationValueCompare, 'Medicine.MedicineClassification.Id', this.MedicineInInventorySearchValueMap);
     this.searchMedicineInInventory();
   }
 
   onSearchSubGroup() {
-    this.generalService.getValueCompare(this.filterSubgroupValue, this.subgroupValueCompare, 'Medicine.MedicineSubgroup.Id', this.MedicineInInventorySearchRecord);
+    this.generalService.setValueCompare(this.filterSubgroupValue, this.subgroupValueCompare, 'Medicine.MedicineSubgroup.Id', this.MedicineInInventorySearchValueMap);
     this.searchMedicineInInventory();
   }
 
   searchMedicineInInventory() {
     // this.generalService.openWaitingPopupNz();
-    this.generalService.getValueCompare(0, this.medicineInInventoryQuantityCompare, 'quantity', this.MedicineInInventorySearchRecord);
-    this.summaryService.searchMedicineInInventory(this.medicineInInventoryRequest).subscribe(
+    this.generalService.setValueCompare(0, this.medicineInInventoryQuantityCompare, 'quantity', this.MedicineInInventorySearchValueMap);
+    this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest.getParamsString()).subscribe(
       (response) => {
         console.log(response.data);
         this.getData(response.data);
@@ -302,7 +308,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    this.medicineInInventoryRequest.page = params.pageIndex;
+    this.medicineInInventorySearchRequest.page = params.pageIndex;
     console.log(params.pageIndex);
     this.searchMedicineInInventory();
   }
@@ -358,7 +364,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
   getData(response: ResponseSearch) {
     if (response.info.page > 1 && response.data.length == 0) {
-      this.medicineInInventoryRequest.page = this.medicineInInventoryRequest.page - 1;
+      this.medicineInInventorySearchRequest.page = this.medicineInInventorySearchRequest.page - 1;
       console.log("back 1 page");
       this.searchMedicineInInventory();
       return;

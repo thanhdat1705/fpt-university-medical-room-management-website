@@ -28,7 +28,7 @@ const routes: Routes = [
     },
   },
   {
-    path: 'search-account',
+    path: 'account-list',
     component: SearchAccountComponent,
     data: {
       title: 'Danh sách tài khoản'

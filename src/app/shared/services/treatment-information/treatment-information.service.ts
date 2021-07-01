@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TreatmentInformation } from '../../models/treatment-information';
 import { TreatmentInformationDetail } from '../../models/treatment-information-details';
+import { GeneralHelperService } from '../general-helper.service';
 import { SummaryService } from '../summary.service';
 
 @Injectable({
@@ -19,6 +21,8 @@ export class TreatmentInformationService {
 
   constructor(
     private summaryService: SummaryService,
+    private router: Router,
+    private generalService: GeneralHelperService
   ) { }
 
 
@@ -82,5 +86,24 @@ export class TreatmentInformationService {
       }
     }
     return tip;
+  }
+
+
+  
+  getTreatment(id: any, param: any){
+
+    this.summaryService.getTreatmentDetails(id, param).subscribe(
+      (response) => {
+        this.router.navigate(['/view-treatment-information/:id', id], {
+          fragment: response.data
+        });
+        console.log(response.data);
+      },
+      (error) => {
+        this.router.navigate(['/view-treatment-information-list']);
+        console.log(error);
+        this.generalService.createErrorNotification(error);
+      }
+    )
   }
 }

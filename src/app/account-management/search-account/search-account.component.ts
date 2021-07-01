@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Account } from 'src/app/shared/models/account';
 import { SummaryService } from 'src/app/shared/services/summary.service';
-import { SearchRequest } from 'src/app/shared/requests/search-request';
+import { SearchRequest1 } from 'src/app/shared/requests/search-request';
 import { HttpParams } from '@angular/common/http';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
@@ -11,6 +11,7 @@ import { EmailValidator, FormBuilder, FormGroup } from '@angular/forms';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { ValueCompare } from 'src/app/shared/models/search-value';
 import { FilterTable } from 'src/app/shared/models/filterTable';
+import { AccountService } from 'src/app/shared/services/account/account.service';
 
 interface SearchAccountAttribute {
   value: string;
@@ -33,22 +34,22 @@ export class SearchAccountComponent implements OnInit {
 
   searchAccountValue: any;
 
-  searchRole: ValueCompare = {
+  roleValueCompare: ValueCompare = {
     value: '',
     compare: '='
   }
 
-  searchActive: ValueCompare = {
+  activeValueCompare: ValueCompare = {
     value: '',
     compare: '='
   }
 
-  searchContent: ValueCompare = {
+  contentValueCompare: ValueCompare = {
     value: '',
     compare: 'contains'
   }
 
-  searchRecord: Record<string, ValueCompare> = {};
+  searchValueMap: Map<string, ValueCompare> = new Map;
 
   filterRole: FilterTable[] = [
     {
@@ -92,9 +93,8 @@ export class SearchAccountComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.searchAccountRequest);
-    this.searchRecord['RoleId'] = null;
-    this.searchRecord['Active'] = null;
+    console.log(this.accountSearchRequest);
+
     this.loading = true;
     this.searchAccount();
 
@@ -102,12 +102,16 @@ export class SearchAccountComponent implements OnInit {
 
   onSearchRole(value: string) {
     if (value == null) {
-      this.searchRecord['RoleId'] = null;
+      this.generalService.setValueCompare(null, this.roleValueCompare, 'RoleId', this.searchValueMap);
+
+      // this.searchRecord['RoleId'] = null;
     } else {
-      console.log('role ne' + value);
-      this.searchRole.value = value;
-      console.log(this.searchRole.value);
-      this.searchRecord['RoleId'] = this.searchRole;
+      // console.log('role ne' + value);
+      this.generalService.setValueCompare(value, this.roleValueCompare, 'RoleId', this.searchValueMap);
+
+      // this.searchRole.value = value;
+      // console.log(this.searchRole.value);
+      // this.searchRecord['RoleId'] = this.searchRole;
     }
     this.searchAccount();
 
@@ -115,12 +119,16 @@ export class SearchAccountComponent implements OnInit {
 
   onSearchActiveStatus(value: string) {
     if (value == null) {
-      this.searchRecord['Active'] = null;
+      this.generalService.setValueCompare(null, this.activeValueCompare, 'Active', this.searchValueMap);
+
+      // this.searchRecord['Active'] = null;
     } else {
-      console.log('active ne' + value);
-      this.searchActive.value = value;
-      console.log(this.searchActive.value);
-      this.searchRecord['Active'] = this.searchActive;
+      // console.log('active ne' + value);
+      // this.searchActive.value = value;
+      // console.log(this.searchActive.value);
+      // this.searchRecord['Active'] = this.searchActive;
+      this.generalService.setValueCompare(value, this.activeValueCompare, 'Active', this.searchValueMap);
+
     }
     this.searchAccount();
   }
@@ -130,12 +138,19 @@ export class SearchAccountComponent implements OnInit {
   }
 
   search() {
-    this.searchContent.value = this.searchAccountValue;
+    // this.contentValueCompare.value = this.searchAccountValue;
+    console.log('name: ', this.searchAccountValue);
+
+
     this.accountAttribute.forEach(element => {
       if (element.value == this.selectedSearchAttribute) {
-        this.searchRecord[this.selectedSearchAttribute] = this.searchContent;
+        this.generalService.setValueCompare(this.searchAccountValue, this.contentValueCompare, this.selectedSearchAttribute, this.searchValueMap);
+
+        // this.searchRecord[this.selectedSearchAttribute] = this.searchContent;
       } else {
-        this.searchRecord[element.value] = null;
+        this.generalService.setValueCompare(null, this.contentValueCompare, element.value, this.searchValueMap);
+
+        // this.searchRecord[element.value] = null;
       }
     });
 
@@ -143,14 +158,17 @@ export class SearchAccountComponent implements OnInit {
   }
 
 
-  searchAccountRequest: SearchRequest = {
-    limit: this.pageSize,
-    page: this.pageIndex,
-    searchValue: this.searchRecord,
-    sortField: this.sortColumn,
-    selectFields: this.selectField,
-    sortOrder: this.sortOrder,
-  };
+  // searchAccountRequest: SearchRequest = {
+  //   limit: this.pageSize,
+  //   page: this.pageIndex,
+  //   searchValue: this.searchRecord,
+  //   sortField: this.sortColumn,
+  //   selectFields: this.selectField,
+  //   sortOrder: this.sortOrder,
+  // };
+
+  accountSearchRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortColumn, this.sortOrder, this.searchValueMap, this.selectField);
+
 
   listOfColumn = [
     {
@@ -183,14 +201,14 @@ export class SearchAccountComponent implements OnInit {
       this.sortOrder = 0;
     }
 
-    this.searchAccountRequest.page = params.pageIndex;
-    this.pageIndex = this.searchAccountRequest.page;
+    this.accountSearchRequest.page = params.pageIndex;
+    this.pageIndex = this.accountSearchRequest.page;
     this.searchAccount();
   }
 
   getData(responseData: ResponseSearch) {
     if (responseData.data.length == 0 && responseData.info.page > 1) {
-      this.searchAccountRequest.page = this.searchAccountRequest.page - 1;
+      this.accountSearchRequest.page = this.accountSearchRequest.page - 1;
       console.log("back 1 page");
       this.searchAccount();
       return;
@@ -204,20 +222,27 @@ export class SearchAccountComponent implements OnInit {
   constructor(
     private summaryService: SummaryService,
     private generalService: GeneralHelperService,
-  ) {}
+    private accountService: AccountService
+  ) { }
 
   searchAccount() {
     this.accountList = [];
-    console.log(JSON.stringify(this.searchAccountRequest));
-    this.searchAccountRequest = {
-      limit: this.pageSize,
-      page: this.pageIndex,
-      searchValue: this.searchRecord,
-      sortField: this.sortColumn,
-      selectFields: this.selectField,
-      sortOrder: this.sortOrder,
-    };
-    this.summaryService.searchAccount(this.searchAccountRequest).subscribe(
+    this.accountSearchRequest.page = this.pageIndex;
+    this.accountSearchRequest.searchValue = this.searchValueMap;
+    this.accountSearchRequest.sortField = this.sortColumn;
+    this.accountSearchRequest.sortOrder = this.sortOrder;
+
+
+    // this.searchAccountRequest = {
+    //   limit: this.pageSize,
+    //   page: this.pageIndex,
+    //   searchValue: this.searchRecord,
+    //   sortField: this.sortColumn,
+    //   selectFields: this.selectField,
+    //   sortOrder: this.sortOrder,
+    // };
+
+    this.summaryService.searchAccount(this.accountSearchRequest.getParamsString()).subscribe(
       (response) => {
         console.log(response.data);
 
@@ -230,5 +255,7 @@ export class SearchAccountComponent implements OnInit {
       });
   }
 
-
+  getAccountDetails(id: any) {
+    this.accountService.getMedicineDetails(id);
+  }
 }

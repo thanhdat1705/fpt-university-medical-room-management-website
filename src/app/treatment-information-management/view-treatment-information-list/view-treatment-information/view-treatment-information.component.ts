@@ -8,11 +8,12 @@ import { Observable, Observer } from 'rxjs';
 import { Department } from 'src/app/shared/models/department';
 import { TreatmentInformation } from 'src/app/shared/models/treatment-information';
 import { TreatmentInformationDetail } from 'src/app/shared/models/treatment-information-details';
-import { SearchRequest } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1 } from 'src/app/shared/requests/search-request';
 import { TreatmentResponse } from 'src/app/shared/responses/treatment/treatment-details-response';
 import { TreatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
+import { TreatmentInformationService } from 'src/app/shared/services/treatment-information/treatment-information.service';
 import { TreatmentInformationDetailsComponent } from '../../add-treatment-information/treatment-information-details/treatment-information-details.component';
 
 @Component({
@@ -37,14 +38,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
   treatmentInformation: TreatmentInformation[] = [];
   treatmentInformationDetails: TreatmentInformationDetail[];
 
-  searchDepartmentRequest: SearchRequest = {
-    limit: 100,
-    page: 0,
-    searchValue: null,
-    selectFields: "id, name",
-    sortField: "",
-    sortOrder: 0
-  }
+  departmentSearchRequest = new SearchRequest1(1,0,'',0,null,'id, name');
+  
 
   insertDepartmentRequest: Department = {
     name: '',
@@ -58,13 +53,21 @@ export class ViewTreatmentInformationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private msg: NzMessageService,
     private modalService: NzModalService,
-
+    private treatmentService: TreatmentInformationService
   ) { }
 
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
     this.getAllDepartment();
+    this.activatedroute.fragment.subscribe(
+      (response) => {
+        this.treatmentInformationDetails = JSON.parse(JSON.stringify(response));
+        if (this.treatmentInformationDetails === null) {
+          this.treatmentService.getTreatment(this.id, this.params);
+        }
+      }
+    );
     this.treatmentForm = this.formBuilder.group({
       internalCode: ['',
         [
@@ -91,7 +94,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
         Validators.required,
       ]]
     });
-    this.getTreatmentInformation();
+    this.getTreatmentInformation(this.id, this.params);
   }
 
   gender = [
@@ -122,8 +125,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
   }
 
 
-  getTreatmentInformation() {
-    this.summaryService.getTreatmentDetails(this.id, this.params).subscribe(
+  getTreatmentInformation(id: any, param: any) {
+    this.summaryService.getTreatmentDetails(id, param).subscribe(
       (response) => {
         this.treatment = response.data;
         console.log('treatment', this.treatment);
@@ -144,7 +147,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
   }
 
   getAllDepartment() {
-    this.summaryService.searchDepartment(this.searchDepartmentRequest).subscribe(
+    this.summaryService.searchDepartment(this.departmentSearchRequest).subscribe(
       (response) => {
         this.departmentList = response.data.data;
         console.log(this.departmentList);

@@ -8,7 +8,7 @@
           [nzValue]="attribute.value">
         </nz-option>
       </nz-select>
-      <input type="text" class="input" nz-input [ngModel]="searchAccountValue"
+      <input type="text" class="input" nz-input [(ngModel)]="searchAccountValue"
         style="width:70%;" />
     </nz-input-group>
 
@@ -61,8 +61,9 @@
         <ng-template #inActive>
           <td>Dừng hoạt động</td>
         </ng-template>
-        <td><button nz-button nzType="default" nzSize="large" nzShape="round"
-            [routerLink]="['/account/account-detail', account.id]">Chi tiết</button></td>
+        <td> <a nzAlign="center" style="color: #1890ff"
+         (click)="getAccountDetails(account.id)">Chi
+          tiết</a></td>
       </tr>
     </tbody>
   </nz-table>
