@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineInInventoryDetailsResponse } from 'src/app/shared/responses/medicine-in-inventory-details/medicine-in-inventory-details';
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
 import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
@@ -22,36 +22,42 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
   medicineInInventoryDetails: MedicineInInventoryDetailsResponse[];
   loading = false;
   medicineInInventory : MedicineInInventoryResponse;
-  MedicineInInventoryDetailsSearchRecord: Record<string, ValueCompare> = {}
+  MedicineInInventoryDetailsSearchValueMap: Map<string, ValueCompare> = new Map;
   total = 0;
   pageSize = 10;
   pageIndex = 1;
-  searchRecord: Record<string, ValueCompare> = {}
+  MedicineInInventorySearchValueMap: Map<string, ValueCompare> = new Map
   sortOrder = 0;
   sortField = "";
 
-  medicineInInventoryDetailsSearchRequest: SearchRequest = {
-    limit: this.pageSize,
-    page: this.pageIndex,
-    searchValue: this.MedicineInInventoryDetailsSearchRecord,
-    selectFields: "id, quantity, importMedicine,importMedicine.importBatch , medicine.medicineUnit",
-    sortField: this.sortField,
-    sortOrder: this.sortOrder
-  }
+  // medicineInInventoryDetailsSearchRequest: SearchRequest = {
+  //   limit: this.pageSize,
+  //   page: this.pageIndex,
+  //   searchValue: this.MedicineInInventoryDetailsSearchRecord,
+  //   selectFields: "id, quantity, importMedicine,importMedicine.importBatch , medicine.medicineUnit",
+  //   sortField: this.sortField,
+  //   sortOrder: this.sortOrder
+  // }
+
+  medicineInInventoryDetailsSearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.MedicineInInventoryDetailsSearchValueMap, "id, quantity, importMedicine,importMedicine.importBatch , medicine.medicineUnit");
+
 
   MedicineIdValueCompare: ValueCompare = {
     value: '',
     compare: 'Equals'
   }
 
-  medicineInInventorySearchRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    searchValue: this.searchRecord,
-    selectFields: "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit",
-    sortField:'',
-    sortOrder: 0,
-  }
+  // medicineInInventorySearchRequest: SearchRequest = {
+  //   limit: 1,
+  //   page: 0,
+  //   searchValue: this.searchRecord,
+  //   selectFields: "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit",
+  //   sortField:'',
+  //   sortOrder: 0,
+  // }
+
+  medicineInInventorySearchRequest = new SearchRequest1(1,0,'',0,this.MedicineInInventorySearchValueMap, "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit");
+
 
   medicineIdValueCompare: ValueCompare = {
     value: '',
@@ -79,10 +85,10 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
   }
 
   getMedicineInInventory(){
-    this.generalService.getValueCompare(this.id,this.medicineIdValueCompare,"medicineId",this.searchRecord);
+    this.generalService.setValueCompare(this.id,this.medicineIdValueCompare,"medicineId",this.MedicineInInventorySearchValueMap);
 
 
-    this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest).subscribe(
+    this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest.getParamsString()).subscribe(
       (response) => {
         this.medicineInInventory = response.data.data[0];
         console.log(this.medicineInInventory);
@@ -106,8 +112,8 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
 
   searchMedicineInInventoryDetails() {
     // this.generalService.openWaitingPopupNz()
-    this.generalService.getValueCompare(this.id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchRecord);
-    this.summaryService.searchMedicineInInventoryDetails(this.medicineInInventoryDetailsSearchRequest).subscribe(
+    this.generalService.setValueCompare(this.id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchValueMap);
+    this.summaryService.searchMedicineInInventoryDetails(this.medicineInInventoryDetailsSearchRequest.getParamsString()).subscribe(
       (response) => {
         this.getData(response.data);
       }, (error) => {

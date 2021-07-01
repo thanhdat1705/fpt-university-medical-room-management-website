@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { EliminatedMedicineResponse } from 'src/app/shared/responses/eliminated-medicine-response';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
@@ -25,7 +25,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   pageSize = 3;
   pageIndex = 1;
   total = 0;
-  searchRecord: Record<string, ValueCompare> = {};
+  searchValueMap: Map<string, ValueCompare> = new Map;
   sortField = "CreateDate";
   sortOrder = 0;
   medicineUnitList: MedicineUnitResponse[];
@@ -38,14 +38,16 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   filterSubgroupValue: string;
 
 
-  searchEliminatedMedicineRequest: SearchRequest = {
-    limit: this.pageSize,
-    page: this.pageIndex,
-    sortField: this.sortField,
-    sortOrder: this.sortOrder,
-    searchValue: this.searchRecord,
-    selectFields: this.selectFields,
-  }
+  // searchEliminatedMedicineRequest: SearchRequest = {
+  //   limit: this.pageSize,
+  //   page: this.pageIndex,
+  //   sortField: this.sortField,
+  //   sortOrder: this.sortOrder,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.selectFields,
+  // }
+
+  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchValueMap,'medicineId,medicine.Name,quantity, medicine.medicineUnit');
 
 
   constructor(
@@ -59,25 +61,29 @@ export class ViewEliminatedMedicineComponent implements OnInit {
     this.getAllMedicineSubgroup();
     this.getAllMedicineUnit();
     this.searchEliminatedMedicine();
-    this.searchRecord['Medicine.Name'] = null;
-    this.searchRecord['Medicine.MedicineUnit.Id'] = null;
-    this.searchRecord['Medicine.MedicineSubgroup.Id'] = null;
-    this.searchRecord['Medicine.MedicineClassification.Id'] = null;
+    // this.searchRecord['Medicine.Name'] = null;
+    // this.searchRecord['Medicine.MedicineUnit.Id'] = null;
+    // this.searchRecord['Medicine.MedicineSubgroup.Id'] = null;
+    // this.searchRecord['Medicine.MedicineClassification.Id'] = null;
   }
 
   searchEliminatedMedicineName() {
 
     if (this.searchMedicineValue != null) {
-      this.searchNameValue.value = this.searchMedicineValue;
-      this.searchRecord['Medicine.Name'] = this.searchNameValue;
-      console.log(this.searchEliminatedMedicineRequest);
+      // this.searchNameValue.value = this.searchMedicineValue;
+    this.generalService.setValueCompare(this.searchMedicineValue, this.searchNameValueCompare, 'medicine.Name', this.searchValueMap);
+
+      // this.searchRecord['Medicine.Name'] = this.searchNameValue;
+      // console.log(this.searchEliminatedMedicineRequest);
     } else {
-      this.searchRecord['Medicine.Name'] = null;
+    this.generalService.setValueCompare(null, this.searchNameValueCompare, 'medicine.Name', this.searchValueMap);
+
+      // this.searchRecord['Medicine.Name'] = null;
     }
     this.searchEliminatedMedicine();
   }
 
-  searchNameValue: ValueCompare = {
+  searchNameValueCompare: ValueCompare = {
     value: '',
     compare: 'Contains'
   }
@@ -95,17 +101,17 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   }
 
   onSearchUnit() {
-    this.generalService.getValueCompare(this.filterUnitValue, this.unitValueCompare, 'Medicine.MedicineUnit.Id', this.searchRecord);
+    this.generalService.setValueCompare(this.filterUnitValue, this.unitValueCompare, 'Medicine.MedicineUnit.Id', this.searchValueMap);
     this.searchEliminatedMedicine();
   }
 
   onSearchClassification() {
-    this.generalService.getValueCompare(this.filterClassificationValue, this.classificationValueCompare, 'Medicine.MedicineClassification.Id', this.searchRecord);
+    this.generalService.setValueCompare(this.filterClassificationValue, this.classificationValueCompare, 'Medicine.MedicineClassification.Id', this.searchValueMap);
     this.searchEliminatedMedicine();
   }
 
   onSearchSubGroup() {
-    this.generalService.getValueCompare(this.filterSubgroupValue, this.subgroupValueCompare, 'Medicine.MedicineSubgroup.Id', this.searchRecord);
+    this.generalService.setValueCompare(this.filterSubgroupValue, this.subgroupValueCompare, 'Medicine.MedicineSubgroup.Id', this.searchValueMap);
     this.searchEliminatedMedicine();
   }
 
@@ -143,7 +149,6 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    this.loading = true;
     const currentSort = params.sort.find(item => item.value !== null);
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
@@ -156,14 +161,16 @@ export class ViewEliminatedMedicineComponent implements OnInit {
       this.sortOrder = 0;
     }
 
-    this.searchEliminatedMedicineRequest.page = params.pageIndex;
-    this.searchEliminatedMedicineRequest.sortField = this.sortField;
-    this.searchEliminatedMedicineRequest.sortOrder = this.sortOrder;
+    this.medicineInInventorySearchRequest.page = params.pageIndex;
+    this.medicineInInventorySearchRequest.sortField = this.sortField;
+    this.medicineInInventorySearchRequest.sortOrder = this.sortOrder;
     this.searchEliminatedMedicine();
   }
 
   searchEliminatedMedicine() {
-    this.summaryService.searchEliminateMedicine(this.searchEliminatedMedicineRequest).subscribe(
+    this.loading = true;
+
+    this.summaryService.searchEliminateMedicine(this.medicineInInventorySearchRequest.getParamsString()).subscribe(
       (response) => {
         console.log(response);
         this.getData(response.data);
@@ -182,7 +189,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
       (response) => {
         this.pageIndex = 1;
         this.sortOrder = 0;
-        this.searchRecord = null;
+        this.searchValueMap = null;
         this.sortField = "CreateDate";
         this.searchEliminatedMedicine();
         this.generalService.messageNz('success', `Đã xóa lô hủy`);
@@ -196,7 +203,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
 
   getData(responseData: ResponseSearch) {
     if (responseData.data.length == 0 && responseData.info.page > 1) {
-      this.searchEliminatedMedicineRequest.page = this.searchEliminatedMedicineRequest.page - 1;
+      this.medicineInInventorySearchRequest.page = this.medicineInInventorySearchRequest.page - 1;
       console.log("back 1 page");
       this.searchEliminatedMedicine();
       return;

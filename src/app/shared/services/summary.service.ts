@@ -120,7 +120,7 @@ export class SummaryService {
 
   public getAccountDetail(id: any): Observable<any> {
 
-    return this.http.get<ResponseServer>(UrlServerGetAccountDetail + "/" + id, { headers: this.headers });
+    return this.http.get<ResponseServer>(UrlServerGetAccountDetail + "/" + id);
   }
 
   public getProfile(): Observable<ResponseServer> {
@@ -147,9 +147,9 @@ export class SummaryService {
     );
   }
 
-  public searchAccount(searchParam: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(
-      UrlServerAPIViewAccounts, searchParam
+  public searchAccount(param: any): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(
+      UrlServerAPIViewAccounts +'?'+ param
     );
   }
 
@@ -283,7 +283,7 @@ export class SummaryService {
   }
 
   public searchEliminateMedicine(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchEliminatedMedicine, data, { headers: this.headers });
+    return this.http.get<ResponseServer>(UrlServerAPISearchEliminatedMedicine + '?' + data);
 
   }
 
@@ -304,7 +304,7 @@ export class SummaryService {
   // Medicine in inventory
 
   public searchMedicineInInventory(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineInInventory, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory +'?'+ data);
   }
 
   public getMedicineInInventoryDetails(id: any) {
@@ -314,7 +314,7 @@ export class SummaryService {
   // Medicine in inventory
 
   public searchMedicineInInventoryDetails(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails+'?'+ data);
 
   }
 
@@ -360,7 +360,7 @@ export class SummaryService {
   }
 
   public searchPatient(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPISearchPatient, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchPatient+'?'+ data);
   }
 
   public getTreatmentDetails(id: any, params: any) {

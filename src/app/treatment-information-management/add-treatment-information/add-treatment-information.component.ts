@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Department } from 'src/app/shared/models/department';
 import { TreatmentInformationDetail } from 'src/app/shared/models/treatment-information-details'
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { InsertTreatmentInformationRequest } from 'src/app/shared/requests/treatment-information/insert-treatment-informationn-request';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { TreatmentInformationService } from 'src/app/shared/services/treatment-information/treatment-information.service';
@@ -30,8 +30,8 @@ export class AddTreatmentInformationComponent implements OnInit {
   diseaseStatusList = [];
   patientDeseaseStatusList = [];
   file: File;
-  searchRecord: Record<string, ValueCompare> = {};
-  DeseaseStatusSearchRecord: Record<string, ValueCompare> = {};
+  searchRecord: Map<string, ValueCompare> = new Map;
+  DeseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
   patientInternalCodeList: patientInternalCodeResponse[];
   patient: Patient;
   medicalStaff: Account = JSON.parse(localStorage.getItem("user"));
@@ -43,14 +43,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   selectPatientInternalCode = "id, internalCode";
   selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
-  searchPatientRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    searchValue: this.searchRecord,
-    selectFields: '',
-    sortField: '',
-    sortOrder: 0
-  }
+  patientSearchRequest = new SearchRequest1(1,0,'',0,this.searchRecord,'');
 
   patientInternalCodeSearchValueCompare: ValueCompare = {
     value: '',
@@ -99,27 +92,20 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   ]
 
+  departmentnSearchRequest = new SearchRequest1(1,0,'',0,this.searchRecord,'id,name');
 
+  deseaseStatusSearchRequest = new SearchRequest1(1,0,'',0,this.DeseaseStatusSearchRecord,'id,name');
 
-  searchDepartmentRequest: SearchRequest = {
-    limit: 100,
-    page: 0,
-    searchValue: null,
-    selectFields: "id, name",
-    sortField: "",
-    sortOrder: 0
-  }
+  // searchDeseaseStatusRequest: SearchRequest = {
 
-  searchDeseaseStatusRequest: SearchRequest = {
+  //   limit: 10,
+  //   page: 0,
+  //   searchValue: this.DeseaseStatusSearchRecord,
+  //   selectFields: "id, name",
+  //   sortField: "",
+  //   sortOrder: 0
 
-    limit: 10,
-    page: 0,
-    searchValue: this.DeseaseStatusSearchRecord,
-    selectFields: "id, name",
-    sortField: "",
-    sortOrder: 0
-
-  }
+  // }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -171,11 +157,11 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   getPatientDetails(value: any) {
     console.log(this.selectedInternalCode);
-    this.searchPatientRequest.selectFields = this.selectPatientDetails;
-    this.generalService.getValueCompare(this.selectedInternalCode, this.patientIdValueCompare, 'id', this.searchRecord);
-    this.generalService.getValueCompare(null, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
+    this.patientSearchRequest.selectFields = this.selectPatientDetails;
+    this.generalService.setValueCompare(this.selectedInternalCode, this.patientIdValueCompare, 'id', this.searchRecord);
+    this.generalService.setValueCompare(null, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
 
-    this.summaryService.searchPatient(this.searchPatientRequest).subscribe(
+    this.summaryService.searchPatient(this.patientSearchRequest.getParamsString()).subscribe(
       (response) => {
         this.patient = response.data.data[0];
         console.log('patient', this.patient);
@@ -212,9 +198,9 @@ export class AddTreatmentInformationComponent implements OnInit {
   }
 
   searchPatientInternalCode() {
-    this.searchPatientRequest.selectFields = this.selectPatientInternalCode;
+    this.patientSearchRequest.selectFields = this.selectPatientInternalCode;
 
-    this.summaryService.searchPatient(this.searchPatientRequest).subscribe(
+    this.summaryService.searchPatient(this.patientSearchRequest.getParamsString()).subscribe(
       (response) => {
         console.log(response);
         this.patientInternalCodeList = response.data.data;
@@ -226,7 +212,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   }
 
   searchDeseaseStatus() {
-    this.summaryService.searchDeseaseStatus(this.searchDeseaseStatusRequest).subscribe(
+    this.summaryService.searchDeseaseStatus(this.deseaseStatusSearchRequest.getParamsString()).subscribe(
       (response) => {
         this.diseaseStatusList = response.data.data;
         console.log('diseaseStatusList', this.diseaseStatusList);
@@ -239,7 +225,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   onSearchDeseaseStatus(value: any) {
     console.log(value);
-    this.generalService.getValueCompare(value, this.deseaseStatusValueCompare, 'name', this.DeseaseStatusSearchRecord);
+    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.DeseaseStatusSearchRecord);
     this.searchDeseaseStatus();
 
   }
@@ -247,9 +233,9 @@ export class AddTreatmentInformationComponent implements OnInit {
   patientIntetrnalCodeInputChange(value: string) {
     console.log('value: ' + value)
     if (value !== '') {
-      this.generalService.getValueCompare(null, this.patientIdValueCompare, 'id', this.searchRecord);
+      this.generalService.setValueCompare(null, this.patientIdValueCompare, 'id', this.searchRecord);
 
-      this.generalService.getValueCompare(value, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
+      this.generalService.setValueCompare(value, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
       this.searchPatientInternalCode();
     }
   }
@@ -373,7 +359,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
 
   getAllDepartment() {
-    this.summaryService.searchDepartment(this.searchDepartmentRequest).subscribe(
+    this.summaryService.searchDepartment(this.departmentnSearchRequest.getParamsString()).subscribe(
       (response) => {
         this.departmentList = response.data.data;
         console.log(this.departmentList);

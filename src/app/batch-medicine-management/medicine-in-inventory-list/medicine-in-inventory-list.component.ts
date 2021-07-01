@@ -3,7 +3,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { ResponseServer } from 'src/app/shared/models/response-server';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
@@ -26,7 +26,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   medicineInInventoryList: MedicineInInventoryResponse[];
   loading = false;
   pageSize = 3;
-  searchRecord: Record<string, ValueCompare> = {}
+  searchMapValue: Map<string, ValueCompare> = new Map;
   total: number;
   pageIndex = 1;
   selectFields = "quantity, medicine, periodicInventory, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit";
@@ -37,14 +37,17 @@ export class MedicineInInventoryListComponent implements OnInit {
   filterClassificationValue: string;
   filterSubgroupValue: string;
 
-  medicineInInventorySearchRequest: SearchRequest = {
-    limit: this.pageSize,
-    page: this.pageIndex,
-    searchValue: this.searchRecord,
-    selectFields: this.selectFields,
-    sortField: this.sortField,
-    sortOrder: this.sortOrder,
-  }
+  // medicineInInventorySearchRequest: SearchRequest = {
+  //   limit: this.pageSize,
+  //   page: this.pageIndex,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.selectFields,
+  //   sortField: this.sortField,
+  //   sortOrder: this.sortOrder,
+  // }
+
+  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchMapValue,this.selectFields);
+
 
   NameValueCompare: ValueCompare = {
     value: '',
@@ -113,25 +116,25 @@ export class MedicineInInventoryListComponent implements OnInit {
 
 
   onSearchClassification() {
-    this.generalService.getValueCompare(this.filterClassificationValue, this.classificationValueCompare, 'Medicine.MedicineClassification.Id', this.searchRecord);
+    this.generalService.setValueCompare(this.filterClassificationValue, this.classificationValueCompare, 'Medicine.MedicineClassification.Id', this.searchMapValue);
     this.searchMedicineInInventory();
   }
 
   onSearchUnit() {
     this.loading = true;
-    this.generalService.getValueCompare(this.filterUnitValue, this.unitValueCompare, 'Medicine.MedicineUnit.Id', this.searchRecord);
+    this.generalService.setValueCompare(this.filterUnitValue, this.unitValueCompare, 'Medicine.MedicineUnit.Id', this.searchMapValue);
     this.searchMedicineInInventory();
   }
 
   onSearchSubGroup() {
     this.loading = true;
-    this.generalService.getValueCompare(this.filterSubgroupValue, this.subgroupValueCompare, 'Medicine.MedicineSubgroup.Id', this.searchRecord);
+    this.generalService.setValueCompare(this.filterSubgroupValue, this.subgroupValueCompare, 'Medicine.MedicineSubgroup.Id', this.searchMapValue);
     this.searchMedicineInInventory();
   }
 
   searchMedicineName() {
     this.loading = true;
-    this.generalService.getValueCompare(this.searchMedicineNameValue, this.NameValueCompare, 'Medicine.Name', this.searchRecord);
+    this.generalService.setValueCompare(this.searchMedicineNameValue, this.NameValueCompare, 'Medicine.Name', this.searchMapValue);
     this.searchMedicineInInventory();
   }
 
@@ -148,7 +151,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   }
 
   searchMedicineInInventory() {
-    this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest).subscribe(
+    this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest.getParamsString()).subscribe(
       (response) => {
         console.log(response.data);
         this.getData(response.data);
