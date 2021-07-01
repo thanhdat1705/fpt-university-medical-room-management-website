@@ -3,8 +3,9 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchMedicineSubgroupRequest } from 'src/app/shared/requests/medicine-subgroup/search-request';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
+import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 
 @Component({
@@ -32,33 +33,28 @@ export class MedicineSubgroupListComponent implements OnInit {
     value: '',
     compare: 'Contains'
   }
-  searchRecord: Record<string, ValueCompare> = {};
-  searchFields = "id, name";
-  searchSubgroupRequest: SearchRequest = {
-    limit: 5,
-    page: 1,
-    sortField: 'name',
-    sortOrder: 0,
-    searchValue: null,
-    selectFields: this.searchFields,
-  }
+  searchValueMap: Map<string, ValueCompare> = new Map;
+  selectFields = "id, name";
+  searchSubgroupRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
+  
 
-  constructor(private service: MedicineService) { }
+  constructor(
+    private service: MedicineService,
+    private generalService: GeneralHelperService,) { }
 
   ngOnInit(): void {
-    this.searchRecord['Name'] = null;
   }
 
   resetTable() {
-    this.pageSize = 5;
-    this.pageIndex = 1;
-    this.sortOrderList = 0;
-    this.sortFieldList = "Name";
+    this.searchSubgroupRequest.limit = 5;
+    this.searchSubgroupRequest.page = 1;
+    this.searchSubgroupRequest.sortOrder = 1;
+    this.searchSubgroupRequest.sortField = "Name";
   }
 
   searchSubgroup() {
     this.tableLoading = true;
-    this.service.searchMedicineSubgroup(this.searchSubgroupRequest).subscribe(
+    this.service.searchMedicineSubgroup(this.searchSubgroupRequest.getParamsString()).subscribe(
       (response) => {
         this.getData(response.data);
         this.tableLoading = false;
@@ -89,14 +85,11 @@ export class MedicineSubgroupListComponent implements OnInit {
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
     sortField == null ? this.sortFieldList = 'Name' : this.sortFieldList = sortField;
-    this.searchSubgroupRequest = {
-      limit: pageSize,
-      page: pageIndex,
-      sortField: this.sortFieldList,
-      sortOrder: this.sortOrderList,
-      searchValue: this.searchRecord,
-      selectFields: this.searchFields,
-    }
+
+    this.searchSubgroupRequest.limit = pageSize;
+    this.searchSubgroupRequest.page = pageIndex;
+    this.searchSubgroupRequest.sortOrder = this.sortOrderList;
+    this.searchSubgroupRequest.sortField = this.sortFieldList;
 
     this.searchSubgroup();
 
@@ -106,8 +99,7 @@ export class MedicineSubgroupListComponent implements OnInit {
   inputChange(value: any) {
     console.log('value -- ', value);
     this.resetTable();
-    this.searchName.value = this.searchValue;
-    this.searchRecord['Name'] = this.searchName;
+    this.generalService.setValueCompare(this.searchValue, this.searchName, 'Name', this.searchValueMap);
     if (value !== '') {
       this.searchSubgroupRequest.limit = 5;
       this.searchSubgroupRequest.page = 1;

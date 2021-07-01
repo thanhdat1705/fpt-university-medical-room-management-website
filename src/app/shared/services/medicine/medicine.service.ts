@@ -33,7 +33,7 @@ export class MedicineService {
   storeNewMedicine(request: StoreNewMedicineRequest) {
     return this.service.storeNewMedicine(request);
   }
-  searchMedicine(request: SearchRequest) {
+  searchMedicine(request: any) {
     return this.service.searchMedicine(request);
   }
   deleteMedicine(id: string) {
@@ -66,7 +66,7 @@ export class MedicineService {
   }
   /*------------------------------------------------------------------------------------------*/
   /*--------------------------------------- Unit ---------------------------------------------*/
-  searchMedicineUnit(searchRequest: SearchRequest) {
+  searchMedicineUnit(searchRequest: any) {
     return this.service.searchMedicineUnit(searchRequest);
   }
   storeNewMedicineUnit(storeRequest: StoreNewMedicineUnitRequest) {
@@ -87,7 +87,7 @@ export class MedicineService {
   getAllMedicineSubgroup() {
     return this.service.getAllMedicineSubgroup();
   }
-  searchMedicineSubgroup(searchRequest: SearchRequest) {
+  searchMedicineSubgroup(searchRequest: any) {
     return this.service.searchMedicineSubgroup(searchRequest);
   }
   /*------------------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ export class MedicineService {
   getAllMedicineClassification() {
     return this.service.getAllMedicineClassification();
   }
-  searchClass(searchRequest: SearchRequest) {
+  searchClass(searchRequest: any) {
     return this.service.searchClassification(searchRequest);
   }
   storeNewMedicineClassification(storeRequest: StoreNewMedicineClassificationRequest) {

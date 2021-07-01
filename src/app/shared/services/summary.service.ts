@@ -193,7 +193,7 @@ export class SummaryService {
   //   );
   // }
   public searchMedicine(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchMedicine, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicine + '?' + data);
   }
 
   public getMedicine(id: string): Observable<ResponseServer> {
@@ -219,7 +219,7 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineClassification, data);
   }
   public searchClassification(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchClassification, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchClassification + '?' + data);
   }
 
   public getAllMedicineSubgroup(): Observable<ResponseServer> {
@@ -230,7 +230,7 @@ export class SummaryService {
   }
 
   public searchMedicineSubgroup(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineSubgroup, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineSubgroup + '?' + data);
   }
 
   public getAllMedicineUnit(): Observable<ResponseServer> {
@@ -241,13 +241,13 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineUnit, data);
   }
   public searchMedicineUnit(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchMedicineUnit, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineUnit + '?' + data);
   }
 
   /*----------------------------------------------------------------------------------------------------- */
   /*---------------------------------------- ImportBatch ---------------------------------------- */
   public searchImportBatch(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchImportBatch, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchImportBatch + '?' + data);
   }
 
   public addImportBatch(data: any): Observable<ResponseServer> {
@@ -270,7 +270,7 @@ export class SummaryService {
     return this.http.delete<ResponseServer>(UrlServerAPIDeleteImportMedicine + id);
   }
   public searchImportMedicine(data: any): Observable<ResponseServer> {
-    return this.http.post<ResponseServer>(UrlServerAPISearchImportMedicine, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchImportMedicine + '?' + data);
   }
   public getDetailImportMedicine(id: string, selectFields: string): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIDetailImportMedicine + id + '?SelectFields=' + selectFields);
@@ -330,12 +330,12 @@ export class SummaryService {
     return this.http.get<ResponseServer>(UrlServerAPIGetDetailBuyMedicine + id + '?SelectFields=' + selectFields);
   }
   public searchRequestBuyMedicine(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPISearchRequestBuyMedicine, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchRequestBuyMedicine + '?' + data);
   }
-  
+
   //Request Buy Medicine Detail
   public searchRequestBuyMedicineDetail(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPIDetailRequestBuyMedicine, data);
+    return this.http.get<ResponseServer>(UrlServerAPIDetailRequestBuyMedicine + '?' + data);
   }
 
 
@@ -346,7 +346,7 @@ export class SummaryService {
   }
 
   public searchDepartment(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchDepartment+'?'+ data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchDepartment + '?' + data);
   }
 
   //treatment information
@@ -356,7 +356,7 @@ export class SummaryService {
   }
 
   public searchTreatment(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchTreatment+'?'+ data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchTreatment + '?' + data);
   }
 
   public searchPatient(data: any) {

@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router, NavigationStart, NavigationError, Event } from '@angular/router';
 import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineResponse, MedicineResponseForImport } from 'src/app/shared/responses/medicine/medicine';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
@@ -57,21 +57,25 @@ export class AddBatchMedicineComponent implements OnInit {
   patternMedicineName = "^[a-zA-Z0-9\\s]+$";
   patternUnit = "^[0-9]{1,5}$";
 
-
-  searchRecord: Record<string, ValueCompare> = {};
+  pageSize = 1;
+  pageIndex = 0;
+  sortOrderList = 1;
+  sortFieldList = "CreateDate";
+  searchValueMap: Map<string, ValueCompare> = new Map;
   searchMedicineName: ValueCompare = {
     value: '',
     compare: 'Contains'
   }
-  searchFields = "id, name, medicineUnit.name as medicineUnit";
-  searchMedicineRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "CreateDate",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+  selectFields = "id, name, medicineUnit.name as medicineUnit";
+  searchMedicineRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
+  // SearchRequest = {
+  //   limit: 1,
+  //   page: 0,
+  //   sortField: "CreateDate",
+  //   sortOrder: 0,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.searchFields,
+  // };
 
   addImportBatchRequest: AddImportBatchRequest = {
     storeImportMedicines: this.importMedicineList,
@@ -132,7 +136,6 @@ export class AddBatchMedicineComponent implements OnInit {
       }
     })
 
-    this.searchRecord['Name'] = null;
 
     if (localStorage.getItem('ImportMedicineList') == null) {
       localStorage.setItem('ImportMedicineList', JSON.stringify(this.importMedicineList));
@@ -194,9 +197,8 @@ export class AddBatchMedicineComponent implements OnInit {
 
     if (value !== '') {
       this.isLoading = true;
-      this.searchMedicineName.value = value;
-      this.searchRecord['Name'] = this.searchMedicineName;
-      this.medicineService.searchMedicine(this.searchMedicineRequest).subscribe(
+      this.generalService.setValueCompare(value, this.searchMedicineName, 'Name', this.searchValueMap);
+      this.medicineService.searchMedicine(this.searchMedicineRequest.getParamsString()).subscribe(
         (response) => {
           this.medicineList = response.data.data;
           console.log(response.data.data);

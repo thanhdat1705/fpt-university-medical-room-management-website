@@ -10,7 +10,7 @@ import { ImportBatchService } from 'src/app/shared/services/import-batch/import-
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { ImportMedicine } from 'src/app/shared/models/importMedicine';
 import { differenceInCalendarDays } from 'date-fns';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineResponseForImport } from 'src/app/shared/responses/medicine/medicine';
 import { ImportMedicineRequest } from 'src/app/shared/requests/ImportBatchMedicine/import-batch-medicine';
 @Component({
@@ -34,16 +34,9 @@ export class DetailImportMedicineComponent implements OnInit {
   isDisable = true;
 
   searchFieldDetailImportMedicine = "Id, Quantity,Price, InsertDate, ExpirationDate, Description, MedicineId, Medicine, Medicine.MedicineUnit.Name as MedicineUnit, ImportMedicineStatus.StatusImportMedicine";
-  searchRecord: Record<string, ValueCompare> = {};
-  searchFields = "id, name, medicineUnit.name as medicineUnit";
-  searchMedicineRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "CreateDate",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+  searchMedicineMap: Map<string, ValueCompare> = new Map;
+  selectMedicineFields = "id, name, medicineUnit.name as medicineUnit";
+  searchMedicineRequest = new SearchRequest1(1, 0, "CreateDate", 1, this.searchMedicineMap, this.selectMedicineFields)
   searchMedicineName: ValueCompare = {
     value: '',
     compare: 'Contains'
@@ -59,16 +52,18 @@ export class DetailImportMedicineComponent implements OnInit {
   }
 
 
-  searchImportMedicineRecord: Record<string, ValueCompare> = {};
-  searchImportMedicinFields = "id, quantity, price, insertDate, expirationDate, medicineId, ImportBatchId";
-  searchImportMedicineRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "",
-    sortOrder: 0,
-    searchValue: this.searchImportMedicineRecord,
-    selectFields: this.searchImportMedicinFields,
-  };
+  // searchImportMedicineRecord: Record<string, ValueCompare> = {};
+  searchImportMedicineMap: Map<string, ValueCompare> = new Map;
+  selectImportMedicinFields = "id, quantity, price, insertDate, expirationDate, medicineId, ImportBatchId";
+  searchImportMedicineRequest = new SearchRequest1(1, 0, "", 0, this.searchImportMedicineMap, this.selectImportMedicinFields)
+  // searchImportMedicineRequest: SearchRequest = {
+  //   limit: 1,
+  //   page: 0,
+  //   sortField: "",
+  //   sortOrder: 0,
+  //   searchValue: this.searchImportMedicineRecord,
+  //   selectFields: this.searchImportMedicinFields,
+  // };
 
   searchValueImportBatchId: ValueCompare = {
     value: '',
@@ -135,12 +130,12 @@ export class DetailImportMedicineComponent implements OnInit {
       }
     })
     // this.medicineList = [...this.medicineList, data.medicine];
-    this.searchImportMedicineRecord['ImportBatchId'] = null;
-    this.searchImportMedicineRecord['Price'] = null;
-    this.searchImportMedicineRecord['InsertDate'] = null;
-    this.searchImportMedicineRecord['ExpirationDate'] = null;
-    this.searchImportMedicineRecord['MedicineId'] = null;
-    this.searchImportMedicineRecord['Id'] = null;
+    // this.searchImportMedicineRecord['ImportBatchId'] = null;
+    // this.searchImportMedicineRecord['Price'] = null;
+    // this.searchImportMedicineRecord['InsertDate'] = null;
+    // this.searchImportMedicineRecord['ExpirationDate'] = null;
+    // this.searchImportMedicineRecord['MedicineId'] = null;
+    // this.searchImportMedicineRecord['Id'] = null;
     this.detailImportMedicine(this.importMedicine);
   }
 
@@ -232,9 +227,8 @@ export class DetailImportMedicineComponent implements OnInit {
   }
 
   searchMedicine(value: string) {
-    this.searchMedicineName.value = value;
-    this.searchRecord['Name'] = this.searchMedicineName;
-    this.medicineService.searchMedicine(this.searchMedicineRequest).subscribe(
+    this.generalService.setValueCompare(value, this.searchMedicineName, 'Name', this.searchMedicineMap);
+    this.medicineService.searchMedicine(this.searchMedicineRequest.getParamsString()).subscribe(
       (response) => {
         this.medicineList = response.data.data;
         this.isLoading = false;
@@ -322,19 +316,25 @@ export class DetailImportMedicineComponent implements OnInit {
       }
     } else {
       this.updateImportMedicineLoading = true;
-      this.searchValueImportBatchId.value = this.importBatchId;
-      this.searchValuePrice.value = this.price.toString();
-      this.searchValueInsertDate.value = this.parseInsertDate;
-      this.searchValueExpirationDate.value = this.parseExpirationDate;
-      this.searchValueMedicineId.value = data.medicine.id;
-      this.isCurrentImportMedicine.value = this.importMedicine.id;
-      this.searchImportMedicineRecord['ImportBatchId'] = this.searchValueImportBatchId;
-      this.searchImportMedicineRecord['Price'] = this.searchValuePrice;
-      this.searchImportMedicineRecord['InsertDate'] = this.searchValueInsertDate;
-      this.searchImportMedicineRecord['ExpirationDate'] = this.searchValueExpirationDate;
-      this.searchImportMedicineRecord['MedicineId'] = this.searchValueMedicineId;
-      this.searchImportMedicineRecord['Id'] = this.isCurrentImportMedicine;
-      this.service.searchImportMedicine(this.searchImportMedicineRequest).subscribe(
+      // this.searchValueImportBatchId.value = this.importBatchId;
+      // this.searchValuePrice.value = this.price.toString();
+      // this.searchValueInsertDate.value = this.parseInsertDate;
+      // this.searchValueExpirationDate.value = this.parseExpirationDate;
+      // this.searchValueMedicineId.value = data.medicine.id;
+      // this.isCurrentImportMedicine.value = this.importMedicine.id;
+      // this.searchImportMedicineRecord['ImportBatchId'] = this.searchValueImportBatchId;
+      // this.searchImportMedicineRecord['Price'] = this.searchValuePrice;
+      // this.searchImportMedicineRecord['InsertDate'] = this.searchValueInsertDate;
+      // this.searchImportMedicineRecord['ExpirationDate'] = this.searchValueExpirationDate;
+      // this.searchImportMedicineRecord['MedicineId'] = this.searchValueMedicineId;
+      // this.searchImportMedicineRecord['Id'] = this.isCurrentImportMedicine;
+      this.generalService.setValueCompare(this.importBatchId, this.searchValueImportBatchId, 'ImportBatchId', this.searchImportMedicineMap);
+      this.generalService.setValueCompare(this.price.toString(), this.searchValuePrice, 'Price', this.searchImportMedicineMap);
+      this.generalService.setValueCompare(this.parseInsertDate, this.searchValueInsertDate, 'InsertDate', this.searchImportMedicineMap);
+      this.generalService.setValueCompare(this.parseExpirationDate, this.searchValueExpirationDate, 'ExpirationDate', this.searchImportMedicineMap);
+      this.generalService.setValueCompare(data.medicine.id, this.searchValueMedicineId, 'MedicineId', this.searchImportMedicineMap);
+      this.generalService.setValueCompare(this.importMedicine.id, this.isCurrentImportMedicine, 'Id', this.searchImportMedicineMap);
+      this.service.searchImportMedicine(this.searchImportMedicineRequest.getParamsString()).subscribe(
         (response) => {
           this.updateImportMedicineLoading = false;
           this.found = response.data.data;
@@ -378,24 +378,7 @@ export class DetailImportMedicineComponent implements OnInit {
       this.service.deleteImportMedicine(idDelete).subscribe(
         (response) => {
           console.log('delete success medicine');
-          this.service.updateImportMedicine(this.updateImportMedicineRequest, this.importMedicine.id, this.searchFieldDetailImportMedicine).subscribe(
-            (response) => {
-              console.log('update ', response.data);
-              this.importMedicine = response.data;
-              this.updateImportMedicineLoading = false;
-              this.detailImportMedicineAfterUpdate(response.data);
-              this.service.setIsUpdate(true);
-              this.generalService.messageNz('success', 'Cập nhật thành công');
-
-            },
-            (error) => {
-              this.service.setIsUpdate(true);
-              console.log(error.error.message);
-              this.updateImportMedicineLoading = false;
-              console.log('update import medicine error');
-              this.generalService.createErrorNotification(error);
-            }
-          )
+          this.update();
         },
         (error) => {
           this.modal.closeAll();
@@ -404,7 +387,33 @@ export class DetailImportMedicineComponent implements OnInit {
         }
       )
     }
-
+    else {
+      this.update();
+    }
 
   }
+
+  update() {
+    this.service.updateImportMedicine(this.updateImportMedicineRequest, this.importMedicine.id, this.searchFieldDetailImportMedicine).subscribe(
+      (response) => {
+        console.log('update ', response.data);
+        this.importMedicine = response.data;
+        this.updateImportMedicineLoading = false;
+        this.detailImportMedicineAfterUpdate(response.data);
+        this.service.setIsUpdate(true);
+        this.generalService.messageNz('success', 'Cập nhật thành công');
+
+      },
+      (error) => {
+        this.service.setIsUpdate(true);
+        console.log(error.error.message);
+        this.updateImportMedicineLoading = false;
+        console.log('update import medicine error');
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+
+  
 }

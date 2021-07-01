@@ -5,7 +5,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { RequestBuyMedicine } from 'src/app/shared/models/request-buy-medicine';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { RequestBuyMedicineService } from 'src/app/shared/services/request-buy-medicine/request-buy-medicine.service';
@@ -30,21 +30,13 @@ export class BuyMedicineListComponent implements OnInit {
 
   totalRecord!: number;
   pageSize = 10;
-  pageIndex = 1;
+  pageIndex = 0;
   sortOrderList = 1;
   sortFieldList = "CreateDate";
-
-  searchRecord: Record<string, ValueCompare> = {};
+  selectFields = "id, createDate, updateDate, numberOfSpecificMedicine"
+  searchBuyMedicine;
   searchValueMap: Map<string, ValueCompare> = new Map;
-  searchFields = "id, createDate, updateDate, numberOfSpecificMedicine"
-  searchMedicineRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "CreateDate",
-    sortOrder: 1,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+
   searchFromDate: ValueCompare = {
     value: '',
     compare: '>='
@@ -68,9 +60,9 @@ export class BuyMedicineListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.searchRecord['CreateDate|from'] = null;
-    this.searchRecord['CreateDate|to'] = null;
+    this.searchBuyMedicine = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
+    // this.searchRecord['CreateDate|from'] = null;
+    // this.searchRecord['CreateDate|to'] = null;
 
   }
 
@@ -96,9 +88,9 @@ export class BuyMedicineListComponent implements OnInit {
 
   searchRequestBuyMedicine() {
     this.requestListLoading = true;
-    console.log(JSON.stringify(this.searchMedicineRequest));
+    console.log(JSON.stringify(this.searchBuyMedicine));
     setTimeout(() => {
-      this.service.searchRequestBuyMedicine(this.searchMedicineRequest).subscribe(
+      this.service.searchRequestBuyMedicine(this.searchBuyMedicine.getParamsString()).subscribe(
         (response) => {
           this.requestListLoading = false;
           this.getData(response.data);
@@ -124,25 +116,22 @@ export class BuyMedicineListComponent implements OnInit {
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
     sortField == null ? this.sortFieldList = 'CreateDate' : this.sortFieldList = sortField;
-    this.searchMedicineRequest = {
-      limit: pageSize,
-      page: pageIndex,
-      sortField: this.sortFieldList,
-      sortOrder: this.sortOrderList,
-      searchValue: this.searchRecord,
-      selectFields: this.searchFields
-    }
+    
+    this.searchBuyMedicine.limit = pageSize;
+    this.searchBuyMedicine.page = pageIndex;
+    this.searchBuyMedicine.sortOrder = this.sortOrderList;
+    this.searchBuyMedicine.sortField = this.sortFieldList;
 
     this.searchRequestBuyMedicine();
   }
 
   goToDetailScreen(id: string) {
-    this.service.getDetailBuyMedicineToDetailScreen(id, this.searchFields);
+    this.service.getDetailBuyMedicineToDetailScreen(id, this.selectFields);
 
   }
 
   goToUpdateScreen(id: string) {
-    this.service.getDetailBuyMedicineToUpdateScreen(id, this.searchFields);
+    this.service.getDetailBuyMedicineToUpdateScreen(id, this.selectFields);
 
   }
 
@@ -151,15 +140,19 @@ export class BuyMedicineListComponent implements OnInit {
     if (result.length > 0) {
       this.dateRangeSelected = true;
       console.log('Từ : ', this.generalService.getYMD(result[0].toString()), ', tới: ', this.generalService.getYMD(result[1].toString()));
-      this.searchFromDate.value = this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00';
-      this.searchToDate.value = this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00';
-      this.searchRecord['CreateDate|from'] = this.searchFromDate;
-      this.searchRecord['CreateDate|to'] = this.searchToDate;
+      // this.searchFromDate.value = this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00';
+      // this.searchToDate.value = this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00';
+      // this.searchRecord['CreateDate|from'] = this.searchFromDate;
+      // this.searchRecord['CreateDate|to'] = this.searchToDate;
+      this.generalService.setValueCompare(this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00', this.searchFromDate, 'CreateDate|from', this.searchValueMap);
+      this.generalService.setValueCompare(this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00', this.searchToDate, 'CreateDate|to', this.searchValueMap);
       this.searchRequestBuyMedicine();
     } else {
       this.dateRangeSelected = false;
-      this.searchRecord['CreateDate|from'] = null;
-      this.searchRecord['CreateDate|to'] = null;
+      // this.searchRecord['CreateDate|from'] = null;
+      // this.searchRecord['CreateDate|to'] = null;
+      this.generalService.setValueCompare(null, this.searchFromDate, 'CreateDate|from', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchToDate, 'CreateDate|to', this.searchValueMap);
       this.searchRequestBuyMedicine();
     }
   }

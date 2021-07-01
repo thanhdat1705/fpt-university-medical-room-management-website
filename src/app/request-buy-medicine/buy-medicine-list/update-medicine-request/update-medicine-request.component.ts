@@ -6,7 +6,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { RequestBuyMedicine, RequestBuyMedicineDisplay } from 'src/app/shared/models/request-buy-medicine';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
@@ -69,28 +69,33 @@ export class UpdateMedicineRequestComponent implements OnInit {
     compare: 'Contains'
   }
   searchRecord: Record<string, ValueCompare> = {};
+  searchMedicineMap: Map<string, ValueCompare> = new Map;
+  searchMedicineDetailInRequestMap: Map<string, ValueCompare> = new Map;
+
   searchRequestBuyMedicineId: ValueCompare = {
     value: '',
     compare: 'Equals'
   }
   searchFields = "id, name";
-  searchMedicineRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "CreateDate",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+  searchMedicine;
+  // SearchRequest = {
+  //   limit: 1,
+  //   page: 0,
+  //   sortField: "CreateDate",
+  //   sortOrder: 0,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.searchFields,
+  // };
   searchFieldsRequest = "medicineId, medicine.name as medicineName, medicineUnitId, medicineUnit.name as medicineUnitName, quantity, note"
-  searchMedicineDetailInRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "medicine.name",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFieldsRequest,
-  };
+  searchMedicineDetailInRequest;
+  // SearchRequest = {
+  //   limit: 1,
+  //   page: 0,
+  //   sortField: "medicine.name",
+  //   sortOrder: 0,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.searchFieldsRequest,
+  // };
 
   requesToBuyMedicine: RequestToBuyMedicine = {
     requestBuyMedicineDetails: this.buyMedicineListDisplay
@@ -134,7 +139,8 @@ export class UpdateMedicineRequestComponent implements OnInit {
     //     }
     //   }
     // );
-
+    this.searchMedicine = new SearchRequest1(1, 0, "CreateDate", 1, this.searchMedicineMap, this.searchFields)
+    this.searchMedicineDetailInRequest = new SearchRequest1(1, 0, "medicine.name", 1, this.searchMedicineDetailInRequestMap, this.searchFieldsRequest)
     this.getAllMedicineUnit();
 
     if (localStorage.getItem('UpdateBuyMedicineListDisplay') == null) {
@@ -230,9 +236,8 @@ export class UpdateMedicineRequestComponent implements OnInit {
 
     if (value !== '') {
       this.isLoading = true;
-      this.searchMedicineName.value = value;
-      this.searchRecord['Name'] = this.searchMedicineName;
-      this.medicineService.searchMedicine(this.searchMedicineRequest).subscribe(
+      this.generalService.setValueCompare(value, this.searchMedicineName, 'Name', this.searchMedicineMap);
+      this.medicineService.searchMedicine(this.searchMedicine.getParamsString()).subscribe(
         (response) => {
           this.medicineList = response.data.data;
           console.log(response.data.data);
@@ -279,9 +284,8 @@ export class UpdateMedicineRequestComponent implements OnInit {
   }
 
   searchRequestBuyMedicineDetail(id: string) {
-    this.searchRequestBuyMedicineId.value = id;
-    this.searchRecord['RequestToBuyMedicineId'] = this.searchRequestBuyMedicineId;
-    this.service.searchRequestBuyMedicineDetail(this.searchMedicineDetailInRequest).subscribe(
+    this.generalService.setValueCompare(id, this.searchRequestBuyMedicineId, 'RequestToBuyMedicineId', this.searchMedicineDetailInRequestMap);
+    this.service.searchRequestBuyMedicineDetail(this.searchMedicineDetailInRequest.getParamsString()).subscribe(
       (response) => {
         localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(response.data.data));
         this.buyMedicineListDisplay = JSON.parse(localStorage.getItem('UpdateBuyMedicineListDisplay'));

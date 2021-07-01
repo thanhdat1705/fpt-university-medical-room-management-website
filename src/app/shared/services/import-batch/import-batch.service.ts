@@ -22,7 +22,7 @@ export class ImportBatchService {
     return this.service.addImportBatch(data);
   }
 
-  searchImportBatches(data: SearchRequest) {
+  searchImportBatches(data: any) {
     return this.service.searchImportBatch(data);
   }
 
@@ -40,7 +40,7 @@ export class ImportBatchService {
   deleteImportMedicine(id: string) {
     return this.service.deleteImportMedicine(id);
   }
-  searchImportMedicine(data: SearchRequest) {
+  searchImportMedicine(data: any) {
     return this.service.searchImportMedicine(data);
   }
 

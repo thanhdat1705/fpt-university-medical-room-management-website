@@ -10,7 +10,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { AddImportMedicineComponent } from './add-import-medicine/add-import-medicine.component';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DetailImportMedicineComponent } from './detail-import-medicine/detail-import-medicine.component';
 import { SearchImportMedicine } from 'src/app/shared/requests/ImportBatchMedicine/import-batch-medicine';
@@ -26,12 +26,6 @@ export class DetailBatchMedicineComponent implements OnInit {
   page: number;
   pageLimit: number;
 
-  totalRecord!: number;
-  pageSize = 5;
-  pageIndex = 1;
-  sortOrderList = 1;
-  sortFieldList = "InsertDate";
-
   importMedicineLoading = false;
   checked = false;
   updateDetail = false;
@@ -43,16 +37,23 @@ export class DetailBatchMedicineComponent implements OnInit {
   importMedicineList: SearchImportMedicine[]
   searchFieldDetailImportMedicine = "Id, Quantity,Price, InsertDate, ExpirationDate, Description, MedicineId, Medicine, Medicine.MedicineUnit.Name as MedicineUnit, ImportMedicineStatus.StatusImportMedicine";
   searchFieldDetailImportBatch = "Id, NumberOfSpecificMedicine, TotalPrice, PeriodicInventory.Month as PeriodicByMonth, PeriodicInventory.Year as PeriodicByYear, CreateDate, UpdateDate";
-  searchRecord: Record<string, ValueCompare> = {};
-  searchFields = "id, quantity, price, description, insertDate, expirationDate, importBatchId, medicine.name as medicineName, medicine.MedicineUnit as medicineUnit, statusId, importMedicineStatus.statusImportMedicine";
-  searchImportMedicineRequest: SearchRequest = {
-    limit: 10,
-    page: 0,
-    sortField: "InsertDate",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+  
+  selectFields = "id, quantity, price, description, insertDate, expirationDate, importBatchId, medicine.name as medicineName, medicine.MedicineUnit as medicineUnit, statusId, importMedicineStatus.statusImportMedicine";
+  totalRecord!: number;
+  pageSize = 10;
+  pageIndex = 0;
+  sortOrderList = 0;
+  sortFieldList = "InsertDate";
+  searchValueMap: Map<string, ValueCompare> = new Map;
+  searchImportMedicineRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
+  // searchImportMedicineRequest: SearchRequest = {
+  //   limit: 10,
+  //   page: 0,
+  //   sortField: "InsertDate",
+  //   sortOrder: 0,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.searchFields,
+  // };
   searchValueImportBarchId: ValueCompare = {
     value: '',
     compare: 'Equals'
@@ -74,9 +75,7 @@ export class DetailBatchMedicineComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.searchValueImportBarchId.value = this.importBatchId;
-    this.searchRecord['ImportBatchId'] = this.searchValueImportBarchId;
-
+    this.generalService.setValueCompare(this.importBatchId, this.searchValueImportBarchId, 'ImportBatchId', this.searchValueMap);
     this.getDetailImportBatch();
 
   }
@@ -113,7 +112,7 @@ export class DetailBatchMedicineComponent implements OnInit {
 
   searchImportMedicine() {
     this.importMedicineLoading = true;
-    this.service.searchImportMedicine(this.searchImportMedicineRequest).subscribe(
+    this.service.searchImportMedicine(this.searchImportMedicineRequest.getParamsString()).subscribe(
       (response) => {
         this.importMedicineLoading = false;
         this.getData(response.data);
@@ -150,14 +149,11 @@ export class DetailBatchMedicineComponent implements OnInit {
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
     sortField == null ? this.sortFieldList = 'InsertDate' : this.sortFieldList = sortField;
-    this.searchImportMedicineRequest = {
-      limit: pageSize,
-      page: pageIndex,
-      sortField: this.sortFieldList,
-      sortOrder: this.sortOrderList,
-      searchValue: this.searchRecord,
-      selectFields: this.searchFields
-    }
+
+    this.searchImportMedicineRequest.limit = pageSize;
+    this.searchImportMedicineRequest.page = pageIndex;
+    this.searchImportMedicineRequest.sortOrder = this.sortOrderList;
+    this.searchImportMedicineRequest.sortField = this.sortFieldList;
 
     this.searchImportMedicine();
   }

@@ -6,7 +6,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { RequestBuyMedicine, RequestBuyMedicineDisplay } from 'src/app/shared/models/request-buy-medicine';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { RequestBuyMedicineService } from 'src/app/shared/services/request-buy-medicine/request-buy-medicine.service';
@@ -35,27 +35,21 @@ export class DetailBuyMedicineComponent implements OnInit {
 
   totalRecord!: number;
   pageSize = 5;
-  pageIndex = 1;
+  pageIndex = 0;
+  sortFieldList = " medicine.name";
   sortOrderList = 1;
-  sortFieldList = "CreateDate";
+  
 
   selectFieldDetail = "id, createDate, updateDate, numberOfSpecificMedicine";
 
-  searchRecord: Record<string, ValueCompare> = {};
+  searchValueMap: Map<string, ValueCompare> = new Map;
   searchRequestBuyMedicineId: ValueCompare = {
     value: '',
     compare: 'Equals'
   }
-  searchFieldsRequest = "id, createDate, updateDate, numberOfSpecificMedicine"
-  searchFields = "medicineId, medicine.name as medicineName, medicineUnitId, medicineUnit.name as medicineUnitName, quantity, note"
-  searchMedicineDetailInRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "medicine.name",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+  selectFieldsRequest = "id, createDate, updateDate, numberOfSpecificMedicine"
+  selectFields = "medicineId, medicine.name as medicineName, medicineUnitId, medicineUnit.name as medicineUnitName, quantity, note"
+  searchMedicineDetailInRequest;
 
   constructor(
     private fb: FormBuilder,
@@ -74,6 +68,7 @@ export class DetailBuyMedicineComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.requestId);
+    this.searchMedicineDetailInRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
     this.activatedRoute.fragment.subscribe(
       (response) => {
         this.requestDetail = JSON.parse(JSON.stringify(response));
@@ -116,9 +111,10 @@ export class DetailBuyMedicineComponent implements OnInit {
   }
 
   searchRequestBuyMedicineDetail(id: string) {
-    this.searchRequestBuyMedicineId.value = id;
-    this.searchRecord['RequestToBuyMedicineId'] = this.searchRequestBuyMedicineId;
-    this.service.searchRequestBuyMedicineDetail(this.searchMedicineDetailInRequest).subscribe(
+    // this.searchRequestBuyMedicineId.value = id;
+    // this.searchRecord['RequestToBuyMedicineId'] = this.searchRequestBuyMedicineId;
+    this.generalService.setValueCompare(id, this.searchRequestBuyMedicineId, 'RequestToBuyMedicineId', this.searchValueMap);
+    this.service.searchRequestBuyMedicineDetail(this.searchMedicineDetailInRequest.getParamsString()).subscribe(
       (response) => {
         this.getData(response.data);
       },
@@ -135,7 +131,7 @@ export class DetailBuyMedicineComponent implements OnInit {
   }
 
   goToUpdateScreen() {
-    this.service.getDetailBuyMedicineToUpdateScreen(this.requestId, this.searchFieldsRequest);
+    this.service.getDetailBuyMedicineToUpdateScreen(this.requestId, this.selectFieldsRequest);
 
   }
 

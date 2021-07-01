@@ -6,7 +6,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { RequestBuyMedicineDisplay } from 'src/app/shared/models/request-buy-medicine';
 import { StoreNewMedicineUnitRequest } from 'src/app/shared/requests/medicine-unit/store-new-request';
 import { RequestToBuyMedicine } from 'src/app/shared/requests/request-buy-medicine/request-to-buy-medicine';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
@@ -52,20 +52,20 @@ export class CreateRequestComponent implements OnInit {
   classList: MedicineClassificationResponse[] = [];
   subgroupList: MedicineSubgroupResponse[] = [];
 
-  searchRecord: Record<string, ValueCompare> = {};
+  totalRecord!: number;
+  pageSize = 1;
+  pageIndex = 0;
+  sortOrderList = 1;
+  sortFieldList = "CreateDate";
+  selectFieldDetail = "id, createDate, updateDate, numberOfSpecificMedicine";
+
+  searchValueMap: Map<string, ValueCompare> = new Map;
   searchMedicineName: ValueCompare = {
     value: '',
     compare: 'Contains'
   }
-  searchFields = "id, name";
-  searchMedicineRequest: SearchRequest = {
-    limit: 1,
-    page: 0,
-    sortField: "CreateDate",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+  selectFields = "id, name";
+  searchMedicineRequest;
 
   storeNewMedicineUnitRequest: StoreNewMedicineUnitRequest = {
     Name: "",
@@ -75,8 +75,8 @@ export class CreateRequestComponent implements OnInit {
     requestBuyMedicineDetails: this.buyMedicineListDisplay
   };
 
-  selectFieldDetail = "id, createDate, updateDate, numberOfSpecificMedicine";
-  
+
+
   constructor(
     private fb: FormBuilder,
     private medicineService: MedicineService,
@@ -102,7 +102,7 @@ export class CreateRequestComponent implements OnInit {
   // medicine = { id: "cbc73215-cdc0-40b2-a547-55deae1d0eab", name: "Alphchoi" }
   ngOnInit(): void {
     this.getAllMedicineUnit();
-
+    this.searchMedicineRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
     if (localStorage.getItem('BuyMedicineListDisplay') == null) {
       localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
       this.buyMedicineListDisplay = JSON.parse(localStorage.getItem('BuyMedicineListDisplay'));
@@ -208,9 +208,8 @@ export class CreateRequestComponent implements OnInit {
 
     if (value !== '') {
       this.isLoading = true;
-      this.searchMedicineName.value = value;
-      this.searchRecord['Name'] = this.searchMedicineName;
-      this.medicineService.searchMedicine(this.searchMedicineRequest).subscribe(
+      this.generalService.setValueCompare(value, this.searchMedicineName, 'Name', this.searchValueMap);
+      this.medicineService.searchMedicine(this.searchMedicineRequest.getParamsString()).subscribe(
         (response) => {
           this.medicineList = response.data.data;
           console.log(response.data.data);

@@ -7,7 +7,7 @@ import { FilterTable } from 'src/app/shared/models/filterTable';
 import { Medicine } from 'src/app/shared/models/medicine';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
@@ -37,8 +37,7 @@ export class MedicineListComponent implements OnInit {
   totalRecord!: number;
   pageSize = 10;
   pageIndex = 1;
-
-  sortOrderList = 0;
+  sortOrderList = 1;
   sortFieldList = "CreateDate";
 
   isLoading = false;
@@ -57,8 +56,8 @@ export class MedicineListComponent implements OnInit {
 
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------------------------------------------------*/
-  searchRecord: Record<string, ValueCompare> = {};
-
+  // searchRecord: Record<string, ValueCompare> = {};
+  searchValueMap: Map<string, ValueCompare> = new Map;
 
   searchName: ValueCompare = {
     value: '',
@@ -77,15 +76,16 @@ export class MedicineListComponent implements OnInit {
     compare: 'Equals'
   }
 
-  searchFields = "id, name, medicineUnit, medicineClassification, medicineSubgroup, createDate";
-  searchMedicineRequest: SearchRequest = {
-    limit: 10,
-    page: 1,
-    sortField: "Createdate",
-    sortOrder: 0,
-    searchValue: null,
-    selectFields: this.searchFields,
-  };
+  selectFields = "id, name, medicineUnit, medicineClassification, medicineSubgroup, createDate";
+  searchMedicineRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
+  // SearchRequest = {
+  //   limit: 10,
+  //   page: 1,
+  //   sortField: "Createdate",
+  //   sortOrder: 0,
+  //   searchValue: null,
+  //   selectFields: this.searchFields,
+  // };
 
   // filterUnit: FilterTable[] = [];
   // filterClass: FilterTable[] = [];
@@ -106,14 +106,11 @@ export class MedicineListComponent implements OnInit {
 
   ngOnInit(): void {
     // this.searchMedicine();
+    
     this.getAllUnit();
     this.getAllSubgroup();
     this.getAllClass();
 
-    this.searchRecord['Name'] = null;
-    this.searchRecord['MedicineUnitId'] = null;
-    this.searchRecord['MedicineSubgroupId'] = null;
-    this.searchRecord['MedicineClassificationId'] = null;
 
   
   }
@@ -126,10 +123,10 @@ export class MedicineListComponent implements OnInit {
   }
 
   resetTable() {
-    this.pageSize = 10;
-    this.pageIndex = 1;
-    this.sortOrderList = 0;
-    this.sortFieldList = "CreateDate";
+    this.searchMedicineRequest.limit = 10;
+    this.searchMedicineRequest.page = 1;
+    this.searchMedicineRequest.sortOrder = 1;
+    this.searchMedicineRequest.sortField = "CreateDate";
   }
 
   /*---------------------------------------------------------------------------------------------------------------------*/
@@ -186,12 +183,10 @@ export class MedicineListComponent implements OnInit {
   /*---------------------------------------------------------------------------------------------------------------------*/
   /*------------------------------------------------ Change ------------------------------------------------------------*/
   inputChange(value: any) {
-    this.searchName.value = this.searchValue;
-    this.searchRecord['Name'] = this.searchName;
-    this.searchRecord['UnitId'] = null;
-    this.searchRecord['MedicineSubgroupId'] = null;
-    this.searchRecord['MedicineClassificationId'] = null;
-    console.log(this.searchRecord);
+    this.generalService.setValueCompare(this.searchValue, this.searchName, 'Name', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
     this.resetTable();
     if (value !== '') {
       this.pageSize = 10;
@@ -200,10 +195,10 @@ export class MedicineListComponent implements OnInit {
       this.searchMedicine();
 
     } else {
-      this.searchRecord['Name'] = null;
-      this.searchRecord['UnitId'] = null;
-      this.searchRecord['MedicineSubgroupId'] = null;
-      this.searchRecord['MedicineClassificationId'] = null;
+      this.generalService.setValueCompare(null, this.searchName, 'Name', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
       this.searchMedicineRequest.limit = 10;
       this.searchMedicineRequest.page = 1;
       this.pageSize = 10;
@@ -219,14 +214,13 @@ export class MedicineListComponent implements OnInit {
     if (value !== '' && value !== null) {
       this.resetTable();
       this.unitSelected = true;
-      this.searchUnit.value = value;
-      this.searchRecord['MedicineUnitId'] = this.searchUnit;
+      this.generalService.setValueCompare(value, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
       this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
       this.unitSelected = false;
-      this.searchRecord['MedicineUnitId'] = null;
+      this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
       this.searchMedicineRequest.limit = 10;
 
     }
@@ -237,14 +231,13 @@ export class MedicineListComponent implements OnInit {
     if (value !== '' && value !== null) {
       this.resetTable();
       this.classSelected = true;
-      this.searchClass.value = value;
-      this.searchRecord['MedicineClassificationId'] = this.searchClass;
+      this.generalService.setValueCompare(value, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
       this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
       this.classSelected = false;
-      this.searchRecord['MedicineClassificationId'] = null;
+      this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
       this.searchMedicineRequest.limit = 10;
 
     }
@@ -255,14 +248,13 @@ export class MedicineListComponent implements OnInit {
     if (value !== '' && value !== null) {
       this.resetTable();
       this.subgroupSelected = true;
-      this.searchSubgroup.value = value;
-      this.searchRecord['MedicineSubgroupId'] = this.searchSubgroup;
+      this.generalService.setValueCompare(value, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
       this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
       this.subgroupSelected = false;
-      this.searchRecord['MedicineSubgroupId'] = null;
+      this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
       this.searchMedicineRequest.limit = 10;
 
     }
@@ -294,7 +286,7 @@ export class MedicineListComponent implements OnInit {
     this.tableLoading = true;
     // this.searchName.value = this.searchValue
     // this.searchMedicineRequest.SearchValue = this.searchRecord;
-    this.service.searchMedicine(this.searchMedicineRequest).subscribe(
+    this.service.searchMedicine(this.searchMedicineRequest.getParamsString()).subscribe(
       (response) => {
         this.tableLoading = false;
         this.getData(response.data);
@@ -330,14 +322,19 @@ export class MedicineListComponent implements OnInit {
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
     sortField == null ? this.sortFieldList = 'CreateDate' : this.sortFieldList = sortField;
     this.searchName.value = this.searchValue;
-    this.searchMedicineRequest = {
-      limit: pageSize,
-      page: pageIndex,
-      sortField: this.sortFieldList,
-      sortOrder: this.sortOrderList,
-      searchValue: this.searchRecord,
-      selectFields: this.searchFields
-    }
+    // this.searchMedicineRequest = {
+    //   limit: pageSize,
+    //   page: pageIndex,
+    //   sortField: this.sortFieldList,
+    //   sortOrder: this.sortOrderList,
+    //   searchValue: this.searchRecord,
+    //   selectFields: this.searchFields
+    // }
+
+    this.searchMedicineRequest.limit = pageSize;
+    this.searchMedicineRequest.page = pageIndex;
+    this.searchMedicineRequest.sortOrder = this.sortOrderList;
+    this.searchMedicineRequest.sortField = this.sortFieldList;
 
     this.searchMedicine();
 

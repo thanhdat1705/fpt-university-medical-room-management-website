@@ -5,7 +5,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
 import { ImportBatchResponse } from 'src/app/shared/responses/ImportBatchMedicine/import-batch';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { ImportBatchService } from 'src/app/shared/services/import-batch/import-batch.service';
@@ -44,7 +44,8 @@ export class BatchMedicineListComponent implements OnInit {
   sortOrderList = 1;
   sortFieldList = "CreateDate";
 
-  searchRecord: Record<string, ValueCompare> = {};
+  // searchRecord: Record<string, ValueCompare> = {};
+  searchValueMap: Map<string, ValueCompare> = new Map;
   searchMinPrice: ValueCompare = {
     value: '',
     compare: '>='
@@ -74,15 +75,16 @@ export class BatchMedicineListComponent implements OnInit {
     compare: '=='
   }
 
-  searchFields = "id, numberOfSpecificMedicine, totalPrice, createDate, periodicInventory";
-  searchImportBatchRequest: SearchRequest = {
-    limit: 10,
-    page: 1,
-    sortField: "Createdate",
-    sortOrder: 0,
-    searchValue: this.searchRecord,
-    selectFields: this.searchFields,
-  };
+  selectFields = "id, numberOfSpecificMedicine, totalPrice, createDate, periodicInventory";
+  searchImportBatchRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
+  // searchImportBatchRequest: SearchRequest = {
+  //   limit: 10,
+  //   page: 1,
+  //   sortField: "Createdate",
+  //   sortOrder: 0,
+  //   searchValue: this.searchRecord,
+  //   selectFields: this.searchFields,
+  // };
 
   constructor(
     private router: Router,
@@ -116,13 +118,13 @@ export class BatchMedicineListComponent implements OnInit {
       }
     })
 
-    this.searchRecord['TotalPrice|from'] = null;
-    this.searchRecord['TotalPrice|to'] = null;
-    this.searchRecord['CreateDate|from'] = null;
-    this.searchRecord['CreateDate|to'] = null;
-    this.searchRecord['NumberOfSpecificMedicine'] = null;
-    this.searchRecord['PeriodicInventory.Month'] = null;
-    this.searchRecord['PeriodicInventory.Year'] = null;
+    // this.searchRecord['TotalPrice|from'] = null;
+    // this.searchRecord['TotalPrice|to'] = null;
+    // this.searchRecord['CreateDate|from'] = null;
+    // this.searchRecord['CreateDate|to'] = null;
+    // this.searchRecord['NumberOfSpecificMedicine'] = null;
+    // this.searchRecord['PeriodicInventory.Month'] = null;
+    // this.searchRecord['PeriodicInventory.Year'] = null;
   }
 
 
@@ -142,7 +144,7 @@ export class BatchMedicineListComponent implements OnInit {
 
   searchImportBatches() {
     this.importBatchLoading = true;
-    this.service.searchImportBatches(this.searchImportBatchRequest).subscribe(
+    this.service.searchImportBatches(this.searchImportBatchRequest.getParamsString()).subscribe(
       (response) => {
         this.importBatchLoading = false;
         this.getData(response.data);
@@ -166,14 +168,11 @@ export class BatchMedicineListComponent implements OnInit {
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
     sortField == null ? this.sortFieldList = 'CreateDate' : this.sortFieldList = sortField;
-    this.searchImportBatchRequest = {
-      limit: pageSize,
-      page: pageIndex,
-      sortField: this.sortFieldList,
-      sortOrder: this.sortOrderList,
-      searchValue: this.searchRecord,
-      selectFields: this.searchFields
-    }
+
+    this.searchImportBatchRequest.limit = pageSize;
+    this.searchImportBatchRequest.page = pageIndex;
+    this.searchImportBatchRequest.sortOrder = this.sortOrderList;
+    this.searchImportBatchRequest.sortField = this.sortFieldList;
 
     this.searchImportBatches();
   }
@@ -183,15 +182,13 @@ export class BatchMedicineListComponent implements OnInit {
     if (result.length > 0) {
       this.dateRangeSelected = true;
       console.log('Từ : ', this.generalService.getYMD(result[0].toString()), ', tới: ', this.generalService.getYMD(result[1].toString()));
-      this.searchFromDate.value = this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00';
-      this.searchToDate.value = this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00';
-      this.searchRecord['CreateDate|from'] = this.searchFromDate;
-      this.searchRecord['CreateDate|to'] = this.searchToDate;
+      this.generalService.setValueCompare(this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00', this.searchFromDate, 'CreateDate|from', this.searchValueMap);
+      this.generalService.setValueCompare(this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00', this.searchToDate, 'CreateDate|to', this.searchValueMap);
       this.searchImportBatches();
     } else {
       this.dateRangeSelected = false;
-      this.searchRecord['CreateDate|from'] = null;
-      this.searchRecord['CreateDate|to'] = null;
+      this.generalService.setValueCompare(null, this.searchFromDate, 'CreateDate|from', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchToDate, 'CreateDate|to', this.searchValueMap);
       this.searchImportBatches();
     }
   }
@@ -199,15 +196,13 @@ export class BatchMedicineListComponent implements OnInit {
   onDateChange(result: Date): void {
     if (result != null) {
       this.dateSelected = true;
-      this.searchMonth.value = (result.getMonth() + 1).toString();
-      this.searchYear.value = (result.getFullYear()).toString();
-      this.searchRecord['PeriodicInventory.Month'] = this.searchMonth;
-      this.searchRecord['PeriodicInventory.Year'] = this.searchYear;
+      this.generalService.setValueCompare((result.getMonth() + 1).toString(), this.searchMonth, 'PeriodicInventory.Month', this.searchValueMap);
+      this.generalService.setValueCompare((result.getFullYear()).toString(), this.searchYear, 'PeriodicInventory.Year', this.searchValueMap);
       this.searchImportBatches();
     } else {
       this.dateSelected = false;
-      this.searchRecord['PeriodicInventory.Month'] = null;
-      this.searchRecord['PeriodicInventory.Year'] = null;
+      this.generalService.setValueCompare(null, this.searchMonth, 'PeriodicInventory.Month', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchYear, 'PeriodicInventory.Year', this.searchValueMap);
       this.searchImportBatches();
     }
   }
@@ -219,12 +214,11 @@ export class BatchMedicineListComponent implements OnInit {
       console.log('null');
     } else if (price == '') {
       this.priceSelected = false;
-      this.searchRecord['TotalPrice|from'] = null;
+      this.generalService.setValueCompare(null, this.searchMinPrice, 'TotalPrice|from', this.searchValueMap);
       this.searchImportBatches();
     } else {
       this.priceSelected = true;
-      this.searchMinPrice.value = this.generalService.removeDotInString(price);
-      this.searchRecord['TotalPrice|from'] = this.searchMinPrice;
+      this.generalService.setValueCompare(this.generalService.removeDotInString(price), this.searchMinPrice, 'TotalPrice|from', this.searchValueMap);
       this.searchImportBatches();
     }
   }
@@ -235,12 +229,11 @@ export class BatchMedicineListComponent implements OnInit {
       console.log('null');
     } else if (price == '') {
       this.priceSelected = false;
-      this.searchRecord['TotalPrice|to'] = null;
+      this.generalService.setValueCompare(null, this.searchMaxPrice, 'TotalPrice|to', this.searchValueMap);
       this.searchImportBatches();
     } else {
       this.priceSelected = true;
-      this.searchMaxPrice.value = this.generalService.removeDotInString(price);
-      this.searchRecord['TotalPrice|to'] = this.searchMaxPrice;
+      this.generalService.setValueCompare(this.generalService.removeDotInString(price), this.searchMaxPrice, 'TotalPrice|to', this.searchValueMap);
       this.searchImportBatches();
     }
   }
@@ -249,21 +242,20 @@ export class BatchMedicineListComponent implements OnInit {
     this.quantity = quantity;
     if (quantity != '') {
       this.quantitySelected = true;
-      this.searchNumberOfSpecificMedicine.value = quantity;
-      this.searchRecord['NumberOfSpecificMedicine'] = this.searchNumberOfSpecificMedicine;
+      this.generalService.setValueCompare(quantity, this.searchNumberOfSpecificMedicine, 'NumberOfSpecificMedicine', this.searchValueMap);
       this.searchImportBatches();
     } else {
       this.quantitySelected = false;
-      this.searchRecord['NumberOfSpecificMedicine'] = null;
+      this.generalService.setValueCompare(null, this.searchNumberOfSpecificMedicine, 'NumberOfSpecificMedicine', this.searchValueMap);
       this.searchImportBatches();
     }
   }
 
   resetTable() {
-    this.pageSize = 10;
-    this.pageIndex = 1;
-    this.sortOrderList = 1;
-    this.sortFieldList = "CreateDate";
+    this.searchImportBatchRequest.limit = 10;
+    this.searchImportBatchRequest.page = 1;
+    this.searchImportBatchRequest.sortOrder = 1;
+    this.searchImportBatchRequest.sortField = "CreateDate";
   }
 
   setToDefaultFilter() {
@@ -279,13 +271,13 @@ export class BatchMedicineListComponent implements OnInit {
     this.dateRange = [];
     this.date = null;
     this.quantity = null;
-    this.searchRecord['TotalPrice|from'] = null;
-    this.searchRecord['TotalPrice|to'] = null;
-    this.searchRecord['CreateDate|from'] = null;
-    this.searchRecord['CreateDate|to'] = null;
-    this.searchRecord['NumberOfSpecificMedicine'] = null;
-    this.searchRecord['PeriodicInventory.Month'] = null;
-    this.searchRecord['PeriodicInventory.Year'] = null;
+    this.generalService.setValueCompare(null, this.searchMinPrice, 'TotalPrice|from', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchMaxPrice, 'TotalPrice|to', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchFromDate, 'CreateDate|from', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchToDate, 'CreateDate|to', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchNumberOfSpecificMedicine, 'NumberOfSpecificMedicine', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchMonth, 'PeriodicInventory.Month', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchYear, 'PeriodicInventory.Year', this.searchValueMap);
     this.searchImportBatches();
   }
 
