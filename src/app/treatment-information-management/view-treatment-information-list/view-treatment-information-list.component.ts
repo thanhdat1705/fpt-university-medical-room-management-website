@@ -40,6 +40,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   selectedSearchAttribute = '';
   searchTreatmentValue;
   selectedSearchRole = '';
+  paramsGetDetails = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
 
   searchAttributelist = [
     {
@@ -318,7 +319,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   getTreatment(id: any){
-    this.treatmentInformationService.getTreatment(id, "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt");
+    this.treatmentInformationService.getTreatment(id, this.paramsGetDetails);
   }
 
 }

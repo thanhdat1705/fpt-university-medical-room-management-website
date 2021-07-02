@@ -32,6 +32,11 @@ export class TreatmentInformationService {
       return this.treatmentInformationDetails;
     }
 
+    public setTreatmentInformation(treatmentInformation: TreatmentInformation[]){
+      this.treatmentinformation = treatmentInformation;
+      console.log('treatmentinformation from service', this.treatmentinformation);
+    }
+
   public getTreatmentInformation() {
     return this.treatmentinformation;
   }

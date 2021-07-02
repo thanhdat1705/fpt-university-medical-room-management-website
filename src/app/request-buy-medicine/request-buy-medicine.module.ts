@@ -1,5 +1,5 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { RequestBuyMedicineRoutingModule } from './request-buy-medicine-routing.module';
 import { BuyMedicineListComponent } from './buy-medicine-list/buy-medicine-list.component';
 import { SharedModule } from '../shared/shared.module';
@@ -26,7 +26,7 @@ import { CheckOutUpdateRequestBuyMedicineGuard } from '../shared/guards/check-ou
   ],
   providers: [
     CheckOutRequestBuyMedicineGuard,
-    CheckOutUpdateRequestBuyMedicineGuard
+    CheckOutUpdateRequestBuyMedicineGuard,
   ]
 })
 export class RequestBuyMedicineModule { }

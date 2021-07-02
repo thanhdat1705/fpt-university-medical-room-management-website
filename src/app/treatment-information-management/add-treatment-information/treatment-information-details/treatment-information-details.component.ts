@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Data } from '@angular/router';
@@ -58,6 +59,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   medicineSubGroupList: MedicineSubgroupResponse[] = [];
   treatmentInformation: TreatmentInformation[] = [];
 
+  dateObj = new Date();
+
   // medicineInInventoryRequest: SearchRequest = {
   //   limit: this.pageSize,
   //   page: this.pageIndex,
@@ -67,8 +70,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   //   sortOrder: 0
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,"",0,this.MedicineInInventorySearchValueMap,'medicineId,medicine.Name,quantity, medicine.medicineUnit');
-   
+  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize, this.pageIndex, "", 0, this.MedicineInInventorySearchValueMap, 'medicineId,medicine.Name,quantity, medicine.medicineUnit');
+
 
   // medicineInInventoryDetailsSearchRequest: SearchRequest = {
   //   limit: 100,
@@ -79,12 +82,22 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   //   sortOrder: 0
   // }
 
-  medicineInInventoryDetailsSearchRequest = new SearchRequest1(1,0,"importMedicine.ExpirationDate",0,this.MedicineInInventoryDetailsSearchValueMap,'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate');
+  medicineInInventoryDetailsSearchRequest = new SearchRequest1(1, 0, "importMedicine.ExpirationDate", 0, this.MedicineInInventoryDetailsSearchValueMap, 'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate');
 
 
   medicineIdValueCompare: ValueCompare = {
     value: '',
     compare: 'Equals'
+  }
+
+  periodicMedicineInInventoryValueCompare: ValueCompare = {
+    value: '',
+    compare: '>='
+  }
+
+  periodicMedicineInInventoryDetatilsValueCompare: ValueCompare = {
+    value: '',
+    compare: '>='
   }
 
   medicineNnameValueCompare: ValueCompare = {
@@ -115,12 +128,25 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     private summaryService: SummaryService,
     private treatmentService: TreatmentInformationService,
     private generalService: GeneralHelperService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private current: CurrencyPipe
   ) { }
 
   NameValueCompare: ValueCompare = {
     value: '',
     compare: 'Contains'
+  }
+
+  autoCheckMedicine() {
+    this.chkTreatmentDetail = this.treatmentService.getTreatmentInformationDetails();
+    if (this.chkTreatmentDetail != null) {
+      this.treatmentDetaisList = this.chkTreatmentDetail;
+      for (let i = 0; i < this.chkTreatmentDetail.length; i++) {
+        this.setOfCheckedId.add(this.chkTreatmentDetail[i].medicineInInventoryDetailId);
+      }
+
+
+    }
   }
 
   ngOnInit(): void {
@@ -131,17 +157,18 @@ export class TreatmentInformationDetailsComponent implements OnInit {
           Validators.pattern(this.numberPattern)
         ]],
     });
-    this.chkTreatmentDetail = this.treatmentService.getTreatmentInformationDetails();
+
+    // this.treatmentDetailsForm.valueChanges.subscribe(form => {
+    //   if (form.quantity) {
+    //     this.treatmentDetailsForm.patchValue({
+    //       quantity: form.quantity.replace(/\D/g, ''),
+    //     }, { emitEvent: false });
+    //   }
+    // })
+
     this.getAllMedicineClassification();
     this.getAllMedicineSubgroup();
-    if (this.chkTreatmentDetail != null) {
-      this.treatmentDetaisList = this.chkTreatmentDetail;
-      for (let i = 0; i < this.chkTreatmentDetail.length; i++) {
-        this.setOfCheckedId.add(this.chkTreatmentDetail[i].medicineInInventoryDetailId);
-      }
-
-      
-    }
+    this.autoCheckMedicine();
 
     console.log('data luc init', this.chkTreatmentDetail);
     this.searchMedicineInInventory();
@@ -170,7 +197,11 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
   searchMedicineInInventoryDetails(id: string) {
     // this.generalService.openWaitingPopupNz()
+    var month = this.dateObj.getUTCMonth() + 1; //months from 1-12
+
     this.generalService.setValueCompare(id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchValueMap);
+    this.generalService.setValueCompare(month, this.periodicMedicineInInventoryDetatilsValueCompare, 'periodicInventory.month', this.MedicineInInventoryDetailsSearchValueMap);
+
     this.summaryService.searchMedicineInInventoryDetails(this.medicineInInventoryDetailsSearchRequest.getParamsString()).subscribe(
       (response) => {
         this.medicineInInventoryDetails = response.data.data;
@@ -231,12 +262,16 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
   searchMedicineInInventory() {
     // this.generalService.openWaitingPopupNz();
+    var month = this.dateObj.getUTCMonth() + 1; //months from 1-12
+
     this.generalService.setValueCompare(0, this.medicineInInventoryQuantityCompare, 'quantity', this.MedicineInInventorySearchValueMap);
+    this.generalService.setValueCompare(month, this.periodicMedicineInInventoryValueCompare, 'periodicInventory.month', this.MedicineInInventorySearchValueMap);
+
     this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest.getParamsString()).subscribe(
       (response) => {
         console.log(response.data);
         this.getData(response.data);
-        
+
         // this.generalService.closeWaitingPopupNz();
 
       }, (error) => {

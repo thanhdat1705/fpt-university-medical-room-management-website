@@ -60,12 +60,13 @@
           </td>
           <td style=" width: 30%">
             <!-- Bug ko insert dc xuong list   -->
-            <!-- <nz-input-number [nzMin]="0" [nzMax]="item.quantity" [nzStep]="1"  style=" margin-left: 80px; width: 20%;" nz-input #inputValue
-            (keyup)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)" [nzDisabled]="!setOfCheckedId.has(item.id)"
-            (keydown)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name)"
+            <!-- <nz-input-number [nzMin]="0" [nzMax]="item.quantity" [nzStep]="1"  style=" margin-left: 80px; width: 35%;" nz-input #inputValue
+            (keyup)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name, generalService.getDate(item.expirationDate ))" [nzDisabled]="!setOfCheckedId.has(item.id)"
+            (keydown)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name, generalService.getDate(item.expirationDate ))"
+            (input)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name, generalService.getDate(item.expirationDate ))"
             value="!setOfCheckedId.has(item.id) ? 0 : getTreatmentDetailsQuantity(item.id)"></nz-input-number> -->
             <!-- <form [formGroup]="treatmentDetailsForm">
-              <nz-form-item>
+              <nz-form-item style="margin-bottom: 0px;">
                 <nz-form-control> -->
                   <input [nzMin]="0" [nzErrorTip]="quantityTpl" [nzMax]="item.quantity" style=" margin-left: 10px;width: 35%;" nz-input #inputValue
                     formControlName="quantity"
@@ -86,8 +87,8 @@
                     <ng-container *ngIf="f.quantity.hasError('pattern')">
                       <span>{{ generalService.showNumberPatternError("Số lượng") }}</span>
                     </ng-container>
-                  </ng-template> -->
-                <!-- </nz-form-control>
+                  </ng-template>
+                </nz-form-control>
               </nz-form-item>
             </form> -->
 

@@ -123,8 +123,11 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.getTreatmentInformationDetails();
     this.getAllDepartment();
+    this.treatmentService.setTreatmentDetails([]);
+    this.treatmentService.setTreatmentInformation([]);
+    this.getTreatmentInformationDetails();
+    
     this.insertTreatmentInformationForm = this.formBuilder.group({
       internalCode: ['',
         [
@@ -254,7 +257,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   insertIndicationToDrink(id: any, indicationToDrink: any) {
     for (let i = 0; i < this.treatmentInformation.length; i++) {
       if (this.treatmentInformation[i].medicineId == id) {
-        this.treatmentInformation[i].IndicationToDrink = indicationToDrink;
+        this.treatmentInformation[i].indicationToDrink = indicationToDrink;
         break;
       }
     }
@@ -307,7 +310,7 @@ export class AddTreatmentInformationComponent implements OnInit {
     for (let i = 0; i < this.treatmentInformation.length; i++) {
       treatmentInformationForm.append('TreatmentInformations[' + i + '].medicineId', this.treatmentInformation[i].medicineId);
       treatmentInformationForm.append('TreatmentInformations[' + i + '].quantity', this.treatmentInformation[i].quantity.toString());
-      treatmentInformationForm.append('TreatmentInformations[' + i + '].indicationToDrink', this.treatmentInformation[i].IndicationToDrink);
+      treatmentInformationForm.append('TreatmentInformations[' + i + '].indicationToDrink', this.treatmentInformation[i].indicationToDrink);
 
     }
 

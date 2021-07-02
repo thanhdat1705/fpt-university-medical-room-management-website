@@ -42,6 +42,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
   diseaseStatusList = [];
   deseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
   patientInternalCodeList: PatientInternalCodeResponse[];
+  isExistInDetails: boolean;
+  setOfCheckedId = new Set<string>();
 
   departmentSearchRequest = new SearchRequest1(1, 0, '', 0, null, 'id, name');
   deseaseStatusSearchRequest = new SearchRequest1(1, 0, '', 0, this.deseaseStatusSearchRecord, 'id,name');
@@ -80,9 +82,21 @@ export class ViewTreatmentInformationComponent implements OnInit {
     private treatmentService: TreatmentInformationService
   ) {
     this.treatmentService.treatmentInformationComponent.subscribe(res => {
-
+      this.getTreatmentInformation();
+      this.getTreatmentInformationDetails();
     })
   }
+
+  getTreatmentInformationDetails() {
+    this.treatmentInformationDetails = this.treatmentService.getTreatmentInformationDetails();
+    console.log('treatmentInformationDetails ', this.treatmentInformationDetails);
+  }
+
+  getTreatmentInformation() {
+    this.treatmentInformation = this.treatmentService.getTreatmentInformation();
+    console.log('TreatmentInformation ', this.treatmentInformation);
+  }
+
   searchRecord: Map<string, ValueCompare> = new Map;
 
   patientSearchRequest = new SearchRequest1(1, 0, '', 0, this.searchRecord, '');
@@ -91,17 +105,6 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
-    this.getAllDepartment();
-    this.searchDeseaseStatus();
-    this.activatedroute.fragment.subscribe(
-      (response) => {
-        console.log(response)
-        this.treatment = JSON.parse(JSON.stringify(response));
-        if (this.treatment === null) {
-          this.getTreatmentInformationFromServer(this.id, this.params);
-        }
-      }
-    );
     this.treatmentForm = this.formBuilder.group({
       internalCode: ['',
         [
@@ -128,6 +131,21 @@ export class ViewTreatmentInformationComponent implements OnInit {
         Validators.required,
       ]]
     });
+    this.getAllDepartment();
+    this.searchDeseaseStatus();
+    this.activatedroute.fragment.subscribe(
+      (response) => {
+        console.log(response)
+        this.treatment = JSON.parse(JSON.stringify(response));
+        
+        if (this.treatment === null) {
+          this.getTreatmentInformationFromServer(this.id, this.params);
+        }else{
+          this.setTreatmentServiceData();
+        }
+      }
+    );
+   
   }
 
   gender = [
@@ -168,32 +186,54 @@ export class ViewTreatmentInformationComponent implements OnInit {
     )
   }
 
+  //createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId,
+  //  data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name, 
+  // generalService.getDate(item.expirationDate ))
+
+  setTreatmentServiceData(){
+    this.treatmentInformation = this.treatment.treatmentInformations;
+
+    for (let i = 0; i < this.treatment.diseaseStatusInTreatments.length; i++) {
+      this.patientDeseaseStatusList.push(this.treatment.diseaseStatusInTreatments[i].diseaseStatus.name);
+    }
+    this.treatmentService.setTreatmentInformation(this.treatmentInformation);
+
+    for (let i = 0; i < this.treatmentInformation.length; i++) {
+
+
+      for (let j = 0; j < this.treatmentInformation[i].treatmentInformationDetails.length; j++) {
+        // treatmentDetailsObj.
+        var treatmentDetailsObj = new TreatmentInformationDetail;
+
+        treatmentDetailsObj.medicineId = this.treatmentInformation[i].medicineId;
+        treatmentDetailsObj.medicineName = this.treatmentInformation[i].medicine.name;
+        treatmentDetailsObj.unitName = this.treatmentInformation[i].medicine.medicineUnit.name
+        treatmentDetailsObj.medicineInInventoryDetailId = this.treatmentInformation[i].id;
+        treatmentDetailsObj.quantity = this.treatmentInformation[i].treatmentInformationDetails[j].quantity;
+        // treatmentDetailsObj.expiredDate = this.treatmentInformation[i].treatmentInformationDetails[j].quantity;
+        treatmentDetailsObj.medicineInInventoryDetailId = this.treatmentInformation[i].treatmentInformationDetails[j].medicineInInventoryDetailId
+        this.treatmentInformationDetails.push(treatmentDetailsObj);
+      }
+    }
+    console.log(this.treatmentInformationDetails);
+    this.treatmentService.setTreatmentDetails(this.treatmentInformationDetails);
+    this.treatmentForm.setValue({
+      internalCode: this.treatment.patient.internalCode,
+      name: this.treatment.patient.name,
+      gender: this.treatment.patient.gender,
+      departmentId: this.treatment.department.id,
+      allergyDescription: this.treatment.patient.allergyDescription,
+      diseaseStatusNames: []
+    });
+    this.avatarUrl = this.treatment.confirmSignature
+  }
 
   getTreatmentInformationFromServer(id: any, param: any) {
     this.summaryService.getTreatmentDetails(id, param).subscribe(
       (response) => {
         this.treatment = response.data;
-        this.treatmentInformation = this.treatment.treatmentInformations;
         console.log(this.treatment);
-        for (let i = 0; i < this.treatment.diseaseStatusInTreatments.length; i++) {
-          this.patientDeseaseStatusList.push(this.treatment.diseaseStatusInTreatments[i].diseaseStatus.name);
-        }
-        for (let i = 0; i < this.treatmentInformation.length; i++) {
-          for (let j = 0; j < this.treatmentInformation[i].treatmentInformationDetails.length; j++)
-            this.treatmentInformationDetails.push(this.treatmentInformation[i].treatmentInformationDetails[j]);
-        }
-        console.log(this.treatmentInformationDetails);
-
-        this.treatmentService.setTreatmentDetails(this.treatmentInformationDetails);
-        this.treatmentForm.setValue({
-          internalCode: this.treatment.patient.internalCode,
-          name: this.treatment.patient.name,
-          gender: this.treatment.patient.gender,
-          departmentId: this.treatment.department.id,
-          allergyDescription: this.treatment.patient.allergyDescription,
-          diseaseStatusNames: []
-        });
-        this.avatarUrl = this.treatment.confirmSignature
+        this.setTreatmentServiceData();
 
       }, (error) => {
         console.log(error);
@@ -207,6 +247,13 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
   }
 
+
+  sendRequest(): void {
+    // const requestData = this.medicineInInventoryDetails.filter(data => this.setOfCheckedId.has(data.id));
+    // this.arrayTreatmentDetails = requestData;
+    // this.treatmentDetailsList = this.arrayTreatmentDetails.concat();
+    this.treatmentService.setTreatmentDetails(this.treatmentInformationDetails);
+  }
 
   getAllDepartment() {
     this.summaryService.searchDepartment(this.departmentSearchRequest).subscribe(
@@ -275,7 +322,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
         break;
     }
   }
-  
+
   displayTipTreatmentInformationDetails(id: any) {
     return this.treatmentService.getTipTreatmentInformationDetails(id);
   }

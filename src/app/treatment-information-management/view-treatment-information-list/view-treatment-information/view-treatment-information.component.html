@@ -19,7 +19,8 @@
         <div class="bg-white m-t-22 m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
             <span class="text-teal-green font-size-18 font-weight-semibold">Thông tin người khám</span>
             <dividing-line></dividing-line>
-            <form nz-form nzLayout="horizontal" *ngIf="treatmentForm" [formGroup]="treatmentForm" class="form">
+            <form nz-form nzLayout="horizontal" *ngIf="treatmentForm" [formGroup]="treatmentForm" class="form"
+                (ngSubmit)="updateTreatment(treatmentForm.value)">
                 <nz-form-item>
                     <nz-form-label nzRequired class="text-label" [nzSpan]="7">
                         <span class="font-size-16">Mã số</span>
@@ -32,8 +33,8 @@
                                 #inputInternalCode [nzAutocomplete]="autoInternalCode" />
                             <nz-autocomplete #autoInternalCode>
                                 <ng-container *ngFor="let option of patientInternalCodeList">
-                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.internalCode"
-                                        [nzLabel]="option.internalCode">
+                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item"
+                                        [nzValue]="option.internalCode" [nzLabel]="option.internalCode">
                                         {{option.internalCode}}
                                     </nz-auto-option>
                                 </ng-container>
@@ -180,34 +181,32 @@
                 </nz-form-item>
 
                 <br><br>
-                <!-- <nz-form-item>
+                <nz-form-item>
                     <nz-form-control>
-                        <div class="button-group">
-                            <a (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-18" nz-button
-                                nzType="primary"
-                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                        <div class="d-flex flex-row justify-content-between">
+                            <a (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-16 button-a" nz-button
+                                nzType="primary">
                                 Sửa thông tin
                             </a>
                             <br>
-                            <button *ngIf="isEditing" class="font-size-18" type="submit" nz-button nzType="primary"
-                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                            <button *ngIf="isEditing" class="font-size-16 button-a" type="submit" nz-button
+                                nzType="primary">
                                 Lưu
                             </button>
                             <br>
-                            <a *ngIf="isEditing" (click)="disableUpdate()" class="font-size-18" type="submit" nz-button
-                                nzType="primary"
-                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                            <a *ngIf="isEditing" (click)="disableUpdate()" class="font-size-16 button-a" nz-button>
+
                                 Hủy
                             </a>
                             <br>
 
-                            <a *ngIf="!isEditing" class="font-size-18" nz-button (click)="deleteTreatment()"
-                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                            <a *ngIf="!isEditing" class="font-size-16 button-a" nz-button (click)="deleteTreatment()">
                                 Xóa
                             </a>
                         </div>
+
                     </nz-form-control>
-                </nz-form-item> -->
+                </nz-form-item>
             </form>
         </div>
 
@@ -231,10 +230,10 @@
                 <tbody>
                     <tr *ngFor="let treatment of treatmentInformation">
                         <td nzTooltipColor="green"
-                            nzTooltipTitle="{{displayTipTreatmentInformationDetails(treatment.medicine.id)}}"
+                            nzTooltipTitle="{{displayTipTreatmentInformationDetails(treatment.medicineId)}}"
                             nzTooltipPlacement="leftTop" nz-tooltip>
-                            {{ treatment.medicine.name }}</td>
-                        <td>{{ treatment.quantity }} {{ treatment.medicine.medicineUnit.name}}</td>
+                            {{ treatment.medicineName }}</td>
+                        <td>{{ treatment.quantity }} {{ treatment.unitName}}</td>
                         <td><input #inputValue nzInput style="width: 100%;" value=" {{ treatment.indicationToDrink }}"
                                 (input)="insertIndicationToDrink(treatment.medicine.medicineId, inputValue.value)">
                         </td>

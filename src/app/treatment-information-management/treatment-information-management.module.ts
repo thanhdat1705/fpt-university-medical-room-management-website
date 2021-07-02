@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 
 import { TreatmentInformationManagementRoutingModule } from './treatment-information-management-routing.module';
@@ -16,6 +16,9 @@ import { ViewTreatmentInformationComponent } from './view-treatment-information-
     CommonModule,
     SharedModule.forChild(),
     TreatmentInformationManagementRoutingModule
+  ],
+  providers: [
+    CurrencyPipe
   ]
 })
 export class TreatmentInformationManagementModule { }
