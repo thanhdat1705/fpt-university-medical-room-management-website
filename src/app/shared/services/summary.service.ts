@@ -370,7 +370,7 @@ export class SummaryService {
 
 
   public searchDeseaseStatus(data: any) {
-    return this.http.post<ResponseServer>(UrlServerAPISearchDeseaseStatus, data);
+    return this.http.get<ResponseServer>(UrlServerAPISearchDeseaseStatus+'?'+ data);
 
   }
 

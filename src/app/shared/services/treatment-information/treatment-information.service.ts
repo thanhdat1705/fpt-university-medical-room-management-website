@@ -12,9 +12,11 @@ import { SummaryService } from '../summary.service';
 export class TreatmentInformationService {
 
   treatmentComponentSource = new Subject<boolean>();
+  treatmentDetailsComponentSource = new Subject<boolean>();
   treatmentinformation: TreatmentInformation[];
   // Observable string streams
   treatmentInformationComponent = this.treatmentComponentSource.asObservable();
+  treatmentDetailsComponent = this.treatmentDetailsComponentSource.asObservable()
   treatmentInformationDetails: TreatmentInformationDetail[];
   treatmentDetails: TreatmentInformationDetail[];
 
@@ -40,6 +42,7 @@ export class TreatmentInformationService {
     console.log(this.treatmentInformationDetails);
     this.convertMedicineInInventoyDetailsToShowTreatmentDetailsData();
     this.treatmentComponentSource.next(null);
+    this.treatmentDetailsComponentSource.next(null);
   }
 
   convertMedicineInInventoyDetailsToShowTreatmentDetailsData() {
@@ -94,13 +97,13 @@ export class TreatmentInformationService {
 
     this.summaryService.getTreatmentDetails(id, param).subscribe(
       (response) => {
-        this.router.navigate(['/view-treatment-information/:id', id], {
+        this.router.navigate(['/treatment-information-management/view-treatment-information', id], {
           fragment: response.data
         });
         console.log(response.data);
       },
       (error) => {
-        this.router.navigate(['/view-treatment-information-list']);
+        this.router.navigate(['/treatment-information-management/view-treatment-information-list']);
         console.log(error);
         this.generalService.createErrorNotification(error);
       }

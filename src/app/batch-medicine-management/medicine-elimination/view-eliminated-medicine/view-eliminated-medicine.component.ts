@@ -47,7 +47,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   //   selectFields: this.selectFields,
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchValueMap,'medicineId,medicine.Name,quantity, medicine.medicineUnit');
+  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchValueMap,this.selectFields);
 
 
   constructor(
@@ -172,7 +172,6 @@ export class ViewEliminatedMedicineComponent implements OnInit {
 
     this.summaryService.searchEliminateMedicine(this.medicineInInventorySearchRequest.getParamsString()).subscribe(
       (response) => {
-        console.log(response);
         this.getData(response.data);
         this.loading = false;
 
@@ -209,9 +208,13 @@ export class ViewEliminatedMedicineComponent implements OnInit {
       return;
     }
     this.eliminatedMedicineList = responseData.data;
-    console.log('medicine list' + JSON.stringify(this.eliminatedMedicineList));
+    console.log(this.eliminatedMedicineList);
     this.total = responseData.info.totalRecord;
     console.log('total: ' + this.total);
+  }
+
+  getEliminatedMedicineDetails(id: any){
+    this.medicineEliminationService.getEliminatedMedicineDetails(id);
   }
 
 }

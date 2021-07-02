@@ -15,7 +15,7 @@ import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Observer } from 'rxjs';
 import { Account } from 'src/app/shared/models/account';
-import { patientInternalCodeResponse } from 'src/app/shared/responses/patient/patient';
+import { PatientInternalCodeResponse } from 'src/app/shared/responses/patient/patient';
 
 
 @Component({
@@ -31,8 +31,8 @@ export class AddTreatmentInformationComponent implements OnInit {
   patientDeseaseStatusList = [];
   file: File;
   searchRecord: Map<string, ValueCompare> = new Map;
-  DeseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
-  patientInternalCodeList: patientInternalCodeResponse[];
+  deseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
+  patientInternalCodeList: PatientInternalCodeResponse[];
   patient: Patient;
   medicalStaff: Account = JSON.parse(localStorage.getItem("user"));
   selectedInternalCode: string;
@@ -94,7 +94,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   departmentnSearchRequest = new SearchRequest1(1,0,'',0,this.searchRecord,'id,name');
 
-  deseaseStatusSearchRequest = new SearchRequest1(1,0,'',0,this.DeseaseStatusSearchRecord,'id,name');
+  deseaseStatusSearchRequest = new SearchRequest1(1,0,'',0,this.deseaseStatusSearchRecord,'id,name');
 
   // searchDeseaseStatusRequest: SearchRequest = {
 
@@ -158,8 +158,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   getPatientDetails(value: any) {
     console.log(this.selectedInternalCode);
     this.patientSearchRequest.selectFields = this.selectPatientDetails;
-    this.generalService.setValueCompare(this.selectedInternalCode, this.patientIdValueCompare, 'id', this.searchRecord);
-    this.generalService.setValueCompare(null, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
+    this.generalService.setValueCompare(this.selectedInternalCode, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
 
     this.summaryService.searchPatient(this.patientSearchRequest.getParamsString()).subscribe(
       (response) => {
@@ -225,7 +224,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   onSearchDeseaseStatus(value: any) {
     console.log(value);
-    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.DeseaseStatusSearchRecord);
+    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.deseaseStatusSearchRecord);
     this.searchDeseaseStatus();
 
   }

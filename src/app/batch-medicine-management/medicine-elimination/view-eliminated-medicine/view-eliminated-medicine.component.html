@@ -59,7 +59,7 @@
         <td>
           <input type="hidden" nz-input #medicineId>
           <a style="color: #1890ff;"
-            [routerLink]="['/batch-medicine-management/eliminated-medicine-details', eliminatedMedicine.id]">Detail</a>
+            (click)="getEliminatedMedicineDetails(eliminatedMedicine.id)">Detail</a>
         </td>
         <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
             (nzOnConfirm)="deletedEliminatedMedicine(eliminatedMedicine.id)">Delete</a></td>

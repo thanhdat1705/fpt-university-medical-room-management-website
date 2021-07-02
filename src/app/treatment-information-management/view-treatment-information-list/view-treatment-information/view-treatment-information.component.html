@@ -19,23 +19,21 @@
         <div class="bg-white m-t-22 m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
             <span class="text-teal-green font-size-18 font-weight-semibold">Thông tin người khám</span>
             <dividing-line></dividing-line>
-            <form nz-form nzLayout="horizontal" *ngIf="treatmentForm"
-                [formGroup]="treatmentForm" class="form">
+            <form nz-form nzLayout="horizontal" *ngIf="treatmentForm" [formGroup]="treatmentForm" class="form">
                 <nz-form-item>
                     <nz-form-label nzRequired class="text-label" [nzSpan]="7">
                         <span class="font-size-16">Mã số</span>
-                    </nz-form-label> 
+                    </nz-form-label>
                     <nz-form-control [nzErrorTip]="internalCodeTpl">
                         <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-                            <input nz-input placeholder="Nhập mã số"
-                                [(ngModel)]="selectedInternalCode"
+                            <input nz-input placeholder="Nhập mã số" [(ngModel)]="selectedInternalCode"
                                 (input)='patientIntetrnalCodeInputChange(inputInternalCode.value)'
                                 style="font-size: 16px;" [nzSize]="'large'" formControlName="internalCode"
                                 #inputInternalCode [nzAutocomplete]="autoInternalCode" />
                             <nz-autocomplete #autoInternalCode>
                                 <ng-container *ngFor="let option of patientInternalCodeList">
-                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.id"
-                                       [nzLabel]="option.internalCode">
+                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.internalCode"
+                                        [nzLabel]="option.internalCode">
                                         {{option.internalCode}}
                                     </nz-auto-option>
                                 </ng-container>
@@ -182,13 +180,34 @@
                 </nz-form-item>
 
                 <br><br>
-                <nz-form-item>
+                <!-- <nz-form-item>
                     <nz-form-control>
-                        <button class="font-size-16" nz-button nzType="primary"
-                            style=" float: right; padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Tạo
-                            đơn</button>
+                        <div class="button-group">
+                            <a (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-18" nz-button
+                                nzType="primary"
+                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                                Sửa thông tin
+                            </a>
+                            <br>
+                            <button *ngIf="isEditing" class="font-size-18" type="submit" nz-button nzType="primary"
+                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                                Lưu
+                            </button>
+                            <br>
+                            <a *ngIf="isEditing" (click)="disableUpdate()" class="font-size-18" type="submit" nz-button
+                                nzType="primary"
+                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                                Hủy
+                            </a>
+                            <br>
+
+                            <a *ngIf="!isEditing" class="font-size-18" nz-button (click)="deleteTreatment()"
+                                style="padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                                Xóa
+                            </a>
+                        </div>
                     </nz-form-control>
-                </nz-form-item>
+                </nz-form-item> -->
             </form>
         </div>
 
@@ -210,14 +229,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let medicine of treatmentInformation">
+                    <tr *ngFor="let treatment of treatmentInformation">
                         <td nzTooltipColor="green"
-                            nzTooltipTitle="{{displayTipTreatmentInformationDetails(medicine.medicineId)}}"
+                            nzTooltipTitle="{{displayTipTreatmentInformationDetails(treatment.medicine.id)}}"
                             nzTooltipPlacement="leftTop" nz-tooltip>
-                            {{ medicine.medicineName }}</td>
-                        <td>{{ medicine.quantity }} {{medicine.unitName}}</td>
-                        <td><input #inputValue nzInput style="width: 100%;"
-                                (input)="insertIndicationToDrink(medicine.medicineId, inputValue.value)">
+                            {{ treatment.medicine.name }}</td>
+                        <td>{{ treatment.quantity }} {{ treatment.medicine.medicineUnit.name}}</td>
+                        <td><input #inputValue nzInput style="width: 100%;" value=" {{ treatment.indicationToDrink }}"
+                                (input)="insertIndicationToDrink(treatment.medicine.medicineId, inputValue.value)">
                         </td>
                     </tr>
                 </tbody>
@@ -229,7 +248,7 @@
                 <span class="text-teal-green font-size-18 font-weight-semibold">Chữ kí xác nhận</span>
                 <dividing-line></dividing-line>
                 <nz-form-item style="text-align: center;">
-                    <nz-form-control>
+                    <nz-form-control style="height: auto;">
                         <nz-upload class="avatar-uploader" nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false"
                             [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">

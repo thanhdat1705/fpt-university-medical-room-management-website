@@ -6,9 +6,11 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 import { Department } from 'src/app/shared/models/department';
+import { Patient } from 'src/app/shared/models/patient';
 import { TreatmentInformation } from 'src/app/shared/models/treatment-information';
 import { TreatmentInformationDetail } from 'src/app/shared/models/treatment-information-details';
-import { SearchRequest, SearchRequest1 } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequest1, ValueCompare } from 'src/app/shared/requests/search-request';
+import { PatientInternalCodeResponse } from 'src/app/shared/responses/patient/patient';
 import { TreatmentResponse } from 'src/app/shared/responses/treatment/treatment-details-response';
 import { TreatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
@@ -24,7 +26,7 @@ import { TreatmentInformationDetailsComponent } from '../../add-treatment-inform
 export class ViewTreatmentInformationComponent implements OnInit {
 
   id: string;
-  params = "id,confirmSignature,isDelivered,createAt,periodicInventory,accountCreateBy,patient,patient.department, diseaseStatusInTreatments ,treatmentInformations";
+  params = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
   treatment: TreatmentResponse;
   treatmentForm: FormGroup
   selectedInternalCode: string;
@@ -34,17 +36,39 @@ export class ViewTreatmentInformationComponent implements OnInit {
   loading = false;
   avatarUrl?: string;
   departmentList: Department[] = [];
-  diseaseStatusNames = []
+  patientDeseaseStatusList = []
   treatmentInformation: TreatmentInformation[] = [];
-  treatmentInformationDetails: TreatmentInformationDetail[];
+  treatmentInformationDetails: TreatmentInformationDetail[] = [];
+  diseaseStatusList = [];
+  deseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
+  patientInternalCodeList: PatientInternalCodeResponse[];
 
-  departmentSearchRequest = new SearchRequest1(1,0,'',0,null,'id, name');
-  
+  departmentSearchRequest = new SearchRequest1(1, 0, '', 0, null, 'id, name');
+  deseaseStatusSearchRequest = new SearchRequest1(1, 0, '', 0, this.deseaseStatusSearchRecord, 'id,name');
+  selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
+
+  isEditing = false;
+  patientInternalCodeSearchValueCompare: ValueCompare = {
+    value: '',
+    compare: 'Contains'
+  }
+
+
+  deseaseStatusValueCompare: ValueCompare = {
+    value: '',
+    compare: 'Contains'
+  }
 
   insertDepartmentRequest: Department = {
     name: '',
     description: '',
   };
+  patientIdValueCompare: ValueCompare = {
+    value: '',
+    compare: 'Equals'
+  }
+
+  selectPatientInternalCode = "id, internalCode";
 
   constructor(
     private summaryService: SummaryService,
@@ -54,17 +78,27 @@ export class ViewTreatmentInformationComponent implements OnInit {
     private msg: NzMessageService,
     private modalService: NzModalService,
     private treatmentService: TreatmentInformationService
-  ) { }
+  ) {
+    this.treatmentService.treatmentInformationComponent.subscribe(res => {
+
+    })
+  }
+  searchRecord: Map<string, ValueCompare> = new Map;
+
+  patientSearchRequest = new SearchRequest1(1, 0, '', 0, this.searchRecord, '');
+  patient: Patient;
 
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
     this.getAllDepartment();
+    this.searchDeseaseStatus();
     this.activatedroute.fragment.subscribe(
       (response) => {
-        this.treatmentInformationDetails = JSON.parse(JSON.stringify(response));
-        if (this.treatmentInformationDetails === null) {
-          this.treatmentService.getTreatment(this.id, this.params);
+        console.log(response)
+        this.treatment = JSON.parse(JSON.stringify(response));
+        if (this.treatment === null) {
+          this.getTreatmentInformationFromServer(this.id, this.params);
         }
       }
     );
@@ -89,12 +123,11 @@ export class ViewTreatmentInformationComponent implements OnInit {
         [
 
         ]],
-      diseaseStatusNames: [this.diseaseStatusNames,
+      diseaseStatusNames: [[],
       [
         Validators.required,
       ]]
     });
-    this.getTreatmentInformation(this.id, this.params);
   }
 
   gender = [
@@ -124,13 +157,34 @@ export class ViewTreatmentInformationComponent implements OnInit {
     });
   }
 
+  searchDeseaseStatus() {
+    this.summaryService.searchDeseaseStatus(this.deseaseStatusSearchRequest.getParamsString()).subscribe(
+      (response) => {
+        this.diseaseStatusList = response.data.data;
+        console.log('diseaseStatusList', this.diseaseStatusList);
+      }, (error) => {
+        console.log(error);
+      }
+    )
+  }
 
-  getTreatmentInformation(id: any, param: any) {
+
+  getTreatmentInformationFromServer(id: any, param: any) {
     this.summaryService.getTreatmentDetails(id, param).subscribe(
       (response) => {
         this.treatment = response.data;
-        console.log('treatment', this.treatment);
+        this.treatmentInformation = this.treatment.treatmentInformations;
+        console.log(this.treatment);
+        for (let i = 0; i < this.treatment.diseaseStatusInTreatments.length; i++) {
+          this.patientDeseaseStatusList.push(this.treatment.diseaseStatusInTreatments[i].diseaseStatus.name);
+        }
+        for (let i = 0; i < this.treatmentInformation.length; i++) {
+          for (let j = 0; j < this.treatmentInformation[i].treatmentInformationDetails.length; j++)
+            this.treatmentInformationDetails.push(this.treatmentInformation[i].treatmentInformationDetails[j]);
+        }
+        console.log(this.treatmentInformationDetails);
 
+        this.treatmentService.setTreatmentDetails(this.treatmentInformationDetails);
         this.treatmentForm.setValue({
           internalCode: this.treatment.patient.internalCode,
           name: this.treatment.patient.name,
@@ -139,12 +193,20 @@ export class ViewTreatmentInformationComponent implements OnInit {
           allergyDescription: this.treatment.patient.allergyDescription,
           diseaseStatusNames: []
         });
-        
+        this.avatarUrl = this.treatment.confirmSignature
+
       }, (error) => {
         console.log(error);
       }
     )
   }
+  onSearchDeseaseStatus(value: any) {
+    console.log(value);
+    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.deseaseStatusSearchRecord);
+    this.searchDeseaseStatus();
+
+  }
+
 
   getAllDepartment() {
     this.summaryService.searchDepartment(this.departmentSearchRequest).subscribe(
@@ -212,5 +274,86 @@ export class ViewTreatmentInformationComponent implements OnInit {
         this.loading = false;
         break;
     }
+  }
+  displayTipTreatmentInformationDetails(id: any) {
+    return this.treatmentService.getTipTreatmentInformationDetails(id);
+  }
+
+  getPatientDetails(value: any) {
+    console.log(this.selectedInternalCode);
+    this.patientSearchRequest.selectFields = this.selectPatientDetails;
+    this.generalService.setValueCompare(this.selectedInternalCode, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
+
+    this.summaryService.searchPatient(this.patientSearchRequest.getParamsString()).subscribe(
+      (response) => {
+        this.patient = response.data.data[0];
+        console.log('patient', this.patient);
+
+        if (this.patient != null) {
+          // this.patient = this.patientList[0];
+          console.log(this.patient);
+          this.treatmentForm.setValue({
+            internalCode: this.patient.internalCode,
+            name: this.patient.name,
+            gender: this.patient.gender,
+            departmentId: this.patient.departmentId,
+            allergyDescription: this.patient.allergyDescription,
+            diseaseStatusNames: this.diseaseStatusList
+          });
+        } else {
+          this.treatmentForm.setValue({
+            internalCode: value,
+            name: '',
+            gender: '',
+            departmentId: '',
+            allergyDescription: '',
+            diseaseStatusNames: this.diseaseStatusList
+          });
+          this.generalService.createErrorNotification('Mã số không có sẵn trông hệ thống');
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+
+  }
+
+  patientIntetrnalCodeInputChange(value: string) {
+    console.log('value: ' + value)
+    if (value !== '') {
+      this.generalService.setValueCompare(null, this.patientIdValueCompare, 'id', this.searchRecord);
+
+      this.generalService.setValueCompare(value, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
+      this.searchPatientInternalCode();
+    }
+  }
+
+  searchPatientInternalCode() {
+    this.patientSearchRequest.selectFields = this.selectPatientInternalCode;
+
+    this.summaryService.searchPatient(this.patientSearchRequest.getParamsString()).subscribe(
+      (response) => {
+        console.log(response);
+        this.patientInternalCodeList = response.data.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+
+  enableUpdate() {
+    this.isEditing = true;
+  }
+
+  disableUpdate() {
+    this.isEditing = false;
+  }
+
+  deleteTreatment() {
+
   }
 }

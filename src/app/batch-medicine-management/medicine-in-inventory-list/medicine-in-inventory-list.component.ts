@@ -8,6 +8,7 @@ import { MedicineClassificationResponse } from 'src/app/shared/responses/medicin
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
+import { BatchOfMedicineInInventoryService } from 'src/app/shared/services/batch-medicine/batch-of-medicine-in-inventory.service';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineEliminationService } from 'src/app/shared/services/medicine-elimination/medicine-elimination.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
@@ -46,7 +47,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   //   sortOrder: this.sortOrder,
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchMapValue,this.selectFields);
+  medicineInInventorySearchRequest = new SearchRequest1(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchMapValue, this.selectFields);
 
 
   NameValueCompare: ValueCompare = {
@@ -69,6 +70,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   constructor(
     private summaryService: SummaryService,
     private generalService: GeneralHelperService,
+    private batchOfMedicineInInventoryService: BatchOfMedicineInInventoryService
   ) { }
 
   ngOnInit(): void {
@@ -162,7 +164,7 @@ export class MedicineInInventoryListComponent implements OnInit {
     );
   }
 
-  sortTableColumn(params: NzTableQueryParams){
+  sortTableColumn(params: NzTableQueryParams) {
     this.loading = true;
     this.sortField = params.sort.find(item => item.value !== null).key;
     const sortParam = params.sort.find(item => item.value !== null).value;
@@ -193,5 +195,7 @@ export class MedicineInInventoryListComponent implements OnInit {
     this.searchMedicineInInventory();
   }
 
-
+  GetBatchOfmedicine(id: any) {
+    this.batchOfMedicineInInventoryService.getBatchOfMedicineInInventory(id);
+  }
 }

@@ -59,7 +59,7 @@
         <td>{{ medicineInInventory.medicineClassification.name }}</td>
         <td>{{ medicineInInventory.medicineSubgroup.name }}</td>
         <td>
-          <a style="color: #1890ff;"
+          <a style="color: #1890ff;" (click)="GetBatchOfmedicine(medicineInInventory.medicine.id)"
             [routerLink]="['/batch-medicine-management/batch-of-medicine', medicineInInventory.medicine.id]">Xem lô thuốc</a>
         </td>
       </tr>

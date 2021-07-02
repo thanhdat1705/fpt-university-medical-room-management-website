@@ -35,7 +35,7 @@
                                 #inputInternalCode [nzAutocomplete]="autoInternalCode" />
                             <nz-autocomplete #autoInternalCode>
                                 <ng-container *ngFor="let option of patientInternalCodeList">
-                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.id"
+                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.internalCode"
                                        [nzLabel]="option.internalCode">
                                         {{option.internalCode}}
                                     </nz-auto-option>

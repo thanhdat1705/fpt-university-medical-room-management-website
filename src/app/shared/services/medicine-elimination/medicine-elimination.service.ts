@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { GeneralHelperService } from '../general-helper.service';
 import { SummaryService } from '../summary.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedicineEliminationService {
+  param = 'quantity, medicine.name, createDate, updateDate, reason, medicineInInventoryDetail.importMedicine, medicineInInventoryDetail, medicine.medicineSubGroup, medicine.medicineClassification, medicine.medicineUnit';
 
   id: any;
   unitName: any;
@@ -15,7 +18,9 @@ export class MedicineEliminationService {
   eliminateMedicineComponent = this.eliminateMedicineComponentSource.asObservable();
   name: any;
 
-  constructor(private summaryService: SummaryService) { }
+  constructor(private summaryService: SummaryService,
+    private router: Router,
+    private generalService: GeneralHelperService) { }
 
   deleteEliminatedMedicine(id: any) {
     this.summaryService.deleteEliminatedMedicineDetails(id).subscribe(
@@ -61,6 +66,22 @@ export class MedicineEliminationService {
   }
   getMedicineName(){
     return this.name;
+  }
+
+  getEliminatedMedicineDetails(id: any) {
+    this.summaryService.getEliminatedMedicineDetails(id, this.param).subscribe(
+      (response) => {
+        this.router.navigate(['/batch-medicine-management/eliminated-medicine-details', id], {
+          fragment: response.data
+        });
+        console.log(response.data);
+      },
+      (error) => {
+        this.router.navigate(['/batch-medicine-management/eliminated-medicines-list']);
+        console.log(error);
+        this.generalService.createErrorNotification(error);
+      }
+    )
   }
 
 }
