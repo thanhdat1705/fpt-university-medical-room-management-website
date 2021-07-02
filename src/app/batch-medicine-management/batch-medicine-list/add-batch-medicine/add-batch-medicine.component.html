@@ -57,7 +57,7 @@
       <dividing-line></dividing-line>
       <!-- <nz-divider style="height: 5px;" ></nz-divider> -->
       <br>
-      <nz-spin [nzSpinning]="addImportMedicineLoading" nzTip="Đang xử lý...">
+      <!-- <nz-spin [nzSpinning]="addImportMedicineLoading" nzTip="Đang xử lý..."> -->
         <form nz-form nzLayout="horizontal" [formGroup]="importMedicineForm" class="form"
           (ngSubmit)="addImportMedicine(importMedicineForm.value)">
           <!---------------------- Medicine Name ----------------------------->
@@ -207,7 +207,7 @@
             </nz-form-control>
           </nz-form-item>
         </form>
-      </nz-spin>
+      <!-- </nz-spin> -->
     </div>
 
   </div>

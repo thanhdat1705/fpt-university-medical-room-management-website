@@ -260,7 +260,7 @@ export class AddBatchMedicineComponent implements OnInit {
         })
       } else {
         this.addImportMedicineLoading = true;
-        setTimeout(() => {
+        // setTimeout(() => {
           this.importMedicine = {
             id: uuidv4(),
             quantity: data.quantity,
@@ -279,7 +279,7 @@ export class AddBatchMedicineComponent implements OnInit {
           this.addImportMedicineLoading = false;
           this.generalService.messageNz('success', 'Thêm thành công');
           console.log(this.importMedicine);
-        }, 2000);
+        // }, 2000);
       }
 
     }
@@ -411,7 +411,7 @@ export class AddBatchMedicineComponent implements OnInit {
 
   updateImportMedicineToArray(newItem: ImportMedicineForAddBatch, addQauntity: number, index: number, isRemove: boolean) {
     this.addImportMedicineLoading = true;
-    setTimeout(() => {
+    // setTimeout(() => {
       this.addImportMedicineLoading = false;
       newItem.quantity = newItem.quantity + addQauntity;
       this.importMedicineList[index] = newItem;
@@ -431,7 +431,7 @@ export class AddBatchMedicineComponent implements OnInit {
 
       this.generalService.messageNz('success', 'Cập nhật thành công');
       console.log(this.importMedicine);
-    }, 2000);
+    // }, 2000);
   }
 
   deleteImportMedicine() {
@@ -462,7 +462,7 @@ export class AddBatchMedicineComponent implements OnInit {
                 return;
               }
             });
-          }, 2000)
+          }, 1000)
         }
         ).catch(() => console.log('Oops errors!')),
       nzOnCancel: () => {
