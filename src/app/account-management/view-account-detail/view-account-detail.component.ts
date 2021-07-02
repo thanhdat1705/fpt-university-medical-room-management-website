@@ -39,14 +39,15 @@ export class ViewAccountDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
-    this.activatedroute.fragment.subscribe(
-      (response) => {
-        this.accountDetail = JSON.parse(JSON.stringify(response));
-        if (this.accountDetail === null) {
-          this.getAccountDetails(this.id);
-        }
-      }
-    );
+    // this.activatedroute.fragment.subscribe(
+    //   (response) => {
+    //     this.accountDetail = JSON.parse(JSON.stringify(response));
+    //     if (this.accountDetail === null) {
+    //       this.getAccountDetails(this.id);
+    //     }
+    //   }
+    // );
+
     this.accountDetailForm = this.formsBuider.group({
       internalCode: ['', [
         Validators.required,
@@ -91,6 +92,7 @@ export class ViewAccountDetailComponent implements OnInit {
         this.generalService.createErrorNotification(error);
       }
     );
+    
     this.generalService.closeWaitingPopupNz();
   }
 

@@ -31,7 +31,10 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     this.id = this.activatedroute.snapshot.paramMap.get('id');
+
+    
     this.eliminatedMedicineDetailsForm = this.formBuilder.group(
       {
         medicineInInventoryDetailId: [''],
@@ -41,7 +44,22 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
         reason: [''],
       }
     );
-    this.getEliminatedMedicineDetails();
+
+    this.activatedroute.fragment.subscribe(
+      (response) => {
+        console.log(response)
+        this.disableUpdate;
+        this.eliminatedMedicineDetails = JSON.parse(JSON.stringify(response));
+
+        if (this.eliminatedMedicineDetails === null) {
+          this.getEliminatedMedicineDetails(this.id, this.param);
+        }else{
+          this.setFormControlValue();
+        }
+      
+
+      }
+    );
   }
 
   disableUpdate() {
@@ -62,29 +80,33 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
     return this.eliminatedMedicineDetailsForm.controls;
   }
 
-  getEliminatedMedicineDetails() {
+  getEliminatedMedicineDetails(id: any, param: any) {
     this.disableUpdate();
-    this.summaryService.getEliminatedMedicineDetails(this.id, this.param).subscribe(
+    this.summaryService.getEliminatedMedicineDetails(id, param).subscribe(
       (response) => {
         this.eliminatedMedicineDetails = response.data;
-        console.log(this.eliminatedMedicineDetails);
-        this.eliminatedMedicineDetailsForm.setValue({
-          medicineInInventoryDetailId: this.eliminatedMedicineDetails.medicineInInventoryDetail.id,
-          quantity: this.eliminatedMedicineDetails.quantity,
-          reason: this.eliminatedMedicineDetails.reason,
-        });
-        this.totalQuantity = this.eliminatedMedicineDetails.medicineInInventoryDetail.quantity + this.eliminatedMedicineDetails.quantity
-        this.eliminatedMedicineDetailsForm.controls['quantity'].setValidators([
-          Validators.pattern(this.numberPattern),
-          Validators.required,
-          Validators.min(1), Validators.max(this.totalQuantity)]);
-
+        this.setFormControlValue();
         console.log(response);
       }, (error) => {
         console.log(error);
         this.generalService.createErrorNotification(error);
       }
     );
+  }
+
+  setFormControlValue(){
+    console.log(this.eliminatedMedicineDetails);
+    this.eliminatedMedicineDetailsForm.setValue({
+      medicineInInventoryDetailId: this.eliminatedMedicineDetails.medicineInInventoryDetail.id,
+      quantity: this.eliminatedMedicineDetails.quantity,
+      reason: this.eliminatedMedicineDetails.reason,
+    });
+    this.totalQuantity = this.eliminatedMedicineDetails.medicineInInventoryDetail.quantity + this.eliminatedMedicineDetails.quantity
+    this.eliminatedMedicineDetailsForm.controls['quantity'].setValidators([
+      Validators.pattern(this.numberPattern),
+      Validators.required,
+      Validators.min(1), Validators.max(this.totalQuantity)]);
+
   }
 
   updatetEliminatedMedicine(data: any) {
@@ -96,7 +118,7 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
     this.summaryService.updateEliminatedMedicineDetails(this.id, data).subscribe(
       (response) => {
         console.log(response);
-        this.getEliminatedMedicineDetails();
+        this.getEliminatedMedicineDetails(this.id, this.param);
       }, (error) => {
         console.log(error);
         this.generalService.createErrorNotification(error);

@@ -7,6 +7,7 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Department } from 'src/app/shared/models/department';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { TreatmentInformationService } from 'src/app/shared/services/treatment-information/treatment-information.service';
 
 export interface treatmentSearchTable {
   date: string;
@@ -119,7 +120,8 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
   constructor(
     private summaryService: SummaryService,
-    private generalService: GeneralHelperService
+    private generalService: GeneralHelperService,
+    private treatmentInformationService: TreatmentInformationService
   ) { }
 
   searchFromDateValueCompare: ValueCompare = {
@@ -315,8 +317,8 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     this.searchTreatment();
   }
 
-  getDetails(id: any) {
-
+  getTreatment(id: any){
+    this.treatmentInformationService.getTreatment(id, "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt");
   }
 
 }
