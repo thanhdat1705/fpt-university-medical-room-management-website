@@ -275,6 +275,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
         break;
     }
   }
+  
   displayTipTreatmentInformationDetails(id: any) {
     return this.treatmentService.getTipTreatmentInformationDetails(id);
   }
