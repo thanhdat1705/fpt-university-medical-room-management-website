@@ -3,16 +3,16 @@ export class ValueCompare {
   public compare: string;
 }
 
-export interface SearchRequest {
-  limit: number;
-  page: number;
-  sortField: string;
-  sortOrder: number;
-  searchValue: Record<string, ValueCompare>;
-  selectFields: string;
-}
+// export interface SearchRequest {
+//   limit: number;
+//   page: number;
+//   sortField: string;
+//   sortOrder: number;
+//   searchValue: Record<string, ValueCompare>;
+//   selectFields: string;
+// }
 
-export class SearchRequest1 {
+export class SearchRequest {
   limit: number;
   page: number;
   sortField: string;

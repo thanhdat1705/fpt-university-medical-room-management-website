@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { DetailsMedicineComponent } from 'src/app/medicine-management/medicine-list/details-medicine/details-medicine.component';
+import { DetailsMedicineComponent } from 'src/app/pages/medicine-management/medicine-list/details-medicine/details-medicine.component';
 
 @Injectable({
   providedIn: 'root'

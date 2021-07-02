@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { SearchRequest } from '../../requests/search-request';
 import { GeneralHelperService } from '../general-helper.service';
 import { SummaryService } from '../summary.service';
 
@@ -55,13 +56,13 @@ export class RequestBuyMedicineService {
     )
   }
 
-  searchRequestBuyMedicine(data: any) {
+  searchRequestBuyMedicine(data: SearchRequest) {
     return this.service.searchRequestBuyMedicine(data);
   }
 
   // RequestBuyMedicineDetail
 
-  searchRequestBuyMedicineDetail(data: any) {
+  searchRequestBuyMedicineDetail(data: SearchRequest) {
     return this.service.searchRequestBuyMedicineDetail(data);
   }
 }

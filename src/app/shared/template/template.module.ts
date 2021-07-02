@@ -5,7 +5,7 @@ import { TemplateRoutingModule } from './template-routing.module';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared.module';
-import { AccountModule } from 'src/app/account-management/account.module';
+import { AccountModule } from 'src/app/pages/account-management/account.module';
 import { AuthService } from '../services/auth-service/auth.service';
 import { SideNavService } from '../services/side-nav.service';
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { Observable } from 'rxjs';
-import { AddBatchMedicineComponent } from 'src/app/batch-medicine-management/batch-medicine-list/add-batch-medicine/add-batch-medicine.component';
+import { AddBatchMedicineComponent } from 'src/app/pages/batch-medicine-management/batch-medicine-list/add-batch-medicine/add-batch-medicine.component';
 import { ImportBatchService } from '../services/import-batch/import-batch.service';
 
 export interface CanComponentDeactivate {

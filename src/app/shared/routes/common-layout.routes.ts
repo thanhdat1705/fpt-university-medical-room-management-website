@@ -14,7 +14,7 @@ export const CommonLayout_ROUTES: Routes = [
             },
             {
                 path: '',
-                loadChildren: () => import('../../medicine-management/medicine-management.module').then(m => m.MedicineManagementModule)
+                loadChildren: () => import('../../pages/medicine-management/medicine-management.module').then(m => m.MedicineManagementModule)
             },
         ]
 
@@ -33,7 +33,7 @@ export const CommonLayout_ROUTES: Routes = [
             },
             {
                 path: '',
-                loadChildren: () => import('../../account-management/account.module').then(m => m.AccountModule)
+                loadChildren: () => import('../../pages/account-management/account.module').then(m => m.AccountModule)
             },
         ]
     },
@@ -51,7 +51,7 @@ export const CommonLayout_ROUTES: Routes = [
             },
             {
                 path: '',
-                loadChildren: () => import('../../batch-medicine-management/batch-medicine-management.module').then(m => m.BatchMedicineManagementModule)
+                loadChildren: () => import('../../pages/batch-medicine-management/batch-medicine-management.module').then(m => m.BatchMedicineManagementModule)
             }
         ],
 
@@ -70,7 +70,7 @@ export const CommonLayout_ROUTES: Routes = [
             },
             {
                 path: '',
-                loadChildren: () => import('../../treatment-information-management/treatment-information-management.module').then(m => m.TreatmentInformationManagementModule)
+                loadChildren: () => import('../../pages/treatment-information-management/treatment-information-management.module').then(m => m.TreatmentInformationManagementModule)
             }
         ]
     },
@@ -88,7 +88,7 @@ export const CommonLayout_ROUTES: Routes = [
             // },
             {
                 path: '',
-                loadChildren: () => import('../../request-buy-medicine/request-buy-medicine.module').then(m => m.RequestBuyMedicineModule)
+                loadChildren: () => import('../../pages/request-buy-medicine/request-buy-medicine.module').then(m => m.RequestBuyMedicineModule)
             }
         ],
 

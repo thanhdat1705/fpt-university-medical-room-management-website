@@ -66,6 +66,7 @@ import {
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
+import { SearchRequest } from '../requests/search-request';
 
 @Injectable({
   providedIn: 'root'
@@ -147,9 +148,9 @@ export class SummaryService {
     );
   }
 
-  public searchAccount(param: any): Observable<ResponseServer> {
+  public searchAccount(param: SearchRequest): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(
-      UrlServerAPIViewAccounts +'?'+ param
+      UrlServerAPIViewAccounts +'?'+ param.getParamsString()
     );
   }
 
@@ -192,8 +193,8 @@ export class SummaryService {
   //     request.SortOrder
   //   );
   // }
-  public searchMedicine(data: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicine + '?' + data);
+  public searchMedicine(data: SearchRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicine + '?' + data.getParamsString());
   }
 
   public getMedicine(id: string): Observable<ResponseServer> {
@@ -218,8 +219,8 @@ export class SummaryService {
   public storeNewMedicineClassification(data: any): Observable<ResponseServer> {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineClassification, data);
   }
-  public searchClassification(data: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPISearchClassification + '?' + data);
+  public searchClassification(data: SearchRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPISearchClassification + '?' + data.getParamsString());
   }
 
   public getAllMedicineSubgroup(): Observable<ResponseServer> {
@@ -229,8 +230,8 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineSubgroup, data);
   }
 
-  public searchMedicineSubgroup(data: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineSubgroup + '?' + data);
+  public searchMedicineSubgroup(data: SearchRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineSubgroup + '?' + data.getParamsString());
   }
 
   public getAllMedicineUnit(): Observable<ResponseServer> {
@@ -240,14 +241,14 @@ export class SummaryService {
   public storeNewMedicineUnit(data: any): Observable<ResponseServer> {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineUnit, data);
   }
-  public searchMedicineUnit(data: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineUnit + '?' + data);
+  public searchMedicineUnit(data: SearchRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineUnit + '?' + data.getParamsString());
   }
 
   /*----------------------------------------------------------------------------------------------------- */
   /*---------------------------------------- ImportBatch ---------------------------------------- */
-  public searchImportBatch(data: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPISearchImportBatch + '?' + data);
+  public searchImportBatch(data: SearchRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPISearchImportBatch + '?' + data.getParamsString());
   }
 
   public addImportBatch(data: any): Observable<ResponseServer> {
@@ -269,8 +270,8 @@ export class SummaryService {
   public deleteImportMedicine(id: string): Observable<ResponseServer> {
     return this.http.delete<ResponseServer>(UrlServerAPIDeleteImportMedicine + id);
   }
-  public searchImportMedicine(data: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPISearchImportMedicine + '?' + data);
+  public searchImportMedicine(data: SearchRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPISearchImportMedicine + '?' + data.getParamsString());
   }
   public getDetailImportMedicine(id: string, selectFields: string): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIDetailImportMedicine + id + '?SelectFields=' + selectFields);
@@ -282,8 +283,8 @@ export class SummaryService {
 
   }
 
-  public searchEliminateMedicine(data: any): Observable<ResponseServer> {
-    return this.http.get<ResponseServer>(UrlServerAPISearchEliminatedMedicine + '?' + data);
+  public searchEliminateMedicine(data: SearchRequest): Observable<ResponseServer> {
+    return this.http.get<ResponseServer>(UrlServerAPISearchEliminatedMedicine + '?' + data.getParamsString());
 
   }
 
@@ -303,8 +304,8 @@ export class SummaryService {
 
   // Medicine in inventory
 
-  public searchMedicineInInventory(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory +'?'+ data);
+  public searchMedicineInInventory(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory +'?'+ data.getParamsString());
   }
 
   public getMedicineInInventoryDetails(id: any) {
@@ -313,8 +314,8 @@ export class SummaryService {
   }
   // Medicine in inventory
 
-  public searchMedicineInInventoryDetails(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails+'?'+ data);
+  public searchMedicineInInventoryDetails(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails+'?'+ data.getParamsString());
 
   }
 
@@ -329,13 +330,13 @@ export class SummaryService {
   public getDetailBuyMedicine(id: string, selectFields: string) {
     return this.http.get<ResponseServer>(UrlServerAPIGetDetailBuyMedicine + id + '?SelectFields=' + selectFields);
   }
-  public searchRequestBuyMedicine(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchRequestBuyMedicine + '?' + data);
+  public searchRequestBuyMedicine(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchRequestBuyMedicine + '?' + data.getParamsString());
   }
 
   //Request Buy Medicine Detail
-  public searchRequestBuyMedicineDetail(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPIDetailRequestBuyMedicine + '?' + data);
+  public searchRequestBuyMedicineDetail(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPIDetailRequestBuyMedicine + '?' + data.getParamsString());
   }
 
 
@@ -345,8 +346,8 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIAddDepartment, data);
   }
 
-  public searchDepartment(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchDepartment + '?' + data);
+  public searchDepartment(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchDepartment + '?' + data.getParamsString());
   }
 
   //treatment information
@@ -355,12 +356,12 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIAddTreatmentInformation, data, { headers: this.headers });
   }
 
-  public searchTreatment(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchTreatment + '?' + data);
+  public searchTreatment(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchTreatment + '?' + data.getParamsString());
   }
 
-  public searchPatient(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchPatient+'?'+ data);
+  public searchPatient(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchPatient+'?'+ data.getParamsString());
   }
 
   public getTreatmentDetails(id: any, params: any) {
@@ -369,8 +370,8 @@ export class SummaryService {
   }
 
 
-  public searchDeseaseStatus(data: any) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchDeseaseStatus+'?'+ data);
+  public searchDeseaseStatus(data: SearchRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchDeseaseStatus+'?'+ data.getParamsString());
 
   }
 
