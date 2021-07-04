@@ -388,6 +388,7 @@ export class DetailImportMedicineComponent implements OnInit {
       )
     }
     else {
+      console.log("not dupplicate");
       this.update();
     }
 

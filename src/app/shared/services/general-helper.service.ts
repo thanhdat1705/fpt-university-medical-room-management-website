@@ -40,8 +40,8 @@ export class GeneralHelperService {
     }
 
     messageNz(type: string, content: string) {
-        if (type === 'success') { this.message.success(content, { nzDuration: 5000 }); }
-        if (type === 'error') { this.message.error(content, { nzDuration: 5000 }); }
+        if (type === 'success') { this.message.success(content, { nzDuration: 1500 }); }
+        if (type === 'error') { this.message.error(content, { nzDuration: 1500 }); }
     }
 
     closeWaitingPopupNz() {
@@ -307,6 +307,13 @@ export class GeneralHelperService {
         // return newdate.toLocaleString().replace('/', '-').split(',')[1].replace('/', '-');
         // return newdate.toISOString().split('T')[0];
         newDate = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+        return newDate;
+    }
+
+    getLocalMonthYear(date: string) {
+        var dt = new Date(date);
+        var newDate = '';
+        newDate = (dt.getMonth() + 1) + "-" + dt.getFullYear();
         return newDate;
     }
 

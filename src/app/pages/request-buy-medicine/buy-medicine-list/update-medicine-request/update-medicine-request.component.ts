@@ -86,7 +86,7 @@ export class UpdateMedicineRequestComponent implements OnInit {
   //   searchValue: this.searchRecord,
   //   selectFields: this.searchFields,
   // };
-  searchFieldsRequest = "medicineId, medicine.name as medicineName, medicineUnitId, medicineUnit.name as medicineUnitName, quantity, note"
+  searchFieldsRequest = "id, medicineId, medicine.name as medicineName, medicineUnitId, medicineUnit.name as medicineUnitName, quantity, note"
   searchMedicineDetailInRequest;
   // SearchRequest = {
   //   limit: 1,
@@ -287,6 +287,7 @@ export class UpdateMedicineRequestComponent implements OnInit {
     this.generalService.setValueCompare(id, this.searchRequestBuyMedicineId, 'RequestToBuyMedicineId', this.searchMedicineDetailInRequestMap);
     this.service.searchRequestBuyMedicineDetail(this.searchMedicineDetailInRequest).subscribe(
       (response) => {
+        console.log(response.data.data);
         localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(response.data.data));
         this.buyMedicineListDisplay = JSON.parse(localStorage.getItem('UpdateBuyMedicineListDisplay'));
       },
@@ -330,27 +331,31 @@ export class UpdateMedicineRequestComponent implements OnInit {
         })
       } else {
         this.addRequestLoading = true;
-        setTimeout(() => {
-          this.medicineInRequestDetail = {
-            id: uuidv4(),
-            medicineId: data.medicine.id,
-            medicineName: data.medicine.name,
-            medicineUnitId: data.unit,
-            medicineUnitName: this.unitList.find(item => item.id == data.unit).name,
-            quantity: data.quantity,
-            note: data.note
-          }
-          console.log(this.medicineInRequestDetail);
-          this.buyMedicineListDisplay = [...this.buyMedicineListDisplay, this.medicineInRequestDetail];
-          localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-          this.addRequestLoading = false;
-          this.resetFormValue();
-        }, 2000)
+        if (data.note == null) {
+          data.note = "";
+        }
+        this.medicineInRequestDetail = {
+          id: uuidv4(),
+          medicineId: data.medicine.id,
+          medicineName: data.medicine.name,
+          medicineUnitId: data.unit,
+          medicineUnitName: this.unitList.find(item => item.id == data.unit).name,
+          quantity: data.quantity,
+          note: data.note
+        }
+        console.log(this.medicineInRequestDetail);
+        this.buyMedicineListDisplay = [...this.buyMedicineListDisplay, this.medicineInRequestDetail];
+        localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+        this.addRequestLoading = false;
+        this.generalService.messageNz('success', 'Thêm thành công');
+        this.resetFormValue();
+
       }
     }
   }
 
   updateRequestDetail(data: any) {
+    console.log(data);
     this.updateItem = {
       id: this.medicineInRequestDetail.id,
       medicineId: data.medicine.id,
@@ -371,6 +376,7 @@ export class UpdateMedicineRequestComponent implements OnInit {
         item.medicineUnitId == data.unit &&
         item.id != this.updateItem.id)
       let index = this.buyMedicineListDisplay.findIndex(item => item.id == this.updateItem.id);
+      console.log(index);
       if (this.found != undefined) {
 
         const confirmModal: NzModalRef = this.modal.confirm({
@@ -386,6 +392,7 @@ export class UpdateMedicineRequestComponent implements OnInit {
         })
       } else {
         this.updateRequestToArray(this.updateItem, 0, index, false);
+        console.log(this.buyMedicineListDisplay);
       }
     }
   }
@@ -393,39 +400,40 @@ export class UpdateMedicineRequestComponent implements OnInit {
 
   updateRequestToArray(newItem: RequestBuyMedicineDisplay, quantity: number, index: number, isRemove: boolean) {
     this.addRequestLoading = true;
-    setTimeout(() => {
-      newItem.quantity = newItem.quantity + quantity;
-      this.buyMedicineListDisplay[index] = newItem;
-      if (isRemove) {
-        this.buyMedicineListDisplay.forEach((items, index) => {
-          if (items.id == this.found.id) {
-            console.log(index);
-            this.buyMedicineListDisplay.splice(index, 1);
-          }
-        })
-      }
-      localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-      this.requestBuyDetail(newItem);
-      this.generalService.messageNz('success', 'Cập nhật thành công');
-      this.addRequestLoading = false;
-    }, 2000);
+
+    newItem.quantity = newItem.quantity + quantity;
+    this.buyMedicineListDisplay[index] = newItem;
+    if (isRemove) {
+      this.buyMedicineListDisplay.forEach((items, index) => {
+        if (items.id == this.found.id) {
+          console.log(index);
+          this.buyMedicineListDisplay.splice(index, 1);
+        }
+      })
+    }
+    localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+    this.requestBuyDetail(newItem);
+    this.generalService.messageNz('success', 'Cập nhật thành công');
+    this.addRequestLoading = false;
+
   }
 
   deleteRquest(id: string) {
     this.sendRequestToBuyMedicineLoading = true;
-    setTimeout(() => {
-      let index = this.buyMedicineListDisplay.findIndex(item => item.id == id);
-      console.log(index);
-      if (index > -1) {
-        this.buyMedicineListDisplay.splice(index, 1);
-        this.generalService.messageNz('success', 'Xóa thành công');
-      }
-      else {
-        this.generalService.messageNz('error', 'Dược phẩm này k tồn tại thành công');
-      }
-      localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-      this.sendRequestToBuyMedicineLoading = false;
-    }, 2000)
+
+    let index = this.buyMedicineListDisplay.findIndex(item => item.id == id);
+    console.log(index);
+    if (index > -1) {
+      this.buyMedicineListDisplay.splice(index, 1);
+      this.generalService.messageNz('success', 'Xóa thành công');
+    }
+    else {
+      this.generalService.messageNz('error', 'Dược phẩm này k tồn tại thành công');
+    }
+    localStorage.setItem('UpdateBuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+    this.sendRequestToBuyMedicineLoading = false;
+    this.cancel();
+
   }
 
 

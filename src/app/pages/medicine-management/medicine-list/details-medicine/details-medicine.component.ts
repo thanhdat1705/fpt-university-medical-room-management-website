@@ -2,6 +2,9 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { StoreNewMedicineClassificationRequest } from 'src/app/shared/requests/medicine-classification/store-new-request';
+import { StoreNewMedicineSubgroupRequest } from 'src/app/shared/requests/medicine-subgroup/store-new-request';
+import { StoreNewMedicineUnitRequest } from 'src/app/shared/requests/medicine-unit/store-new-request';
 import { StoreNewMedicineRequest } from 'src/app/shared/requests/medicine/store-new';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
@@ -35,6 +38,19 @@ export class DetailsMedicineComponent implements OnInit {
   classList: MedicineUnitResponse[] = [];
   subgroupList: MedicineSubgroupResponse[] = [];
 
+  storeNewMedicineUnitRequest: StoreNewMedicineUnitRequest = {
+    Name: "",
+    AcronymUnit: "",
+  }
+
+  storeNewMedicineSubgroupRequest: StoreNewMedicineSubgroupRequest = {
+    Name: ""
+  }
+  storeNewMedicineClassificationRequest: StoreNewMedicineClassificationRequest = {
+    Name: "",
+    Description: "",
+  }
+
   isDisable = true;
   medicineDetail: MedicineResponse;
 
@@ -51,7 +67,6 @@ export class DetailsMedicineComponent implements OnInit {
         Validators.required,
         Validators.minLength(this.medicineNameMinL),
         Validators.maxLength(this.medicineNameMaxL),
-        Validators.pattern(this.patternMedicineName)
       ]],
       medicineUnitId: ['', [
         Validators.required
@@ -160,6 +175,94 @@ export class DetailsMedicineComponent implements OnInit {
       }
     )
   }
+
+  addSubgroup(value: any) {
+    let data;
+    console.log('value', value);
+    this.storeNewMedicineSubgroupRequest.Name = value;
+
+    if ((this.subgroupList.filter(item => item.name.toLocaleLowerCase() === value.toLocaleLowerCase())).length < 1) {
+      this.addItemLoading = true;
+      this.service.storeNewMedicineSubgroup(this.storeNewMedicineSubgroupRequest).subscribe(
+        (response) => {
+          data = response.data;
+          this.subgroupList = [...this.subgroupList, data];
+          this.addItemLoading = false;
+          this.medicineForm.controls.medicineSubgroupId.setValue(data.id);
+          this.generalService.messageNz('success', `Thêm mới nhóm dược ${value.bold()} thành công`);
+        },
+        (error) => {
+          console.log("store unit error");
+          this.addItemLoading = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+    } else {
+      this.generalService.messageNz('error', `Nhóm dược ${value.bold()} đã có trong hệ thống`);
+      console.log('duplicate');
+    }
+
+    console.log(this.unitList);
+  }
+
+  addUnit(value: any): void {
+    let data;
+    console.log('value', value);
+    this.storeNewMedicineUnitRequest.Name = value;
+    this.storeNewMedicineUnitRequest.AcronymUnit = value.substring(0, 1);
+
+    if ((this.unitList.filter(item => item.name.toLocaleLowerCase() === value.toLocaleLowerCase())).length < 1) {
+      this.addItemLoading = true;
+      this.service.storeNewMedicineUnit(this.storeNewMedicineUnitRequest).subscribe(
+        (response) => {
+          data = response.data;
+          this.unitList = [...this.unitList, data];
+          this.addItemLoading = false;
+          this.medicineForm.controls.medicineUnitId.setValue(data.id);
+          this.generalService.messageNz('success', `Thêm mới đơn vị ${value.bold()} thành công`);
+        },
+        (error) => {
+          console.log("store unit error");
+          this.addItemLoading = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+    } else {
+      this.generalService.messageNz('error', `Đơn vị ${value.bold()} đã có trong hệ thống`);
+      console.log('duplicate');
+    }
+
+  }
+
+  addClassification(value: string): void {
+    let data;
+    console.log('value', value);
+    this.storeNewMedicineClassificationRequest.Name = value;
+    this.storeNewMedicineClassificationRequest.Description = null;
+
+    if ((this.classList.filter(item => item.name.toLocaleLowerCase() === value.toLocaleLowerCase())).length < 1) {
+      this.addItemLoading = true;
+      this.service.storeNewMedicineClassification(this.storeNewMedicineClassificationRequest).subscribe(
+        (response) => {
+          data = response.data;
+          this.classList = [...this.classList, data];
+          this.addItemLoading = false;
+          this.medicineForm.controls.medicineClassificationId.setValue(data.id);
+          this.generalService.messageNz('success', `Thêm mới loại ${value.bold()} thành công`);
+        },
+        (error) => {
+          console.log("store Classification error");
+          this.addItemLoading = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+    } else {
+      this.generalService.messageNz('error', `Loại ${value.bold()} đã có trong hệ thống`);
+      console.log('duplicate');
+    }
+  }
+
+
 
   isDiable(bool: boolean) {
     if (bool) {

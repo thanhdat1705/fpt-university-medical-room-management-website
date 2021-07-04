@@ -16,6 +16,7 @@ import { StoreNewMedicineRequest } from 'src/app/shared/requests/medicine/store-
 import { ActivatedRoute, Router } from '@angular/router';
 import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
+import { StoreNewMedicineClassificationRequest } from 'src/app/shared/requests/medicine-classification/store-new-request';
 
 @Component({
   selector: 'app-add-medicine',
@@ -58,6 +59,10 @@ export class AddMedicineComponent implements OnInit {
 
   storeNewMedicineSubgroupRequest: StoreNewMedicineSubgroupRequest = {
     Name: ""
+  }
+  storeNewMedicineClassificationRequest: StoreNewMedicineClassificationRequest = {
+    Name: "",
+    Description: "",
   }
 
   // medicineId: string;
@@ -134,31 +139,6 @@ export class AddMedicineComponent implements OnInit {
   }
   /*----------GET ALL------------------------------------------------------------------------------------------*/
 
-  // getDetailMedicine() {
-  //   if (this.medicineId != null) {
-  //     // this.medicineForm.controls['name'].disable();
-  //     // this.medicineForm.controls['description'].disable();
-  //     this.isDiable(true);
-  //     this.service.getMedicine(this.medicineId).subscribe(
-  //       (response) => {
-  //         this.medicineDetail = response.data;
-  //         console.log('details ', response.data);
-  //         this.medicineForm.setValue({
-  //           name: this.medicineDetail.name,
-  //           medicineUnitId: this.medicineDetail.medicineUnitId,
-  //           description: this.medicineDetail.description,
-  //           medicineSubgroupId: this.medicineDetail.medicineSubgroupId,
-  //           medicineClassificationId: this.medicineDetail.medicineClassificationId,
-  //         })
-  //       },
-  //       (error) => {
-  //         console.log('get detail error');
-  //         this.generalService.createErrorNotification(error);
-  //       }
-  //     )
-  //   }
-  // }
-
   getAllMedicineUnit() {
     this.service.getAllMedicineUnit().subscribe(
       (response) => {
@@ -221,6 +201,7 @@ export class AddMedicineComponent implements OnInit {
           data = response.data;
           this.subgroupList = [...this.subgroupList, data];
           this.addItemLoading = false;
+          this.medicineForm.controls.medicineSubgroupId.setValue(data.id);
           this.generalService.messageNz('success', `Thêm mới nhóm dược ${value.bold()} thành công`);
         },
         (error) => {
@@ -239,7 +220,6 @@ export class AddMedicineComponent implements OnInit {
 
   addUnit(value: any): void {
     let data;
-    this.isInserting = false;
     console.log('value', value);
     this.storeNewMedicineUnitRequest.Name = value;
     this.storeNewMedicineUnitRequest.AcronymUnit = value.substring(0, 1);
@@ -251,6 +231,7 @@ export class AddMedicineComponent implements OnInit {
           data = response.data;
           this.unitList = [...this.unitList, data];
           this.addItemLoading = false;
+          this.medicineForm.controls.medicineUnitId.setValue(data.id);
           this.generalService.messageNz('success', `Thêm mới đơn vị ${value.bold()} thành công`);
         },
         (error) => {
@@ -264,8 +245,36 @@ export class AddMedicineComponent implements OnInit {
       console.log('duplicate');
     }
 
-    console.log(this.unitList);
   }
+
+  addClassification(value: string): void {
+    let data;
+    console.log('value', value);
+    this.storeNewMedicineClassificationRequest.Name = value;
+    this.storeNewMedicineClassificationRequest.Description = null;
+
+    if ((this.classList.filter(item => item.name.toLocaleLowerCase() === value.toLocaleLowerCase())).length < 1) {
+      this.addItemLoading = true;
+      this.service.storeNewMedicineClassification(this.storeNewMedicineClassificationRequest).subscribe(
+        (response) => {
+          data = response.data;
+          this.classList = [...this.classList, data];
+          this.addItemLoading = false;
+          this.medicineForm.controls.medicineClassificationId.setValue(data.id);
+          this.generalService.messageNz('success', `Thêm mới loại ${value.bold()} thành công`);
+        },
+        (error) => {
+          console.log("store Classification error");
+          this.addItemLoading = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+    } else {
+      this.generalService.messageNz('error', `Loại ${value.bold()} đã có trong hệ thống`);
+      console.log('duplicate');
+    }
+  }
+
 
   addNewMedicine(data: StoreNewMedicineRequest) {
 

@@ -61,12 +61,14 @@ import {
   UrlServerAPIGetDetailBuyMedicine,
   UrlServerAPIDetailRequestBuyMedicine,
   UrlServerAPISearchRequestBuyMedicine,
-  UrlServerAPIUpdateRequestBuyMedicine
+  UrlServerAPIUpdateRequestBuyMedicine,
+  UrlServerAPIExportImportInventoryPeriodic
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
 import { SearchRequest } from '../requests/search-request';
+import { GetExportImportDateRequest } from '../requests/periodic-inventory/periodic-inventory-request';
 
 @Injectable({
   providedIn: 'root'
@@ -150,7 +152,7 @@ export class SummaryService {
 
   public searchAccount(param: SearchRequest): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(
-      UrlServerAPIViewAccounts +'?'+ param.getParamsString()
+      UrlServerAPIViewAccounts + '?' + param.getParamsString()
     );
   }
 
@@ -305,7 +307,7 @@ export class SummaryService {
   // Medicine in inventory
 
   public searchMedicineInInventory(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory +'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory + '?' + data.getParamsString());
   }
 
   public getMedicineInInventoryDetails(id: any) {
@@ -315,7 +317,7 @@ export class SummaryService {
   // Medicine in inventory
 
   public searchMedicineInInventoryDetails(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails+'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails + '?' + data.getParamsString());
 
   }
 
@@ -361,7 +363,7 @@ export class SummaryService {
   }
 
   public searchPatient(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchPatient+'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchPatient + '?' + data.getParamsString());
   }
 
   public getTreatmentDetails(id: any, params: any) {
@@ -371,10 +373,16 @@ export class SummaryService {
 
 
   public searchDeseaseStatus(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchDeseaseStatus+'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchDeseaseStatus + '?' + data.getParamsString());
 
   }
 
+  //ExportImportInventoryPeriodic
+
+  public getExportImport(date: GetExportImportDateRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPIExportImportInventoryPeriodic + "?Month=" + date.month + "&Year=" + date.year);
+
+  }
   /*===========================================================================================================*/
 
   public setTokenHeader() {

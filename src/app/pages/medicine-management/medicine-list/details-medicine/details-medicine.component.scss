@@ -41,14 +41,15 @@
     display: flex;
     flex-wrap: nowrap;
     padding: 8px;
-    font-size: 18px;
+    font-size: 16px;
   }
   input {
-    font-size: 18px;
+    font-size: 16px;
   }
   .add-item {
     flex: 0 0 auto;
     padding: 8px;
-    display: block;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
   }
-  

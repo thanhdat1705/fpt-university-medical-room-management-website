@@ -93,4 +93,18 @@ export const CommonLayout_ROUTES: Routes = [
         ],
 
     },
+
+    {
+        path: 'periodic-inventory',
+        data: {
+            title: 'Xuất nhập tồn'
+        },
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('../../pages/periodic-inventory/periodic-inventory.module').then(m => m.PeriodicInventoryModule)
+            }
+        ],
+        
+    },
 ];
