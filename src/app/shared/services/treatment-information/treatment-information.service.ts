@@ -103,13 +103,10 @@ export class TreatmentInformationService {
 
   getTipTreatmentInformationDetails(id: any) {
     var treatment = this.treatmentInformationDetails.filter(treatment => treatment.medicineId.includes(id));
-    var tip = '';
+    var tip = [];
     for (let i = 0; i < treatment.length; i++) {
-      if (i == treatment.length - 1) {
-        tip += treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate + '.'
-      } else {
-        tip += treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate + ', '
-      }
+      tip.push(treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate + " \n ");
+
     }
     return tip;
   }

@@ -57,7 +57,7 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
           this.setFormControlValue();
         }
       
-
+        this.disableUpdate();
       }
     );
   }
@@ -86,6 +86,7 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
       (response) => {
         this.eliminatedMedicineDetails = response.data;
         this.setFormControlValue();
+        this.disableUpdate();
         console.log(response);
       }, (error) => {
         console.log(error);
@@ -119,6 +120,9 @@ export class ViewEliminatedMedicineDetailsComponent implements OnInit {
       (response) => {
         console.log(response);
         this.getEliminatedMedicineDetails(this.id, this.param);
+        
+        this.generalService.messageNz('success', 'Chi tiết thuốc hủy đã được cập nhật');
+        this.disableUpdate();
       }, (error) => {
         console.log(error);
         this.generalService.createErrorNotification(error);

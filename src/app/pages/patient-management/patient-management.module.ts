@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PatientManagementRoutingModule } from './patient-management-routing.module';
-import { PatientManagementComponent } from './patient-management.component';
+import { ViewPatientListComponent } from './view-patient-list/view-patient-list.component';
 
 
 @NgModule({
-  declarations: [PatientManagementComponent],
+  declarations: [ViewPatientListComponent],
   imports: [
     CommonModule,
     PatientManagementRoutingModule

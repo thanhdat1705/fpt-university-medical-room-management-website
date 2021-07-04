@@ -8,6 +8,7 @@ import { TreatmentInformationDetailsComponent } from './add-treatment-informatio
 import { ViewTreatmentInformationListComponent } from './view-treatment-information-list/view-treatment-information-list.component';
 import { ViewTreatmentInformationComponent } from './view-treatment-information-list/view-treatment-information/view-treatment-information.component';
 import { ViewTreatmentInformationPeriodicReportComponent } from './view-treatment-information-periodic-report/view-treatment-information-periodic-report.component';
+import { CheckoutUpdateTreatmentGuard } from 'src/app/shared/guards/checkout-update-treatment.guard';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { ViewTreatmentInformationPeriodicReportComponent } from './view-treatmen
     TreatmentInformationManagementRoutingModule
   ],
   providers: [
-    CurrencyPipe
+    CheckoutUpdateTreatmentGuard
   ]
 })
 export class TreatmentInformationManagementModule { }
