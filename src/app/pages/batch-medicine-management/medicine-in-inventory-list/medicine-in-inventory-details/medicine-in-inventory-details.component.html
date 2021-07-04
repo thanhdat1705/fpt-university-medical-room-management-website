@@ -8,7 +8,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
-                    value="{{medicineInInventoryDetails.importMedicine.medicine.name}}" />
+                    value="{{medicineInInventoryDetails.medicine.name}}" />
             </nz-form-control>
         </nz-form-item>
 
@@ -19,7 +19,7 @@
             <nz-form-control>
                 <input [disabled]="true" type="text" nz-input [nzSize]="'large'" style="width: 10%;"
                     value="{{medicineInInventoryDetails.quantity}}" />
-                <span style="margin-left: 10px;">{{ medicineInInventoryDetails.importMedicine.medicine.medicineUnit.name
+                <span style="margin-left: 10px;">{{ medicineInInventoryDetails.medicineUnit.name
                     }}
                 </span>
             </nz-form-control>
@@ -31,7 +31,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
-                    value="{{ medicineInInventoryDetails.importMedicine.medicine.medicineClassification.name }}" />
+                    value="{{ medicineInInventoryDetails.medicineClassification.name }}" />
                 <span style="margin-left: 10px;">
                 </span>
             </nz-form-control>
@@ -43,7 +43,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" type="text" nz-input [nzSize]="'large'"
-                    value="{{ medicineInInventoryDetails.importMedicine.medicine.medicineSubgroup.name }}" />
+                    value="{{ medicineInInventoryDetails.medicineSubgroup.name }}" />
                 <span style="margin-left: 10px;">
                 </span>
             </nz-form-control>
@@ -55,7 +55,7 @@
             </nz-form-label>
             <nz-form-control>
                 <input [disabled]="true" id="quantity" nz-input [nzSize]="'large'"
-                    value="{{ generalService.getDate(medicineInInventoryDetails.importMedicine.importBatch.createDate) }}" />
+                    value="{{ generalService.getDate(medicineInInventoryDetails.importBatch.createDate) }}" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

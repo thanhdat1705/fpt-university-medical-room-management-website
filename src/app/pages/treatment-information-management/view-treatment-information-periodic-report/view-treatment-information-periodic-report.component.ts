@@ -9,6 +9,16 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 import { TreatmentInformationService } from 'src/app/shared/services/treatment-information/treatment-information.service';
 import { treatmentSearchTable } from '../view-treatment-information-list/view-treatment-information-list.component';
 import { endOfMonth, startOfMonth } from 'date-fns';
+import { Patient } from 'src/app/shared/models/patient';
+
+export interface treatmentReportTableRowData{
+  date: string;
+  patient: Patient
+  diseaseStatusName: string;
+  treatmentDirection: string;
+  numberOfMedicine: string;
+  isConfirmed: boolean;
+}
 
 @Component({
   selector: 'app-view-treatment-information-periodic-report',
@@ -18,7 +28,7 @@ import { endOfMonth, startOfMonth } from 'date-fns';
 export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
 
   treatmentList: TreatmentSearchResponse[];
-  treatmentTableData: treatmentSearchTable[] = [];
+  treatmentTableData: treatmentReportTableRowData[] = [];
   pageSize = 10;
   pageIndex = 1;
   searchRecord: Map<string, ValueCompare> = new Map;
@@ -109,7 +119,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
 
   sortField = "createAt";
   sortOrder = 1;
-  selectFields = "id,confirmSignature,createAt,accountCreateBy,isDelivered,patient,patient.department";
+  selectFields = "id,confirmSignature,createAt,accountCreateBy,isDelivered,patient,patient.department, TreatmentInformations, DiseaseStatusInTreatments";
   // treatmentSearchRequest: SearchRequest = {
   //   limit: this.pageSize,
   //   page: this.pageIndex,
@@ -172,9 +182,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     console.log('map: ', this.treatmentSearchRequest.getParamsString());
   }
 
-  onSearchTreatment() {
 
-  }
 
   searchTreatment() {
     console.log('searchMap', this.searchRecord);
@@ -213,7 +221,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     }
     this.treatmentList = response.data;
     this.total = response.info.totalRecord;
-    this.combinedCreateDate();
+    this.combinedTreatmentCreateDate();
     // this.treatmentTableData.treatmentInfor = this.treatmentList;
     console.log(this.treatmentList);
   }
@@ -260,7 +268,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     this.searchTreatment();
   }
 
-  combinedCreateDate() {
+  combinedTreatmentCreateDate() {
     this.treatmentTableData = [];
 
     for (var i = 0; i < this.treatmentList.length; i++) {
@@ -273,15 +281,15 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
       var found = false;
       for (var j = 0; j < this.treatmentTableData.length; j++) {
         if (this.treatmentTableData[j].date === date) {
-          this.treatmentTableData[j].treatmentInfor.push(this.treatmentList[i]);
-          found = true;
+          // this.treatmentTableData[j].diseaseStatusName += this.treatmentList[i].
+          // found = true;
         }
       }
       if (!found) {
-        this.treatmentTableData.push({
-          date: date,
-          treatmentInfor: treatment,
-        });
+        // this.treatmentTableData.push({
+        //   date: date,
+        //   treatmentInfor: treatment,
+        // });
       }
     }
     console.log('grouped:', this.treatmentTableData);

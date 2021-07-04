@@ -1,22 +1,8 @@
 <div class="container d-flex flex-wrap justify-content-between h-100">
     <div class="container-left col-md-12 col-lg-6">
-        <div class="bg-white d-flex flex-column p-h-20 p-v-10" *ngIf="profile">
-            <span class="text-teal-green font-size-18 font-weight-semibold">Bác sĩ</span>
-            <dividing-line></dividing-line>
 
-            <div class="info-wrapper">
-                <div class="header-info">
-                    <span class="font-weight-semibold font-size-16 text-teal-green">Tên</span>
-                    <span>{{ profile.displayName }}</span>
-                </div>
-                <div class="header-info">
-                    <span class="font-weight-semibold font-size-16 text-teal-green">Mã số</span>
-                    <span>{{ profile.internalCode }}</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="bg-white m-t-22 m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
+        <div class="bg-white m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
             <span class="text-teal-green font-size-18 font-weight-semibold">Thông tin người khám</span>
             <dividing-line></dividing-line>
             <form nz-form nzLayout="horizontal" *ngIf="insertTreatmentInformationForm"
@@ -25,18 +11,17 @@
                 <nz-form-item>
                     <nz-form-label nzRequired class="text-label" [nzSpan]="7">
                         <span class="font-size-16">Mã số</span>
-                    </nz-form-label> 
+                    </nz-form-label>
                     <nz-form-control [nzErrorTip]="internalCodeTpl">
                         <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-                            <input nz-input placeholder="Nhập mã số"
-                                [(ngModel)]="selectedInternalCode"
+                            <input nz-input placeholder="Nhập mã số" [(ngModel)]="selectedInternalCode"
                                 (input)='patientIntetrnalCodeInputChange(inputInternalCode.value)'
                                 style="font-size: 16px;" [nzSize]="'large'" formControlName="internalCode"
                                 #inputInternalCode [nzAutocomplete]="autoInternalCode" />
                             <nz-autocomplete #autoInternalCode>
                                 <ng-container *ngFor="let option of patientInternalCodeList">
-                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item" [nzValue]="option.internalCode"
-                                       [nzLabel]="option.internalCode">
+                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item"
+                                        [nzValue]="option.internalCode" [nzLabel]="option.internalCode">
                                         {{option.internalCode}}
                                     </nz-auto-option>
                                 </ng-container>
@@ -52,9 +37,9 @@
                             </nz-autocomplete>
                         </nz-input-group>
                         <ng-template #suffixButton>
-                            <a nz-button [disabled]="inputInternalCode.value.length == 0"
-                            nzType="primary" (click)="getPatientDetails(inputInternalCode.value)"
-                                nzSize="large" nzSearch>Truy xuất</a>
+                            <a nz-button [disabled]="inputInternalCode.value.length == 0" nzType="primary"
+                                (click)="getPatientDetails(inputInternalCode.value)" nzSize="large" nzSearch>Truy
+                                xuất</a>
                         </ng-template>
 
                         <ng-template #internalCodeTpl let-control>
@@ -153,7 +138,7 @@
                             [(ngModel)]="patientDeseaseStatusList" (nzOnSearch)="onSearchDeseaseStatus($event)"
                             [ngModelOptions]="{standalone: true}" nzAllowClear nzShowSearch nzServerSearch>
                             <ng-container *ngFor="let o of diseaseStatusList">
-                                <nz-option [nzValue]="o.id" [nzLabel]="o.name"></nz-option>
+                                <nz-option [nzValue]="o.name" [nzLabel]="o.name"></nz-option>
                             </ng-container>
                             <nz-option nzDisabled nzCustomContent>
                                 <i nz-icon></i> Loading Data...
@@ -187,13 +172,28 @@
                 <nz-form-item>
                     <nz-form-control>
                         <button class="font-size-16" nz-button nzType="primary"
+                            [disabled]="treatmentInformation.length == 0"
                             style=" float: right; padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Tạo
                             đơn</button>
                     </nz-form-control>
                 </nz-form-item>
             </form>
         </div>
+        <div class="bg-white d-flex flex-column p-h-20 p-v-10" *ngIf="profile">
+            <span class="text-teal-green font-size-18 font-weight-semibold">Bác sĩ</span>
+            <dividing-line></dividing-line>
 
+            <div class="info-wrapper">
+                <div class="header-info">
+                    <span class="font-weight-semibold font-size-16 text-teal-green">Tên</span>
+                    <span>{{ profile.displayName }}</span>
+                </div>
+                <div class="header-info">
+                    <span class="font-weight-semibold font-size-16 text-teal-green">Mã số</span>
+                    <span>{{ profile.internalCode }}</span>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="container-right col-md-12 col-lg-6">
         <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100">
@@ -206,24 +206,39 @@
                 [nzFrontPagination]="false">
                 <thead>
                     <tr>
+                        <th nzWidth="60px"></th>
                         <th nzWidth="30%" nzColumnKey="InternalCode">Thuốc</th>
                         <th nzWidth="20%" nzColumnKey="DisplayName">Số lượng</th>
                         <th nzWidth="50%" nzColumnKey="Active">Hướng điều trị</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let medicine of treatmentInformation">
-                        <td nzTooltipColor="green"
-                            nzTooltipTitle="{{displayTipTreatmentInformationDetails(medicine.medicineId)}}"
-                            nzTooltipPlacement="leftTop" nz-tooltip>
-                            {{ medicine.medicineName }}</td>
-                        <td>{{ medicine.quantity }} {{medicine.unitName}}</td>
-                        <td><input #inputValue nzInput style="width: 100%;"
+                    <ng-container *ngFor="let medicine of treatmentInformation">
+                        <tr>
+                            <td [nzExpand]="expandSet.has(medicine.medicineId)"
+                                (nzExpandChange)="onExpandChange(medicine.medicineId, $event)"></td>
+                            <!-- <td nzTooltipColor="green"
+                                nzTooltipTitle="{{displayTipTreatmentInformationDetails(medicine.medicineId)}}"
+                                nzTooltipPlacement="leftTop" nz-tooltip> -->
+                            <td>
+                                {{ medicine.medicineName }}</td>
+                            <td>{{ medicine.quantity }} {{medicine.unitName}}</td>
+                            <td><textarea nz-input #inputValue nzInput style="width: 100%;"
+                                    (input)="insertIndicationToDrink(medicine.medicineId, inputValue.value)"
+                                    placeholder="Chỉ dẫn"
+                                    [nzAutosize]="{ minRows: 1, maxRows: 3 }">{{ medicine.indicationToDrink }}</textarea>
+
+                                <!-- <input #inputValue nzInput style="width: 100%;"
                                 (input)="insertIndicationToDrink(medicine.medicineId, inputValue.value)"
-                                value="{{ medicine.indicationToDrink }}"
-                                >
-                        </td>
-                    </tr>
+                                value="{{ medicine.indicationToDrink }}"> -->
+                            </td>
+                        </tr>
+                            <tr [nzExpand]="expandSet.has(medicine.medicineId)" *ngFor="let tip of displayTipTreatmentInformationDetails(medicine.medicineId)">
+
+                                {{ tip }}
+                            </tr>
+
+                    </ng-container>
                 </tbody>
             </nz-table>
         </div>

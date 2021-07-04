@@ -1,6 +1,7 @@
 import { MedicineInInventoryResponse } from "../responses/medicine-in-inventory/medicine-in-inventory";
 
 export class TreatmentInformationDetail {
+    id: string
     medicineId: string;
     medicineName: string;
     medicineInInventoryDetailId: string;

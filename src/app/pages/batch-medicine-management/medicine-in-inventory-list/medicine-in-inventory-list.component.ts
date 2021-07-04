@@ -38,6 +38,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   filterUnitValue: string;
   filterClassificationValue: string;
   filterSubgroupValue: string;
+  dateObj = new Date();
 
   // medicineInInventorySearchRequest: SearchRequest = {
   //   limit: this.pageSize,
@@ -50,6 +51,15 @@ export class MedicineInInventoryListComponent implements OnInit {
 
   medicineInInventorySearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchMapValue, this.selectFields);
 
+  periodicMonthValueCompare: ValueCompare = {
+    value: '',
+    compare: '='
+  }
+
+  periodicYearValueCompare: ValueCompare = {
+    value: '',
+    compare: '='
+  }
 
   NameValueCompare: ValueCompare = {
     value: '',
@@ -154,6 +164,12 @@ export class MedicineInInventoryListComponent implements OnInit {
   }
 
   searchMedicineInInventory() {
+    var month = this.dateObj.getUTCMonth() + 1; //months from 1-12
+    var year = this.dateObj.getFullYear();
+
+    this.generalService.setValueCompare(month, this.periodicMonthValueCompare, 'periodicInventory.month', this.searchMapValue)
+    this.generalService.setValueCompare(year, this.periodicYearValueCompare, 'periodicInventory.year', this.searchMapValue);
+  
     this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest).subscribe(
       (response) => {
         console.log(response.data);

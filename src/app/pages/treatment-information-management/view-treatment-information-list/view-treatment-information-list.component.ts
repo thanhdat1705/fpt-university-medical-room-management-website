@@ -192,6 +192,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
       }, (error) => {
         console.log(error);
         this.loading = false;
+        this.generalService.createErrorNotification(error);
 
       }
     );
@@ -205,6 +206,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.generalService.createErrorNotification(error);
       }
     );
   }

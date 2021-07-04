@@ -27,6 +27,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
   id: string;
   params = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
+  paramMedicineInInventotryDetails = "importMedicine.expirationDate";
+  
   afterUpdateParam = "id";
   treatment: TreatmentResponse;
   treatmentForm: FormGroup
@@ -44,15 +46,16 @@ export class ViewTreatmentInformationComponent implements OnInit {
   deseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
   patientInternalCodeList: PatientInternalCodeResponse[];
   isExistInDetails: boolean;
-  setOfCheckedId = new Set<string>();
+  expandSet = new Set<string>();
+
   file: File;
   confirmModal!: NzModalRef;
   patientAllegryDescription: string;
   departmentSearchRequest = new SearchRequest(1, 0, '', 0, null, 'id, name');
-  deseaseStatusSearchRequest = new SearchRequest(1, 0, '', 0, this.deseaseStatusSearchRecord, 'id,name');
+  deseaseStatusSearchRequest = new SearchRequest(1, 0, '', 0, this.deseaseStatusSearchRecord, 'name');
   selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
 
-  isEditing = false;
+  isEditing = true;
 
   patientInternalCodeSearchValueCompare: ValueCompare = {
     value: '',
@@ -166,7 +169,9 @@ export class ViewTreatmentInformationComponent implements OnInit {
     }
   ]
 
-
+  getMedicineInInventoryDetails(id: string) {
+    
+  }
 
   getGender(acronym: any) {
     if (acronym == "M") {
@@ -178,7 +183,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
   showMedicineModal(): void {
     this.modalService.create({
-      nzTitle: 'Modal Title',
+      nzTitle: 'Danh sách thuốc',
       nzContent: TreatmentInformationDetailsComponent
     });
   }
@@ -199,7 +204,9 @@ export class ViewTreatmentInformationComponent implements OnInit {
   // generalService.getDate(item.expirationDate ))
 
   setTreatmentServiceData() {
-    this.url = this.treatment.confirmSignature;
+    if(this.treatment.confirmSignature != null){
+      this.url = this.treatment.confirmSignature;
+    }
     console.log(this.url);
     this.treatmentInformation = this.treatment.treatmentInformations;
     if(this.treatment.patient.allergyDescription == null){
@@ -225,7 +232,15 @@ export class ViewTreatmentInformationComponent implements OnInit {
         treatmentDetailsObj.unitName = this.treatmentInformation[i].medicine.medicineUnit.name
         treatmentDetailsObj.medicineInInventoryDetailId = this.treatmentInformation[i].id;
         treatmentDetailsObj.quantity = this.treatmentInformation[i].treatmentInformationDetails[j].quantity;
-        // treatmentDetailsObj.expiredDate = this.treatmentInformation[i].treatmentInformationDetails[j].quantity;
+        this.summaryService.getMedicineInInventoryDetails(this.treatmentInformation[i].treatmentInformationDetails[j].id, this.paramMedicineInInventotryDetails).subscribe(
+          (response) => {
+            treatmentDetailsObj.expiredDate = response.data;
+
+    
+          }, (error) => {
+            console.log(error);
+          }
+        );
         treatmentDetailsObj.medicineInInventoryDetailId = this.treatmentInformation[i].treatmentInformationDetails[j].medicineInInventoryDetailId
         this.treatmentInformationDetails.push(treatmentDetailsObj);
         this.treatmentService.setTreatmentInformation(this.treatmentInformation);
@@ -234,6 +249,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
     }
     console.log(this.treatmentInformationDetails);
     this.treatmentService.setTreatmentDetails(this.treatmentInformationDetails);
+    console.log('code',this.treatment.patient.internalCode);
+    this.selectedInternalCode = this.treatment.patient.internalCode
     this.treatmentForm.setValue({
       internalCode: this.treatment.patient.internalCode,
       name: this.treatment.patient.name,
@@ -252,6 +269,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
         this.treatment = response.data;
         console.log(this.treatment);
         this.setTreatmentServiceData();
+
         this.disableUpdate();
       }, (error) => {
         console.log(error);
@@ -292,9 +310,14 @@ export class ViewTreatmentInformationComponent implements OnInit {
     this.summaryService.addDepartment(this.insertDepartmentRequest).subscribe(
       (response) => {
         this.getAllDepartment();
+        this.generalService.messageNz('success', 'Phòng ban đã được cập nhật');
+
+
         console.log(response);
       }, (error) => {
         console.log(error);
+        this.generalService.createErrorNotification(error);
+
       }
     );
   }
@@ -426,7 +449,15 @@ export class ViewTreatmentInformationComponent implements OnInit {
     })
   }
 
-
+  insertIndicationToDrink(id: any, indicationToDrink: any) {
+    for (let i = 0; i < this.treatmentInformation.length; i++) {
+      if (this.treatmentInformation[i].medicineId == id) {
+        this.treatmentInformation[i].indicationToDrink = indicationToDrink;
+        break;
+      }
+    }
+    this.treatmentService.setTreatmentInformation(this.treatmentInformation);
+  }
 
   deleteTreatment() {
     // this.summaryService.deleteTreatment(this.id).subscribe(
@@ -481,8 +512,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
     }
 
     treatmentInformationForm.append('ConfirmSignatureImg', this.file);
-    console.log("img" + treatmentInformationForm.get('ConfirmSignatureImg'));
-    console.log("department" + treatmentInformationForm.get('Patient.DepartmentId'));
+    console.log('patientDeseaseStatusList: ', this.patientDeseaseStatusList);
 
 
     this.summaryService.updateTreatment(this.id, this.afterUpdateParam, treatmentInformationForm).subscribe(
@@ -498,4 +528,12 @@ export class ViewTreatmentInformationComponent implements OnInit {
       }
     )
   }
+
+  onExpandChange(id: string, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+   } else {
+     this.expandSet.delete(id);
+      }
+    }
 }

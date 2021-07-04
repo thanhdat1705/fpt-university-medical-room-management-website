@@ -12,7 +12,7 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
 export class MedicineInInventoryDetails implements OnInit {
 
   id: any;
-  param = "id, quantity, createdDate, importMedicine, medicine, medicine.medicineClassification,medicine.medicineSubgroup, importMedicine.importBatch, periodicInventory";
+  param = "id, quantity, createdDate, importMedicine, medicine, medicine.medicineUnit, medicine.medicineClassification,medicine.medicineSubgroup, importMedicine.importBatch, periodicInventory";
   constructor(
     private summaryService: SummaryService,
     private activatedroute: ActivatedRoute,

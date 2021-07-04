@@ -7,7 +7,7 @@ import { SummaryService } from '../summary.service';
   providedIn: 'root'
 })
 export class MedicineInInventoryDetailsService {
-  param = "id, quantity, createdDate, importMedicine, medicine, medicine.medicineClassification,medicine.medicineSubgroup, importMedicine.importBatch, periodicInventory";
+  param = "id, quantity, createdDate, importMedicine, medicine, medicine.medicineUnit, medicine.medicineClassification,medicine.medicineSubgroup, importMedicine.importBatch, periodicInventory";
 
   constructor(
     private summaryService: SummaryService,

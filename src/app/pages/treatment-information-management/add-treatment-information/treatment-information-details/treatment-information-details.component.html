@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<nz-table *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize"
+<nz-table *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize" [nzScroll]="{ y: '400px' }"
   [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)">
 
   <thead>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CheckoutUpdateTreatmentGuard } from 'src/app/shared/guards/checkout-update-treatment.guard';
 import { AddBatchMedicineComponent } from '../batch-medicine-management/batch-medicine-list/add-batch-medicine/add-batch-medicine.component';
 import { AddTreatmentInformationComponent } from './add-treatment-information/add-treatment-information.component';
 import { ViewTreatmentInformationListComponent } from './view-treatment-information-list/view-treatment-information-list.component';
@@ -27,7 +28,9 @@ const routes: Routes = [
     component: ViewTreatmentInformationComponent,
     data: {
       title: "Đơn điều trị"
-    }
+    },
+    canDeactivate: [CheckoutUpdateTreatmentGuard]
+
   },
   {
     path: 'treatment-information-periodc-report',

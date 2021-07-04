@@ -30,6 +30,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   diseaseStatusList = [];
   patientDeseaseStatusList = [];
   file: File;
+  expandSet = new Set<string>();
   profile: Account
   searchRecord: Map<string, ValueCompare> = new Map;
   deseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
@@ -37,6 +38,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   patient: Patient;
   medicalStaff: Account = JSON.parse(localStorage.getItem("user"));
   selectedInternalCode: string;
+
   insertDepartmentRequest: Department = {
     name: '',
     description: '',
@@ -383,7 +385,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   showMedicineModal(): void {
     this.modalService.create({
-      nzTitle: 'Modal Title',
+      nzTitle: 'Danh sách thuốc',
       nzContent: TreatmentInformationDetailsComponent
     });
   }
@@ -418,7 +420,16 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   }
 
-  displayTipTreatmentInformationDetails(id: any) {
+   displayTipTreatmentInformationDetails(id: any) {
     return this.treatmentService.getTipTreatmentInformationDetails(id);
+}
+
+ onExpandChange(id: string, checked: boolean): void {
+  if (checked) {
+    this.expandSet.add(id);
+ } else {
+   this.expandSet.delete(id);
+    }
   }
+
 }

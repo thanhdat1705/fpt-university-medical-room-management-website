@@ -1,5 +1,5 @@
 <div class="inner-content">
-    <nz-input-group nzSize="large" nzCompact [nzAddOnAfter]="searchIconButton">
+    <!-- <nz-input-group nzSize="large" nzCompact [nzAddOnAfter]="searchIconButton">
         <nz-select class="select-search" nzPlaceHolder="Tìm theo" nzAllowClear nzSize="large" style="width: 20%;"
             [(ngModel)]="selectedSearchAttribute">
             <nz-option *ngFor="let attribute of searchAttributelist" [nzLabel]="attribute.name"
@@ -58,7 +58,7 @@
 
             <br><br>
         </div>
-    </div>
+    </div> -->
 
     <nz-table class="medicine-table" #colSpanTable [nzData]="treatmentList" nzTableLayout="fixed" nzBordered
         [nzFrontPagination]="false" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
@@ -86,17 +86,20 @@
                 <tr *ngFor="let treatment of data.treatmentInfor; index as i">
 
                     <td>{{ i+1 }}</td>
-                    <td>{{ treatment.patient.internalCode }}</td>
                     <td>{{ treatment.patient.name }}</td>
                     <td>{{ getGender(treatment.patient.gender) }}</td>
                     <td>{{ treatment.department.name }}</td>
+                    <td>{{ treatment.diseaseStatusNames }}</td>
+                    <td></td>
+                    <td></td>
+
                     <td *ngIf="treatment.confirmSignature == null; else confirmed">Chưa xác nhận</td>
                     <ng-template #confirmed>
                         <td>Đã xác nhận</td>
                     </ng-template>
-                    <td> <a nzAlign="center" style="color: #1890ff"
+                    <!-- <td> <a nzAlign="center" style="color: #1890ff"
                             (click)="getTreatment(treatment.id)">Chi
-                            tiết</a></td>
+                            tiết</a></td> -->
                 </tr>
             </ng-container>
             <!-- <ng-container *ngFor="let data of treatmentTableData">

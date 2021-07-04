@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Data } from '@angular/router';
@@ -92,14 +91,19 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     compare: 'Equals'
   }
 
-  periodicMedicineInInventoryValueCompare: ValueCompare = {
+  periodicMonthMedicineInInventoryValueCompare: ValueCompare = {
     value: '',
-    compare: '>='
+    compare: '='
+  }
+
+  periodicYearMedicineInInventoryValueCompare: ValueCompare = {
+    value: '',
+    compare: '='
   }
 
   periodicMedicineInInventoryDetatilsValueCompare: ValueCompare = {
     value: '',
-    compare: '>='
+    compare: '='
   }
 
   medicineNnameValueCompare: ValueCompare = {
@@ -131,7 +135,6 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     private treatmentService: TreatmentInformationService,
     private generalService: GeneralHelperService,
     private formBuilder: FormBuilder,
-    private current: CurrencyPipe
   ) { }
 
   NameValueCompare: ValueCompare = {
@@ -212,7 +215,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   searchMedicineInInventoryDetails(id: string) {
     // this.generalService.openWaitingPopupNz()
     var month = this.dateObj.getUTCMonth() + 1; //months from 1-12
-
+    var year = this.dateObj.getFullYear();
     this.generalService.setValueCompare(id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchValueMap);
     this.generalService.setValueCompare(month, this.periodicMedicineInInventoryDetatilsValueCompare, 'periodicInventory.month', this.MedicineInInventoryDetailsSearchValueMap);
 
@@ -278,9 +281,10 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   searchMedicineInInventory() {
     // this.generalService.openWaitingPopupNz();
     var month = this.dateObj.getUTCMonth() + 1; //months from 1-12
-
+    var year = this.dateObj.getFullYear();
     this.generalService.setValueCompare(0, this.medicineInInventoryQuantityCompare, 'quantity', this.MedicineInInventorySearchValueMap);
-    this.generalService.setValueCompare(month, this.periodicMedicineInInventoryValueCompare, 'periodicInventory.month', this.MedicineInInventorySearchValueMap);
+    this.generalService.setValueCompare(month, this.periodicMonthMedicineInInventoryValueCompare, 'periodicInventory.month', this.MedicineInInventorySearchValueMap);
+    this.generalService.setValueCompare(year, this.periodicYearMedicineInInventoryValueCompare, 'periodicInventory.year', this.MedicineInInventorySearchValueMap);
 
     this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest).subscribe(
       (response) => {
