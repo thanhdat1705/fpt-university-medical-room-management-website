@@ -36,7 +36,8 @@
                         <a [routerLink]="'batch-medicine-management/batch-medicine-list'">Danh sách lô</a>
                     </li>
                     <li nz-menu-item>
-                        <a [routerLink]="'batch-medicine-management/eliminated-medicines-list'">Danh sách thuốc đã hủy</a>
+                        <a [routerLink]="'batch-medicine-management/eliminated-medicines-list'">Danh sách thuốc đã
+                            hủy</a>
                     </li>
                     <li nz-menu-item>
                         <a [routerLink]="'batch-medicine-management/medicine-in-inventory'">Danh sách thuốc hiện có</a>
@@ -49,7 +50,12 @@
                         <a [routerLink]="'treatment-information-management/add-treatment-information'">Tạo đơn</a>
                     </li>
                     <li nz-menu-item>
-                        <a [routerLink]="'treatment-information-management/treatment-information-list'">Danh sách đơn điều trị</a>
+                        <a [routerLink]="'treatment-information-management/treatment-information-list'">Danh sách đơn
+                            điều trị</a>
+                    </li>
+                    <li nz-menu-item>
+                        <a [routerLink]="'treatment-information-management/treatment-information-periodc-report'">
+                            Báo cáo cấp phát thuốc</a>
                     </li>
                 </ul>
             </li>
@@ -75,7 +81,8 @@
         <app-header></app-header>
         <nz-content class="main-content">
             <div class="main-content-header">
-                <h4 class="page-title" *ngIf="breadcrumbs$ | async; let breadcrumbs">{{(breadcrumbs[breadcrumbs.length - 1].label)}}</h4>
+                <h4 class="page-title" *ngIf="breadcrumbs$ | async; let breadcrumbs">{{(breadcrumbs[breadcrumbs.length -
+                    1].label)}}</h4>
                 <nz-breadcrumb nzSeparator=">">
                     <!-- <i class="m-r-5 text-gray" nz-icon nzType="home"></i> -->
                     <nz-breadcrumb-item *ngFor="let breadcrumb of breadcrumbs$ | async">

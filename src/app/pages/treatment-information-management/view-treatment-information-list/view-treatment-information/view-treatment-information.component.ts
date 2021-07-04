@@ -47,7 +47,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
   setOfCheckedId = new Set<string>();
   file: File;
   confirmModal!: NzModalRef;
-
+  patientAllegryDescription: string;
   departmentSearchRequest = new SearchRequest(1, 0, '', 0, null, 'id, name');
   deseaseStatusSearchRequest = new SearchRequest(1, 0, '', 0, this.deseaseStatusSearchRecord, 'id,name');
   selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
@@ -202,7 +202,11 @@ export class ViewTreatmentInformationComponent implements OnInit {
     this.url = this.treatment.confirmSignature;
     console.log(this.url);
     this.treatmentInformation = this.treatment.treatmentInformations;
-
+    if(this.treatment.patient.allergyDescription == null){
+      this.patientAllegryDescription = ''
+    }else{
+      this.patientAllegryDescription = this.treatment.patient.allergyDescription;
+    }
     for (let i = 0; i < this.treatment.diseaseStatusInTreatments.length; i++) {
       this.patientDeseaseStatusList.push(this.treatment.diseaseStatusInTreatments[i].diseaseStatus.name);
     }
@@ -235,7 +239,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
       name: this.treatment.patient.name,
       gender: this.treatment.patient.gender,
       departmentId: this.treatment.department.id,
-      allergyDescription: this.treatment.patient.allergyDescription,
+      allergyDescription:  this.patientAllegryDescription,
       diseaseStatusNames: []
     });
     this.sygnatureUrl = this.treatment.confirmSignature

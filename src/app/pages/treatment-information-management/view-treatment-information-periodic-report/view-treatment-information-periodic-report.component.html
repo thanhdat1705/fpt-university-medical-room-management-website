@@ -1,0 +1,128 @@
+<div class="inner-content">
+    <nz-input-group nzSize="large" nzCompact [nzAddOnAfter]="searchIconButton">
+        <nz-select class="select-search" nzPlaceHolder="Tìm theo" nzAllowClear nzSize="large" style="width: 20%;"
+            [(ngModel)]="selectedSearchAttribute">
+            <nz-option *ngFor="let attribute of searchAttributelist" [nzLabel]="attribute.name"
+                [nzValue]="attribute.id">
+            </nz-option>
+        </nz-select>
+        <nz-select class="select-search" nzPlaceHolder="Vai trò" nzAllowClear nzSize="large" style="width: 20%;"
+            [(ngModel)]="selectedSearchRole">
+            <nz-option *ngFor="let role of searchRoleList" [nzLabel]="role.name" [nzValue]="role.id">
+            </nz-option>
+        </nz-select>
+        <input type="text" class="input" nz-input [(ngModel)]="searchTreatmentValue" style="width:60%;" />
+    </nz-input-group>
+
+    <ng-template #searchIconButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="search()">
+            <i nz-icon nzType="search" nzTheme="outline"></i>
+        </button>
+    </ng-template>
+
+    <div class="search-filter">
+        <br>
+
+        <div class="select-wrap">
+            <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
+            <div class="filter">
+                <span class="label">Ngày nhập: </span>
+                <nz-range-picker [ngClass]="{'border-selected': dateRangeSelected}" [nzRanges]="ranges"
+                    [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)" style="width: 250px;"
+                    nzFormat="dd-MM-yyyy"></nz-range-picker>
+            </div>
+            <div class="filter">
+                <span class="label">Giới tính: </span>
+                <nz-select class="select-w" nzPlaceHolder="Giới tính" nzAllowClear [(ngModel)]="genderFilterValue"
+                    (ngModelChange)="onSearchGender()">
+                    <nz-option *ngFor="let option of gender" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+            <div class="filter">
+                <span class="label">Phòng ban: </span>
+                <nz-select class="select-w" nzPlaceHolder="Phòng bang" nzAllowClear [(ngModel)]="departmentFilterValue"
+                    (ngModelChange)="onSearchDepartment()">
+                    <nz-option *ngFor="let option of departmentList" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+            <div class="filter">
+                <span class="label">Trạng thái đơn: </span>
+                <nz-select class="select-w" nzPlaceHolder="Trạng thái đơn" nzAllowClear [(ngModel)]="treatmentStatusFilterValue"
+                    (ngModelChange)="onSearchTreatmentStatus()">
+                    <nz-option *ngFor="let option of treatmentStatus" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+
+            <br><br>
+        </div>
+    </div>
+
+    <nz-table class="medicine-table" #colSpanTable [nzData]="treatmentList" nzTableLayout="fixed" nzBordered
+        [nzFrontPagination]="false" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
+        [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)" [nzLoading]="loading">
+        <thead>
+            <tr>
+                <th nzWidth="10%" nzColumnKey="InternalCode">Ngày</th>
+                <th nzWidth="5%" nzColumnKey="DisplayName">Stt</th>
+                <th nzWidth="10%" nzColumnKey="Active">MS nhân viên</th>
+                <th nzWidth="20%" nzColumnKey="Active">Tên nhân viên</th>
+                <th nzWidth="10%" nzColumnKey="Active">Giới tính</th>
+                <th nzWidth="10%" nzColumnKey="Active">Bộ phận</th>
+                <th nzWidth="20%" nzColumnKey="Active">Trạng thái đơn</th>
+                <th nzWidth="10%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let data of treatmentTableData">
+                <tr>
+                    <td [attr.rowspan]="data.treatmentInfor.length + 1">{{data.date}}</td>
+                </tr>
+                <tr *ngFor="let treatment of data.treatmentInfor; index as i">
+
+                    <td>{{ i+1 }}</td>
+                    <td>{{ treatment.patient.internalCode }}</td>
+                    <td>{{ treatment.patient.name }}</td>
+                    <td>{{ getGender(treatment.patient.gender) }}</td>
+                    <td>{{ treatment.department.name }}</td>
+                    <td *ngIf="treatment.confirmSignature == null; else confirmed">Chưa xác nhận</td>
+                    <ng-template #confirmed>
+                        <td>Đã xác nhận</td>
+                    </ng-template>
+                    <td> <a nzAlign="center" style="color: #1890ff"
+                            (click)="getTreatment(treatment.id)">Chi
+                            tiết</a></td>
+                </tr>
+            </ng-container>
+            <!-- <ng-container *ngFor="let data of treatmentTableData">
+            <tr>
+                <td rowspan="data.treatmentInfor.length">{{data.date}}</td>
+                <ng-container *ngFor="let treatment of data.treatmentInfor">
+                    <td>{{ treatment.accountCreateBy.displayName }}</td>
+                    <td>{{ treatment.patient.internalCode }}</td>
+                    <td>{{ treatment.patient.name }}</td>
+                    <td>{{ getGender(treatment.patient.gender) }}</td>
+                    <td>{{ treatment.department.name }}</td>
+                </ng-container>
+            </tr>
+
+        </ng-container> -->
+
+            <!-- </ng-container> -->
+
+            <!-- <tr *ngFor="let treatment of treatmentList">
+            <ng-container *ngFor="let data of treatmentCreateDate">
+                <td rowspan="data.length">{{ treatmentCreateDate.createDate }}</td>
+            </ng-container> 
+            <td>STT</td>
+            <td>{{ treatment.accountCreateBy.displayName }}</td>
+            <td>{{ treatment.patient.internalCode }}</td>
+            <td>{{ treatment.patient.name }}</td>
+            <td>{{ getGender(treatment.patient.gender) }}</td>
+            <td>{{ treatment.department.name }}</td>
+        </tr> -->
+        </tbody>
+    </nz-table>
+</div>

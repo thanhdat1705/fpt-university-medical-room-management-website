@@ -7,10 +7,11 @@ import { AddTreatmentInformationComponent } from './add-treatment-information/ad
 import { TreatmentInformationDetailsComponent } from './add-treatment-information/treatment-information-details/treatment-information-details.component';
 import { ViewTreatmentInformationListComponent } from './view-treatment-information-list/view-treatment-information-list.component';
 import { ViewTreatmentInformationComponent } from './view-treatment-information-list/view-treatment-information/view-treatment-information.component';
+import { ViewTreatmentInformationPeriodicReportComponent } from './view-treatment-information-periodic-report/view-treatment-information-periodic-report.component';
 
 
 @NgModule({
-  declarations: [AddTreatmentInformationComponent, TreatmentInformationDetailsComponent, ViewTreatmentInformationListComponent, ViewTreatmentInformationComponent],
+  declarations: [AddTreatmentInformationComponent, TreatmentInformationDetailsComponent, ViewTreatmentInformationListComponent, ViewTreatmentInformationComponent, ViewTreatmentInformationPeriodicReportComponent],
   
   imports: [
     CommonModule,

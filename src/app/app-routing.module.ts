@@ -27,6 +27,7 @@ const routes: Routes = [
     component: CommonLayoutComponent,
     children: CommonLayout_ROUTES
   },
+  { path: 'patient-management', loadChildren: () => import('./pages/patient-management/patient-management.module').then(m => m.PatientManagementModule) },
   {
     path: '**',
     component: ErrorComponent
