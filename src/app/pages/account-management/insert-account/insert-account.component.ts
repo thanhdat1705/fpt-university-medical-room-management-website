@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { Router } from '@angular/router';
 import { InsertAccountRequest } from 'src/app/shared/interfaces/account/insert-account-request';
 import { Role } from 'src/app/shared/models/role';
 import { MyErrorStateMatcher } from 'src/app/shared/my-error-state-matcher';
@@ -37,7 +38,9 @@ export class InsertAccountComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder, 
     private generalService: GeneralHelperService, 
-    private summaryService: SummaryService) { }
+    private summaryService: SummaryService,
+    private router: Router
+    ) { }
 
   insertAccount(data: InsertAccountRequest) {
     console.log(data);
@@ -51,6 +54,7 @@ export class InsertAccountComponent implements OnInit {
       (response) => {
         console.log(response);
         this.generalService.messageNz('success', 'Tài khoản "'+ this.accountForm.get('usernanme').value +'" đã được tạo');
+        this.router.navigate(['account-management/account-detais', response.data.id]);
       },
       (error) => {
         console.log(error);

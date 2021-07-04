@@ -43,7 +43,7 @@ const routes: Routes = [
     component: LinkToSocialAccountComponent
   },
   {
-    path: 'account-detail/:id',
+    path: 'account-detais/:id',
     component: ViewAccountDetailComponent,
     data: {
       title: "Thông tin tài khoản"

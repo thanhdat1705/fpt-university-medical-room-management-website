@@ -17,7 +17,7 @@ param="";
   getAccountDetails(id: string) {
     this.summaryService.getAccountDetail(id, this.param).subscribe(
       (response) => {
-        this.router.navigate(['/account/account-detail', id], {
+        this.router.navigate(['/account/account-details', id], {
           fragment: response.data
           
         });
