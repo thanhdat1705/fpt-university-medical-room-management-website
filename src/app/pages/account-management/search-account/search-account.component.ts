@@ -100,6 +100,7 @@ export class SearchAccountComponent implements OnInit {
 
   }
 
+
   onSearchRole(value: string) {
     if (value == null) {
       this.generalService.setValueCompare(null, this.roleValueCompare, 'RoleId', this.searchValueMap);

@@ -13,3 +13,10 @@ export interface Account {
   lastLogin: Date;
   active: boolean
 }
+
+export interface AccountHeader{
+  id: string
+  displayName: string;
+  photoUrl: string;
+  roleName: string;
+}

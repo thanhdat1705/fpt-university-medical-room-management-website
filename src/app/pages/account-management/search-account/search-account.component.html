@@ -50,13 +50,8 @@
       <tr *ngFor="let account of accountList">
         <td>{{ account.internalCode }}</td>
         <td>{{ account.displayName }}</td>
-        <td *ngIf="account.role.id === 1; else staff">Quản lí</td>
-        <ng-template #staff>
-          <td *ngIf="account.role.id === 2; else patient">Nhân viên y tế</td>
-        </ng-template>
-        <ng-template #patient>
-          <td>Bệnh nhân</td>
-        </ng-template>
+        <td>{{ account.role.roleName }}</td>
+      
         <td *ngIf="account.active; else inActive">Hoạt động</td>
         <ng-template #inActive>
           <td>Dừng hoạt động</td>

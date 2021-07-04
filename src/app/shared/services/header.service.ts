@@ -6,17 +6,35 @@ import { HeaderComponent } from '../template/header/header.component';
 })
 export class HeaderService {
 
-  constructor() { }
+  constructor(
+  ) {
+  }
 
-  avatar = localStorage.getItem('avatar');
+  avatar = localStorage.getItem('photoUrl');
+  name = localStorage.getItem('displayName');
+  roleName = localStorage.getItem('roleName');
 
   public getAvatar() {
     return this.avatar;
   }
 
+  public setAvatar(avatarUrl: any) {
+    this.avatar = avatarUrl;
+  }
 
-  public setAvatar(url: any) {
-    localStorage.setItem('avatar', url);
-    this.avatar = url;
+  public getName() {
+    return this.name;
+  }
+
+  public setName(name: any) {
+    this.name = name;
+  }
+
+  public getRole() {
+    return this.roleName;
+  }
+
+  public setRole(role: any) {
+    this.roleName = role;
   }
 }

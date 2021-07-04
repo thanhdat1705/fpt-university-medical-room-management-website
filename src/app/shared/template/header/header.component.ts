@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Account } from '../../models/account';
+import { Account, AccountHeader } from '../../models/account';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { HeaderService } from '../../services/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -16,10 +16,14 @@ import { SideNavService } from '../../services/side-nav.service';
 
 export class HeaderComponent implements OnInit {
 
-  avatar = this.headerService.getAvatar();
+  user: AccountHeader
+  avatar: string;
+  name: string
+  role: string
   // user: Account = JSON.parse(localStorage.getItem("user"));
   toggleActive: boolean = false;
   isCollapsed: boolean;
+
 
   constructor(private sidenav: SideNavService, private sanitizer: DomSanitizer, private authService: AuthService, public headerService: HeaderService) {
   }
@@ -27,12 +31,14 @@ export class HeaderComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.headerService.getAvatar());
+    this.getProfile();
   }
 
-  showAvatar() {
-    // this.avatar = this.headerService.avatar;
-    // this.sanitizer.bypassSecurityTrustUrl(this.);
+
+  getProfile() {
+    this.avatar= this.headerService.getAvatar();
+    this.name = this.headerService.getName();
+    this.role = this.headerService.getRole();
   }
 
   ToggleNav() {

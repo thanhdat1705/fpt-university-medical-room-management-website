@@ -71,8 +71,8 @@
               <div class="d-flex m-r-50">
                 <nz-avatar nzSize="large" [nzSrc]="headerService.getAvatar()"></nz-avatar>
                 <div class="m-l-10">
-                  <!-- <p class="m-b-0 text-dark font-weight-semibold">{{user.displayName}}</p> -->
-                  <p class="m-b-0 opacity-07">role???</p>
+                  <p class="m-b-0 text-dark font-weight-semibold">{{ name }}</p>
+                  <p class="m-b-0 opacity-07">{{ role }}</p>
                 </div>
               </div>
             </li>
@@ -86,7 +86,8 @@
               </a>
             </li>
             <li nz-menu-item>
-              <a class="p-v-10 d-flex align-items-center justify-content-between" [routerLink]="'account/link-to-social-account'">
+              <a class="p-v-10 d-flex align-items-center justify-content-between"
+                [routerLink]="'account/link-to-social-account'">
                 <div class="baseline-icon">
                   <i class="opacity-04 font-size-16" nz-icon nzType="user" theme="outline"></i>
                   <span class="m-l-10">Liên kết tài khoản</span>
@@ -96,7 +97,7 @@
             </li>
             <li nz-menu-item>
               <a class="p-v-10 d-flex align-items-center justify-content-between" (click)="signOut()">
-                <div class="baseline-icon"> 
+                <div class="baseline-icon">
                   <i class="opacity-04 font-size-16" nz-icon nzType="logout" theme="outline"></i>
                   <span class="m-l-10">Đăng xuất</span>
                 </div>

@@ -42,22 +42,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     console.log(data);
-    this.summaryService.usernameAuthenticate(data).subscribe(
-      (response) => {
-        localStorage.setItem('avatar', response.data.photoUrl);
-        console.log('avatar' + response.data.photoUrl);
-        localStorage.setItem('user', response.data);
-        
-        localStorage.setItem("token", response.data.token);
-        this.summaryService.setTokenHeader();
-        this.generalService.closeWaitingPopupNz();
-        this.router.navigate(['/account/profile']);
-      },
-      (error) => {
-        console.log(error);
-        this.generalService.createErrorNotification(error);
-      }
-    );
+
     this.generalService.closeWaitingPopupNz();
   }
 }

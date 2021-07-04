@@ -16,6 +16,7 @@ import { GeneralHelperService } from '../general-helper.service';
 import { SummaryService } from '../summary.service';
 import { GeneralStorage } from '../storages/storages';
 import { LinkToSocialAccountRequest } from '../../requests/link-to-social-account/link-to-social-account-request';
+import { HeaderService } from '../header.service';
 
 
 @Injectable({
@@ -47,6 +48,7 @@ export class AuthService {
         private generalService: GeneralHelperService,
         private summaryService: SummaryService,
         public storage: GeneralStorage,
+        public headerService: HeaderService
     ) {
         this.firebaseAuth.authState.subscribe(user => {
             if (user) {
@@ -90,6 +92,13 @@ export class AuthService {
         })
     }
 
+    setUserInforToLocalStorage(avatarUrl: string, name: string, role: string) {
+        localStorage.setItem('photoUrl', avatarUrl);
+        localStorage.setItem('displayName', name);
+        localStorage.setItem('roleName', role);
+
+        console.log(avatarUrl, name, role)
+    }
 
     login() {
         this.isLoginUser = true;
@@ -120,14 +129,13 @@ export class AuthService {
             (response) => {
                 console.log(response);
                 this.setAccount(response.data);
-                this.account.Id = response.data.accountId;
-                console.log(this.account);
+                this.account = response.data;
+                console.log('accountServer: ', this.account);
                 localStorage.setItem("accountId", response.data.accountId);
+                this.setUserInforToLocalStorage(this.account.photoUrl, this.account.displayName, this.account.role.roleName)
                 localStorage.setItem("token", response.data.token);
                 this.summaryService.setTokenHeader();
                 console.log(localStorage.getItem("token"));
-                localStorage.setItem('user', response.data);
-
                 this.summaryService.setTokenHeader();
                 this.generalService.closeWaitingPopupNz();
                 this.ngZone.run(() => {
@@ -144,6 +152,26 @@ export class AuthService {
         );
     }
 
+    loginWithUsernameAccount(data: any) {
+        this.summaryService.usernameAuthenticate(data).subscribe(
+            (response) => {
+                this.account = response.data;
+
+
+                localStorage.setItem("token", response.data.token);
+                this.setUserInforToLocalStorage(this.account.photoUrl, this.account.displayName, this.account.role.roleName)
+
+                this.summaryService.setTokenHeader();
+                this.generalService.closeWaitingPopupNz();
+
+                this.router.navigate(['/account/profile']);
+            },
+            (error) => {
+                console.log(error);
+                this.generalService.createErrorNotification(error);
+            }
+        );
+    }
 
     GoogleAuth() {
         return this.AuthLogin(1, new firebase.auth.GoogleAuthProvider());
@@ -204,7 +232,6 @@ export class AuthService {
 
         };
         this.generalService.closeWaitingPopupNz();
-
     }
 
     loginWithFacebook() {
