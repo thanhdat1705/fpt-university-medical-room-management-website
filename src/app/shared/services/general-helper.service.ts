@@ -41,8 +41,8 @@ export class GeneralHelperService {
     }
 
     messageNz(type: string, content: string) {
-        if (type === 'success') { this.message.success(content, { nzDuration: 5000 }); }
-        if (type === 'error') { this.message.error(content, { nzDuration: 5000 }); }
+        if (type === 'success') { this.message.success(content, { nzDuration: 1500 }); }
+        if (type === 'error') { this.message.error(content, { nzDuration: 1500 }); }
     }
 
     closeWaitingPopupNz() {
@@ -101,250 +101,256 @@ export class GeneralHelperService {
             nzOkText: okText,
             nzOnOk: () => fn
         });
-}
+    }
 
-createSuccessNotification(content: string) {
-    let backgroundColorSuccess = "#f6ffed";
-    let posion: NzNotificationPlacement = 'topRight';
-    let border = 'thin solid #b7eb8f';
-    let duration = 3000;
-    this.notification.success(
-        'Thành công',
-        content,
-        {
-            nzPlacement: posion,
-            nzDuration: duration,
-            nzStyle: {
-                width: '400px',
-                marginLeft: '-265px',
-                backgroundColor: backgroundColorSuccess,
-                border: border
-            },
-        }
-    )
-}
-
-createErrorNotification(error: any) {
-    let backgroundColorError = "#fff2f0";
-    let backgroundColorWarrning = "#fffbe6";
-    let posion: NzNotificationPlacement = 'bottomRight';
-    let borderError = 'thin solid #ffccc7';
-    let borderWarning = 'thin solid #ffe58f';
-    let duration = 3000;
-    if (error.status != undefined) {
-        if (error.status == 404) {
-            this.notification.error(
-                'Lỗi Hệ thống: ' + error.status,
-                error.statusText,
-                {
-                    nzPlacement: posion,
-                    nzDuration: duration,
-                    nzStyle: {
-                        width: '400px',
-                        marginLeft: '-265px',
-                        backgroundColor: backgroundColorError,
-                        border: borderError
-                    },
-                }
-            );
-        }
-        else if (error.status == 401) {
-            this.notification.warning(
-                'Opp!',
-                'Phiên đăng nhập của bạn đã hết hạn',
-                {
-                    nzPlacement: posion,
-                    nzDuration: duration,
-                    nzStyle: {
-                        width: '400px',
-                        marginLeft: '-265px',
-                        backgroundColor: backgroundColorWarrning,
-                        border: borderWarning
-                    },
-                }
-            );
-            localStorage.removeItem('user');
-            localStorage.removeItem("token");
-            this.router.navigate(['authentication/login']);
-        }
-        else if (error.status == 400) {
-            this.notification.error(
-                'Lỗi Hệ thống: ' + error.status,
-                error.error.message,
-                {
-                    nzPlacement: posion,
-                    nzDuration: duration,
-                    nzStyle: {
-                        width: '400px',
-                        marginLeft: '-265px',
-                        backgroundColor: backgroundColorError,
-                        border: borderError
-                    },
-                },
-            );
-        }
-        else if (error.status == 500) {
-            this.notification.error(
-                'Lỗi Hệ thống: ' + error.status,
-                error.error.message,
-                {
-                    nzPlacement: posion,
-                    nzDuration: duration,
-                    nzStyle: {
-                        width: '400px',
-                        marginLeft: '-265px',
-                        backgroundColor: backgroundColorError,
-                        border: borderError
-                    },
-                },
-            );
-        }
-        else if (error.status == 503) {
-            this.notification.error(
-                'Lỗi Hệ thống: ' + error.status,
-                'Server đang update, vui lòng đợi trong giây lát',
-                {
-                    nzPlacement: posion,
-                    nzDuration: duration,
-                    nzStyle: {
-                        width: '400px',
-                        marginLeft: '-265px',
-                        backgroundColor: backgroundColorError,
-                        border: borderError
-                    },
-                },
-            );
-        }
-        else if (error.status == 0) {
-            this.notification.error(
-                'Lỗi Hệ thống: ' + error.status,
-                'Server Error!!',
-                {
-                    nzPlacement: posion,
-                    nzDuration: duration,
-                    nzStyle: {
-                        width: '400px',
-                        marginLeft: '-265px',
-                        backgroundColor: backgroundColorError,
-                        border: borderError
-                    },
-                }
-            );
-        }
-        else {
-            this.notification.error(
-                'Lỗi Hệ thống: ' + error.statusCode,
-                error.message,
-                {
-                    nzPlacement: posion,
-                    nzDuration: duration,
-                    nzStyle: {
-                        width: '400px',
-                        marginLeft: '-265px',
-                        backgroundColor: backgroundColorError,
-                        border: borderError
-                    },
-                }
-            );
-        }
-    } else {
-        this.notification.error(
-            'Lỗi Hệ thống: ',
-            error,
+    createSuccessNotification(content: string) {
+        let backgroundColorSuccess = "#f6ffed";
+        let posion: NzNotificationPlacement = 'topRight';
+        let border = 'thin solid #b7eb8f';
+        let duration = 3000;
+        this.notification.success(
+            'Thành công',
+            content,
             {
                 nzPlacement: posion,
                 nzDuration: duration,
                 nzStyle: {
                     width: '400px',
                     marginLeft: '-265px',
-                    backgroundColor: backgroundColorError,
-                    border: borderError
+                    backgroundColor: backgroundColorSuccess,
+                    border: border
                 },
             }
-        );
+        )
     }
-}
 
-getToStringTime(time: DateTime): string {
-    var result = "";
-    if (time.day < 10) {
-        result = result + '0' + time.day + '-';
-    } else {
-        result = result + time.day + '-';
-    }
-    if (time.month < 10) {
-        result = result + '0' + time.month + '-';
-    } else {
-        result = result + time.month + '-';
-    }
-    result = result + time.year + ' ';
-    if (time.hour < 10) {
-        result = result + '0' + time.hour + ':';
-    } else {
-        result = result + time.hour + ':';
-    }
-    if (time.minute < 10) {
-        result = result + '0' + time.minute + ':';
-    } else {
-        result = result + time.minute + ':';
-    }
-    if (time.second < 10) {
-        result = result + '0' + time.second;
-    } else {
-        result = result + time.second;
-    }
-    return result;
-}
-
-getDate(time: string) {
-    var subs = time.split('-');
-    var result = '';
-    for (var i = subs.length - 1; i >= 0; i--) {
-        if (subs[i].toString().includes('T')) {
-            var tmp = subs[i].toString().split('T');
-            result = result + tmp[0];
+    createErrorNotification(error: any) {
+        let backgroundColorError = "#fff2f0";
+        let backgroundColorWarrning = "#fffbe6";
+        let posion: NzNotificationPlacement = 'bottomRight';
+        let borderError = 'thin solid #ffccc7';
+        let borderWarning = 'thin solid #ffe58f';
+        let duration = 3000;
+        if (error.status != undefined) {
+            if (error.status == 404) {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.status,
+                    error.statusText,
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    }
+                );
+            }
+            else if (error.status == 401) {
+                this.notification.warning(
+                    'Opp!',
+                    'Phiên đăng nhập của bạn đã hết hạn',
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorWarrning,
+                            border: borderWarning
+                        },
+                    }
+                );
+                localStorage.removeItem('user');
+                localStorage.removeItem("token");
+                this.router.navigate(['authentication/login']);
+            }
+            else if (error.status == 400) {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.status,
+                    error.error.message,
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    },
+                );
+            }
+            else if (error.status == 500) {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.status,
+                    error.error.message,
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    },
+                );
+            }
+            else if (error.status == 503) {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.status,
+                    'Server đang update, vui lòng đợi trong giây lát',
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    },
+                );
+            }
+            else if (error.status == 0) {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.status,
+                    'Server Error!!',
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    }
+                );
+            }
+            else {
+                this.notification.error(
+                    'Lỗi Hệ thống: ' + error.statusCode,
+                    error.message,
+                    {
+                        nzPlacement: posion,
+                        nzDuration: duration,
+                        nzStyle: {
+                            width: '400px',
+                            marginLeft: '-265px',
+                            backgroundColor: backgroundColorError,
+                            border: borderError
+                        },
+                    }
+                );
+            }
         } else {
-            result = result + '-' + subs[i].toString();
+            this.notification.error(
+                'Lỗi Hệ thống: ',
+                error,
+                {
+                    nzPlacement: posion,
+                    nzDuration: duration,
+                    nzStyle: {
+                        width: '400px',
+                        marginLeft: '-265px',
+                        backgroundColor: backgroundColorError,
+                        border: borderError
+                    },
+                }
+            );
         }
-
-
     }
-    return result;
-}
 
-getYMD(date: string) {
-    var dt = new Date(date);
-    var newDate = '';
-    // return newdate.toLocaleString().replace('/', '-').split(',')[1].replace('/', '-');
-    // return newdate.toISOString().split('T')[0];
-    newDate = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
-    return newDate;
-}
-
-removeDotInString(text: string) {
-    var removeDot = text.replace(/\./g, '');
-    return removeDot;
-}
-
-MustMatch(controlName: string, matchingControlName: string) {
-
-    return (formGroup: FormGroup) => {
-        const control = formGroup.controls[controlName];
-        const matchingControl = formGroup.controls[matchingControlName];
-
-        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
-            // return if another validator has already found an error on the matchingControl
-            return;
-        }
-
-        // set error on matchingControl if validation fails
-        if (control.value != matchingControl.value) {
-            matchingControl.setErrors({ mustMatch: true });
+    getToStringTime(time: DateTime): string {
+        var result = "";
+        if (time.day < 10) {
+            result = result + '0' + time.day + '-';
         } else {
-            matchingControl.setErrors(null);
+            result = result + time.day + '-';
+        }
+        if (time.month < 10) {
+            result = result + '0' + time.month + '-';
+        } else {
+            result = result + time.month + '-';
+        }
+        result = result + time.year + ' ';
+        if (time.hour < 10) {
+            result = result + '0' + time.hour + ':';
+        } else {
+            result = result + time.hour + ':';
+        }
+        if (time.minute < 10) {
+            result = result + '0' + time.minute + ':';
+        } else {
+            result = result + time.minute + ':';
+        }
+        if (time.second < 10) {
+            result = result + '0' + time.second;
+        } else {
+            result = result + time.second;
+        }
+        return result;
+    }
+
+    getDate(time: string) {
+        var subs = time.split('-');
+        var result = '';
+        for (var i = subs.length - 1; i >= 0; i--) {
+            if (subs[i].toString().includes('T')) {
+                var tmp = subs[i].toString().split('T');
+                result = result + tmp[0];
+            } else {
+                result = result + '-' + subs[i].toString();
+            }
+
+
+        }
+        return result;
+    }
+    getLocalMonthYear(date: string) {
+        var dt = new Date(date);
+        var newDate = '';
+        newDate = (dt.getMonth() + 1) + "-" + dt.getFullYear();
+        return newDate;
+    }
+
+    getYMD(date: string) {
+        var dt = new Date(date);
+        var newDate = '';
+        // return newdate.toLocaleString().replace('/', '-').split(',')[1].replace('/', '-');
+        // return newdate.toISOString().split('T')[0];
+        newDate = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+        return newDate;
+    }
+
+    removeDotInString(text: string) {
+        var removeDot = text.replace(/\./g, '');
+        return removeDot;
+    }
+
+    MustMatch(controlName: string, matchingControlName: string) {
+
+        return (formGroup: FormGroup) => {
+            const control = formGroup.controls[controlName];
+            const matchingControl = formGroup.controls[matchingControlName];
+
+            if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+                // return if another validator has already found an error on the matchingControl
+                return;
+            }
+
+            // set error on matchingControl if validation fails
+            if (control.value != matchingControl.value) {
+                matchingControl.setErrors({ mustMatch: true });
+            } else {
+                matchingControl.setErrors(null);
+            }
         }
     }
-}
 
 
 }

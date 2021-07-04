@@ -255,44 +255,44 @@ export class CreateRequestComponent implements OnInit {
         })
       } else {
         this.addRequestLoading = true;
-        setTimeout(() => {
-          this.medicineInRequestDetail = {
-            id: uuidv4(),
-            medicineId: data.medicine.id,
-            medicineName: data.medicine.name,
-            medicineUnitId: data.unit,
-            medicineUnitName: this.unitList.find(item => item.id == data.unit).name,
-            quantity: data.quantity,
-            note: data.note
-          }
-          console.log(this.medicineInRequestDetail);
-          this.buyMedicineListDisplay = [...this.buyMedicineListDisplay, this.medicineInRequestDetail];
-          localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-          this.addRequestLoading = false;
-          this.resetFormValue();
-        }, 2000)
+
+        this.medicineInRequestDetail = {
+          id: uuidv4(),
+          medicineId: data.medicine.id,
+          medicineName: data.medicine.name,
+          medicineUnitId: data.unit,
+          medicineUnitName: this.unitList.find(item => item.id == data.unit).name,
+          quantity: data.quantity,
+          note: data.note
+        }
+        console.log(this.medicineInRequestDetail);
+        this.buyMedicineListDisplay = [...this.buyMedicineListDisplay, this.medicineInRequestDetail];
+        localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+        this.addRequestLoading = false;
+        this.resetFormValue();
+
       }
     }
   }
 
   updateRequestToArray(newItem: RequestBuyMedicineDisplay, quantity: number, index: number, isRemove: boolean) {
     this.addRequestLoading = true;
-    setTimeout(() => {
-      newItem.quantity = newItem.quantity + quantity;
-      this.buyMedicineListDisplay[index] = newItem;
-      if (isRemove) {
-        this.buyMedicineListDisplay.forEach((items, index) => {
-          if (items.id == this.found.id) {
-            console.log(index);
-            this.buyMedicineListDisplay.splice(index, 1);
-          }
-        })
-      }
-      localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
-      this.requestBuyDetail(newItem);
-      this.generalService.messageNz('success', 'Cập nhật thành công');
-      this.addRequestLoading = false;
-    }, 2000);
+
+    newItem.quantity = newItem.quantity + quantity;
+    this.buyMedicineListDisplay[index] = newItem;
+    if (isRemove) {
+      this.buyMedicineListDisplay.forEach((items, index) => {
+        if (items.id == this.found.id) {
+          console.log(index);
+          this.buyMedicineListDisplay.splice(index, 1);
+        }
+      })
+    }
+    localStorage.setItem('BuyMedicineListDisplay', JSON.stringify(this.buyMedicineListDisplay));
+    this.requestBuyDetail(newItem);
+    this.generalService.messageNz('success', 'Cập nhật thành công');
+    this.addRequestLoading = false;
+
   }
 
   updateRequestDetail(data: any) {

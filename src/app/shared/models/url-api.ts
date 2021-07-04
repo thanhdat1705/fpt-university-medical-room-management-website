@@ -1,13 +1,12 @@
 export const UrlServer = "https://fhcs-backend.online";
+// export const UrlServer = "http://10.1.64.81:9000";
 // export const UrlServer = "http://192.168.43.45:9000";
 // export const UrlServer = "http://10.1.64.71:9000";
 
 // export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
 // export const UrlServer = "http://14.161.47.36:9000";
-// export const UrlServer = "http://192.168.43.45:9000";
 //  export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
 // export const UrlServer = "http://localhost:9000";
-// export const UrlServer = "http://14.161.47.36:9000";
 
 export const Proxy = "https://cors-anywhere.herokuapp.com/";
 export const UrlGetAllCity = Proxy + "https://thongtindoanhnghiep.co/api/city";
@@ -94,3 +93,7 @@ export const UrlServerAPISearchRequestBuyMedicine = UrlServer + '/api/v1.0/Reque
 
 //Request To Buy Medicine Detail
 export const UrlServerAPIDetailRequestBuyMedicine = UrlServer + '/api/v1.0/RequestBuyMedicineDetails/Searching';
+
+
+//ExportImportInventoryPeriodic
+export const UrlServerAPIExportImportInventoryPeriodic = UrlServer + '/api/v1.0/PeriodicInventories';

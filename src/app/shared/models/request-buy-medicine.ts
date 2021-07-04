@@ -15,6 +15,13 @@ export interface RequestBuyMedicineDisplay {
     note: string
 }
 
+export interface RequestBuyMedicineToExcel {
+    medicineName: string,
+    medicineUnitName: string,
+    quantity: number,
+    note: string
+}
+
 export interface RequestBuyMedicine {
     id: string,
     createDate: string,

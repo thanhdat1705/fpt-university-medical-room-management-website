@@ -1,0 +1,58 @@
+<div class="inner-content">
+    <div class="d-flex flex-column ">
+        <div class="filter">
+            <span class="label">Kỳ nhập: </span>
+            <nz-date-picker [ngClass]="{'border-selected': dateSelected}" nzMode="month" nzPlaceHolder="Tháng - Năm"
+                nzFormat="MM-yyyy" [(ngModel)]="dateSelect" (ngModelChange)="onDateChange($event)"
+                style="width: 250px;">
+            </nz-date-picker>
+        </div>
+    </div>
+    <nz-spin [nzSpinning]="exportLoading" nzTip="Đang xử lý...">
+        <nz-table [nzFrontPagination]="false" [nzData]="periodicInventoryResponse" nzBordered>
+            <thead>
+                <tr>
+                    <th nzAlign='center'>Mã thuốc/Mã dụng cụ</th>
+                    <th nzAlign='center'>Tên thuốc - Dụng cụ</th>
+                    <th nzAlign='center'>ĐVT</th>
+                    <th nzAlign='center'>Đơn giá</th>
+                    <th nzAlign='center'>Tồn Đầu kỳ</th>
+                    <th nzAlign='center'>Nhập trong kỳ</th>
+                    <th nzAlign='center'>SL Xuất trong kỳ</th>
+                    <th nzAlign='center'>Tồn cuối kỳ</th>
+                    <th nzAlign='center'>Thành tiền (SL xuất x đơn giá)</th>
+                    <!-- <th nzAlign='center' >Số thuốc/Dụng cụ tối thiểu</th> -->
+                    <th nzAlign='center'>Hạn sử dụng</th>
+                    <th nzAlign='center'>Số lượng cần mua thêm</th>
+                    <!-- <th nzAlign='center' >Giá tiền</th> -->
+                    <th nzAlign='center'>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let data of exportImportPeriodicInventoryShows">
+                    <tr>
+                        <td [attr.rowspan]="data.periodicInventoryExports.length + 1" nzAlign='center'>
+                            <span style="color: #1397B6; font-weight: 500;">{{ data.subGroup.name }}</span>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let medicine of data.periodicInventoryExports">
+                        <td nzAlign='center'>{{ medicine.medicineName }}</td>
+                        <td nzAlign='center'>{{ medicine.medicineUnit }}</td>
+                        <td nzAlign='center'>{{ medicine.importPrice }}</td>
+                        <td nzAlign='center'>{{ medicine.numberAtBeginPeriodic }}</td>
+                        <td nzAlign='center'>{{ medicine.numberImportInPeriodic }}</td>
+                        <td nzAlign='center'>{{ medicine.numberExportInPeriodic }}</td>
+                        <td nzAlign='center'>{{ medicine.numberEndPeriodic }}</td>
+                        <td nzAlign='center'>{{ medicine.getTotalExportPrice() }}</td>
+                        <td nzAlign='center'></td>
+                        <td nzAlign='center'>{{ medicine.expirationnDate }}</td>
+                        <td nzAlign='center'></td>
+                    </tr>
+                </ng-container>
+             
+
+            </tbody>
+        </nz-table>
+
+    </nz-spin>
+</div>

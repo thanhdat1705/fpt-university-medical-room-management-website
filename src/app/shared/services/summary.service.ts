@@ -61,12 +61,14 @@ import {
   UrlServerAPIGetDetailBuyMedicine,
   UrlServerAPIDetailRequestBuyMedicine,
   UrlServerAPISearchRequestBuyMedicine,
-  UrlServerAPIUpdateRequestBuyMedicine
+  UrlServerAPIUpdateRequestBuyMedicine,
+  UrlServerAPIExportImportInventoryPeriodic
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
 import { SearchRequest } from '../requests/search-request';
+import { GetExportImportDateRequest } from '../requests/periodic-inventory/periodic-inventory-request';
 
 @Injectable({
   providedIn: 'root'
@@ -384,6 +386,12 @@ export class SummaryService {
 
   }
 
+  //ExportImportInventoryPeriodic
+
+  public getExportImport(date: GetExportImportDateRequest) {
+    return this.http.get<ResponseServer>(UrlServerAPIExportImportInventoryPeriodic + "?Month=" + date.month + "&Year=" + date.year);
+
+  }
   /*===========================================================================================================*/
 
   public setTokenHeader() {

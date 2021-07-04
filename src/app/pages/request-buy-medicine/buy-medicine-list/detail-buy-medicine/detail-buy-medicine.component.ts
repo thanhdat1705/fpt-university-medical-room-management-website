@@ -4,15 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PageInfo } from 'src/app/shared/models/page-info';
-import { RequestBuyMedicine, RequestBuyMedicineDisplay } from 'src/app/shared/models/request-buy-medicine';
+import { RequestBuyMedicine, RequestBuyMedicineDisplay, RequestBuyMedicineToExcel } from 'src/app/shared/models/request-buy-medicine';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineService } from 'src/app/shared/services/medicine/medicine.service';
 import { RequestBuyMedicineService } from 'src/app/shared/services/request-buy-medicine/request-buy-medicine.service';
 import * as XLSX from 'xlsx';
-import { Workbook } from 'exceljs';
+import { Column, Workbook } from 'exceljs';
 import * as fs from 'file-saver';
+import { Header, HeaderExcel } from 'src/app/shared/models/header-exxcel';
 
 @Component({
   selector: 'app-detail-buy-medicine',
@@ -38,7 +39,7 @@ export class DetailBuyMedicineComponent implements OnInit {
   pageIndex = 0;
   sortFieldList = " medicine.name";
   sortOrderList = 1;
-  
+
 
   selectFieldDetail = "id, createDate, updateDate, numberOfSpecificMedicine";
 
@@ -79,6 +80,7 @@ export class DetailBuyMedicineComponent implements OnInit {
         }
       }
     );
+
 
 
   }
@@ -148,28 +150,188 @@ export class DetailBuyMedicineComponent implements OnInit {
     XLSX.writeFile(wb, 'SheetJS.xlsx');
   }
 
+  // headers = ["Stt", "Tên thuốc", "Đơn vị tính", "Số lượng", "Ghi chú"];
+  // headers: Header[] = [
+  //   { headerName: "Stt", key: "stt" },
+  //   { headerName: "Tên thuốc", key: "name" },
+  //   { headerName: "Đơn vị tính", key: "unit" },
+  //   { headerName: "Số lượng", key: "quantity" },
+  //   { headerName: "Ghi chú", key: "note" }
+  // ]
+
+  headers: Partial<Column>[] = [
+    { header: 'Stt', key: 'stt', width: 3 },
+    { header: 'Tên thuốc', key: 'name', width: 9 },
+    { header: 'Đơn vị tính', key: 'unit', width: 11 },
+    { header: 'Số lượng', key: 'quantity', width: 8 },
+    { header: 'Ghi chú', key: 'note', width: 7},
+  ]
+
+  colLenght = [];
+
+  // getListStringHeaderName(headers: Header[]): string[] {
+  //   let result: string[] = [];
+  //   headers.forEach(h => {
+  //     result.push(h.headerName);
+  //   })
+  //   return result;
+  // }
+  buyMedicineListToExcel: RequestBuyMedicineToExcel[] = [];
+
+  convertList(): RequestBuyMedicineToExcel[] {
+    const newArray = this.buyMedicineListDisplay.map(({ medicineId, medicineUnitId, ...keepAttrs }) => keepAttrs)
+    return newArray;
+  }
+
   exportExcel() {
-
+    this.buyMedicineListToExcel = this.convertList();
+    let sheet = this.generalService.getLocalMonthYear(this.requestDetail.updateDate);
     let workbook = new Workbook();
-    let worksheet = workbook.addWorksheet('ProductSheet');
+    let worksheet = workbook.addWorksheet(sheet);
 
-    worksheet.columns = [
-      { header: 'Stt', key: 'stt', width: 10, style: { font: { name: 'Times New Roman', size: 13 } } },
-      { header: 'Tên thuốc', key: 'name', width: 32, style: { font: { name: 'Times New Roman', size: 13 } } },
-      { header: 'Đơn vị tính', key: 'unit', width: 20, style: { font: { name: 'Times New Roman', size: 13 } } },
-      { header: 'Số lượng', key: 'quantity', width: 10, style: { font: { name: 'Times New Roman', size: 13 } } },
-      { header: 'Ghi chú', key: 'note', width: 20, style: { font: { name: 'Times New Roman', size: 13 } } },
-    ];
+    worksheet.columns = this.headers;
 
-    this.buyMedicineListDisplay.forEach((e, index) => {
-      worksheet.addRow({ stt: index++, name: e.medicineName, unit: e.medicineUnitName, quantity: e.quantity, note: e.note }, "n");
+    var headerRow = worksheet.getRow(1);
+    headerRow.height = 65;
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'C5D9F1' },
+        bgColor: { argb: 'C5D9F1' }
+      }
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } }
+      cell.font = { name: 'Times New Roman', size: 13, bold: true }
+      cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' }
     });
+
+
+    // worksheet.columns = [];
+    // this.headers.forEach((header, index) => {
+    //   console.log(index);
+    //   worksheet.columns[index].header = header.headerName;
+    //   worksheet.columns[index].width = header.headerName.toString().length + 10;
+    //   worksheet.columns[index].style = {
+    //     font: { name: 'Times New Roman', size: 13, bold: true },
+    //     alignment: { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' },
+    //     border: { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } },
+    //     fill: {
+    //       type: 'pattern',
+    //       pattern: 'solid',
+    //       fgColor: { argb: 'C5D9F1' },
+    //       bgColor: { argb: 'FF0000FF' }
+    //     }
+    //   }
+    // })
+    // worksheet.columns = [];
+    // this.headers.forEach((header, index) => {
+    //   console.log(index);
+    //   worksheet.columns.push({
+    //     header: header.headerName,
+    //     key: header.key,
+    //     font: { name: 'Times New Roman', size: 13 },
+    //     border: { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } },
+    //     fill: {
+    //       type: 'pattern',
+    //       pattern: 'solid',
+    //       fgColor: { argb: 'C5D9F1' },
+    //       bgColor: { argb: 'FF0000FF' }
+    //     }
+    //   });
+    // });
+    // console.log(worksheet.columns);
+
+
+    this.buyMedicineListDisplay.forEach((b, index) => {
+      let row = worksheet.addRow({ stt: index + 1, name: b.medicineName, unit: b.medicineUnitName, quantity: b.quantity, note: b.note });
+      let stt = row.getCell('stt');
+      let unit = row.getCell('unit');
+      let quantity = row.getCell('quantity');
+      let color = 'FF99FF99';
+      stt.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+      unit.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+      quantity.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+
+      row.font = {
+        color: {
+          argb: '00000000',
+        },
+        name: 'Times New Roman', size: 13,
+        bold: false
+      }
+      row.eachCell(cell => {
+        cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+      })
+      row.height = 30;
+    })
+
+    worksheet.columns.forEach((col, index) => {
+      let strLength = this.getLength(index);
+      col.width = strLength;
+    })
+    // this.buyMedicineListDisplay.forEach((e, index) => {
+    //   worksheet.addRow({ stt: index + 1, name: e.medicineName, unit: e.medicineUnitName, quantity: e.quantity, note: e.note }, "n");
+    // });
+
+    // this.getLength(1);
 
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      fs.saveAs(blob, 'ProductData.xlsx');
+      fs.saveAs(blob, 'ĐỀ-XUẤT-MUA-THUỐC.xlsx');
     })
 
   }
+
+  // convertObjToList(data: RequestBuyMedicineDisplay): string[] {
+  //   return Object.getOwnPropertyNames(data);
+  // }
+
+  getColLength(data: RequestBuyMedicineToExcel[], index: number): number {
+    let length = 0;
+    data.forEach((d) => {
+      let tmp = 0;
+      if (index == 1) {
+        tmp = d.medicineName.toString().length;
+        console.log(tmp);
+      }
+      if (index == 2) {
+        tmp = d.medicineUnitName.toString().length;
+      }
+      if (index == 3) {
+        tmp = d.quantity.toString().length;
+      }
+      if (index == 4) {
+        tmp = d.note.toString().length;
+      }
+      if (tmp > length) {
+        length = tmp;
+      }
+    });
+    return length;
+  }
+
+  getLength(index: number): number {
+    let length = 0;
+    let lengthHeader = this.headers[index].header.toString().length;
+    let lengthData = this.getColLength(this.buyMedicineListToExcel, index);
+    console.log(lengthHeader);
+    console.log(lengthData);
+    // this.buyMedicineListDisplay[index].
+
+    // this.convertObjToList(this.buyMedicineListDisplay[index])[index];
+
+    // console.log(this.buyMedicineListDisplay[index][Object.getOwnPropertyNames(this.buyMedicineListDisplay[index])[index]]);
+    // console.log(Object.getOwnPropertyNames(this.buyMedicineListDisplay[index])[index]);
+    if (lengthData > lengthHeader) {
+      length = lengthData;
+    } else {
+      length = lengthHeader;
+    }
+
+    return length + 6;
+  }
+
+
+
 
 }
