@@ -47,7 +47,14 @@
                     </nz-option>
                 </nz-select>
             </div>
-
+            <div class="filter">
+                <span class="label">Trạng thái đơn: </span>
+                <nz-select class="select-w" nzPlaceHolder="Trạng thái đơn" nzAllowClear [(ngModel)]="treatmentStatusFilterValue"
+                    (ngModelChange)="onSearchTreatmentStatus()">
+                    <nz-option *ngFor="let option of treatmentStatus" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
 
             <br><br>
         </div>

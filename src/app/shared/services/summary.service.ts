@@ -55,7 +55,7 @@ import {
   UrlServerAPISearchTreatment,
   UrlServerAPISearchPatient,
   UrlServerAPISearchDeseaseStatus,
-  UrlServerAPIGgetTreatment,
+  UrlServerAPIGetTreatment,
 
 
   UrlServerAPIGetDetailBuyMedicine,
@@ -119,9 +119,9 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIChangePassword, data, { headers: this.headers });
   }
 
-  public getAccountDetail(id: any): Observable<any> {
+  public getAccountDetail(id: any, param: any): Observable<any> {
 
-    return this.http.get<ResponseServer>(UrlServerGetAccountDetail + "/" + id);
+    return this.http.get<ResponseServer>(UrlServerGetAccountDetail + "/" + id+ "?selectFields="+ param);
   }
 
   public getProfile(): Observable<ResponseServer> {
@@ -150,7 +150,7 @@ export class SummaryService {
 
   public searchAccount(param: SearchRequest): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(
-      UrlServerAPIViewAccounts +'?'+ param.getParamsString()
+      UrlServerAPIViewAccounts + '?' + param.getParamsString()
     );
   }
 
@@ -305,17 +305,17 @@ export class SummaryService {
   // Medicine in inventory
 
   public searchMedicineInInventory(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory +'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory + '?' + data.getParamsString());
   }
 
-  public getMedicineInInventoryDetails(id: any) {
-    return this.http.get<ResponseServer>(UrlServerAPIGetMedicineInInventoryDetails + "/" + id);
+  public getMedicineInInventoryDetails(id: string, param: string) {
+    return this.http.get<ResponseServer>(UrlServerAPIGetMedicineInInventoryDetails + "/" + id+"?selectFields="+ param);
 
   }
   // Medicine in inventory
 
   public searchMedicineInInventoryDetails(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails+'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails + '?' + data.getParamsString());
 
   }
 
@@ -361,17 +361,26 @@ export class SummaryService {
   }
 
   public searchPatient(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchPatient+'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchPatient + '?' + data.getParamsString());
   }
 
   public getTreatmentDetails(id: any, params: any) {
-    return this.http.get<ResponseServer>(UrlServerAPIGgetTreatment + "/" + id + "?SelectFields=" + params);
+    return this.http.get<ResponseServer>(UrlServerAPIGetTreatment + "/" + id + "?SelectFields=" + params);
+
+  }
+
+  public deleteTreatment(id: any) {
+    return this.http.delete<ResponseServer>(UrlServerAPIGetTreatment + "/" + id);
+  }
+
+  public updateTreatment(id: any, param: any, data: FormData) {
+    return this.http.put<ResponseServer>(UrlServerAPIGetTreatment + "/" + id + "?SelectFields=" + param, data);
 
   }
 
 
   public searchDeseaseStatus(data: SearchRequest) {
-    return this.http.get<ResponseServer>(UrlServerAPISearchDeseaseStatus+'?'+ data.getParamsString());
+    return this.http.get<ResponseServer>(UrlServerAPISearchDeseaseStatus + '?' + data.getParamsString());
 
   }
 

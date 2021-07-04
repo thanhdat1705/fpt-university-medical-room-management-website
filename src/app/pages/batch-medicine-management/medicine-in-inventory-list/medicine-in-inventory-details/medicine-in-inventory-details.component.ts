@@ -9,31 +9,40 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
   templateUrl: './medicine-in-inventory-details.component.html',
   styleUrls: ['./medicine-in-inventory-details.component.scss']
 })
-export class MedicineInInventoryDetailsComponent implements OnInit {
+export class MedicineInInventoryDetails implements OnInit {
 
   id: any;
-
+  param = "id, quantity, createdDate, importMedicine, medicine, medicine.medicineClassification,medicine.medicineSubgroup, importMedicine.importBatch, periodicInventory";
   constructor(
     private summaryService: SummaryService,
     private activatedroute: ActivatedRoute,
     private generalService: GeneralHelperService
   ) { }
 
-  medicineInInventoryDetails : MedicineInInventoryResponse;
+  medicineInInventoryDetails: MedicineInInventoryResponse;
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
-    this.getMedicineInInventoryDetails();
+    this.activatedroute.fragment.subscribe(
+      (response) => {
+        console.log(response)
+        this.medicineInInventoryDetails = JSON.parse(JSON.stringify(response));
+
+        if (this.medicineInInventoryDetails === null) {
+          this.getMedicineInInventoryDetails();
+        }
+      }
+    );
   }
 
 
   getMedicineInInventoryDetails() {
-    this.summaryService.getMedicineInInventoryDetails(this.id).subscribe(
+    this.summaryService.getMedicineInInventoryDetails(this.id, this.param).subscribe(
       (response) => {
         this.medicineInInventoryDetails = response.data;
         console.log(this.medicineInInventoryDetails);
 
-      },(error) => {
+      }, (error) => {
         console.log(error);
       }
     );

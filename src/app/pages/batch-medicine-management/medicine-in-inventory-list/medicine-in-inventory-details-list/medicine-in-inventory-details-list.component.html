@@ -44,6 +44,7 @@
         <!-- <th nzWidth="60px" nzColumnKey="price" [nzSortFn]="true"> Giá</th> -->
         <th nzWidth="80px" nzColumnKey="importMedicine.expirationDate" [nzSortFn]="true">Ngày hết hạn</th>
         <th nzWidth="60px"></th>
+        <th nzWidth="60px"></th>
 
       </tr>
     </thead>
@@ -56,8 +57,11 @@
         <!-- <td>{{ detail.importMedicine.price }} đ</td> -->
         <td>{{ generalService.getDate(detail.importMedicine.expirationDate) }}</td>
         <td> <a style="color: #1890ff"
-          (click)="showEliminateMedicineModel(detail.id, generalService.getDate(detail.importBatch.createDate), medicineInInventory.name, medicineInInventory.medicineUnit.name,  detail.quantity)">Hủy
-          thuốc</a></td>
+          (click)="getMedicineInInventoryDetails(detail.id)">Chi
+          tiết</a></td>
+          <td> <a style="color: #1890ff"
+            (click)="showEliminateMedicineModel(detail.id, generalService.getDate(detail.importBatch.createDate), medicineInInventory.name, medicineInInventory.medicineUnit.name,  detail.quantity)">Hủy
+            thuốc</a></td>
     </tbody>
   </nz-table>
 </div>

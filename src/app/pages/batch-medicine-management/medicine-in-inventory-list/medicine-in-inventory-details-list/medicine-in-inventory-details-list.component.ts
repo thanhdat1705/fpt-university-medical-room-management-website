@@ -9,19 +9,21 @@ import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-i
 import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineEliminationService } from 'src/app/shared/services/medicine-elimination/medicine-elimination.service';
+import { MedicineInInventoryDetailsService } from 'src/app/shared/services/medicine-in-inventory-details/medicine-in-inventory-details.service';
+import { MedicineInInventoryService } from 'src/app/shared/services/medicine-in-inventory/medicine-in-inventory.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { EliminateMedicineComponent } from '../../medicine-elimination/eliminate-medicine.component';
 
 @Component({
-  selector: 'app-view-batch-of-the-medicine',
-  templateUrl: './view-batch-of-the-medicine.component.html',
-  styleUrls: ['./view-batch-of-the-medicine.component.scss']
+  selector: 'app-medicine-in-inventory-details-list',
+  templateUrl: './medicine-in-inventory-details-list.component.html',
+  styleUrls: ['./medicine-in-inventory-details-list.component.scss']
 })
-export class ViewBatchOfTheMedicineComponent implements OnInit {
+export class MedicineInInventoryDetailsList implements OnInit {
   id: any;
   medicineInInventoryDetails: MedicineInInventoryDetailsResponse[];
   loading = false;
-  medicineInInventory : MedicineInInventoryResponse;
+  medicineInInventory: MedicineInInventoryResponse;
   MedicineInInventoryDetailsSearchValueMap: Map<string, ValueCompare> = new Map;
   total = 0;
   pageSize = 10;
@@ -39,7 +41,7 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
   //   sortOrder: this.sortOrder
   // }
 
-  medicineInInventoryDetailsSearchRequest = new SearchRequest(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.MedicineInInventoryDetailsSearchValueMap, "id, quantity, importMedicine,importMedicine.importBatch , medicine.medicineUnit");
+  medicineInInventoryDetailsSearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.MedicineInInventoryDetailsSearchValueMap, "id, quantity, importMedicine,importMedicine.importBatch , medicine.medicineUnit");
 
 
   MedicineIdValueCompare: ValueCompare = {
@@ -56,7 +58,7 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
   //   sortOrder: 0,
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest(1,0,'',0,this.MedicineInInventorySearchValueMap, "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit");
+  medicineInInventorySearchRequest = new SearchRequest(1, 0, '', 0, this.MedicineInInventorySearchValueMap, "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit");
 
 
   medicineIdValueCompare: ValueCompare = {
@@ -64,28 +66,47 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
     compare: 'Equals'
   }
 
-  
+  getMedicineInInventoryDetails(id: string) {
+    console.log('idBatch' + id);
+    this.medicineInInventoryDetailsService.getMedicineInInventoryDetails(id, this.id);
+  }
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
-    this.searchMedicineInInventoryDetails();
     this.getMedicineInInventory();
+
+    this.activatedroute.fragment.subscribe(
+      (response) => {
+        console.log(response)
+        this.medicineInInventoryDetails = JSON.parse(JSON.stringify(response));
+
+        if (this.medicineInInventoryDetails === null) {
+          this.searchMedicineInInventoryDetails(this.id);
+        } else {
+          this.searchMedicineInInventoryDetails(this.id);
+        }
+      }
+    );
   }
 
   constructor(private summaryService: SummaryService,
     private activatedroute: ActivatedRoute,
     private generalService: GeneralHelperService,
     private medicineEliminateService: MedicineEliminationService,
+    private medicineInInventoryService: MedicineInInventoryService,
+    private medicineInInventoryDetailsService: MedicineInInventoryDetailsService,
+
     private modalService: NzModalService,
   ) {
     this.medicineEliminateService.eliminateMedicineComponent.subscribe(res => {
-      this.searchMedicineInInventoryDetails();
+      this.searchMedicineInInventoryDetails(this.id);
       this.getMedicineInInventory();
     })
   }
 
-  getMedicineInInventory(){
-    this.generalService.setValueCompare(this.id,this.medicineIdValueCompare,"medicineId",this.MedicineInInventorySearchValueMap);
+
+  getMedicineInInventory() {
+    this.generalService.setValueCompare(this.id, this.medicineIdValueCompare, "medicineId", this.MedicineInInventorySearchValueMap);
 
 
     this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest).subscribe(
@@ -110,9 +131,9 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
     });
   }
 
-  searchMedicineInInventoryDetails() {
+  searchMedicineInInventoryDetails(id: any) {
     // this.generalService.openWaitingPopupNz()
-    this.generalService.setValueCompare(this.id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchValueMap);
+    this.generalService.setValueCompare(id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchValueMap);
     this.summaryService.searchMedicineInInventoryDetails(this.medicineInInventoryDetailsSearchRequest).subscribe(
       (response) => {
         this.getData(response.data);
@@ -139,7 +160,7 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
     this.medicineInInventoryDetailsSearchRequest.page = params.pageIndex;
     this.medicineInInventoryDetailsSearchRequest.sortField = this.sortField;
     this.medicineInInventoryDetailsSearchRequest.sortOrder = this.sortOrder;
-    this.searchMedicineInInventoryDetails();
+    this.searchMedicineInInventoryDetails(this.id);
   }
 
 
@@ -147,7 +168,7 @@ export class ViewBatchOfTheMedicineComponent implements OnInit {
     if (response.info.page > 1 && response.data.length == 0) {
       this.medicineInInventoryDetailsSearchRequest.page = this.medicineInInventoryDetailsSearchRequest.page - 1;
       console.log("back 1 page");
-      this.searchMedicineInInventoryDetails();
+      this.searchMedicineInInventoryDetails(this.id);
       return;
     }
     this.medicineInInventoryDetails = response.data;

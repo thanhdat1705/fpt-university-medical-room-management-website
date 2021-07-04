@@ -13,7 +13,7 @@ export class TreatmentInformationService {
 
   treatmentComponentSource = new Subject<boolean>();
   treatmentDetailsComponentSource = new Subject<boolean>();
-  treatmentinformation: TreatmentInformation[];
+  treatmentinformation: TreatmentInformation[] = [];
   // Observable string streams
   treatmentInformationComponent = this.treatmentComponentSource.asObservable();
   treatmentDetailsComponent = this.treatmentDetailsComponentSource.asObservable()
@@ -28,14 +28,14 @@ export class TreatmentInformationService {
   ) { }
 
 
-    public getTreatmentInformationDetails(){
-      return this.treatmentInformationDetails;
-    }
+  public getTreatmentInformationDetails() {
+    return this.treatmentInformationDetails;
+  }
 
-    public setTreatmentInformation(treatmentInformation: TreatmentInformation[]){
-      this.treatmentinformation = treatmentInformation;
-      console.log('treatmentinformation from service', this.treatmentinformation);
-    }
+  public setTreatmentInformation(treatmentInformation: TreatmentInformation[]) {
+    this.treatmentinformation = treatmentInformation;
+    console.log('treatmentinformation from service', this.treatmentinformation);
+  }
 
   public getTreatmentInformation() {
     return this.treatmentinformation;
@@ -43,16 +43,19 @@ export class TreatmentInformationService {
   // reference https://stackoverflow.com/questions/57668759/how-to-call-a-component-method-from-service-class-angular
   setTreatmentDetails(data: TreatmentInformationDetail[]) {
     this.treatmentInformationDetails = data;
-    
+
     console.log(this.treatmentInformationDetails);
-    this.convertMedicineInInventoyDetailsToShowTreatmentDetailsData();
+    // for(let i = 0; i< this.treatmentInformationDetails.length; i++){
+    //   if(this.treatmentInformationDetails)
+    // }
+    this.convertMedicineInInventoyDetailsToTableData();
     this.treatmentComponentSource.next(null);
     this.treatmentDetailsComponentSource.next(null);
   }
 
-  convertMedicineInInventoyDetailsToShowTreatmentDetailsData() {
+  convertMedicineInInventoyDetailsToTableData() {
     var result = []
-    for (var i =    0; i < this.treatmentInformationDetails.length; i++) {
+    for (var i = 0; i < this.treatmentInformationDetails.length; i++) {
       var data = JSON.parse(JSON.stringify(this.treatmentInformationDetails[i]));
       var found = false;
       for (var j = 0; j < result.length; j++) {
@@ -65,8 +68,16 @@ export class TreatmentInformationService {
         result.push(JSON.parse(JSON.stringify(data)));
       }
     }
+    for (let i = 0; i < this.treatmentinformation.length; i++) {
+      for (let j = 0; j < result.length; j++) {
+        if (result[j].medicineId == this.treatmentinformation[i].medicineId) {
+            result[j].indicationToDrink = this.treatmentinformation[i].indicationToDrink
+        }
+      }
+    }
     console.log('grouped:', result);
-    this.treatmentinformation = result
+
+    this.treatmentinformation = result;
   }
 
   getMedicineDetail(id: string) {
@@ -97,18 +108,18 @@ export class TreatmentInformationService {
   }
 
 
-  
-  getTreatment(id: any, param: any){
+
+  getTreatment(id: any, param: any) {
 
     this.summaryService.getTreatmentDetails(id, param).subscribe(
       (response) => {
-        this.router.navigate(['/treatment-information-management/view-treatment-information', id], {
+        this.router.navigate(['/treatment-information-management/treatment-information', id], {
           fragment: response.data
         });
         console.log(response.data);
       },
       (error) => {
-        this.router.navigate(['/treatment-information-management/view-treatment-information-list']);
+        this.router.navigate(['/treatment-information-management/treatment-information-list']);
         console.log(error);
         this.generalService.createErrorNotification(error);
       }

@@ -7,9 +7,9 @@ import { DetailBatchMedicineComponent } from './batch-medicine-list/detail-batch
 import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
 import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
 import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eliminated-medicine/view-eliminated-medicine.component';
-import { MedicineInInventoryDetailsComponent } from './medicine-in-inventory-list/medicine-in-inventory-details/medicine-in-inventory-details.component';
+import { MedicineInInventoryDetails } from './medicine-in-inventory-list/medicine-in-inventory-details/medicine-in-inventory-details.component'
 import { MedicineInInventoryListComponent } from './medicine-in-inventory-list/medicine-in-inventory-list.component';
-import { ViewBatchOfTheMedicineComponent } from './medicine-in-inventory-list/view-batch-of-the-medicine/view-batch-of-the-medicine.component';
+import { MedicineInInventoryDetailsList } from './medicine-in-inventory-list/medicine-in-inventory-details-list/medicine-in-inventory-details-list.component';
 
 const routes: Routes = [
   {
@@ -61,9 +61,17 @@ const routes: Routes = [
   },
   {
     path: 'batch-of-medicine/:id',
-    component: ViewBatchOfTheMedicineComponent,
+    component: MedicineInInventoryDetailsList,
     data: {
-      title: 'Chi tiết thuốc hiện có'
+      title: 'Lô hiện có'
+    },
+    
+  },
+  {
+    path: 'batch-of-medicine-details/:id',
+    component: MedicineInInventoryDetails,
+    data: {
+      title: 'Chi tiết lô'
     },
   },
 ];

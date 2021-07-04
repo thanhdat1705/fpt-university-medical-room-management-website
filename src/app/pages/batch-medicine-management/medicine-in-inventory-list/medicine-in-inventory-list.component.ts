@@ -11,6 +11,7 @@ import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/med
 import { BatchOfMedicineInInventoryService } from 'src/app/shared/services/batch-medicine/batch-of-medicine-in-inventory.service';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { MedicineEliminationService } from 'src/app/shared/services/medicine-elimination/medicine-elimination.service';
+import { MedicineInInventoryService } from 'src/app/shared/services/medicine-in-inventory/medicine-in-inventory.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { EliminateMedicineComponent } from '../medicine-elimination/eliminate-medicine.component';
 
@@ -70,7 +71,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   constructor(
     private summaryService: SummaryService,
     private generalService: GeneralHelperService,
-    private batchOfMedicineInInventoryService: BatchOfMedicineInInventoryService
+    private medicineInInventoryService: MedicineInInventoryService
   ) { }
 
   ngOnInit(): void {
@@ -196,6 +197,6 @@ export class MedicineInInventoryListComponent implements OnInit {
   }
 
   GetBatchOfmedicine(id: any) {
-    this.batchOfMedicineInInventoryService.getBatchOfMedicineInInventory(id);
+    this.medicineInInventoryService.getMedicineInInventory(id);
   }
 }

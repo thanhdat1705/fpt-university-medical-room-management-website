@@ -165,7 +165,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     //     }, { emitEvent: false });
     //   }
     // })
-
+    this.treatmentService.getTreatmentInformationDetails();
+    this.treatmentService.getTreatmentInformation();
     this.getAllMedicineClassification();
     this.getAllMedicineSubgroup();
     this.autoCheckMedicine();
@@ -340,6 +341,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     // this.arrayTreatmentDetails = requestData;
     // this.treatmentDetailsList = this.arrayTreatmentDetails.concat();
     this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
+    this.destroyModal();
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
@@ -419,17 +421,6 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     console.log(this.treatmentDetailsTableData);
   }
 
-
-
-
-
-  getTreatmentDetails(treatmentDetails: TreatmentInformationDetail[], medicineInInventoryDetails: MedicineInInventoryResponse[]) {
-    for (let i = 0; i < treatmentDetails.length; i++) {
-
-      treatmentDetails[i].medicineInInventoryDetailId = medicineInInventoryDetails[i].id;
-      treatmentDetails[i].quantity = 0;
-    }
-  }
   // refreshCheckedStatus(): void {
   //   const listOfEnabledData = this.listOfCurrentPageData.filter(({ disabled }) => !disabled);
   //   this.checked = listOfEnabledData.every(({ indicateToDrink }) => this.setOfCheckedId.has(indicateToDrink));

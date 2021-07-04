@@ -28,7 +28,7 @@ export class EditProfileComponent implements OnInit {
   passwordMaxLength = 50;
   pattern = '[a-zA-Z ]*';
   phoneNumberPattern = '[0-9]*'
-  profile: AccountDetailResponse;
+  profile: Account;
   file: File;
   fileName: string;
   url: any;
@@ -147,13 +147,13 @@ export class EditProfileComponent implements OnInit {
     this.router.navigate(['/account/profile']);
   }
 
-  async getProfile() {
+  getProfile() {
     this.summaryService.getProfile().subscribe(
       (response) => {
         this.profile = response.data;
         console.log(this.profile);
         this.editProfileForm.setValue({
-          internalCode: this.profile.role.accounts[0].internalCode,
+          internalCode: this.profile.internalCode,
           displayName: this.profile.displayName,
           email: this.profile.email,
           phoneNumber: this.profile.phoneNumber,

@@ -15,14 +15,14 @@ const routes: Routes = [
     }
   },
   {
-    path: 'view-treatment-information-list',
+    path: 'treatment-information-list',
     component: ViewTreatmentInformationListComponent,
     data: {
       title: "Danh sách đơn điều trị"
     }
   },
   {
-    path: 'view-treatment-information/:id',
+    path: 'treatment-information/:id',
     component: ViewTreatmentInformationComponent,
     data: {
       title: "Đơn điều trị"

@@ -1,17 +1,17 @@
 <div class="container d-flex flex-wrap justify-content-between h-100">
     <div class="container-left col-md-12 col-lg-6">
-        <div class="bg-white d-flex flex-column p-h-20 p-v-10">
+        <div class="bg-white d-flex flex-column p-h-20 p-v-10" *ngIf="profile">
             <span class="text-teal-green font-size-18 font-weight-semibold">Bác sĩ</span>
             <dividing-line></dividing-line>
 
             <div class="info-wrapper">
                 <div class="header-info">
                     <span class="font-weight-semibold font-size-16 text-teal-green">Tên</span>
-                    <span>{{ medicalStaff.displayName }}</span>
+                    <span>{{ profile.displayName }}</span>
                 </div>
                 <div class="header-info">
                     <span class="font-weight-semibold font-size-16 text-teal-green">Mã số</span>
-                    <span>{{ medicalStaff.internalCode }}</span>
+                    <span>{{ profile.internalCode }}</span>
                 </div>
             </div>
         </div>
@@ -52,7 +52,8 @@
                             </nz-autocomplete>
                         </nz-input-group>
                         <ng-template #suffixButton>
-                            <a nz-button nzType="primary" (click)="getPatientDetails(inputInternalCode.value)"
+                            <a nz-button [disabled]="inputInternalCode.value.length == 0"
+                            nzType="primary" (click)="getPatientDetails(inputInternalCode.value)"
                                 nzSize="large" nzSearch>Truy xuất</a>
                         </ng-template>
 
@@ -218,7 +219,9 @@
                             {{ medicine.medicineName }}</td>
                         <td>{{ medicine.quantity }} {{medicine.unitName}}</td>
                         <td><input #inputValue nzInput style="width: 100%;"
-                                (input)="insertIndicationToDrink(medicine.medicineId, inputValue.value)">
+                                (input)="insertIndicationToDrink(medicine.medicineId, inputValue.value)"
+                                value="{{ medicine.indicationToDrink }}"
+                                >
                         </td>
                     </tr>
                 </tbody>
@@ -226,20 +229,13 @@
         </div>
 
         <div class="bg-white d-flex flex-column p-h-20 p-v-10 m-t-22">
-            <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100">
+            <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100" style="text-align: center;">
                 <span class="text-teal-green font-size-18 font-weight-semibold">Chữ kí xác nhận</span>
                 <dividing-line></dividing-line>
-                <nz-form-item style="text-align: center;">
+                <nz-form-item>
                     <nz-form-control>
-                        <nz-upload class="avatar-uploader" nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false"
-                            [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">
-                            <ng-container *ngIf="!avatarUrl">
-                                <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
-                                <div class="ant-upload-text">Upload</div>
-                            </ng-container>
-                            <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
-                        </nz-upload>
+                        <img class="signature-img" [src]="url" *ngIf="url">
+                        <input type="file" (change)="onFileSelected($event)" />
                     </nz-form-control>
                 </nz-form-item>
             </div>

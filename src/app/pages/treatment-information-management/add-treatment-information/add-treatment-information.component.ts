@@ -30,6 +30,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   diseaseStatusList = [];
   patientDeseaseStatusList = [];
   file: File;
+  profile: Account
   searchRecord: Map<string, ValueCompare> = new Map;
   deseaseStatusSearchRecord: Map<string, ValueCompare> = new Map;
   patientInternalCodeList: PatientInternalCodeResponse[];
@@ -40,10 +41,13 @@ export class AddTreatmentInformationComponent implements OnInit {
     name: '',
     description: '',
   };
+  paramsGetDetails = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
+
+  getPatientButtonStatus = true;
 
   selectPatientInternalCode = "id, internalCode";
   selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
-  patientSearchRequest = new SearchRequest(1,0,'',0,this.searchRecord,'');
+  patientSearchRequest = new SearchRequest(1, 0, '', 0, this.searchRecord, '');
 
   patientInternalCodeSearchValueCompare: ValueCompare = {
     value: '',
@@ -92,9 +96,9 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   ]
 
-  departmentnSearchRequest = new SearchRequest(1,0,'',0,this.searchRecord,'id,name');
+  departmentnSearchRequest = new SearchRequest(1, 0, '', 0, this.searchRecord, 'id,name');
 
-  deseaseStatusSearchRequest = new SearchRequest(1,0,'',0,this.deseaseStatusSearchRecord,'id,name');
+  deseaseStatusSearchRequest = new SearchRequest(1, 0, '', 0, this.deseaseStatusSearchRecord, 'id,name');
 
   // searchDeseaseStatusRequest: SearchRequest = {
 
@@ -127,7 +131,7 @@ export class AddTreatmentInformationComponent implements OnInit {
     this.treatmentService.setTreatmentDetails([]);
     this.treatmentService.setTreatmentInformation([]);
     this.getTreatmentInformationDetails();
-    
+    this.getAccountProfile();
     this.insertTreatmentInformationForm = this.formBuilder.group({
       internalCode: ['',
         [
@@ -146,12 +150,9 @@ export class AddTreatmentInformationComponent implements OnInit {
           Validators.required,
         ]],
       allergyDescription: ['',
-        [
-
-        ]],
+      ],
       diseaseStatusNames: [[],
       [
-        Validators.required,
       ]]
     });
     console.log(this.treatmentInformation);
@@ -242,17 +243,6 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   }
 
-  onFileSelected(event) {
-    this.file = event.target.files[0];
-    console.log('Got file' + this.file);
-    if (this.file) {
-      this.reader.readAsDataURL(this.file);
-      this.reader.onload = (_event) => {
-        this.url = this.reader.result;
-      }
-      this.fileName = this.file.name;
-    }
-  }
 
   insertIndicationToDrink(id: any, indicationToDrink: any) {
     for (let i = 0; i < this.treatmentInformation.length; i++) {
@@ -261,6 +251,7 @@ export class AddTreatmentInformationComponent implements OnInit {
         break;
       }
     }
+    this.treatmentService.setTreatmentInformation(this.treatmentInformation);
   }
 
 
@@ -272,89 +263,107 @@ export class AddTreatmentInformationComponent implements OnInit {
     return this.insertTreatmentInformationForm.controls;
   }
 
+  getAccountProfile() {
+    this.summaryService.getProfile().subscribe(
+      (response) => {
 
+        this.profile = response.data;
+        console.log(this.profile);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+  }
 
   addTreatmentInformation(data: any) {
 
-    // if (this.insertTreatmentInformationForm.invalid) {
-    // this.generalService.createErrorNotification("Xin hãy nhập đúng thông tin");
-    // this.generalService.closeWaitingPopupNz();
-    // return;
-    // }
-    // else {
-    // this.generalService.openWaitingPopupNz();
-
-    const treatmentInformationForm = new FormData();
-    treatmentInformationForm.append('Patient.InternalCode', data.internalCode);
-    treatmentInformationForm.append('Patient.Name', data.name);
-    treatmentInformationForm.append('Patient.Gender', data.gender);
-    treatmentInformationForm.append('Patient.DepartmentId', data.departmentId);
-    treatmentInformationForm.append('Patient.AllergyDescription', data.allergyDescription);
-    // treatmentInformationForm.append('DiseaseStatusNames', JSON.stringify(this.listDiseaseStatus));
-    // this.listDiseaseStatus.forEach(s => {
-    //   treatmentInformationForm.append('DiseaseStatusNames', JSON.stringify(s));
-    // });
-
-    // this.treatmentInformationDetails.forEach(s => {
-    //   treatmentInformationForm.append('TreatmentInformationDetails', JSON.stringify(s));
-    // });
-
-    // this.treatmentInformation.forEach(s => {
-    //   treatmentInformationForm.append('TreatmentInformations', JSON.stringify(s));
-    // });
-
-    for (let i = 0; i < this.patientDeseaseStatusList.length; i++) {
-      treatmentInformationForm.append('DiseaseStatusNames[' + i + ']', this.patientDeseaseStatusList[i]);
-    }
-
-    for (let i = 0; i < this.treatmentInformation.length; i++) {
-      treatmentInformationForm.append('TreatmentInformations[' + i + '].medicineId', this.treatmentInformation[i].medicineId);
-      treatmentInformationForm.append('TreatmentInformations[' + i + '].quantity', this.treatmentInformation[i].quantity.toString());
-      treatmentInformationForm.append('TreatmentInformations[' + i + '].indicationToDrink', this.treatmentInformation[i].indicationToDrink);
+    if (this.insertTreatmentInformationForm.invalid) {
+      this.generalService.createErrorNotification("Xin hãy nhập chính xác các thông tin");
+      return;
 
     }
+    else {
 
-    for (let i = 0; i < this.treatmentInformationDetails.length; i++) {
-      treatmentInformationForm.append('TreatmentInformationDetails[' + i + '].medicineInInventoryDetailId', this.treatmentInformationDetails[i].medicineInInventoryDetailId);
-      treatmentInformationForm.append('TreatmentInformationDetails[' + i + '].quantity', this.treatmentInformationDetails[i].quantity.toString());
+      const treatmentInformationForm = new FormData();
 
-    }
+      for (let i = 0; i < this.treatmentInformation.length; i++) {
+        treatmentInformationForm.append('TreatmentInformations[' + i + '].medicineId', this.treatmentInformation[i].medicineId);
+        treatmentInformationForm.append('TreatmentInformations[' + i + '].quantity', this.treatmentInformation[i].quantity.toString());
+        treatmentInformationForm.append('TreatmentInformations[' + i + '].indicationToDrink', this.treatmentInformation[i].indicationToDrink);
+        if (this.treatmentInformation[i].indicationToDrink == null || this.treatmentInformation[i].indicationToDrink.length == 0) {
+          this.generalService.createErrorNotification("Xin hãy nhập chính xác các thông tin");
+          return;
+        }
+      }
+      treatmentInformationForm.append('Patient.InternalCode', data.internalCode);
+      treatmentInformationForm.append('Patient.Name', data.name);
+      treatmentInformationForm.append('Patient.Gender', data.gender);
+      treatmentInformationForm.append('Patient.DepartmentId', data.departmentId);
+      treatmentInformationForm.append('Patient.AllergyDescription', data.allergyDescription);
 
-    // treatmentInformationForm.append('TreatmentInformations', JSON.stringify(this.treatmentInformation));
-    treatmentInformationForm.append('ConfirmSignatureImg', this.file);
-    console.log("code" + treatmentInformationForm.get('Patient.InternalCode'));
-    console.log("department" + treatmentInformationForm.get('Patient.DepartmentId'));
 
-    // console.log("TreatmentInformationDetails" + treatmentInformationForm.get('TreatmentInformationDetails'));
-    // console.log("TreatmentInformations" + treatmentInformationForm.get('TreatmentInformations'));
+      // treatmentInformationForm.append('DiseaseStatusNames', JSON.stringify(this.listDiseaseStatus));
+      // this.listDiseaseStatus.forEach(s => {
+      //   treatmentInformationForm.append('DiseaseStatusNames', JSON.stringify(s));
+      // });
+
+      // this.treatmentInformationDetails.forEach(s => {
+      //   treatmentInformationForm.append('TreatmentInformationDetails', JSON.stringify(s));
+      // });
+
+      // this.treatmentInformation.forEach(s => {
+      //   treatmentInformationForm.append('TreatmentInformations', JSON.stringify(s));
+      // });
+
+      for (let i = 0; i < this.patientDeseaseStatusList.length; i++) {
+        treatmentInformationForm.append('DiseaseStatusNames[' + i + ']', this.patientDeseaseStatusList[i]);
+      }
 
 
 
-    // console.log(treatmentInformationForm.getAll('TreatmentInformationDetails'));
-    // console.log(treatmentInformationForm.getAll('DiseaseStatusNames'));
-
-    // this.TreatmentInformationAddRequest.patient.Name = data.name;
-    // this.TreatmentInformationAddRequest.patient.DepartmentId = data.departmentId;
-    // this.TreatmentInformationAddRequest.patient.AllergyDescription = data.allergyDescription;
-    // this.TreatmentInformationAddRequest.patient.Gender = data.gender;
-    // this.TreatmentInformationAddRequest.patient.InternalCode = data.internalCode;
-    // this.TreatmentInformationAddRequest.treatmentInformationDetails = this.treatmentInformationDetails;
-    // this.TreatmentInformationAddRequest.treatmentInformations = this.treatmentInformation;
-    // this.TreatmentInformationAddRequest.diseaseStatusNames = this.listDiseaseStatus;
-
-    this.summaryService.addTreatmentInformation(treatmentInformationForm).subscribe(
-      (response) => {
-        console.log(response);
-        // this.generalService.closeWaitingPopupNz();
-        this.generalService.messageNz('success', `Đơn điều trị đã được tạo`);
-
-      }, (error) => {
-        console.log(error);
-        // this.generalService.closeWaitingPopupNz();
+      for (let i = 0; i < this.treatmentInformationDetails.length; i++) {
+        treatmentInformationForm.append('TreatmentInformationDetails[' + i + '].medicineInInventoryDetailId', this.treatmentInformationDetails[i].medicineInInventoryDetailId);
+        treatmentInformationForm.append('TreatmentInformationDetails[' + i + '].quantity', this.treatmentInformationDetails[i].quantity.toString());
 
       }
-    );
-    // }
+
+      // treatmentInformationForm.append('TreatmentInformations', JSON.stringify(this.treatmentInformation));
+      treatmentInformationForm.append('ConfirmSignatureImg', this.file);
+      console.log("code" + treatmentInformationForm.get('Patient.InternalCode'));
+      console.log("department" + treatmentInformationForm.get('Patient.DepartmentId'));
+
+      // console.log("TreatmentInformationDetails" + treatmentInformationForm.get('TreatmentInformationDetails'));
+      // console.log("TreatmentInformations" + treatmentInformationForm.get('TreatmentInformations'));
+
+
+
+      // console.log(treatmentInformationForm.getAll('TreatmentInformationDetails'));
+      // console.log(treatmentInformationForm.getAll('DiseaseStatusNames'));
+
+      // this.TreatmentInformationAddRequest.patient.Name = data.name;
+      // this.TreatmentInformationAddRequest.patient.DepartmentId = data.departmentId;
+      // this.TreatmentInformationAddRequest.patient.AllergyDescription = data.allergyDescription;
+      // this.TreatmentInformationAddRequest.patient.Gender = data.gender;
+      // this.TreatmentInformationAddRequest.patient.InternalCode = data.internalCode;
+      // this.TreatmentInformationAddRequest.treatmentInformationDetails = this.treatmentInformationDetails;
+      // this.TreatmentInformationAddRequest.treatmentInformations = this.treatmentInformation;
+      // this.TreatmentInformationAddRequest.diseaseStatusNames = this.listDiseaseStatus;
+
+      this.summaryService.addTreatmentInformation(treatmentInformationForm).subscribe(
+        (response) => {
+          console.log(response);
+          // this.generalService.closeWaitingPopupNz();
+          this.generalService.messageNz('success', `Đơn điều trị đã được tạo`);
+          this.treatmentService.getTreatment(response.data.id, this.paramsGetDetails)
+        }, (error) => {
+          console.log(error);
+          this.generalService.closeWaitingPopupNz();
+
+        }
+      );
+    }
 
   }
 
@@ -397,47 +406,15 @@ export class AddTreatmentInformationComponent implements OnInit {
 
 
 
-  beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]) => {
-    return new Observable((observer: Observer<boolean>) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-      if (!isJpgOrPng) {
-        this.msg.error('You can only upload JPG file!');
-        observer.complete();
-        return;
+  onFileSelected(event) {
+    this.file = event.target.files[0];
+    console.log('Got file' + this.file);
+    if (this.file) {
+      this.reader.readAsDataURL(this.file);
+      this.reader.onload = (_event) => {
+        this.url = this.reader.result;
       }
-      const isLt2M = file.size! / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.msg.error('Image must smaller than 2MB!');
-        observer.complete();
-        return;
-      }
-      observer.next(isJpgOrPng && isLt2M);
-      observer.complete();
-    });
-  };
-
-  private getBase64(img: File, callback: (img: string) => void): void {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result!.toString()));
-    reader.readAsDataURL(img);
-  }
-
-  handleChange(info: { file: NzUploadFile }): void {
-    switch (info.file.status) {
-      case 'uploading':
-        this.loading = true;
-        break;
-      case 'done':
-        // Get this url from response in real world.
-        this.getBase64(info.file!.originFileObj!, (img: string) => {
-          this.loading = false;
-          this.avatarUrl = img;
-        });
-        break;
-      case 'error':
-        this.msg.error('Network error');
-        this.loading = false;
-        break;
+      this.fileName = this.file.name;
     }
   }
 

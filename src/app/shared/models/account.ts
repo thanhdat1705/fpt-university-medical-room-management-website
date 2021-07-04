@@ -8,6 +8,8 @@ export interface Account {
   displayName: string;
   description: string;
   photoUrl: string;
-  role: Role;
+  roleId: number;
+  role?: Role;
   lastLogin: Date;
+  active: boolean
 }

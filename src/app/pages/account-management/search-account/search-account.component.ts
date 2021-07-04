@@ -256,6 +256,6 @@ export class SearchAccountComponent implements OnInit {
   }
 
   getAccountDetails(id: any) {
-    this.accountService.getMedicineDetails(id);
+    this.accountService.getAccountDetails(id);
   }
 }

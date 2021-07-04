@@ -7,15 +7,15 @@ import { SummaryService } from '../summary.service';
   providedIn: 'root'
 })
 export class AccountService {
-
+param="";
   constructor(
     private summaryService : SummaryService,
     private router: Router,
     private generalService: GeneralHelperService
   ) { }
 
-  getMedicineDetails(id: string) {
-    this.summaryService.getAccountDetail(id).subscribe(
+  getAccountDetails(id: string) {
+    this.summaryService.getAccountDetail(id, this.param).subscribe(
       (response) => {
         this.router.navigate(['/account/account-detail', id], {
           fragment: response.data

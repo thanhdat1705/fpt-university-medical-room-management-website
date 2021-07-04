@@ -62,8 +62,7 @@
           <td>Dừng hoạt động</td>
         </ng-template>
         <td> <a nzAlign="center" style="color: #1890ff"
-          [routerLink]="['/account/account-detail', account.id]"
-         
+        (click)="getAccountDetails(account.id)"
          >Chi
           tiết</a></td>
       </tr>

@@ -36,6 +36,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   dateRange: Date[];
   genderFilterValue: string;
   departmentFilterValue: string;
+  treatmentStatusFilterValue: string;
   departmentList: Department[];
   selectedSearchAttribute = '';
   searchTreatmentValue;
@@ -50,6 +51,17 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     {
       id: 'internalCode',
       name: 'Mã số'
+    }
+  ]
+
+  treatmentStatus = [
+    {
+      id: 'true',
+      name: 'Đã xác nhận'
+    },
+    {
+      id: 'false',
+      name: 'Chưa xác nhận'
     }
   ]
 
@@ -101,7 +113,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
 
   sortField = "createAt";
-  sortOrder = 0;
+  sortOrder = 1;
   selectFields = "id,confirmSignature,createAt,accountCreateBy,isDelivered,patient,patient.department";
   // treatmentSearchRequest: SearchRequest = {
   //   limit: this.pageSize,
@@ -112,12 +124,12 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   //   sortOrder: this.sortOrder
   // }
 
-  treatmentSearchRequest = new SearchRequest(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchRecord,this.selectFields);
-  departmentSearchRequest = new SearchRequest(1,0,'',0,null,'id, name');
+  treatmentSearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchRecord, this.selectFields);
+  departmentSearchRequest = new SearchRequest(1, 0, '', 0, null, 'id, name');
   // treatmentSearchRequestParam = "Limit=" + this.treatmentSearchRequest.limit + "&Page=" +  this.treatmentSearchRequest.page + "&SortField=" +
   // this.treatmentSearchRequest.sortField + "&SortOrder=" + this.treatmentSearchRequest.sortOrder + "&SelectFields="+ this.treatmentSearchRequest.selectFields
 
-    dateRangeSelected = false;
+  dateRangeSelected = false;
 
   constructor(
     private summaryService: SummaryService,
@@ -125,6 +137,10 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     private treatmentInformationService: TreatmentInformationService
   ) { }
 
+  isDeliveryValueCompare: ValueCompare = {
+    value: '',
+    compare: '='
+  }
   searchFromDateValueCompare: ValueCompare = {
     value: '',
     compare: '>='
@@ -151,7 +167,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllDepartment();
-   
+
     // this.searchValueCompare.value = 'test';
     // this.searchRecordMap.set('testKey', null);
     // console.log(this.searchRecordMap.get('testKey'));
@@ -166,7 +182,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   }
 
   searchTreatment() {
-    console.log('searchMap',this.searchRecord);
+    console.log('searchMap', this.searchRecord);
     this.treatmentSearchRequest.searchValue = this.searchRecord
     this.summaryService.searchTreatment(this.treatmentSearchRequest).subscribe(
       (response) => {
@@ -232,6 +248,11 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     //   this.searchRecord['CreateDate|to'] = null;
     //   this.searchTreatment();
     // }
+  }
+
+  onSearchTreatmentStatus(){
+    this.generalService.setValueCompare(this.treatmentStatusFilterValue, this.isDeliveryValueCompare, 'isDelivered', this.searchRecord);
+    this.searchTreatment();
   }
 
   onSearchGender() {
@@ -312,13 +333,13 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   onQueryParamsChange(params: NzTableQueryParams) {
     this.treatmentSearchRequest.page = params.pageIndex;
     console.log(this.treatmentSearchRequest.page);
-    
+
     console.log(params.pageIndex);
 
     this.searchTreatment();
   }
 
-  getTreatment(id: any){
+  getTreatment(id: any) {
     this.treatmentInformationService.getTreatment(id, this.paramsGetDetails);
   }
 

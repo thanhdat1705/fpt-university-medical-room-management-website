@@ -14,10 +14,10 @@ import { SummaryService } from 'src/app/shared/services/summary.service';
   styleUrls: ['./view-account-detail.component.scss']
 })
 export class ViewAccountDetailComponent implements OnInit {
-
+  param = "";
   url: string;
   id: any;
-  accountDetail: AccountDetailResponse;
+  accountDetail: Account;
   accountDetailForm: FormGroup
   roles: Role[] = [
     { id: 1, roleName: "Admin" },
@@ -39,15 +39,7 @@ export class ViewAccountDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
-    // this.activatedroute.fragment.subscribe(
-    //   (response) => {
-    //     this.accountDetail = JSON.parse(JSON.stringify(response));
-    //     if (this.accountDetail === null) {
-    //       this.getAccountDetails(this.id);
-    //     }
-    //   }
-    // );
-
+    console.log(this.id);
     this.accountDetailForm = this.formsBuider.group({
       internalCode: ['', [
         Validators.required,
@@ -64,11 +56,22 @@ export class ViewAccountDetailComponent implements OnInit {
       ]],
       active: ['', [
         Validators.required,
+
       ]],
     });
-    this.getAccountDetails(this.id);
-    // console.log(this.accountDetail.role.accounts[0].active);
-    // this.activeStatus = this.checkActiveId(this.accountDetail.role.accounts[0].active);
+    this.activatedroute.fragment.subscribe(
+      (response) => {
+        this.accountDetail = JSON.parse(JSON.stringify(response));
+        if (this.accountDetail === null) {
+          this.getAccountDetails(this.id);
+          
+        }
+        else{
+          this.setAccountData();
+          this.disableUpdate();
+        }
+      }
+    );
   }
 
   get f() {
@@ -124,21 +127,26 @@ export class ViewAccountDetailComponent implements OnInit {
     }
   }
 
+  setAccountData(){
+    console.log('account', this.accountDetail);
+    this.url = this.accountDetail.photoUrl;
+    this.accountDetailForm.setValue({
+      internalCode: this.accountDetail.internalCode,
+      displayName: this.accountDetail.displayName,
+      email: this.accountDetail.email,
+      // phoneNumber: this.accountDetail.phoneNumber,
+      roleId: this.accountDetail.roleId,
+      active: this.accountDetail.active,
+    });
+  }
+
   getAccountDetails(id: any) {
     this.disableUpdate();
-    this.summaryService.getAccountDetail(id).subscribe(
+    this.summaryService.getAccountDetail(id, this.param).subscribe(
       (response) => {
         this.accountDetail = response.data;
         console.log(this.accountDetail);
-        this.url = this.accountDetail.photoUrl;
-        this.accountDetailForm.setValue({
-          internalCode: this.accountDetail.role.accounts[0].internalCode,
-          displayName: this.accountDetail.displayName,
-          email: this.accountDetail.email,
-          // phoneNumber: this.accountDetail.phoneNumber,
-          roleId: this.accountDetail.role.id,
-          active: this.accountDetail.role.accounts[0].active,
-        });
+        this.setAccountData();
       },
       (error) => {
         console.log(error);

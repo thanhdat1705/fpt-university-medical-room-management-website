@@ -50,8 +50,9 @@
                             </nz-autocomplete>
                         </nz-input-group>
                         <ng-template #suffixButton>
-                            <a nz-button nzType="primary" (click)="getPatientDetails(inputInternalCode.value)"
-                                nzSize="large" nzSearch>Truy xuất</a>
+                            <a nz-button nzType="primary" [disabled]="!isEditing || inputInternalCode.value.length == 0"
+                                (click)="getPatientDetails(inputInternalCode.value)" nzSize="large" nzSearch>Truy
+                                xuất</a>
                         </ng-template>
 
                         <ng-template #internalCodeTpl let-control>
@@ -96,8 +97,8 @@
                         <span class="font-size-16">Giới tính</span>
                     </nz-form-label>
                     <nz-form-control [nzErrorTip]="genderTpl">
-                        <nz-select formControlName="gender" nzAllowClear [nzSize]="'large'" nzPlaceHolder="Giới tính"
-                            style="display: flex; align-items: center; font-size: 16px;">
+                        <nz-select nzDisabled="isEditing" formControlName="gender" nzAllowClear [nzSize]="'large'"
+                            nzPlaceHolder="Giới tính" style="display: flex; align-items: center; font-size: 16px;">
                             <nz-option *ngFor="let item of gender" [nzLabel]="item.name" [nzValue]="item.id">
                                 <span style="font-size: 16px;">{{ item.name }}</span>
                             </nz-option>
@@ -114,7 +115,7 @@
                         <span class="font-size-16">Phòng bang</span>
                     </nz-form-label>
                     <nz-form-control [nzErrorTip]="departmentTpl">
-                        <nz-select nzShowSearch nzAllowClear formControlName="departmentId"
+                        <nz-select nzDisabled="isEditing" nzShowSearch nzAllowClear formControlName="departmentId"
                             [nzDropdownRender]="renderDepartment" [nzSize]="'large'" nzPlaceHolder="Phòng bang"
                             style="display: flex; align-items: center; font-size: 16px;">
                             <nz-option *ngFor="let item of departmentList" [nzLabel]="item.name" [nzValue]="item.id"
@@ -146,9 +147,10 @@
                         <span class="font-size-16">Tình trạng bệnh</span>
                     </nz-form-label>
                     <nz-form-control>
-                        <nz-select nzPlaceHolder="Tình trạng bệnh" nzSize="large" nzMode="tags"
-                            [(ngModel)]="patientDeseaseStatusList" (nzOnSearch)="onSearchDeseaseStatus($event)"
-                            [ngModelOptions]="{standalone: true}" nzAllowClear nzShowSearch nzServerSearch>
+                        <nz-select [nzDisabled]="!isEditing" nzPlaceHolder="Tình trạng bệnh" nzSize="large"
+                            nzMode="tags" [(ngModel)]="patientDeseaseStatusList"
+                            (nzOnSearch)="onSearchDeseaseStatus($event)" [ngModelOptions]="{standalone: true}"
+                            nzAllowClear nzShowSearch nzServerSearch>
                             <ng-container *ngFor="let o of diseaseStatusList">
                                 <nz-option [nzValue]="o.id" [nzLabel]="o.name"></nz-option>
                             </ng-container>
@@ -181,7 +183,7 @@
                 </nz-form-item>
 
                 <br><br>
-                <nz-form-item>
+                <nz-form-item *ngIf="!treatment.isdelivered">
                     <nz-form-control>
                         <div class="d-flex flex-row justify-content-between">
                             <a (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-16 button-a" nz-button
@@ -195,12 +197,12 @@
                             </button>
                             <br>
                             <a *ngIf="isEditing" (click)="disableUpdate()" class="font-size-16 button-a" nz-button>
-
                                 Hủy
                             </a>
                             <br>
 
-                            <a *ngIf="!isEditing" class="font-size-16 button-a" nz-button (click)="deleteTreatment()">
+                            <a *ngIf="!isEditing" class="font-size-16 button-a" nz-button
+                                (click)=" deleteTreatmentPopUp()">
                                 Xóa
                             </a>
                         </div>
@@ -215,7 +217,8 @@
         <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100">
             <span class="text-teal-green font-size-18 font-weight-semibold">Cấp phát thuốc</span>
             <dividing-line></dividing-line>
-            <a nz-button nzType="default" style="margin: 30px; float: right;" (click)="showMedicineModal()">Thêm
+            <a nz-button nzType="default" [disabled]="!isEditing" style="margin: 30px; float: right;"
+                (click)="showMedicineModal()">Thêm
                 thuốc</a>
 
             <nz-table class="medicine-table" #basicTable [nzData]="treatmentInformation" nzTableLayout="fixed"
@@ -234,7 +237,8 @@
                             nzTooltipPlacement="leftTop" nz-tooltip>
                             {{ treatment.medicineName }}</td>
                         <td>{{ treatment.quantity }} {{ treatment.unitName}}</td>
-                        <td><input #inputValue nzInput style="width: 100%;" value=" {{ treatment.indicationToDrink }}"
+                        <td><input [disabled]="!isEditing" #inputValue nzInput style="width: 100%;"
+                                value=" {{ treatment.indicationToDrink }}"
                                 (input)="insertIndicationToDrink(treatment.medicine.medicineId, inputValue.value)">
                         </td>
                     </tr>
@@ -243,20 +247,18 @@
         </div>
 
         <div class="bg-white d-flex flex-column p-h-20 p-v-10 m-t-22">
-            <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100">
+            <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100" style="text-align: center;">
                 <span class="text-teal-green font-size-18 font-weight-semibold">Chữ kí xác nhận</span>
                 <dividing-line></dividing-line>
-                <nz-form-item style="text-align: center;">
-                    <nz-form-control style="height: auto;">
-                        <nz-upload class="avatar-uploader" nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false"
-                            [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">
-                            <ng-container *ngIf="!avatarUrl">
-                                <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
-                                <div class="ant-upload-text">Upload</div>
-                            </ng-container>
-                            <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
-                        </nz-upload>
+                <div *ngIf="!isEditing">
+                    <span *ngIf="!treatment.isdelivered && url == null">Chưa có chữ kí </span>
+                </div>
+                <nz-form-item>
+                    <nz-form-control>
+                        <img class="signature-img" [src]="url">
+                        <div *ngIf="isEditing">
+                            <input *ngIf="!treatment.isdelivered" type="file" (change)="onFileSelected($event)" />
+                        </div>
                     </nz-form-control>
                 </nz-form-item>
             </div>

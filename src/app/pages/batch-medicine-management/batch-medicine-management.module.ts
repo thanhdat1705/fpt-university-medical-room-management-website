@@ -12,8 +12,8 @@ import { ViewEliminatedMedicineComponent } from './medicine-elimination/view-eli
 import { EliminateMedicineComponent } from './medicine-elimination/eliminate-medicine.component';
 import { ViewEliminatedMedicineDetailsComponent } from './medicine-elimination/view-eliminated-medicine-details/view-eliminated-medicine-details.component';
 import { MedicineInInventoryListComponent } from './medicine-in-inventory-list/medicine-in-inventory-list.component';
-import { MedicineInInventoryDetailsComponent } from './medicine-in-inventory-list/medicine-in-inventory-details/medicine-in-inventory-details.component';
-import { ViewBatchOfTheMedicineComponent } from './medicine-in-inventory-list/view-batch-of-the-medicine/view-batch-of-the-medicine.component';
+import { MedicineInInventoryDetails } from './medicine-in-inventory-list/medicine-in-inventory-details/medicine-in-inventory-details.component';
+import { MedicineInInventoryDetailsList } from './medicine-in-inventory-list/medicine-in-inventory-details-list/medicine-in-inventory-details-list.component';
 import { CheckoutInsertBatchGuard } from '../../shared/guards/checkout-insert-batch.guard';
 import { DetailBatchMedicineComponent } from './batch-medicine-list/detail-batch-medicine/detail-batch-medicine.component';
 import { AddImportMedicineComponent } from './batch-medicine-list/detail-batch-medicine/add-import-medicine/add-import-medicine.component';
@@ -28,8 +28,8 @@ import { DetailImportMedicineComponent } from './batch-medicine-list/detail-batc
     ViewEliminatedMedicineComponent,
     ViewEliminatedMedicineDetailsComponent,
     MedicineInInventoryListComponent,
-    MedicineInInventoryDetailsComponent,
-    ViewBatchOfTheMedicineComponent,
+    MedicineInInventoryDetails,
+    MedicineInInventoryDetailsList,
     DetailBatchMedicineComponent,
     AddImportMedicineComponent,
     DetailImportMedicineComponent,
