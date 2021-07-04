@@ -126,7 +126,7 @@ export class AddTreatmentInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.treatmentService.currentComponentServeName = 'addTreatmentComponent';
     this.getAllDepartment();
     this.treatmentService.setTreatmentDetails([]);
     this.treatmentService.setTreatmentInformation([]);

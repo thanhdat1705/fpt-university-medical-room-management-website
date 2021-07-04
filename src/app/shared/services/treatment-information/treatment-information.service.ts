@@ -19,7 +19,7 @@ export class TreatmentInformationService {
   treatmentDetailsComponent = this.treatmentDetailsComponentSource.asObservable()
   treatmentInformationDetails: TreatmentInformationDetail[];
   treatmentDetails: TreatmentInformationDetail[];
-
+  currentComponentServeName: string;
 
   constructor(
     private summaryService: SummaryService,
@@ -49,8 +49,15 @@ export class TreatmentInformationService {
     //   if(this.treatmentInformationDetails)
     // }
     this.convertMedicineInInventoyDetailsToTableData();
-    this.treatmentComponentSource.next(null);
-    this.treatmentDetailsComponentSource.next(null);
+  }
+
+  returnTreatmentDataComponent() {
+    if (this.currentComponentServeName == 'treatmentDetailsComponent') {
+      this.treatmentDetailsComponentSource.next(null);
+    } else if (this.currentComponentServeName == 'addTreatmentComponent') {
+      this.treatmentComponentSource.next(null);
+
+    }
   }
 
   convertMedicineInInventoyDetailsToTableData() {
@@ -71,7 +78,7 @@ export class TreatmentInformationService {
     for (let i = 0; i < this.treatmentinformation.length; i++) {
       for (let j = 0; j < result.length; j++) {
         if (result[j].medicineId == this.treatmentinformation[i].medicineId) {
-            result[j].indicationToDrink = this.treatmentinformation[i].indicationToDrink
+          result[j].indicationToDrink = this.treatmentinformation[i].indicationToDrink
         }
       }
     }

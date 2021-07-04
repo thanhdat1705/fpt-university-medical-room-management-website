@@ -69,7 +69,7 @@
               <nz-form-item style="margin-bottom: 0px;">
                 <nz-form-control> -->
                   <input [nzMin]="0" [nzErrorTip]="quantityTpl" [nzMax]="item.quantity" style=" margin-left: 10px;width: 35%;" nz-input #inputValue
-                    formControlName="quantity"
+                    
                     (input)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId, data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name, generalService.getDate(item.expirationDate ))"
                     [disabled]="!setOfCheckedId.has(item.id)"
                     [value]="!setOfCheckedId.has(item.id) ? item.quantity : getTreatmentDetailsQuantity(item.id)" />

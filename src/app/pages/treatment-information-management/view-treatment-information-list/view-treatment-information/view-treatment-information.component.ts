@@ -48,7 +48,6 @@ export class ViewTreatmentInformationComponent implements OnInit {
   file: File;
   confirmModal!: NzModalRef;
 
-
   departmentSearchRequest = new SearchRequest(1, 0, '', 0, null, 'id, name');
   deseaseStatusSearchRequest = new SearchRequest(1, 0, '', 0, this.deseaseStatusSearchRecord, 'id,name');
   selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
@@ -88,7 +87,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
     private modal: NzModalService,
     private router: Router
   ) {
-    this.treatmentService.treatmentInformationComponent.subscribe(res => {
+    this.treatmentService.treatmentDetailsComponent.subscribe(res => {
       this.getTreatmentInformation();
       this.getTreatmentInformationDetails();
     })
@@ -96,12 +95,12 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
   getTreatmentInformationDetails() {
     this.treatmentInformationDetails = this.treatmentService.getTreatmentInformationDetails();
-    console.log('treatmentInformationDetails ', this.treatmentInformationDetails);
+    console.log('****treatmentInformationDetails ', this.treatmentInformationDetails);
   }
 
   getTreatmentInformation() {
     this.treatmentInformation = this.treatmentService.getTreatmentInformation();
-    console.log('TreatmentInformation ', this.treatmentInformation);
+    console.log('****TreatmentInformation ', this.treatmentInformation);
   }
 
   searchRecord: Map<string, ValueCompare> = new Map;
@@ -111,6 +110,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.treatmentService.currentComponentServeName = 'treatmentDetailsComponent';
+
     this.id = this.activatedroute.snapshot.paramMap.get('id');
     this.treatmentForm = this.formBuilder.group({
       internalCode: ['',
@@ -238,6 +239,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
       diseaseStatusNames: []
     });
     this.sygnatureUrl = this.treatment.confirmSignature
+    this.treatmentService.returnTreatmentDataComponent();
   }
 
   getTreatmentInformationFromServer(id: any, param: any) {

@@ -61,6 +61,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
   dateObj = new Date();
 
+  componentName: string;
+
   // medicineInInventoryRequest: SearchRequest = {
   //   limit: this.pageSize,
   //   page: this.pageIndex,
@@ -144,8 +146,11 @@ export class TreatmentInformationDetailsComponent implements OnInit {
       for (let i = 0; i < this.chkTreatmentDetail.length; i++) {
         this.setOfCheckedId.add(this.chkTreatmentDetail[i].medicineInInventoryDetailId);
       }
-
-
+    }else{
+      for (let i = 0; i < this.treatmentDetaisList.length; i++) {
+        this.setOfCheckedId.add(this.treatmentDetaisList[i].medicineInInventoryDetailId);
+        this.autoExpandSelectedMedicineInInventory()
+      }
     }
   }
 
@@ -173,17 +178,19 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
     console.log('data luc init', this.chkTreatmentDetail);
     this.searchMedicineInInventory();
-    this.getTreatmentInformationFromTable();
+    this.autoExpandSelectedMedicineInInventory();
   }
 
-  getTreatmentInformationFromTable() {
+  autoExpandSelectedMedicineInInventory() {
 
     this.treatmentInformation = this.treatmentService.getTreatmentInformation();
     if (this.treatmentInformation == null) {
       return;
     } else {
-      for (let i = 0; i < this.treatmentInformation.length; i++)
+      for (let i = 0; i < this.treatmentInformation.length; i++){
         this.onExpandChange(this.treatmentInformation[i].medicineId, true);
+      }
+      
     }
   }
 
@@ -194,6 +201,12 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     } else {
       this.expandSet.delete(id);
     }
+  }
+
+  clearExpandSetAndCheckSet(){
+    this.expandSet.clear();
+    this.setOfCheckedId.clear();
+
   }
 
   searchMedicineInInventoryDetails(id: string) {
@@ -249,6 +262,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   searchMedicineName() {
     this.generalService.setValueCompare(this.searchNameValue, this.medicineNnameValueCompare, 'medicine.Name', this.MedicineInInventorySearchValueMap);
     this.searchMedicineInInventory();
+    
   }
 
   onSearchClassification() {
@@ -272,9 +286,12 @@ export class TreatmentInformationDetailsComponent implements OnInit {
       (response) => {
         console.log(response.data);
         this.getData(response.data);
-
         // this.generalService.closeWaitingPopupNz();
+        this.clearExpandSetAndCheckSet();
+        this.autoExpandSelectedMedicineInInventory()
 
+        this.autoCheckMedicine();
+    
       }, (error) => {
         console.log(error);
         // this.generalService.closeWaitingPopupNz();
@@ -322,13 +339,14 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
         this.treatmentDetaisList.push(treatmentObj);
       }
+      this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
 
     }
     this.isExistInDetails = false;
     console.log(this.treatmentDetaisList.length);
 
     console.log(this.treatmentDetaisList);
-
+    
 
   }
 
@@ -340,7 +358,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     // const requestData = this.medicineInInventoryDetails.filter(data => this.setOfCheckedId.has(data.id));
     // this.arrayTreatmentDetails = requestData;
     // this.treatmentDetailsList = this.arrayTreatmentDetails.concat();
-    this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
+    this.treatmentService.returnTreatmentDataComponent();
     this.destroyModal();
   }
 
@@ -348,7 +366,9 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     this.medicineInInventorySearchRequest.page = params.pageIndex;
     console.log(params.pageIndex);
     this.searchMedicineInInventory();
+ 
   }
+
   getTreatmentDetailsQuantity(id: string) {
     if (this.chkTreatmentDetail == null) {
       return '';
@@ -389,6 +409,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
             break;
           }
         }
+        this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
       }
     }
   }
@@ -417,7 +438,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
       treatmentDetailsRowData.medicineInInventoryDetails = [];
       this.treatmentDetailsTableData.push(treatmentDetailsRowData);
     }
-    this.getTreatmentInformationFromTable();
+
+    this.autoExpandSelectedMedicineInInventory();
     console.log(this.treatmentDetailsTableData);
   }
 
