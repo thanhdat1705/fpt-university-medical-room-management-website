@@ -34,6 +34,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   total = 0;
   setOfCheckedId = new Set<string>();
   expandSet = new Set<string>();
+  tempUnCheckedId = new Set<string>();
+
   listOfCurrentPageData: ReadonlyArray<Data> = [];
   checked = false;
   indeterminate = false;
@@ -57,7 +59,6 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   medicineClassificationList: MedicineClassificationResponse[];
   medicineSubGroupList: MedicineSubgroupResponse[] = [];
   treatmentInformation: TreatmentInformation[] = [];
-
   dateObj = new Date();
 
   componentName: string;
@@ -71,8 +72,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   //   sortOrder: 0
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest(this.pageSize,this.pageIndex,"",0,this.MedicineInInventorySearchValueMap,'medicineId,medicine.Name,quantity, medicine.medicineUnit');
-   
+  medicineInInventorySearchRequest = new SearchRequest(this.pageSize, this.pageIndex, "", 0, this.MedicineInInventorySearchValueMap, 'medicineId,medicine.Name,quantity, medicine.medicineUnit');
+
 
   // medicineInInventoryDetailsSearchRequest: SearchRequest = {
   //   limit: 100,
@@ -83,7 +84,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   //   sortOrder: 0
   // }
 
-  medicineInInventoryDetailsSearchRequest = new SearchRequest(1,0,"importMedicine.ExpirationDate",0,this.MedicineInInventoryDetailsSearchValueMap,'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate');
+  medicineInInventoryDetailsSearchRequest = new SearchRequest(1, 0, "importMedicine.ExpirationDate", 0, this.MedicineInInventoryDetailsSearchValueMap, 'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate');
 
 
   medicineIdValueCompare: ValueCompare = {
@@ -149,7 +150,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
       for (let i = 0; i < this.chkTreatmentDetail.length; i++) {
         this.setOfCheckedId.add(this.chkTreatmentDetail[i].medicineInInventoryDetailId);
       }
-    }else{
+    } else {
       for (let i = 0; i < this.treatmentDetaisList.length; i++) {
         this.setOfCheckedId.add(this.treatmentDetaisList[i].medicineInInventoryDetailId);
         this.autoExpandSelectedMedicineInInventory()
@@ -190,10 +191,10 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     if (this.treatmentInformation == null) {
       return;
     } else {
-      for (let i = 0; i < this.treatmentInformation.length; i++){
+      for (let i = 0; i < this.treatmentInformation.length; i++) {
         this.onExpandChange(this.treatmentInformation[i].medicineId, true);
       }
-      
+
     }
   }
 
@@ -206,7 +207,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     }
   }
 
-  clearExpandSetAndCheckSet(){
+  clearExpandSetAndCheckSet() {
     this.expandSet.clear();
     this.setOfCheckedId.clear();
 
@@ -265,7 +266,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   searchMedicineName() {
     this.generalService.setValueCompare(this.searchNameValue, this.medicineNnameValueCompare, 'medicine.Name', this.MedicineInInventorySearchValueMap);
     this.searchMedicineInInventory();
-    
+
   }
 
   onSearchClassification() {
@@ -295,7 +296,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
         this.autoExpandSelectedMedicineInInventory()
 
         this.autoCheckMedicine();
-    
+
       }, (error) => {
         console.log(error);
         // this.generalService.closeWaitingPopupNz();
@@ -350,11 +351,19 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     console.log(this.treatmentDetaisList.length);
 
     console.log(this.treatmentDetaisList);
-    
+
 
   }
 
   destroyModal(): void {
+    if (this.treatmentDetaisList.length == 0) {
+      return;
+    } else {
+    for (var id of Array.from(this.tempUnCheckedId.values())) {
+      this.setOfCheckedId.add(id);
+    }
+      this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
+    }
     this.modal.destroy();
   }
 
@@ -363,6 +372,19 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     // this.arrayTreatmentDetails = requestData;
     // this.treatmentDetailsList = this.arrayTreatmentDetails.concat();
     this.treatmentService.returnTreatmentDataComponent();
+    for (var id of Array.from(this.tempUnCheckedId.values())) {
+
+      for (let i = 0; i < this.treatmentDetaisList.length; i++) {
+        if (this.treatmentDetaisList[i].medicineInInventoryDetailId == id) {
+          this.treatmentDetaisList.splice(i, 1);
+          console.log(this.treatmentDetaisList[i]);
+          console.log(this.treatmentDetaisList)
+          break;
+        }
+      }
+
+    }
+    this.tempUnCheckedId.clear();
     this.destroyModal();
   }
 
@@ -370,7 +392,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     this.medicineInInventorySearchRequest.page = params.pageIndex;
     console.log(params.pageIndex);
     this.searchMedicineInInventory();
- 
+
   }
 
   getTreatmentDetailsQuantity(id: string) {
@@ -401,20 +423,22 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     if (checked) {
       this.setOfCheckedId.add(id);
     } else {
+      this.tempUnCheckedId.add(id);
       this.setOfCheckedId.delete(id);
-      if (this.treatmentDetaisList.length == 0) {
-        return;
-      } else {
-        for (let i = 0; i < this.treatmentDetaisList.length; i++) {
-          if (this.treatmentDetaisList[i].medicineInInventoryDetailId == id) {
-            this.treatmentDetaisList.splice(i, 1);
-            console.log(this.treatmentDetaisList[i]);
-            console.log(this.treatmentDetaisList)
-            break;
-          }
-        }
-        this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
-      }
+
+      // if (this.treatmentDetaisList.length == 0) {
+      //   return;
+      // } else {
+      //   for (let i = 0; i < this.treatmentDetaisList.length; i++) {
+      //     if (this.treatmentDetaisList[i].medicineInInventoryDetailId == id) {
+      //       this.treatmentDetaisList.splice(i, 1);
+      //       console.log(this.treatmentDetaisList[i]);
+      //       console.log(this.treatmentDetaisList)
+      //       break;
+      //     }
+      //   }
+      //   this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
+      // }
     }
   }
 
