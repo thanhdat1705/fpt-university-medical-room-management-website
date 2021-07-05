@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequestWithGroupByAndInclude, ValueCompare } from 'src/app/shared/requests/search-request';
 import { TreatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
@@ -124,7 +124,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
   //   sortOrder: this.sortOrder
   // }
 
-  treatmentSearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchRecord, this.selectFields);
+  treatmentSearchRequest = new SearchRequestWithGroupByAndInclude(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchRecord, this.selectFields, null, null);
   departmentSearchRequest = new SearchRequest(1, 0, '', 0, null, 'id, name');
   // treatmentSearchRequestParam = "Limit=" + this.treatmentSearchRequest.limit + "&Page=" +  this.treatmentSearchRequest.page + "&SortField=" +
   // this.treatmentSearchRequest.sortField + "&SortOrder=" + this.treatmentSearchRequest.sortOrder + "&SelectFields="+ this.treatmentSearchRequest.selectFields

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { Department } from 'src/app/shared/models/department';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
-import { TreatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
+import { SearchRequest, SearchRequestWithGroupByAndInclude, ValueCompare } from 'src/app/shared/requests/search-request';
+import { TreatmentReportExcel, TreatmentReportSearchResponse, TreatmentSearchResponse } from 'src/app/shared/responses/treatment/treatment-search-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
 import { TreatmentInformationService } from 'src/app/shared/services/treatment-information/treatment-information.service';
@@ -11,9 +11,15 @@ import { treatmentSearchTable } from '../view-treatment-information-list/view-tr
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Patient } from 'src/app/shared/models/patient';
 
-export interface treatmentReportTableRowData{
+export interface treatmentReportTableRowData {
   date: string;
-  patient: Patient
+  treatmentReportInfo: TreatmentReportInfo[];
+}
+
+export interface TreatmentReportInfo {
+  patientName: string,
+  patientGender: string,
+  departmentName: string,
   diseaseStatusName: string;
   treatmentDirection: string;
   numberOfMedicine: string;
@@ -27,14 +33,11 @@ export interface treatmentReportTableRowData{
 })
 export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
 
-  treatmentList: TreatmentSearchResponse[];
-  treatmentTableData: treatmentReportTableRowData[] = [];
+  treatmentList: TreatmentReportSearchResponse[] = [];
+  treatmentTableData: treatmentReportTableRowData[];
   pageSize = 10;
   pageIndex = 1;
-  searchRecord: Map<string, ValueCompare> = new Map;
   searchRecordMap: Map<string, ValueCompare> = new Map;
-
-  searchRecordDepartment: Record<string, ValueCompare> = {};
   total = 0;
   loading = true;
   ranges = { 'Hôm nay': [new Date(), new Date()], 'Tháng này': [startOfMonth(new Date()), endOfMonth(new Date())] };
@@ -46,95 +49,34 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
   selectedSearchAttribute = '';
   searchTreatmentValue;
   selectedSearchRole = '';
-  paramsGetDetails = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
 
-  searchAttributelist = [
-    {
-      id: 'name',
-      name: 'Tên'
-    },
-    {
-      id: 'internalCode',
-      name: 'Mã số'
-    }
-  ]
-
-  treatmentStatus = [
-    {
-      id: 'true',
-      name: 'Đã xác nhận'
-    },
-    {
-      id: 'false',
-      name: 'Chưa xác nhận'
-    }
-  ]
-
-  searchRoleList = [
-    {
-      id: 'doctor',
-      name: 'Bác sĩ',
-    },
-    {
-      id: 'patient',
-      name: 'Người bệnh'
-    }
-  ]
-
-  searchByAttributeList = [
-    {
-      id: 'patient.name',
-      name: 'Tên người bệnh'
-    },
-    {
-      id: 'accountCreateBy.name',
-      name: 'Tên bác sỹ'
-    },
-    {
-      id: 'patient.name',
-      name: 'Tên người bệnh'
-    },
-  ]
-
-  gender = [
-    {
-      id: "M",
-      name: "Nam"
-    }, {
-      id: "F",
-      name: "Nữ"
-    }
-  ]
-
-  // searchDepartmentRequest: SearchRequest = {
-  //   limit: 100,
-  //   page: 0,
-  //   searchValue: null,
-  //   selectFields: "id, name",
-  //   sortField: "",
-  //   sortOrder: 0,
+  // convertList(): TreatmentReportExcel[] {
+  //   const newArray = this.treatmentTableData.map(({date,treatmentReportInfo,...keepAttrs }) => keepAttrs)
+  //   return newArray;
   // }
-
-
 
   sortField = "createAt";
   sortOrder = 1;
-  selectFields = "id,confirmSignature,createAt,accountCreateBy,isDelivered,patient,patient.department, TreatmentInformations, DiseaseStatusInTreatments";
-  // treatmentSearchRequest: SearchRequest = {
-  //   limit: this.pageSize,
-  //   page: this.pageIndex,
-  //   searchValue: this.searchRecord,
-  //   selectFields: this.selectFields,
-  //   sortField: this.sortField,
-  //   sortOrder: this.sortOrder
-  // }
+  includes = ["TreatmentInformations.TreatmentInformationDetails.Medicine.MedicineUnit", "DiseaseStatusInTreatments.DiseaseStatus"]
 
-  treatmentSearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchRecord, this.selectFields);
-  departmentSearchRequest = new SearchRequest(1, 0, '', 0, null, 'id, name');
-  // treatmentSearchRequestParam = "Limit=" + this.treatmentSearchRequest.limit + "&Page=" +  this.treatmentSearchRequest.page + "&SortField=" +
-  // this.treatmentSearchRequest.sortField + "&SortOrder=" + this.treatmentSearchRequest.sortOrder + "&SelectFields="+ this.treatmentSearchRequest.selectFields
+  selectFields = "id,confirmSignature,createAt,accountCreateBy,isDelivered,patient,patient.department, TreatmentInformations, DiseaseStatusInTreatments";
+
+
+  treatmentSearchRequest = new SearchRequestWithGroupByAndInclude(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchRecordMap, this.selectFields, this.includes, null);
+
 
   dateRangeSelected = false;
+
+  periodicMonthValueCompare: ValueCompare = {
+    value: '',
+    compare: '='
+  }
+
+  periodicYearValueCompare: ValueCompare = {
+    value: '',
+    compare: '='
+  }
+
 
   constructor(
     private summaryService: SummaryService,
@@ -142,51 +84,18 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     private treatmentInformationService: TreatmentInformationService
   ) { }
 
-  isDeliveryValueCompare: ValueCompare = {
-    value: '',
-    compare: '='
-  }
-  searchFromDateValueCompare: ValueCompare = {
-    value: '',
-    compare: '>='
-  }
-  searchToDateValueCompare: ValueCompare = {
-    value: '',
-    compare: '<='
-  }
-
-  genderValueCompare: ValueCompare = {
-    value: '',
-    compare: 'Equals'
-  }
-
-  departmentValueCompare: ValueCompare = {
-    value: '',
-    compare: 'Equals'
-  }
-
-  searchValueCompare: ValueCompare = {
-    value: '',
-    compare: 'Contains'
-  }
 
   ngOnInit(): void {
-    this.getAllDepartment();
 
-    // this.searchValueCompare.value = 'test';
-    // this.searchRecordMap.set('testKey', null);
-    // console.log(this.searchRecordMap.get('testKey'));
-    this.treatmentSearchRequest.searchValue = this.searchRecord;
+    this.treatmentSearchRequest.searchValue = this.searchRecordMap;
     this.searchTreatment();
-
-    console.log('map: ', this.treatmentSearchRequest.getParamsString());
   }
 
 
 
   searchTreatment() {
-    console.log('searchMap', this.searchRecord);
-    this.treatmentSearchRequest.searchValue = this.searchRecord
+    console.log('searchMap', this.searchRecordMap);
+    this.treatmentSearchRequest.searchValue = this.searchRecordMap
     this.summaryService.searchTreatment(this.treatmentSearchRequest).subscribe(
       (response) => {
         this.getData(response.data);
@@ -200,18 +109,6 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     );
   }
 
-  getAllDepartment() {
-    this.summaryService.searchDepartment(this.departmentSearchRequest).subscribe(
-      (response) => {
-        this.departmentList = response.data.data;
-        console.log(this.departmentList);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
-
   getData(response: ResponseSearch) {
     if (response.info.page > 1 && response.data.length == 0) {
       this.treatmentSearchRequest.page = this.treatmentSearchRequest.page - 1;
@@ -221,9 +118,9 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     }
     this.treatmentList = response.data;
     this.total = response.info.totalRecord;
+
     this.combinedTreatmentCreateDate();
     // this.treatmentTableData.treatmentInfor = this.treatmentList;
-    console.log(this.treatmentList);
   }
 
   getGender(acronyms: any) {
@@ -234,104 +131,79 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     }
   }
 
-  onDateRangeChange(result: Date[]): void {
-    if (result.length > 0) {
-      this.dateRangeSelected = true;
-      console.log('Từ : ', this.generalService.getYMD(result[0].toString()), ', tới: ', this.generalService.getYMD(result[1].toString()));
-      this.generalService.setValueCompare(this.generalService.getYMD(result[0].toString()) + ' ' + '00:00:00', this.searchFromDateValueCompare, 'createAt|from', this.searchRecord);
-      this.generalService.setValueCompare(this.generalService.getYMD(result[1].toString()) + ' ' + '23:59:00', this.searchToDateValueCompare, 'createAt|to', this.searchRecord);
-
-      this.searchTreatment();
-    }
 
 
-    // else {
-    //   this.dateRangeSelected = false;
-    //   this.searchRecord['CreateDate|from'] = null;
-    //   this.searchRecord['CreateDate|to'] = null;
-    //   this.searchTreatment();
-    // }
-  }
-
-  onSearchTreatmentStatus(){
-    this.generalService.setValueCompare(this.treatmentStatusFilterValue, this.isDeliveryValueCompare, 'isDelivered', this.searchRecord);
-    this.searchTreatment();
-  }
-
-  onSearchGender() {
-    this.generalService.setValueCompare(this.genderFilterValue, this.genderValueCompare, 'patient.gender', this.searchRecord);
-    this.searchTreatment();
-  }
-
-  onSearchDepartment() {
-    this.generalService.setValueCompare(this.departmentFilterValue, this.departmentValueCompare, 'patient.department.id', this.searchRecord);
-    this.searchTreatment();
-  }
 
   combinedTreatmentCreateDate() {
     this.treatmentTableData = [];
+    console.log('treatmentList: ', this.treatmentList);
 
     for (var i = 0; i < this.treatmentList.length; i++) {
-      var treatment: TreatmentSearchResponse[] = [];
-      treatment.push(JSON.parse(JSON.stringify(this.treatmentList[i])));
-
+      var treatmentReportInfoList: TreatmentReportInfo[] = [];
       var date;
+      var treatmentReportInfo: TreatmentReportInfo = {
+        diseaseStatusName: '',
+        departmentName: null,
+        isConfirmed: null,
+        numberOfMedicine: '',
+        patientGender: null,
+        patientName: null,
+        treatmentDirection: ''
+      };
+      treatmentReportInfo.patientName = this.treatmentList[i].patient.name;
+      treatmentReportInfo.departmentName = this.treatmentList[i].department.name;
+      treatmentReportInfo.patientGender = this.treatmentList[i].patient.gender;
 
+
+    
+      console.log('treatmentInformation: ', this.treatmentList[i].treatmentInformations.length);
+
+      for (let j = 0; j < this.treatmentList[i].treatmentInformations.length; j++) {
+        if (j == this.treatmentList[i].treatmentInformations.length - 1) {
+          treatmentReportInfo.treatmentDirection += this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails[0].medicine.name + " " +
+            this.treatmentList[i].treatmentInformations[j].indicationToDrink;
+
+        } else {
+          treatmentReportInfo.treatmentDirection += this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails[0].medicine.name + " " +
+            this.treatmentList[i].treatmentInformations[j].indicationToDrink + ", ";
+        }
+        if (j == this.treatmentList[i].treatmentInformations.length - 1) {
+          treatmentReportInfo.numberOfMedicine += this.treatmentList[i].treatmentInformations[j].quantity + " " +
+            this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails[0].medicine.medicineUnit.name
+
+        } else {
+          treatmentReportInfo.numberOfMedicine += this.treatmentList[i].treatmentInformations[j].quantity + " " +
+            this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails[0].medicine.medicineUnit.name + ", ";
+        }
+        // for (let k = 0; k < this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails.length; k++) {
+          
+          
+        // }
+
+      }
+
+      treatmentReportInfo.isConfirmed = this.treatmentList[i].isDelivered;
       date = this.generalService.getDate(this.treatmentList[i].createAt);
+      treatmentReportInfoList.push(treatmentReportInfo);
       var found = false;
       for (var j = 0; j < this.treatmentTableData.length; j++) {
+
         if (this.treatmentTableData[j].date === date) {
-          // this.treatmentTableData[j].diseaseStatusName += this.treatmentList[i].
-          // found = true;
+          this.treatmentTableData[j].treatmentReportInfo.push(treatmentReportInfo);
+          found = true;
+
         }
       }
       if (!found) {
-        // this.treatmentTableData.push({
-        //   date: date,
-        //   treatmentInfor: treatment,
-        // });
+        this.treatmentTableData.push({
+          date: date,
+          treatmentReportInfo: treatmentReportInfoList,
+        });
       }
     }
     console.log('grouped:', this.treatmentTableData);
   }
 
-  search() {
-    console.log("search:", this.searchTreatmentValue)
-    if (this.selectedSearchAttribute == 'name' && this.selectedSearchRole == 'doctor') {
-      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'accountCreateBy.displayName', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
-
-      this.searchTreatment();
-    } else if (this.selectedSearchAttribute == 'name' && this.selectedSearchRole == 'patient') {
-      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
-
-      this.searchTreatment();
-    } else if (this.selectedSearchAttribute == 'internalCode' && this.selectedSearchRole == 'doctor') {
-      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
-
-
-      this.searchTreatment();
-    } else if (this.selectedSearchAttribute == 'internalCode' && this.selectedSearchRole == 'patient') {
-      this.generalService.setValueCompare(this.searchTreatmentValue, this.searchValueCompare, 'patient.internalCode', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'patient.name', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.name', this.searchRecord);
-      this.generalService.setValueCompare(null, this.searchValueCompare, 'accountCreateBy.internalCode', this.searchRecord);
-
-
-
-      this.searchTreatment();
-    } else {
-      this.generalService.createErrorNotification("Hãy chọn đầy đủ mục tìm kiếm")
-    }
-  }
 
   onQueryParamsChange(params: NzTableQueryParams) {
     this.treatmentSearchRequest.page = params.pageIndex;
@@ -342,8 +214,73 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     this.searchTreatment();
   }
 
-  getTreatment(id: any) {
-    this.treatmentInformationService.getTreatment(id, this.paramsGetDetails);
+  onDateChange(result: Date): void {
+
+    var month = result.getUTCMonth() + 1; //months from 1-12
+    var year = result.getFullYear();
+    
+    this.generalService.setValueCompare(month, this.periodicMonthValueCompare, 'periodicInventory.month', this.searchRecordMap);
+    this.generalService.setValueCompare(year, this.periodicYearValueCompare, 'periodicInventory.year', this.searchRecordMap);
+    this.searchTreatment();
+    console.log('date',result)
+  }
+
+  exportExcel() {
+  //   this.treatmentTableData = this.convertList();
+  //   let sheet = this.generalService.getLocalMonthYear(this.requestDetail.updateDate);
+  //   let workbook = new Workbook();
+  //   let worksheet = workbook.addWorksheet(sheet);
+
+  //   worksheet.columns = this.headers;
+
+  //   var headerRow = worksheet.getRow(1);
+  //   headerRow.height = 65;
+  //   headerRow.eachCell((cell) => {
+  //     cell.fill = {
+  //       type: 'pattern',
+  //       pattern: 'solid',
+  //       fgColor: { argb: 'C5D9F1' },
+  //       bgColor: { argb: 'C5D9F1' }
+  //     }
+  //     cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } }
+  //     cell.font = { name: 'Times New Roman', size: 13, bold: true }
+  //     cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' }
+  //   });
+
+  //   this.treatmentTableData.forEach((b, index) => {
+  //     let row = worksheet.addRow({ stt: index + 1, name: b.medicineName, unit: b.medicineUnitName, quantity: b.quantity, note: b.note });
+  //     let stt = row.getCell('stt');
+  //     let unit = row.getCell('unit');
+  //     let quantity = row.getCell('quantity');
+  //     let color = 'FF99FF99';
+  //     stt.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+  //     unit.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+  //     quantity.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+
+  //     row.font = {
+  //       color: {
+  //         argb: '00000000',
+  //       },
+  //       name: 'Times New Roman', size: 13,
+  //       bold: false
+  //     }
+  //     row.eachCell(cell => {
+  //       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+  //     })
+  //     row.height = 30;
+  //   })
+
+  //   worksheet.columns.forEach((col, index) => {
+  //     let strLength = this.getLength(index);
+  //     col.width = strLength;
+  //   })
+
+
+  //   workbook.xlsx.writeBuffer().then((data) => {
+  //     let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  //     fs.saveAs(blob, 'ĐỀ-XUẤT-MUA-THUỐC.xlsx');
+  //   })
+
   }
 
 }

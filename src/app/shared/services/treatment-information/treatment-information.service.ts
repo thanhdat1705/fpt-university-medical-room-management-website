@@ -17,7 +17,7 @@ export class TreatmentInformationService {
   // Observable string streams
   treatmentInformationComponent = this.treatmentComponentSource.asObservable();
   treatmentDetailsComponent = this.treatmentDetailsComponentSource.asObservable()
-  treatmentInformationDetails: TreatmentInformationDetail[];
+  treatmentInformationDetails: TreatmentInformationDetail[] = [];
   treatmentDetails: TreatmentInformationDetail[];
   currentComponentServeName: string;
 

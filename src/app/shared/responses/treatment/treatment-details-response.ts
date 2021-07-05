@@ -4,7 +4,7 @@ import { Patient } from "../../models/patient";
 import { PeriodicInventory } from "../../models/periodic-inventory";
 import { TreatmentInformation } from "../../models/treatment-information";
 import { TreatmentInformationDetail } from "../../models/treatment-information-details";
-import { DiseaseStatusInTreatmentDetails } from "../desease-status/DiseaseStatusInTreatmentDetailsResponse";
+import { DiseaseStatusInTreatment } from "../desease-status/DiseaseStatusInTreatmentDetailsResponse";
 
 export interface TreatmentResponse {
     id: string,
@@ -17,5 +17,5 @@ export interface TreatmentResponse {
     accountCreateBy: Account,
     periodicInventory: PeriodicInventory,
     treatmentInformations: TreatmentInformation[],
-    diseaseStatusInTreatments: DiseaseStatusInTreatmentDetails[];
+    diseaseStatusInTreatments: DiseaseStatusInTreatment[];
 }

@@ -163,6 +163,9 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   getPatientDetails(value: any) {
     console.log(this.selectedInternalCode);
+    if(this.selectedInternalCode != null || this.selectedInternalCode != ''){
+      return;
+    }
     this.patientSearchRequest.selectFields = this.selectPatientDetails;
     this.generalService.setValueCompare(this.selectedInternalCode, this.patientInternalCodeSearchValueCompare, 'internalCode', this.searchRecord);
 
@@ -358,6 +361,9 @@ export class AddTreatmentInformationComponent implements OnInit {
           console.log(response);
           // this.generalService.closeWaitingPopupNz();
           this.generalService.messageNz('success', `Đơn điều trị đã được tạo`);
+          this.insertTreatmentInformationForm.reset();
+          this.treatmentInformation = [];
+          this.patientDeseaseStatusList = [];
           this.treatmentService.getTreatment(response.data.id, this.paramsGetDetails)
         }, (error) => {
           console.log(error);

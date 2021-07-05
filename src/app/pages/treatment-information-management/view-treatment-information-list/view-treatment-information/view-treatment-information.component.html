@@ -38,11 +38,11 @@
 
                             </nz-autocomplete>
                         </nz-input-group>
-                        <ng-template #suffixButton>
+                        <!-- <ng-template #suffixButton>
                             <a nz-button nzType="primary" [disabled]="!isEditing || inputInternalCode.value.length == 0"
                                 (click)="getPatientDetails(inputInternalCode.value)" nzSize="large" nzSearch>Truy
                                 xuất</a>
-                        </ng-template>
+                        </ng-template> -->
 
                         <ng-template #internalCodeTpl let-control>
                             <ng-container *ngIf="f.internalCode.hasError('required')">
@@ -172,7 +172,7 @@
                 </nz-form-item>
 
                 <br><br>
-                <nz-form-item *ngIf="!treatment.isdelivered">
+                <nz-form-item *ngIf="!treatment.isDelivered">
                     <nz-form-control>
                         <div class="d-flex flex-row justify-content-between">
                             <a (click)="enableUpdate()" *ngIf="!isEditing" class="font-size-16 button-a" nz-button
@@ -273,7 +273,7 @@
                 </div>
                 <nz-form-item>
                     <nz-form-control>
-                        <img class="signature-img" [src]="url">
+                        <img *ngIf="isEditing && url" class="signature-img" [src]="url">
                         <div *ngIf="isEditing">
                             <input *ngIf="!treatment.isdelivered" type="file" (change)="onFileSelected($event)" />
                         </div>

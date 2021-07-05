@@ -67,7 +67,7 @@ import {
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
-import { SearchRequest } from '../requests/search-request';
+import { SearchRequest, SearchRequestWithGroupByAndInclude } from '../requests/search-request';
 import { GetExportImportDateRequest } from '../requests/periodic-inventory/periodic-inventory-request';
 
 @Injectable({
@@ -358,7 +358,7 @@ export class SummaryService {
     return this.http.post<ResponseServer>(UrlServerAPIAddTreatmentInformation, data, { headers: this.headers });
   }
 
-  public searchTreatment(data: SearchRequest) {
+  public searchTreatment(data: SearchRequestWithGroupByAndInclude) {
     return this.http.get<ResponseServer>(UrlServerAPISearchTreatment + '?' + data.getParamsString());
   }
 

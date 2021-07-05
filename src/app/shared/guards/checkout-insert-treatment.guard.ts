@@ -44,7 +44,7 @@ export class CheckoutInsertTreatmentGuard implements CanDeactivate<AddTreatmentI
           console.log(this.confirmModal);
 
           return this.confirmModal.afterClose.toPromise();
- 
+          
         
       }
   
