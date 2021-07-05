@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { ErrorComponent } from './shared/components/error/error.component';
+import { CheckLoginGuard } from './shared/guards/check-login.guard';
 import { CommonLayout_ROUTES } from './shared/routes/common-layout.routes';
 import { FullLayout_ROUTES } from './shared/routes/full-layout.routes';
 
@@ -25,7 +26,8 @@ const routes: Routes = [
   {
     path: '',
     component: CommonLayoutComponent,
-    children: CommonLayout_ROUTES
+    children: CommonLayout_ROUTES,
+    canActivate: [CheckLoginGuard]
   },
   { path: 'patient-management', loadChildren: () => import('./pages/patient-management/patient-management.module').then(m => m.PatientManagementModule) },
   {

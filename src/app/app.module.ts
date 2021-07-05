@@ -17,6 +17,7 @@ import { AuthService } from './shared/services/auth-service/auth.service';
 import { GeneralHelperService } from './shared/services/general-helper.service';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { FirebaseService } from './shared/services/firebase.service';
+import { CheckLoginGuard } from './shared/guards/check-login.guard';
 
 
 registerLocaleData(en);
@@ -36,7 +37,7 @@ registerLocaleData(en);
     SharedModule.forRoot(),
     TemplateModule,
   ],
-  providers: [GeneralHelperService, FirebaseService, AuthService,
+  providers: [GeneralHelperService, FirebaseService, AuthService, CheckLoginGuard,
     { provide: NZ_I18N, useValue: en_US },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
