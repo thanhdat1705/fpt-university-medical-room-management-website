@@ -14,7 +14,7 @@
                     </nz-form-label>
                     <nz-form-control [nzErrorTip]="internalCodeTpl">
                         <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-                            <input nz-input placeholder="Nhập mã số" [(ngModel)]="selectedInternalCode"
+                            <input  (focusout)="getPatientDetails(inputInternalCode.value)" nz-input placeholder="Nhập mã số" [(ngModel)]="selectedInternalCode"
                                 (input)='patientIntetrnalCodeInputChange(inputInternalCode.value)'
                                 style="font-size: 16px;" [nzSize]="'large'" formControlName="internalCode"
                                 #inputInternalCode [nzAutocomplete]="autoInternalCode" />

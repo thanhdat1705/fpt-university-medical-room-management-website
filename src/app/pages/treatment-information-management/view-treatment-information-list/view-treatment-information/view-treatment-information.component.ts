@@ -27,8 +27,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
   id: string;
   params = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
-  paramMedicineInInventotryDetails = "importMedicine.expirationDate";
-  
+  paramMedicineInInventoryDetails = "importMedicine.expirationDate";
+
   afterUpdateParam = "id";
   treatment: TreatmentResponse;
   treatmentForm: FormGroup
@@ -170,7 +170,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
   ]
 
   getMedicineInInventoryDetails(id: string) {
-    
+
   }
 
   getGender(acronym: any) {
@@ -203,15 +203,15 @@ export class ViewTreatmentInformationComponent implements OnInit {
   //  data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name, 
   // generalService.getDate(item.expirationDate ))
 
-  setTreatmentServiceData() {
-    if(this.treatment.confirmSignature != null){
+  async setTreatmentServiceData() {
+    if (this.treatment.confirmSignature != null) {
       this.url = this.treatment.confirmSignature;
     }
     console.log(this.url);
     this.treatmentInformation = this.treatment.treatmentInformations;
-    if(this.treatment.patient.allergyDescription == null){
+    if (this.treatment.patient.allergyDescription == null) {
       this.patientAllegryDescription = ''
-    }else{
+    } else {
       this.patientAllegryDescription = this.treatment.patient.allergyDescription;
     }
     for (let i = 0; i < this.treatment.diseaseStatusInTreatments.length; i++) {
@@ -221,8 +221,6 @@ export class ViewTreatmentInformationComponent implements OnInit {
     console.log('this.treatmentInformation) from serer', this.treatmentInformation);
 
     for (let i = 0; i < this.treatmentInformation.length; i++) {
-
-
       for (let j = 0; j < this.treatmentInformation[i].treatmentInformationDetails.length; j++) {
         // treatmentDetailsObj.
         var treatmentDetailsObj = new TreatmentInformationDetail;
@@ -230,18 +228,13 @@ export class ViewTreatmentInformationComponent implements OnInit {
         treatmentDetailsObj.medicineId = this.treatmentInformation[i].medicineId;
         treatmentDetailsObj.medicineName = this.treatmentInformation[i].medicine.name;
         treatmentDetailsObj.unitName = this.treatmentInformation[i].medicine.medicineUnit.name
-        treatmentDetailsObj.medicineInInventoryDetailId = this.treatmentInformation[i].id;
+        treatmentDetailsObj.medicineInInventoryDetailId = this.treatmentInformation[i].treatmentInformationDetails[j].medicineInInventoryDetailId;
         treatmentDetailsObj.quantity = this.treatmentInformation[i].treatmentInformationDetails[j].quantity;
-        this.summaryService.getMedicineInInventoryDetails(this.treatmentInformation[i].treatmentInformationDetails[j].id, this.paramMedicineInInventotryDetails).subscribe(
-          (response) => {
-            treatmentDetailsObj.expiredDate = response.data;
-
-    
-          }, (error) => {
-            console.log(error);
-          }
-        );
-        treatmentDetailsObj.medicineInInventoryDetailId = this.treatmentInformation[i].treatmentInformationDetails[j].medicineInInventoryDetailId
+        this.getExpirationDate(treatmentDetailsObj.medicineInInventoryDetailId, treatmentDetailsObj.expiredDate);
+        // this.getExpirationDate(this.treatmentInformation[i].treatmentInformationDetails[j].medicineInInventoryDetailId, treatmentDetailsObj.expiredDate);
+        const response = await this.summaryService.getMedicineInInventoryDetails(this.treatmentInformation[i].treatmentInformationDetails[j].medicineInInventoryDetailId, this.paramMedicineInInventoryDetails).toPromise();
+        console.log(response.data);
+        treatmentDetailsObj.expiredDate = this.generalService.getDate(response.data.expirationDate)
         this.treatmentInformationDetails.push(treatmentDetailsObj);
         this.treatmentService.setTreatmentInformation(this.treatmentInformation);
 
@@ -249,18 +242,22 @@ export class ViewTreatmentInformationComponent implements OnInit {
     }
     console.log(this.treatmentInformationDetails);
     this.treatmentService.setTreatmentDetails(this.treatmentInformationDetails);
-    console.log('code',this.treatment.patient.internalCode);
+    console.log('code', this.treatment.patient.internalCode);
     this.selectedInternalCode = this.treatment.patient.internalCode
     this.treatmentForm.setValue({
       internalCode: this.treatment.patient.internalCode,
       name: this.treatment.patient.name,
       gender: this.treatment.patient.gender,
       departmentId: this.treatment.department.id,
-      allergyDescription:  this.patientAllegryDescription,
+      allergyDescription: this.patientAllegryDescription,
       diseaseStatusNames: []
     });
     this.sygnatureUrl = this.treatment.confirmSignature
     this.treatmentService.returnTreatmentDataComponent();
+  }
+
+  async getExpirationDate(medicineInInventoryDetailId: string, expirationDate: string) {
+
   }
 
   getTreatmentInformationFromServer(id: any, param: any) {
@@ -284,7 +281,6 @@ export class ViewTreatmentInformationComponent implements OnInit {
     this.searchDeseaseStatus();
 
   }
-
 
   sendRequest(): void {
     // const requestData = this.medicineInInventoryDetails.filter(data => this.setOfCheckedId.has(data.id));
@@ -405,13 +401,11 @@ export class ViewTreatmentInformationComponent implements OnInit {
   }
 
   disableUpdate() {
-    this.patientDeseaseStatusList = [];
-    this.treatmentInformation = [];
-    this.treatmentInformationDetails = []
-    this.treatmentService.setTreatmentInformation([]);
-    this.treatmentService.setTreatmentDetails([]);
-
-    this.setTreatmentServiceData();
+    // this.patientDeseaseStatusList = [];
+    // this.treatmentInformation = [];
+    // this.treatmentInformationDetails = []
+    // this.treatmentService.setTreatmentInformation([]);
+    // this.treatmentService.setTreatmentDetails([]);
     this.isEditing = false;
     for (var control in this.treatmentForm.controls) {
       this.treatmentForm.controls[control].disable();
@@ -532,8 +526,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
   onExpandChange(id: string, checked: boolean): void {
     if (checked) {
       this.expandSet.add(id);
-   } else {
-     this.expandSet.delete(id);
-      }
+    } else {
+      this.expandSet.delete(id);
     }
+  }
 }
