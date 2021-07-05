@@ -61,8 +61,8 @@
     </div> -->
 
     <nz-table class="medicine-table" #colSpanTable [nzData]="treatmentList" nzTableLayout="fixed" nzBordered
-        [nzFrontPagination]="false" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
-        [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)" [nzLoading]="loading">
+        [nzFrontPagination]="false" 
+      (nzQueryParams)="onQueryParamsChange($event)" [nzLoading]="loading">
         <thead>
             <tr>
                 <th nzWidth="10%" nzColumnKey="InternalCode">Ngày</th>

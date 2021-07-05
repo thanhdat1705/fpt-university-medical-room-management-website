@@ -5,7 +5,8 @@
         <div class="bg-white  m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
             <span class="text-teal-green font-size-18 font-weight-semibold">Thông tin người khám</span>
             <dividing-line></dividing-line>
-            <form nz-form nzLayout="horizontal" *ngIf="treatmentForm" [formGroup]="treatmentForm" class="form"
+            <form nz-form nzLayout="horizontal" 
+             *ngIf="treatmentForm" [formGroup]="treatmentForm" class="form"
                 (ngSubmit)="updateTreatment(treatmentForm.value)">
                 <nz-form-item>
                     <nz-form-label nzRequired class="text-label" [nzSpan]="7">
@@ -13,13 +14,15 @@
                     </nz-form-label>
                     <nz-form-control [nzErrorTip]="internalCodeTpl">
                         <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-                            <input nz-input placeholder="Nhập mã số" [(ngModel)]="selectedInternalCode"
+                            <input nz-input (focusout)="getPatientDetails(inputInternalCode.value)"
+                            placeholder="Nhập mã số" [(ngModel)]="selectedInternalCode"
                                 (input)='patientIntetrnalCodeInputChange(inputInternalCode.value)'
                                 style="font-size: 16px;" [nzSize]="'large'" formControlName="internalCode"
                                 #inputInternalCode [nzAutocomplete]="autoInternalCode" />
                             <nz-autocomplete #autoInternalCode>
                                 <ng-container *ngFor="let option of patientInternalCodeList">
-                                    <nz-auto-option *ngIf="!isLoading" class="global-search-item"
+                                    <nz-auto-option (click)='getPatientDetails(option.internalCode)'
+                                     *ngIf="!isLoading" class="global-search-item"
                                         [nzValue]="option.internalCode" [nzLabel]="option.internalCode">
                                         {{option.internalCode}}
                                     </nz-auto-option>
