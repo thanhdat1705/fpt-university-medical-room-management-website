@@ -7,8 +7,7 @@ import { NzNotificationPlacement, NzNotificationService } from 'ng-zorro-antd/no
 import { WaitingComponent } from '../components/waiting/waiting.component';
 import { DateTime } from '../models/date-time';
 import { ValueCompare } from '../requests/search-request';
-import { AuthService } from './auth-service/auth.service';
-
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +23,8 @@ export class GeneralHelperService {
         private router: Router,
         private notification: NzNotificationService,
         private modal: NzModalService,
-        private message: NzMessageService
+        private message: NzMessageService,
+        public firebaseAuth: AngularFireAuth,
     ) { }
 
     openWaitingPopupNz() {
@@ -38,6 +38,14 @@ export class GeneralHelperService {
             // nzMaskStyle	: {backgroundColor: 'blue'},
             // nzBodyStyle: {backgroundColor: 'transparent'},
         });
+    }
+
+    isMedicalStaff(): boolean {
+        let roleId = Number(localStorage.getItem("roleId"));
+        if (roleId == 1) {
+            return false;
+        }
+        return true;
     }
 
     messageNz(type: string, content: string) {
@@ -107,7 +115,7 @@ export class GeneralHelperService {
         let backgroundColorSuccess = "#f6ffed";
         let posion: NzNotificationPlacement = 'topRight';
         let border = 'thin solid #b7eb8f';
-        let duration = 3000;
+        let duration = 2000;
         this.notification.success(
             'Thành công',
             content,
@@ -124,13 +132,20 @@ export class GeneralHelperService {
         )
     }
 
+    sessionTimeout() {
+        return this.firebaseAuth.signOut().then(() => {
+            localStorage.clear();
+            this.router.navigate(['authentication/login']);
+        })
+    }
+
     createErrorNotification(error: any) {
         let backgroundColorError = "#fff2f0";
         let backgroundColorWarrning = "#fffbe6";
         let posion: NzNotificationPlacement = 'bottomRight';
         let borderError = 'thin solid #ffccc7';
         let borderWarning = 'thin solid #ffe58f';
-        let duration = 3000;
+        let duration = 2000;
         if (error.status != undefined) {
             if (error.status == 404) {
                 this.notification.error(
@@ -163,9 +178,7 @@ export class GeneralHelperService {
                         },
                     }
                 );
-                localStorage.removeItem('user');
-                localStorage.removeItem("token");
-                this.router.navigate(['authentication/login']);
+                this.sessionTimeout();
             }
             else if (error.status == 400) {
                 this.notification.error(

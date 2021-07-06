@@ -62,13 +62,22 @@ import {
   UrlServerAPIDetailRequestBuyMedicine,
   UrlServerAPISearchRequestBuyMedicine,
   UrlServerAPIUpdateRequestBuyMedicine,
-  UrlServerAPIExportImportInventoryPeriodic
+  UrlServerAPIExportImportInventoryPeriodic,
+  UrlServerAPIDeleteMedicineUnit,
+  UrlServerAPIUpdateMedicineUnit,
+  UrlServerAPIDeleteMedicineSubgroup,
+  UrlServerAPIUpdateMedicineSubgroup,
+  UrlServerAPIDeleteMedicineClassification,
+  UrlServerAPIUpdateMedicineClassification
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../requests/medicine-classification/search-request';
 import { SearchRequest } from '../requests/search-request';
 import { GetExportImportDateRequest } from '../requests/periodic-inventory/periodic-inventory-request';
+import { UpdateMedicineUnitRequest } from '../requests/medicine-unit/store-new-request';
+import { UpdateMedicineSubgroupRequest } from '../requests/medicine-subgroup/store-new-request';
+import { UpdateMedicineClassificationRequest } from '../requests/medicine-classification/store-new-request';
 
 @Injectable({
   providedIn: 'root'
@@ -123,7 +132,7 @@ export class SummaryService {
 
   public getAccountDetail(id: any, param: any): Observable<any> {
 
-    return this.http.get<ResponseServer>(UrlServerGetAccountDetail + "/" + id+ "?selectFields="+ param);
+    return this.http.get<ResponseServer>(UrlServerGetAccountDetail + "/" + id + "?selectFields=" + param);
   }
 
   public getProfile(): Observable<ResponseServer> {
@@ -215,6 +224,7 @@ export class SummaryService {
     return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicine + "/" + id);
   }
 
+  //Classification
   public getAllMedicineClassification(): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineClassification);
   }
@@ -224,20 +234,39 @@ export class SummaryService {
   public searchClassification(data: SearchRequest): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPISearchClassification + '?' + data.getParamsString());
   }
+  public deleteMedicineClassification(id: string): Observable<ResponseServer> {
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicineClassification + "/" + id);
+  }
+  public updateMedicineClassification(id: string, data: UpdateMedicineClassificationRequest): Observable<ResponseServer> {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateMedicineClassification + "/" + id, data);
+  }
 
+  //Subgroup
   public getAllMedicineSubgroup(): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineSubgroup);
   }
   public storeNewMedicineSubgroup(data: any): Observable<ResponseServer> {
     return this.http.post<ResponseServer>(UrlServerAPIStoreNewMedicineSubgroup, data);
   }
-
   public searchMedicineSubgroup(data: SearchRequest): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPISearchMedicineSubgroup + '?' + data.getParamsString());
   }
+  public deleteMedicineSubgroup(id: string): Observable<ResponseServer> {
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicineSubgroup + "/" + id);
+  }
+  public updateMedicineSubgroup(id: string, data: UpdateMedicineSubgroupRequest): Observable<ResponseServer> {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateMedicineSubgroup + "/" + id, data);
+  }
 
+  //Unit
   public getAllMedicineUnit(): Observable<ResponseServer> {
     return this.http.get<ResponseServer>(UrlServerAPIGetAllMedicineUnit);
+  }
+  public deleteMedicineUnit(id: string): Observable<ResponseServer> {
+    return this.http.delete<ResponseServer>(UrlServerAPIDeleteMedicineUnit + "/" + id);
+  }
+  public updateMedicineUnit(id: string, data: UpdateMedicineUnitRequest): Observable<ResponseServer> {
+    return this.http.put<ResponseServer>(UrlServerAPIUpdateMedicineUnit + "/" + id, data);
   }
 
   public storeNewMedicineUnit(data: any): Observable<ResponseServer> {
@@ -311,7 +340,7 @@ export class SummaryService {
   }
 
   public getMedicineInInventoryDetails(id: string, param: string) {
-    return this.http.get<ResponseServer>(UrlServerAPIGetMedicineInInventoryDetails + "/" + id+"?selectFields="+ param);
+    return this.http.get<ResponseServer>(UrlServerAPIGetMedicineInInventoryDetails + "/" + id + "?selectFields=" + param);
 
   }
   // Medicine in inventory

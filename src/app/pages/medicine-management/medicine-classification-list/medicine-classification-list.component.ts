@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchMedicineClassificationRequest } from 'src/app/shared/requests/medicine-classification/search-request';
+import { StoreNewMedicineClassificationRequest, UpdateMedicineClassificationRequest } from 'src/app/shared/requests/medicine-classification/store-new-request';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
@@ -16,6 +18,8 @@ import { MedicineService } from 'src/app/shared/services/medicine/medicine.servi
 export class MedicineClassificationListComponent implements OnInit {
 
   classList: MedicineClassificationResponse[] = [];
+  updateClass: UpdateMedicineClassificationRequest;
+  addNewClass: StoreNewMedicineClassificationRequest;
 
   pageInfo: PageInfo = { isFirstPage: true, isLastPage: false, numberOfPage: 1, info: null };
   page: number;
@@ -26,7 +30,10 @@ export class MedicineClassificationListComponent implements OnInit {
   sortOrderList = 0;
   sortFieldList = "Name";
 
+  updateValue: string;
+  classForm: FormGroup;
   tableLoading = false;
+  visible = false;
   searchValue = '';
 
   searchName: ValueCompare = {
@@ -36,14 +43,22 @@ export class MedicineClassificationListComponent implements OnInit {
   searchValueMap: Map<string, ValueCompare> = new Map;
   selectFields = "id, name, description";
   searchClassRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
-  
+
 
   constructor(
+    private fb: FormBuilder,
     private service: MedicineService,
-    private generalService: GeneralHelperService,) { }
+    public generalService: GeneralHelperService,) { }
 
   ngOnInit(): void {
+    this.classForm = this.fb.group({
+      class: ['', [
+        Validators.required,
+      ]],
+    })
   }
+
+  get form() { return this.classForm.controls; }
 
   resetTable() {
     this.searchClassRequest.limit = 5;
@@ -72,7 +87,10 @@ export class MedicineClassificationListComponent implements OnInit {
     this.pageLimit = this.pageInfo.info.limit;
     this.totalRecord = this.pageInfo.info.totalRecord;
     this.classList = responseUnit.data;
-    console.log('medicineList ', this.classList);
+    this.classList.forEach(unit => {
+      unit.edit = false;
+    })
+    console.log('class ', this.classList);
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
@@ -114,8 +132,91 @@ export class MedicineClassificationListComponent implements OnInit {
     }
   }
 
-  deleteClass() {
+  deleteClass(id: string) {
+    console.log(id);
+    this.tableLoading = true;
+    this.service.deleteMedicineClassification(id).toPromise().then(
+      (reponse) => {
+        this.tableLoading = false;
+        this.searchClass();
+        this.generalService.createSuccessNotification("Xóa loại thành công");
+      },
+      (error) => {
+        console.log('delete error');
+        this.tableLoading = false;
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
 
+  startEdit(index: number) {
+    this.updateValue = this.classList[index].name;
+    this.classList[index].edit = true;
+  }
+
+  saveEdit(id: string, index: number, updateValue: string) {
+    let name = updateValue;
+    this.updateClass = {
+      Name: name,
+      Description: "",
+    }
+    this.tableLoading = true;
+    this.service.updateMedicineClassification(id, this.updateClass).subscribe(
+      (response) => {
+        this.classList[index].name = response.data.name
+        this.classList[index].edit = false;
+        this.tableLoading = false;
+        console.log(this.classList);
+      },
+      (error) => {
+        console.log('update error');
+        this.classList[index].edit = false;
+        this.tableLoading = false;
+        this.generalService.createErrorNotification(error);
+      }
+    )
+
+
+  }
+
+  cancelEdit(index: number) {
+    this.updateValue = this.classList[index].name;
+    this.classList[index].edit = false;
+  }
+
+  addNewClassMethod() {
+    if (this.classForm.invalid) {
+      for (const i in this.classForm.controls) {
+        this.classForm.controls[i].markAsDirty();
+        this.classForm.controls[i].updateValueAndValidity();
+      }
+    } else {
+      let value = this.classForm.controls.class.value;
+      this.addNewClass = {
+        Name: value,
+        Description: "",
+      }
+      this.tableLoading = true;
+      this.service.storeNewMedicineClassification(this.addNewClass).subscribe(
+        (response) => {
+          this.visible = false;
+          this.generalService.messageNz('success', `Loại ${value.bold()} thêm thành công`);
+          this.searchClass()
+        },
+        (error) => {
+          console.log('add class error');
+          this.visible = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+      console.log(value);
+    }
+
+
+  }
+
+  popoverChange(value: any) {
+    this.classForm.reset();
   }
 
 }

@@ -60,7 +60,7 @@ export class PeriodicInventoryExport {
         let total;
         total = this.numberExportInPeriodic * this.importPrice;
         if (total != 0) {
-            return total;
+            return total.toLocaleString('vi');
         }
         return null;
     }

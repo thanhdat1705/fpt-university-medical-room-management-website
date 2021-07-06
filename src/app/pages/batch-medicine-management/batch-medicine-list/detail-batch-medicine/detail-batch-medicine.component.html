@@ -41,11 +41,12 @@
                         [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
                         <thead>
                             <tr>
-                                <th>Dược phẩm</th>
-                                <th nzAlign='center'>Số lượng</th>
-                                <th nzAlign='center'>Đơn vị</th>
-                                <th nzAlign='center'>Trạng thái</th>
-                                <th nzAlign='right'>Đơn giá</th>
+                                <th nzWidth="20%">Dược phẩm</th>
+                                <th nzWidth="10%" nzAlign='center'>Số lượng</th>
+                                <th nzWidth="15%" nzAlign='center'>Đơn vị</th>
+                                <th nzWidth="20%" nzAlign='center'>Trạng thái</th>
+                                <th nzWidth="20%" nzAlign='right'>Hạn sử dụng</th>
+                                <th nzWidth="15%" nzAlign='right'>Đơn giá</th>
                                 <!-- <th nzWidth="80px" nzRight></th> -->
                             </tr>
                         </thead>
@@ -61,8 +62,10 @@
                                 <td nzAlign='center'>{{ data.quantity }}</td>
                                 <td nzAlign='center'>{{data.medicineUnit.name}}</td>
                                 <td nzAlign='center'>
-                                    <nz-badge [nzStatus]="getStatus(data.statusId)" >{{ data.statusImportMedicine }}</nz-badge>
+                                    <nz-badge [nzStatus]="getStatus(data.statusId)">{{ data.statusImportMedicine }}
+                                    </nz-badge>
                                 </td>
+                                <td nzAlign='right'>{{ getCreateTime(data.expirationDate) }}</td>
                                 <td nzAlign='right'>{{ data.price.toLocaleString('vi') }} ₫</td>
 
                                 <!-- <td nzRight>

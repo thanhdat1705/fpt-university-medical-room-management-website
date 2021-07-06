@@ -9,6 +9,8 @@ import { SummaryService } from '../summary.service';
 })
 export class RequestBuyMedicineService {
 
+  loading = false;
+
   constructor(
     private service: SummaryService,
     private router: Router,
@@ -46,9 +48,11 @@ export class RequestBuyMedicineService {
   getDetailBuyMedicineToUpdateScreen(id: string, selectFields: string) {
     this.service.getDetailBuyMedicine(id, selectFields).subscribe(
       (response) => {
+        this.loading = false;
         this.router.navigate(['request-buy-medicine/buy-medicine-list/update-request', id]);
       },
       (error) => {
+        this.loading = false;
         this.router.navigate(['request-buy-medicine/buy-medicine-list']);
         console.log('get detail error');
         this.generalService.createErrorNotification(error);

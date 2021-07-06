@@ -59,16 +59,18 @@
                     </li>
                 </ul>
             </li>
-            <li nz-submenu nzTitle="Quản lý tài khoản" nzIcon="dollar">
-                <ul>
-                    <li nz-menu-item>
-                        <a [routerLink]="'account/insert-account'">Tạo tài khoản mới</a>
-                    </li>
-                    <li nz-menu-item>
-                        <a [routerLink]="'account/account-list'">Danh sách tài khoản hiện có</a>
-                    </li>
-                </ul>
-            </li>
+            <ng-container *ngIf="!generalService.isMedicalStaff()">
+                <li nz-submenu nzTitle="Quản lý tài khoản" nzIcon="dollar">
+                    <ul>
+                        <li nz-menu-item>
+                            <a [routerLink]="'account/insert-account'">Tạo tài khoản mới</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a [routerLink]="'account/account-list'">Danh sách tài khoản hiện có</a>
+                        </li>
+                    </ul>
+                </li>
+            </ng-container>
             <li nz-menu-item>
                 <a [routerLink]="'request-buy-medicine/buy-medicine-list'">
                     <i nz-icon nzType="form"></i>
@@ -87,8 +89,7 @@
         <app-header></app-header>
         <nz-content class="main-content">
             <div class="main-content-header">
-                <h4 class="page-title" *ngIf="breadcrumbs$ | async; let breadcrumbs">{{(breadcrumbs[breadcrumbs.length -
-                    1].label)}}</h4>
+
                 <nz-breadcrumb nzSeparator=">">
                     <!-- <i class="m-r-5 text-gray" nz-icon nzType="home"></i> -->
                     <nz-breadcrumb-item *ngFor="let breadcrumb of breadcrumbs$ | async">
@@ -97,6 +98,8 @@
                         </a>
                     </nz-breadcrumb-item>
                 </nz-breadcrumb>
+                <h4 class="page-title" *ngIf="breadcrumbs$ | async; let breadcrumbs">{{(breadcrumbs[breadcrumbs.length -
+                    1].label)}}</h4>
             </div>
             <div>
                 <router-outlet></router-outlet>

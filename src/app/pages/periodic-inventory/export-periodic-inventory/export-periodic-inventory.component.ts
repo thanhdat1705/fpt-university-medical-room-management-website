@@ -21,7 +21,7 @@ export class ExportPeriodicInventoryComponent implements OnInit {
   dateSelected = false;
   exportLoading = false;
   dateSelect: Date;
-
+  data = [];
   exportImportPeriodicInventoryShows: PeriodicInventoryExportShow[] = [];
   periodicInventoryResponse: PeriodicInventoryResponse;
   //dateExprotRquest: GetExportImportDateRequest
@@ -39,9 +39,9 @@ export class ExportPeriodicInventoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.onDateChange(new Date);
-    this.getAllMedicineUnit();
+    this.dateSelect = new Date;
+    this.onDateChange(this.dateSelect);
+    // this.getAllMedicineUnit();
   }
 
   getAllMedicineUnit() {
@@ -57,8 +57,13 @@ export class ExportPeriodicInventoryComponent implements OnInit {
     )
   }
 
+  getCreateTime(time: string) {
+    return this.generalService.getDate(time);
+  }
+
   onDateChange(result: Date): void {
-    this.dateSelect = result;
+
+    console.log(result);
     if (result != null) {
       this.dateSelected = true;
       this.exportLoading = true;
@@ -67,7 +72,13 @@ export class ExportPeriodicInventoryComponent implements OnInit {
         (response) => {
           this.exportLoading = false;
           this.periodicInventoryResponse = response.data;
-          //console.log(this.periodicInventoryResponse);
+          this.data = ["1"];
+          if (this.periodicInventoryResponse.beginInventories.length < 1 &&
+            this.periodicInventoryResponse.exportMedicines.length < 1 &&
+            this.periodicInventoryResponse.importBatches.length < 1 &&
+            this.periodicInventoryResponse.medicineInInventories.length < 1) {
+            this.data = [];
+          }
 
           //EndInventory
           this.periodicInventoryResponse.medicineInInventories.forEach(medicineInInventory => {
@@ -101,7 +112,7 @@ export class ExportPeriodicInventoryComponent implements OnInit {
           });
           console.log(this.exportImportPeriodicInventoryShows);
 
-          //ExportPeriodic, ImportPeriodic 
+          //ExportPeriodic, ImportPeriodic, BeginInventory
           this.exportImportPeriodicInventoryShows.forEach(exportImportPeriodicInventoryShow => {
             exportImportPeriodicInventoryShow.periodicInventoryExports.forEach(periodicInventoryExport => {
               //ExportPeriodic
@@ -110,7 +121,6 @@ export class ExportPeriodicInventoryComponent implements OnInit {
               if (intdexExport != -1) {
                 periodicInventoryExport.numberExportInPeriodic =
                   this.periodicInventoryResponse.exportMedicines[intdexExport].quantity;
-                //console.log(this.periodicInventoryResponse.exportMedicines.findIndex(b => b.medicineInInventoryDetailId == periodicInventoryExport.medicineInInventoryDetailId));
               }
               //ImportPeriodic
               this.periodicInventoryResponse.importBatches.forEach((importBatch) => {
@@ -118,18 +128,36 @@ export class ExportPeriodicInventoryComponent implements OnInit {
                 if (importMedicineIndex != -1) {
                   periodicInventoryExport.numberImportInPeriodic = importBatch.importMedicines[importMedicineIndex].quantity;
                   periodicInventoryExport.importPrice = importBatch.importMedicines[importMedicineIndex].price;
+                  periodicInventoryExport.expirationnDate = this.getCreateTime(importBatch.importMedicines[importMedicineIndex].expirationDate);
                 }
               });
 
+
+              let beginInventoryIndex = this.periodicInventoryResponse.beginInventories
+                .findIndex(i => i.medicineInInventoryDetailId == periodicInventoryExport.medicineInInventoryDetailId);
+              console.log(beginInventoryIndex);
+              if (beginInventoryIndex != -1) {
+                periodicInventoryExport.numberAtBeginPeriodic = this.periodicInventoryResponse.beginInventories[beginInventoryIndex].quantity;
+                periodicInventoryExport.importPrice = this.periodicInventoryResponse.beginInventories[beginInventoryIndex].lastMedicineInInventoryDetail.importMedicine.price;
+                periodicInventoryExport.expirationnDate = this.getCreateTime(this.periodicInventoryResponse.beginInventories[beginInventoryIndex].lastMedicineInInventoryDetail.importMedicine.expirationDate);
+              }
 
             });
           });
 
 
 
+        },
+        (error) => {
+          this.data = [];
+          this.exportLoading = false;
+          console.log('search error');
+          this.generalService.createErrorNotification(error);
         }
       );
     } else {
+      this.exportImportPeriodicInventoryShows = [];
+      this.data = [];
       this.dateSelected = false;
     }
   }

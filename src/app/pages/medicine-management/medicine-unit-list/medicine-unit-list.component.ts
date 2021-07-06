@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { MedicineUnit } from 'src/app/shared/models/medicine';
 import { PageInfo } from 'src/app/shared/models/page-info';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { SearchMedicineUnitRequest } from 'src/app/shared/requests/medicine-unit/search-request';
+import { StoreNewMedicineUnitRequest, UpdateMedicineUnitRequest } from 'src/app/shared/requests/medicine-unit/store-new-request';
 import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineUnitResponse } from 'src/app/shared/responses/medicine-unit/medicine-unit-response';
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
@@ -15,8 +18,10 @@ import { MedicineService } from 'src/app/shared/services/medicine/medicine.servi
 })
 export class MedicineUnitListComponent implements OnInit {
 
+  // unitList: MedicineUnit[] = [];
   unitList: MedicineUnitResponse[] = [];
-
+  updateUnit: UpdateMedicineUnitRequest;
+  addNewUnit: StoreNewMedicineUnitRequest;
   pageInfo: PageInfo = { isFirstPage: true, isLastPage: false, numberOfPage: 1, info: null };
   page: number;
   pageLimit: number;
@@ -26,7 +31,12 @@ export class MedicineUnitListComponent implements OnInit {
   sortOrderList = 0;
   sortFieldList = "Name";
 
+  updateValue: string;
+  unitForm: FormGroup;
+  isUpdate = false;
   tableLoading = false;
+  visible = false;
+
   searchValue = '';
 
   searchName: ValueCompare = {
@@ -45,13 +55,19 @@ export class MedicineUnitListComponent implements OnInit {
   //   selectFields: this.searchFields,
   // }
   constructor(
+    private fb: FormBuilder,
     private service: MedicineService,
-    private generalService: GeneralHelperService,) { }
+    public generalService: GeneralHelperService,) { }
 
   ngOnInit(): void {
+    this.unitForm = this.fb.group({
+      unit: ['', [
+        Validators.required,
+      ]],
+    })
   }
 
-
+  get form() { return this.unitForm.controls; }
   // getAllUnit() {
   //   this.tableLoading = true;
   //   this.service.getAllMedicineUnit().subscribe(
@@ -81,6 +97,7 @@ export class MedicineUnitListComponent implements OnInit {
       (error) => {
         this.tableLoading = false;
         console.log('get all unit error');
+        this.generalService.createErrorNotification(error);
       }
     )
   }
@@ -91,7 +108,10 @@ export class MedicineUnitListComponent implements OnInit {
     this.pageLimit = this.pageInfo.info.limit;
     this.totalRecord = this.pageInfo.info.totalRecord;
     this.unitList = responseUnit.data;
-    console.log('medicineList ', this.unitList);
+    this.unitList.forEach(unit => {
+      unit.edit = false;
+    })
+    console.log('unit ', this.unitList);
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
@@ -104,7 +124,7 @@ export class MedicineUnitListComponent implements OnInit {
     const sortOrder = (currentSort && currentSort.value) || null;
     sortOrder === 'ascend' || null ? this.sortOrderList = 0 : this.sortOrderList = 1;
     sortField == null ? this.sortFieldList = 'Name' : this.sortFieldList = sortField;
-    
+
     this.searchUnitRequest.limit = pageSize;
     this.searchUnitRequest.page = pageIndex;
     this.searchUnitRequest.sortOrder = this.sortOrderList;
@@ -131,8 +151,92 @@ export class MedicineUnitListComponent implements OnInit {
     }
   }
 
-  deleteUnit() {
+  deleteUnit(id: string) {
+    this.tableLoading = true;
+    this.service.deleteMedicineUnit(id).toPromise().then(
+      (reponse) => {
+        this.tableLoading = false;
+        this.searchUnit();
+        this.generalService.createSuccessNotification("Xóa đơn vị thành công");
+      },
+      (error) => {
+        console.log('delete error');
+        this.tableLoading = false;
+        this.generalService.createErrorNotification(error);
+      }
+    )
+  }
+
+  startEdit(index: number) {
+    this.updateValue = this.unitList[index].name;
+    this.unitList[index].edit = true;
+  }
+
+  saveEdit(id: string, index: number, updateValue: string) {
+    let name = updateValue;
+    let acronymUnit = name.substring(0, 1);
+    this.updateUnit = {
+      name: name,
+      acronymUnit: acronymUnit,
+    }
+    this.tableLoading = true;
+    this.service.updateMedicineUnit(id, this.updateUnit).subscribe(
+      (response) => {
+        this.unitList[index].name = response.data.name
+        this.unitList[index].acronymUnit = response.data.acronymUnit;
+        this.unitList[index].edit = false;
+        this.tableLoading = false;
+        console.log(this.unitList);
+      },
+      (error) => {
+        console.log('update error');
+        this.unitList[index].edit = false;
+        this.tableLoading = false;
+        this.generalService.createErrorNotification(error);
+      }
+    )
+
 
   }
 
+  cancelEdit(index: number) {
+    this.updateValue = this.unitList[index].name;
+    this.unitList[index].edit = false;
+  }
+
+  addNewUnitMethod() {
+    if (this.unitForm.invalid) {
+      for (const i in this.unitForm.controls) {
+        this.unitForm.controls[i].markAsDirty();
+        this.unitForm.controls[i].updateValueAndValidity();
+      }
+    } else {
+      let value = this.unitForm.controls.unit.value;
+      this.addNewUnit = {
+        Name: value,
+        AcronymUnit: value.substring(0, 1),
+      }
+      this.tableLoading = true;
+      this.service.storeNewMedicineUnit(this.addNewUnit).subscribe(
+        (response) => {
+          this.visible = false;
+          this.generalService.messageNz('success', `Đơn vị ${value.bold()} thêm thành công`);
+          this.searchUnit()
+        },
+        (error) => {
+          console.log('add unit error');
+          this.visible = false;
+          this.generalService.createErrorNotification(error);
+        }
+      )
+      console.log(value);
+    }
+
+
+  }
+
+  popoverChange(value: any) {
+    this.unitForm.reset();
+  }
+  
 }

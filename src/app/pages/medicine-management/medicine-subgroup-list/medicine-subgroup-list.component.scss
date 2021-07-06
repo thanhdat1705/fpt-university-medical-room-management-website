@@ -2,6 +2,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: auto;
-    width: 100px;
+}
+
+.a-button {
+    color: #1890ff;
+    text-decoration: none;
+    &:hover {
+        color: #0056b3 !important;
+    }
 }

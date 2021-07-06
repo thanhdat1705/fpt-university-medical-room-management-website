@@ -1,22 +1,22 @@
 import { Subgroup } from "./subgroup";
 import { Unit } from "./unit";
 
-export interface ImportMedicineInventory {
-    id: string,
+export interface ImportMedicine {
+    id: string;
     quantity: number;
     price: number;
     importBatchId: string;
-
+    expirationDate: string;
 }
 export interface Medicine {
-    id: string,
+    id: string;
     name: string;
     medicineSubgroup: Subgroup;
     medicineUnit: Unit;
 
 }
 export interface MedicineInInventoryDetail {
-    id: string,
+    id: string;
     importMedicineId: string;
     quantity: number;
     medicineId: string;
@@ -24,34 +24,44 @@ export interface MedicineInInventoryDetail {
 
 }
 
+export interface LastMedicineInInventoryDetail {
+    importMedicineId: string;
+    quantity: number;
+    medicineId: string;
+    periodicInventoryId: string;
+    importMedicine: ImportMedicine;
+}
+
 
 //=========================================
 export interface BeginInventory {
-    id: string,
-    medicineInInventoryDetailId: string,
-    quantity: number,
+    id: string;
+    medicineInInventoryDetailId: string;
+    lastMedicineInInventoryDetailId: string;
+    quantity: number;
     periodicInventoryId: string;
     medicineId: string;
+    lastMedicineInInventoryDetail: LastMedicineInInventoryDetail;
 }
 
 export interface ExportMedicineInventory {
-    id: string,
-    medicineInInventoryDetailId: string,
+    id: string;
+    medicineInInventoryDetailId: string;
     periodicInventoryId: string;
     medicineId: string;
-    quantity: number,
+    quantity: number;
 
 }
 
 export interface ImportBatchInventory {
-    id: string,
+    id: string;
     periodicInventoryId: string;
     medicineId: string;
-    importMedicines: ImportMedicineInventory[];
+    importMedicines: ImportMedicine[];
 }
 
 export interface MedicineInInventory {
-    medicineId: string,
+    medicineId: string;
     periodicInventoryId: string;
     quantity: string;
     medicine: Medicine;
