@@ -469,7 +469,6 @@ export class UpdateMedicineRequestComponent implements OnInit {
           this.generalService.createErrorNotification(error);
         }
       )
-      this.sendRequestToBuyMedicineLoading = false;
     }, 1000)
   }
 }

@@ -11,3 +11,11 @@ export interface MedicineDetail {
     name: string;
     medicineUnit: MedicineUnitResponse;
 }
+
+
+export interface MedicineUnit {
+    id: string;
+    name: string;
+    acronymUnit: string;
+    edit: boolean;
+}

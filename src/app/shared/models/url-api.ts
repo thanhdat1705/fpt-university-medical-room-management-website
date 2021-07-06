@@ -1,5 +1,5 @@
 export const UrlServer = "https://fhcs-backend.online";
-// export const UrlServer = "http://10.1.64.81:9000";
+// export const UrlServer = "http://10.1.64.66:9000";
 // export const UrlServer = "http://192.168.43.45:9000";
 // export const UrlServer = "http://10.1.64.71:9000";
 
@@ -36,19 +36,28 @@ export const UrlServerAPIDeleteEliminatedMedicineDetails = UrlServer +"/api/v1.0
 export const UrlServerAPIAddDepartment = UrlServer +"/api/v1.0/Departments";
 export const UrlServerAPISearchDepartment = UrlServer +"/api/v1.0/Departments/Searching";
 
-
+//Unit
 export const UrlServerAPISearchMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits/Searching';
 export const UrlServerAPIStoreNewMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits';
 export const UrlServerAPIGetAllMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits';
+export const UrlServerAPIDeleteMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits';
+export const UrlServerAPIUpdateMedicineUnit = UrlServer + '/api/v1.0/MedicineUnits';
 
+//Subgroup
 export const UrlServerAPIGetAllMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups';
 export const UrlServerAPIStoreNewMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups';
 export const UrlServerAPISearchMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups/Searching';
+export const UrlServerAPIDeleteMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups';
+export const UrlServerAPIUpdateMedicineSubgroup = UrlServer + '/api/v1.0/MedicineSubgroups';
 
+//Classification
 export const UrlServerAPIGetAllMedicineClassification = UrlServer + '/api/v1.0/MedicineClassifications';
 export const UrlServerAPISearchClassification = UrlServer + '/api/v1.0/MedicineClassifications/Searching';
 export const UrlServerAPIStoreNewMedicineClassification = UrlServer + '/api/v1.0/MedicineClassifications';
+export const UrlServerAPIDeleteMedicineClassification = UrlServer + '/api/v1.0/MedicineClassifications';
+export const UrlServerAPIUpdateMedicineClassification = UrlServer + '/api/v1.0/MedicineClassifications';
 
+//Medicine
 export const UrlServerAPIStoreNewMedicine = UrlServer + '/api/v1.0/Medicines';
 export const UrlServerAPISearchMedicine = UrlServer + '/api/v1.0/Medicines/Searching';
 export const UrlServerAPIDeleteMedicine = UrlServer + '/api/v1.0/Medicines';

@@ -27,6 +27,7 @@ export class CommonLayoutComponent {
         private router: Router,
         private sidenav: SideNavService,
         private activatedRoute: ActivatedRoute,
+        public generalService: GeneralHelperService,
     ) {
         this.getScreenSize();
     }

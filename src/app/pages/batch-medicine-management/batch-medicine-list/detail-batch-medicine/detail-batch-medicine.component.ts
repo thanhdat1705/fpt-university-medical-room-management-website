@@ -79,7 +79,10 @@ export class DetailBatchMedicineComponent implements OnInit {
     this.getDetailImportBatch();
 
   }
-
+  getCreateTime(time: string) {
+    return this.generalService.getDate(time);
+  }
+  
   getStatus(id: number): string {
     let status = '';
     if (id == 1) {

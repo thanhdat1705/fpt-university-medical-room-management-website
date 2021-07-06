@@ -26,7 +26,6 @@ export class MedicineListComponent implements OnInit {
   classSelected = false;
   subgroupSelected = false;
 
-  detailLoading = false;
   tableLoading = false;
 
   medicineList: MedicineResponse[] = [];
@@ -35,7 +34,7 @@ export class MedicineListComponent implements OnInit {
   pageLimit: number;
 
   totalRecord!: number;
-  pageSize = 10;
+  pageSize = 5;
   pageIndex = 1;
   sortOrderList = 1;
   sortFieldList = "CreateDate";
@@ -99,7 +98,7 @@ export class MedicineListComponent implements OnInit {
   /*---------------------------------------------------------------------------------------------------------------------*/
   constructor(private fb: FormBuilder,
     public service: MedicineService,
-    private generalService: GeneralHelperService,
+    public generalService: GeneralHelperService,
     private router: Router,
   ) { }
 

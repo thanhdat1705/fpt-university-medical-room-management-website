@@ -32,6 +32,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProfile();
+    console.log(this.role);
   }
 
 

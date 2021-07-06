@@ -86,17 +86,18 @@ export class AuthService {
 
     SignOut() {
         return this.firebaseAuth.signOut().then(() => {
-            localStorage.removeItem('user');
-            localStorage.removeItem("token");
+            // localStorage.removeItem('user');
+            // localStorage.removeItem("token");
+            localStorage.clear();
             this.router.navigate(['authentication/login']);
         })
     }
 
-    setUserInforToLocalStorage(avatarUrl: string, name: string, role: string) {
+    setUserInforToLocalStorage(avatarUrl: string, name: string, role: string, roleId: number) {
         localStorage.setItem('photoUrl', avatarUrl);
         localStorage.setItem('displayName', name);
         localStorage.setItem('roleName', role);
-
+        localStorage.setItem('roleId', roleId.toString());
         console.log(avatarUrl, name, role)
     }
 
@@ -132,7 +133,7 @@ export class AuthService {
                 this.account = response.data;
                 console.log('accountServer: ', this.account);
                 localStorage.setItem("accountId", response.data.accountId);
-                this.setUserInforToLocalStorage(this.account.photoUrl, this.account.displayName, this.account.role.roleName)
+                this.setUserInforToLocalStorage(this.account.photoUrl, this.account.displayName, this.account.role.roleName, this.account.role.id)
                 localStorage.setItem("token", response.data.token);
                 this.summaryService.setTokenHeader();
                 console.log(localStorage.getItem("token"));
@@ -159,7 +160,7 @@ export class AuthService {
 
 
                 localStorage.setItem("token", response.data.token);
-                this.setUserInforToLocalStorage(this.account.photoUrl, this.account.displayName, this.account.role.roleName)
+                this.setUserInforToLocalStorage(this.account.photoUrl, this.account.displayName, this.account.role.roleName, this.account.role.id)
 
                 this.summaryService.setTokenHeader();
                 this.generalService.closeWaitingPopupNz();
@@ -167,6 +168,7 @@ export class AuthService {
                 this.router.navigate(['/account/profile']);
             },
             (error) => {
+                this.generalService.closeWaitingPopupNz();
                 console.log(error);
                 this.generalService.createErrorNotification(error);
             }

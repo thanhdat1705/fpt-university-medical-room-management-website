@@ -56,7 +56,7 @@ export class DetailBuyMedicineComponent implements OnInit {
     private fb: FormBuilder,
     private medicineService: MedicineService,
     private generalService: GeneralHelperService,
-    private service: RequestBuyMedicineService,
+    public service: RequestBuyMedicineService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private modal: NzModalService,
@@ -133,6 +133,7 @@ export class DetailBuyMedicineComponent implements OnInit {
   }
 
   goToUpdateScreen() {
+    this.service.loading = true;
     this.service.getDetailBuyMedicineToUpdateScreen(this.requestId, this.selectFieldsRequest);
 
   }
@@ -164,7 +165,7 @@ export class DetailBuyMedicineComponent implements OnInit {
     { header: 'Tên thuốc', key: 'name', width: 9 },
     { header: 'Đơn vị tính', key: 'unit', width: 11 },
     { header: 'Số lượng', key: 'quantity', width: 8 },
-    { header: 'Ghi chú', key: 'note', width: 7},
+    { header: 'Ghi chú', key: 'note', width: 7 },
   ]
 
   colLenght = [];
@@ -273,7 +274,7 @@ export class DetailBuyMedicineComponent implements OnInit {
     //   worksheet.addRow({ stt: index + 1, name: e.medicineName, unit: e.medicineUnitName, quantity: e.quantity, note: e.note }, "n");
     // });
 
-    // this.getLength(1);
+    // this.getLength(4);
 
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -301,7 +302,7 @@ export class DetailBuyMedicineComponent implements OnInit {
         tmp = d.quantity.toString().length;
       }
       if (index == 4) {
-        tmp = d.note.toString().length;
+        tmp = d.note.toString().length + 5;
       }
       if (tmp > length) {
         length = tmp;

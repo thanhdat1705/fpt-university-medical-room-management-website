@@ -22,52 +22,55 @@
         <nz-divider class="divider-border"></nz-divider>
     </div>
     <div>
-        <nz-spin [nzSpinning]="requestMedicineLoading" nzTip="Đang xử lý...">
-            <div class="d-flex flex-column justify-content-between" style="min-height: 150px;" #TABLE>
-                <nz-table  id="requestTable" [nzData]="buyMedicineListDisplay" [nzFrontPagination]="false"
-                    [nzScroll]="{ y: '250px' }">
-                    <thead>
-                        <tr>
-                            <th nzWidth="10%" nzAlign='left'>Stt</th>
-                            <th nzWidth="20%" nzAlign='center'>Dược phẩm</th>
-                            <th nzWidth="20%" nzAlign='center'>Đơn vị</th>
-                            <th nzWidth="20%" nzAlign='center'>Số lượng</th>
-                            <th nzWidth="30%" nzAlign='center'>Ghi chú</th>
-                            <!-- <th nzAlign='right'>Hành động</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
+        <nz-spin [nzSpinning]="service.loading" nzTip="Đang lấy dữ liệu...">
+            <nz-spin [nzSpinning]="requestMedicineLoading" nzTip="Đang xử lý...">
+                <div class="d-flex flex-column justify-content-between" style="min-height: 150px;" #TABLE>
+                    <nz-table id="requestTable" [nzData]="buyMedicineListDisplay" [nzFrontPagination]="false"
+                        [nzScroll]="{ y: '250px' }">
+                        <thead>
+                            <tr>
+                                <th nzWidth="10%" nzAlign='left'>Stt</th>
+                                <th nzWidth="20%" nzAlign='center'>Dược phẩm</th>
+                                <th nzWidth="20%" nzAlign='center'>Đơn vị</th>
+                                <th nzWidth="20%" nzAlign='center'>Số lượng</th>
+                                <th nzWidth="30%" nzAlign='center'>Ghi chú</th>
+                                <!-- <th nzAlign='right'>Hành động</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                        <tr *ngFor="let data of buyMedicineListDisplay; index as i">
-                            <td nzAlign='left'>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
-                            <td nzAlign='center'>
-                                <span class="text-link font-weight-semibold">
-                                    {{ data.medicineName }}
-                                </span>
-                            </td>
-                            <td nzAlign='center'>{{ data.medicineUnitName }}</td>
-                            <td nzAlign='center'>{{ data.quantity }}</td>
-                            <td nzAlign='center'>{{ data.note }}</td>
-                            <!-- <td nzAlign='right'>
+                            <tr *ngFor="let data of buyMedicineListDisplay; index as i">
+                                <td nzAlign='left'>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+                                <td nzAlign='center'>
+                                    <span class="text-link font-weight-semibold">
+                                        {{ data.medicineName }}
+                                    </span>
+                                </td>
+                                <td nzAlign='center'>{{ data.medicineUnitName }}</td>
+                                <td nzAlign='center'>{{ data.quantity }}</td>
+                                <td nzAlign='center'>{{ data.note }}</td>
+                                <!-- <td nzAlign='right'>
                                 <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
                                     (nzOnConfirm)="deleteRequestDetail()">
                                     <i nz-icon nzType="delete" nzTheme="outline"></i>
                                 </a>
                             </td> -->
-                        </tr>
+                            </tr>
 
-                    </tbody>
-                </nz-table>
-                <div class="d-flex flex-row align-items-center justify-content-between" style="width: 280px;">
-                    <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large" (click)="exportExcel()">
-                        <span>Xuất ra Excel</span>
-                    </button>
-                    <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
-                        (click)="goToUpdateScreen()">
-                        <span>Cập nhật đơn</span>
-                    </button>
+                        </tbody>
+                    </nz-table>
+                    <div class="d-flex flex-row align-items-center justify-content-between" style="width: 280px;">
+                        <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
+                            (click)="exportExcel()">
+                            <span>Xuất ra Excel</span>
+                        </button>
+                        <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
+                            (click)="goToUpdateScreen()">
+                            <span>Cập nhật đơn</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </nz-spin>
         </nz-spin>
     </div>
 

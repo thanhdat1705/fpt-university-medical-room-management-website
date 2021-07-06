@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { SummaryService } from '../summary.service';
 import { SearchMedicineUnitRequest } from '../../requests/medicine-unit/search-request';
-import { StoreNewMedicineUnitRequest } from '../../requests/medicine-unit/store-new-request';
-import { StoreNewMedicineSubgroupRequest } from '../../requests/medicine-subgroup/store-new-request';
+import { StoreNewMedicineUnitRequest, UpdateMedicineUnitRequest } from '../../requests/medicine-unit/store-new-request';
+import { StoreNewMedicineSubgroupRequest, UpdateMedicineSubgroupRequest } from '../../requests/medicine-subgroup/store-new-request';
 import { StoreNewMedicineRequest } from '../../requests/medicine/store-new';
 import { SearchMedicineSubgroupRequest } from '../../requests/medicine-subgroup/search-request';
 import { SearchMedicineClassificationRequest } from '../../requests/medicine-classification/search-request';
@@ -11,7 +11,7 @@ import { SearchRequest } from '../../requests/search-request';
 import { Router } from '@angular/router';
 import { GeneralHelperService } from '../general-helper.service';
 import { MedicineResponse } from '../../responses/medicine/medicine';
-import { StoreNewMedicineClassificationRequest } from '../../requests/medicine-classification/store-new-request';
+import { StoreNewMedicineClassificationRequest, UpdateMedicineClassificationRequest } from '../../requests/medicine-classification/store-new-request';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +75,12 @@ export class MedicineService {
   getAllMedicineUnit() {
     return this.service.getAllMedicineUnit();
   }
+  updateMedicineUnit(id: string, data: UpdateMedicineUnitRequest) {
+    return this.service.updateMedicineUnit(id, data);
+  }
+  deleteMedicineUnit(id: string) {
+    return this.service.deleteMedicineUnit(id);
+  }
   // deleteMedicineUnit() {
   //   return this.service.deleteMedicineUnit();
   // }
@@ -83,13 +89,19 @@ export class MedicineService {
   storeNewMedicineSubgroup(storeRequest: StoreNewMedicineSubgroupRequest) {
     return this.service.storeNewMedicineSubgroup(storeRequest);
   }
-
   getAllMedicineSubgroup() {
     return this.service.getAllMedicineSubgroup();
   }
   searchMedicineSubgroup(searchRequest: SearchRequest) {
     return this.service.searchMedicineSubgroup(searchRequest);
   }
+  updateMedicineSubgroup(id: string, data: UpdateMedicineSubgroupRequest) {
+    return this.service.updateMedicineSubgroup(id, data);
+  }
+  deleteMedicineSubgroup(id: string) {
+    return this.service.deleteMedicineSubgroup(id);
+  }
+
   /*------------------------------------------------------------------------------------------*/
   /*-------------------------------------- Classification ------------------------------------*/
   getAllMedicineClassification() {
@@ -101,5 +113,12 @@ export class MedicineService {
   storeNewMedicineClassification(storeRequest: StoreNewMedicineClassificationRequest) {
     return this.service.storeNewMedicineClassification(storeRequest);
   }
+  updateMedicineClassification(id: string, data: UpdateMedicineClassificationRequest) {
+    return this.service.updateMedicineClassification(id, data);
+  }
+  deleteMedicineClassification(id: string) {
+    return this.service.deleteMedicineClassification(id);
+  }
+  
   /*------------------------------------------------------------------------------------------*/
 }

@@ -1,41 +1,77 @@
-<div class="example-input">
-    <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
-        <input placeholder="Nhập tên nhóm" nz-input [(ngModel)]="searchValue"
-            (input)="inputChange(inputValue.value)" #inputValue />
-    </nz-input-group>
-    <ng-template #searchIconButton>
-        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton button-match-logo"
-            (click)="searchSubgroup()">
-            <i nz-icon nzType="search" nzTheme="outline"></i>
+<div class="inner-content">
+    <div class="d-flex flex-row align-items-center justify-content-between m-b-10">
+        <nz-input-group nzSearch nzSize="large" [nzSuffix]="searchIconButton">
+            <input placeholder="Nhập tên nhóm" nz-input [(ngModel)]="searchValue"
+                (input)="inputChange(inputValue.value)" #inputValue />
+        </nz-input-group>
+        <ng-template #searchIconButton>
+            <i nz-icon nzType="search"></i>
+        </ng-template>
+        <button *ngIf="generalService.isMedicalStaff()" nz-button nzType="primary" nzBlock nzSize="large" style="width: 160px;" nz-popover
+            nzPopoverTitle="Thêm nhóm mới" [nzPopoverContent]="subgroupPopover" nzPopoverTrigger="click"
+            nzPopoverPlacement="bottomRight" [(nzPopoverVisible)]="visible"
+            (nzPopoverVisibleChange)="popoverChange($event)" class="m-l-10">
+            Thêm nhóm
         </button>
-    </ng-template>
-</div>
+        <ng-template #subgroupPopover>
+            <form nz-form [formGroup]="subgroupForm">
+                <nz-form-item style="margin-bottom: 0px;">
+                    <nz-form-control [nzErrorTip]="addUnitErrorTpl">
+                        <nz-input-group nzSearch [nzAddOnAfter]="addButton">
+                            <input type="text" nz-input placeholder="Nhập tên nhóm" formControlName="subgroup" />
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <ng-template #addUnitErrorTpl let-control>
+                    <ng-container *ngIf="form.subgroup.hasError('required')">
+                        <span>Không được để trống</span>
+                    </ng-container>
+                </ng-template>
+                <ng-template #addButton>
+                    <button nz-button nzType="primary" nzSearch class="iconButton" style="height: 31px;"
+                        (click)="addNewSubgroupMethod()">
+                        <i nz-icon nzType="plus" nzTheme="outline"></i>
+                    </button>
+                </ng-template>
+            </form>
+        </ng-template>
+    </div>
 
-<br>
-
-<nz-table #nzTable [nzFrontPagination]="false" [nzData]="subgroupList" [nzLoading]="tableLoading"
-    [nzScroll]="{ x: '1000px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
-    (nzQueryParams)="onQueryParamsChange($event)">
-    <thead>
-        <tr>
-            <th nzWidth="20%">No.</th>
-            <th nzColumnKey="name" [nzSortFn]="true">Tên nhóm thuốc</th>
-            <th nzWidth="10%"></th>
-            <th nzWidth="10%"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let data of subgroupList; index as i">
-            <td>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
-            <td>{{ data.name }}</td>
-            <td><a style="color: #1890ff">Detail</a></td>
-            <td> <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
-                    (nzOnConfirm)="deleteSubgroup()">Delete</a></td>
-        </tr>
-    </tbody>
-</nz-table>
-<div style="margin: 10px; width: 200px;">
-    <button nz-button nzType="primary" nzBlock nzSize="large" class="button-match-logo">
-        <span>Thêm mới nhóm</span>
-    </button>
+    <br>
+    <nz-spin [nzSpinning]="tableLoading" nzTip="Đang xử lý...">
+        <nz-table #nzTable [nzFrontPagination]="false" [nzData]="subgroupList" [nzTotal]="totalRecord"
+            [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
+            <thead>
+                <tr>
+                    <th nzWidth="25%">No.</th>
+                    <th nzWidth="45%" nzColumnKey="name" [nzSortFn]="true">Tên nhóm thuốc</th>
+                    <th *ngIf="generalService.isMedicalStaff()" nzWidth="15%" nzAlign='right'></th>
+                    <th *ngIf="generalService.isMedicalStaff()" nzWidth="15%" nzAlign='right'></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of subgroupList; index as i">
+                    <td>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+                    <ng-container *ngIf="!subgroupList[i].edit; else editTemplate">
+                        <td>{{ data.name }}</td>
+                        <td *ngIf="generalService.isMedicalStaff()" nzAlign='right'><a (click)="startEdit(i)" class="a-button">Chỉnh sửa</a></td>
+                    </ng-container>
+                    <ng-template #editTemplate>
+                        <td><input type="text" nz-input [(ngModel)]="updateValue" #inputValue /></td>
+                        <td nzAlign='right'>
+                            <a (click)="saveEdit(data.id, i, inputValue.value)" class="m-r-10 a-button">Lưu</a>
+                            <a nz-popconfirm nzPopconfirmTitle="Bạn chắc chứ?" (nzOnConfirm)="cancelEdit(i)"
+                                class="a-button">Hủy</a>
+                        </td>
+                    </ng-template>
+                    <td *ngIf="generalService.isMedicalStaff()" nzAlign='right'>
+                        <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #b31b1b;"
+                            (nzOnConfirm)="deleteSubgroup(data.id)">
+                            <i nz-icon nzType="delete" nzTheme="outline"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-spin>
 </div>
