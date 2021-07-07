@@ -109,7 +109,7 @@ export const CommonLayout_ROUTES: Routes = [
     },
 
     {
-        path: 'patient-manangement',
+        path: 'patient-management',
         data: {
             title: 'Quản lí người đến khám'
         },

@@ -130,7 +130,7 @@ export class ViewPatientListComponent implements OnInit {
   }
 
   onSearchGender() {
-    this.generalService.setValueCompare(this.genderFilterValue, this.genderValueCompare, 'patient.gender', this.searchValueMap);
+    this.generalService.setValueCompare(this.genderFilterValue, this.genderValueCompare, 'gender', this.searchValueMap);
     this.searchPatient();
   }
   getAllDepartment() {
@@ -146,7 +146,7 @@ export class ViewPatientListComponent implements OnInit {
     );
   }
   onSearchDepartment() {
-    this.generalService.setValueCompare(this.departmentFilterValue, this.departmentValueCompare, 'patient.department.id', this.searchValueMap);
+    this.generalService.setValueCompare(this.departmentFilterValue, this.departmentValueCompare, 'department.id', this.searchValueMap);
     this.searchPatient();
   }
 
