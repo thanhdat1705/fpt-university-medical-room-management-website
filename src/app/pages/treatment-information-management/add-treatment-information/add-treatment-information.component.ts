@@ -197,7 +197,6 @@ export class AddTreatmentInformationComponent implements OnInit {
             allergyDescription: '',
             diseaseStatusNames: this.diseaseStatusList
           });
-          this.generalService.createErrorNotification('Mã số không có sẵn trông hệ thống');
         }
       },
       (error) => {
@@ -367,7 +366,7 @@ export class AddTreatmentInformationComponent implements OnInit {
           this.insertTreatmentInformationForm.reset();
           this.treatmentInformation = [];
           this.patientDeseaseStatusList = [];
-          this.treatmentService.getTreatment(response.data.id, this.paramsGetDetails)
+          // this.treatmentService.getTreatment(response.data.id, this.paramsGetDetails)
         }, (error) => {
           console.log(error);
           this.generalService.closeWaitingPopupNz();
