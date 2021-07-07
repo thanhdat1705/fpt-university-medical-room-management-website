@@ -13,7 +13,15 @@ const routes: Routes = [
 
   },
   {
+    //admin
     path: 'patient-treatment-list/:id',
+    component: ViewPatientTreatmentListComponent,
+    data: {
+      title: "Lịch sử khám"
+    },
+
+  },{
+    path: 'patient-treatment-history',
     component: ViewPatientTreatmentListComponent,
     data: {
       title: "Lịch sử khám"

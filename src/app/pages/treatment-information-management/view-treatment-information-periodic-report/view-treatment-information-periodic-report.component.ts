@@ -11,6 +11,7 @@ import { treatmentSearchTable } from '../view-treatment-information-list/view-tr
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Patient } from 'src/app/shared/models/patient';
 import { Column, Workbook } from 'exceljs';
+import * as fs from 'file-saver';
 
 export interface TreatmentReportTableRowData {
   date: string;
@@ -51,7 +52,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
   searchTreatmentValue;
   selectedSearchRole = '';
 
- 
+
 
   sortField = "createAt";
   sortOrder = 1;
@@ -232,21 +233,97 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     console.log('date', result)
   }
   headers: Partial<Column>[] = [
-    { header: 'Ngày', key: 'date', width: 3 },
-    { header: 'STT', key: 'stt', width: 9 },
-    { header: 'Tên nhân viên', key: 'name', width: 11 },
-    { header: 'Giới tính', key: 'gender', width: 8 },
-    { header: 'Bộ phận', key: 'department', width: 7 },
-    { header: 'Tình trạng bệnh', key: 'diseaseStatusName', width: 7 },
-    { header: 'Hướng điều trị', key: 'treatmentDirection', width: 7 },
-    { header: 'Số thuốc cấp', key: 'numberOfMedicine', width: 7 },
-    { header: 'Kí nhận', key: 'isDeilivered', width: 7 },
+    { header: 'Ngày', key: 'date', width: 20 },
+    { header: 'STT', key: 'stt', width: 10 },
+    { header: 'Tên nhân viên', key: 'name', width: 20 },
+    { header: 'Giới tính', key: 'gender', width: 12 },
+    { header: 'Bộ phận', key: 'department', width: 15 },
+    { header: 'Tình trạng bệnh', key: 'diseaseStatusName', width: 25 },
+    { header: 'Hướng điều trị', key: 'treatmentDirection', width: 35 },
+    { header: 'Số thuốc cấp', key: 'numberOfMedicine', width: 15 },
+    { header: 'Kí nhận', key: 'isDeilivered', width: 15 },
 
   ]
 
+  getIsDelivered(status: boolean) {
+    if (status) {
+      return "Đã xác nhận"
+    } else {
+      return "Chưa xác nhận"
+
+    }
+  }
+
+
 
   exportExcel() {
- 
+    console.log("EXPORTTTTTTTTTTTTTTT")
+    let sheet = 'NV 07-2021';
+    let workbook = new Workbook();
+    let worksheet = workbook.addWorksheet(sheet);
+    worksheet.columns = this.headers;
+    let mergeRowNumber = 2;
+    let contentRow = 2;
+    var headerRow = worksheet.getRow(1);
+    headerRow.height = 65;
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'C5D9F1' },
+        bgColor: { argb: 'C5D9F1' }
+      }
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } }
+      cell.font = { name: 'Times New Roman', size: 13, bold: true }
+      cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' }
+    });
+
+    for (let i = 0; i < this.treatmentTableData.length; i++) {
+      worksheet.mergeCells('A' + mergeRowNumber + ':A' + (mergeRowNumber + this.treatmentTableData[i].treatmentReportInfo.length - 1));
+      worksheet.getCell('A' + contentRow).value = this.treatmentTableData[i].date;
+      worksheet.getCell('A' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+
+      for (let j = 0; j < this.treatmentTableData[i].treatmentReportInfo.length; j++) {
+        let num = j
+        worksheet.getCell('B' + contentRow).value = ++num;
+        worksheet.getCell('B' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('C' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].patientName;
+        worksheet.getCell('C' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('D' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].patientGender
+        worksheet.getCell('D' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('E' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].departmentName;
+        worksheet.getCell('E' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('F' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].diseaseStatusName;
+        worksheet.getCell('F' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'left' };
+        // if (this.treatmentTableData[i].treatmentReportInfo[j].diseaseStatusName.length / 28 > 1) {
+        //   worksheet.getRow(contentRow).height = 15 * (Math.ceil(this.treatmentTableData[i].treatmentReportInfo[j].diseaseStatusName.length / 28) + 1);
+        //   worksheet.getRow(contentRow).alignment = { vertical: 'top', horizontal: 'left' };
+        // }
+        worksheet.getCell('G' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].treatmentDirection;
+        worksheet.getCell('G' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'left' };
+
+        // if (this.treatmentTableData[i].treatmentReportInfo[j].treatmentDirection.length / 38 > 1) {
+        //   worksheet.getRow(contentRow).height = 15 * (Math.ceil(this.treatmentTableData[i].treatmentReportInfo[j].treatmentDirection.length / 38) + 1);
+        //   worksheet.getRow(contentRow).alignment = { vertical: 'top', horizontal: 'left' };
+
+        // }
+        worksheet.getCell('H' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].numberOfMedicine;
+        worksheet.getCell('H' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+
+        worksheet.getCell('I' + contentRow).value = this.getIsDelivered(this.treatmentTableData[i].treatmentReportInfo[j].isConfirmed);
+        worksheet.getCell('I' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        
+        contentRow++;
+
+      }
+      mergeRowNumber += this.treatmentTableData[i].treatmentReportInfo.length;
+    }
+    workbook.xlsx.writeBuffer().then((data) => {
+      let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      fs.saveAs(blob, 'Cấp phát thuốc.xlsx');
+
+    })
+
   }
 
 
