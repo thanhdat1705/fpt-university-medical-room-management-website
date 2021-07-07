@@ -86,18 +86,9 @@ export class AuthService {
 
     SignOut() {
         return this.firebaseAuth.signOut().then(() => {
-<<<<<<< HEAD
             // localStorage.removeItem('user');
             // localStorage.removeItem("token");
             localStorage.clear();
-=======
-            localStorage.removeItem('photoUrl');
-            localStorage.removeItem('displayName');
-            localStorage.removeItem('roleName');
-            localStorage.removeItem("token");
-            localStorage.removeItem("accountId");
-
->>>>>>> tan
             this.router.navigate(['authentication/login']);
         })
     }
@@ -106,17 +97,14 @@ export class AuthService {
         localStorage.setItem('photoUrl', avatarUrl);
         localStorage.setItem('displayName', name);
         localStorage.setItem('roleName', role);
-<<<<<<< HEAD
         localStorage.setItem('roleId', roleId.toString());
         console.log(avatarUrl, name, role)
-=======
 
         console.log(avatarUrl, name, role);
         this.headerService.setName(name);
         this.headerService.setAvatar(avatarUrl);
         this.headerService.setRole(role);
 
->>>>>>> tan
     }
 
     login() {
