@@ -63,8 +63,9 @@
                         <th nzAlign='left' nzWidth="10%">No.</th>
                         <th nzAlign='center' nzWidth="25%" nzColumnKey="CreateDate" [nzSortFn]="true">Ngày tạo</th>
                         <th nzAlign='center' nzWidth="25%" nzColumnKey="UpdateDate" [nzSortFn]="true">Cập nhật</th>
-                        <th nzAlign='center' nzWidth="25%" nzColumnKey="NumberOfSpecificMedicine" [nzSortFn]="true">Số dược phẩm yêu cầu</th>
-                        <th nzAlign='right' nzWidth="15%" ></th>
+                        <th nzAlign='center' nzWidth="25%" nzColumnKey="NumberOfSpecificMedicine" [nzSortFn]="true">Số
+                            dược phẩm yêu cầu</th>
+                        <th nzAlign='right' nzWidth="15%"></th>
                         <!-- <th nzWidth="70px"></th> -->
                     </tr>
                 </thead>
@@ -89,12 +90,16 @@
                     </tr>
                 </tbody>
             </nz-table>
-            <div style="margin: 10px; width: 220px;">
-                <button nz-button nzType="primary" nzBlock nzSize="large"
-                [routerLink]="'/request-buy-medicine/buy-medicine-list/create-request'">
-                    <span>Tạo đơn mua dược phẩm</span>
-                </button>
-            </div>
+            <ng-container *ngIf="generalService.isMedicalStaff()">
+                <div style="margin: 10px; width: 220px;">
+                    <button nz-button nzType="primary" nzBlock nzSize="large"
+                        [routerLink]="'/request-buy-medicine/buy-medicine-list/create-request'">
+                        <span>Tạo đơn mua dược phẩm</span>
+                    </button>
+                </div>
+            </ng-container>
+
+
         </div>
     </nz-spin>
     <!-- <button nz-button [routerLink]="'/request-buy-medicine/create-request'">create request</button> -->

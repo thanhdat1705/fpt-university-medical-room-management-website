@@ -78,7 +78,7 @@ export class MedicineListComponent implements OnInit {
   selectFields = "id, name, medicineUnit, medicineClassification, medicineSubgroup, createDate";
   searchMedicineRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
   // SearchRequest = {
-  //   limit: 10,
+  //   limit: 5,
   //   page: 1,
   //   sortField: "Createdate",
   //   sortOrder: 0,
@@ -105,13 +105,13 @@ export class MedicineListComponent implements OnInit {
 
   ngOnInit(): void {
     // this.searchMedicine();
-    
+
     this.getAllUnit();
     this.getAllSubgroup();
     this.getAllClass();
 
 
-  
+
   }
 
 
@@ -122,7 +122,7 @@ export class MedicineListComponent implements OnInit {
   }
 
   resetTable() {
-    this.searchMedicineRequest.limit = 10;
+    this.searchMedicineRequest.limit = 5;
     this.searchMedicineRequest.page = 1;
     this.searchMedicineRequest.sortOrder = 1;
     this.searchMedicineRequest.sortField = "CreateDate";
@@ -183,13 +183,12 @@ export class MedicineListComponent implements OnInit {
   /*------------------------------------------------ Change ------------------------------------------------------------*/
   inputChange(value: any) {
     this.generalService.setValueCompare(this.searchValue, this.searchName, 'Name', this.searchValueMap);
-      this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
-      this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
-      this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
+    this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
     this.resetTable();
     if (value !== '') {
-      this.pageSize = 10;
-      this.searchMedicineRequest.limit = 10;
+      this.searchMedicineRequest.limit = 5;
       this.searchMedicineRequest.page = 1;
       this.searchMedicine();
 
@@ -198,9 +197,8 @@ export class MedicineListComponent implements OnInit {
       this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
       this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
       this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
-      this.searchMedicineRequest.limit = 10;
+      this.searchMedicineRequest.limit = 5;
       this.searchMedicineRequest.page = 1;
-      this.pageSize = 10;
       this.searchMedicine();
     }
   }
@@ -214,13 +212,11 @@ export class MedicineListComponent implements OnInit {
       this.resetTable();
       this.unitSelected = true;
       this.generalService.setValueCompare(value, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
-      this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
       this.unitSelected = false;
       this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
-      this.searchMedicineRequest.limit = 10;
 
     }
     this.searchMedicine();
@@ -231,13 +227,11 @@ export class MedicineListComponent implements OnInit {
       this.resetTable();
       this.classSelected = true;
       this.generalService.setValueCompare(value, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
-      this.searchMedicineRequest.limit = 10;
 
     } else {
       this.resetTable();
       this.classSelected = false;
       this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
-      this.searchMedicineRequest.limit = 10;
 
     }
     this.searchMedicine();
@@ -248,13 +242,13 @@ export class MedicineListComponent implements OnInit {
       this.resetTable();
       this.subgroupSelected = true;
       this.generalService.setValueCompare(value, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
-      this.searchMedicineRequest.limit = 10;
+      this.searchMedicineRequest.limit = 5;
 
     } else {
       this.resetTable();
       this.subgroupSelected = false;
       this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
-      this.searchMedicineRequest.limit = 10;
+      this.searchMedicineRequest.limit = 5;
 
     }
     this.searchMedicine();
@@ -339,6 +333,20 @@ export class MedicineListComponent implements OnInit {
 
   }
 
-
+  setToDefaultFilter() {
+      this.resetTable();
+      this.unitSelected = false;
+      this.classSelected = false;
+      this.subgroupSelected = false;
+      this.unitValue = null;
+      this.classValue = null;
+      this.subgroupValue = null;
+      this.medicineList = [];
+      this.generalService.setValueCompare(null, this.searchUnit, 'MedicineUnitId', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchClass, 'MedicineClassificationId', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchSubgroup, 'MedicineSubgroupId', this.searchValueMap);
+      this.searchMedicine();
+    
+  }
 
 }

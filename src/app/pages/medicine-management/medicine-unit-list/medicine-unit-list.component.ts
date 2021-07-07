@@ -172,8 +172,8 @@ export class MedicineUnitListComponent implements OnInit {
     this.unitList[index].edit = true;
   }
 
-  saveEdit(id: string, index: number, updateValue: string) {
-    let name = updateValue;
+  saveEdit(id: string, index: number, inputValue: string) {
+    let name = inputValue;
     let acronymUnit = name.substring(0, 1);
     this.updateUnit = {
       name: name,

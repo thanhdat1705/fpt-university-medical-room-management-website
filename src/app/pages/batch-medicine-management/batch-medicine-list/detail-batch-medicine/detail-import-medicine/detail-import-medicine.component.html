@@ -120,7 +120,7 @@
             </nz-form-control>
         </nz-form-item>
         <br>
-        <nz-form-item>
+        <nz-form-item *ngIf="generalService.isMedicalStaff()">
             <nz-form-control>
                 <div *ngIf="isDisable" class="d-flex flex-row justify-content-start flex-wrap">
                     <a class="font-size-16 button-a" nz-button nzType="primary" (click)="edit()">

@@ -31,6 +31,8 @@ export class BatchMedicineListComponent implements OnInit {
   quantity: string;
   dateRange: Date[];
   date: Date;
+  minPrice: number;
+  maxPrice: number;
   importBatchList: ImportBatchResponse[] = [];
 
   ranges = { 'Hôm nay': [new Date(), new Date()], 'Tháng này': [startOfMonth(new Date()), endOfMonth(new Date())] };
@@ -89,7 +91,7 @@ export class BatchMedicineListComponent implements OnInit {
   constructor(
     private router: Router,
     private service: ImportBatchService,
-    private generalService: GeneralHelperService,
+    public generalService: GeneralHelperService,
     private i18n: NzI18nService,
     private currency: CurrencyPipe,
     private elRef: ElementRef,
@@ -179,6 +181,7 @@ export class BatchMedicineListComponent implements OnInit {
 
 
   onDateRangeChange(result: Date[]): void {
+    console.log("date range change");
     if (result.length > 0) {
       this.dateRangeSelected = true;
       console.log('Từ : ', this.generalService.getYMD(result[0].toString()), ', tới: ', this.generalService.getYMD(result[1].toString()));
@@ -194,6 +197,7 @@ export class BatchMedicineListComponent implements OnInit {
   }
 
   onDateChange(result: Date): void {
+    console.log("date change");
     if (result != null) {
       this.dateSelected = true;
       this.generalService.setValueCompare((result.getMonth() + 1).toString(), this.searchMonth, 'PeriodicInventory.Month', this.searchValueMap);
@@ -209,6 +213,7 @@ export class BatchMedicineListComponent implements OnInit {
 
 
   minPriceChange(price: string) {
+    console.log("min price change", price);
     if (price == null) {
       this.priceSelected = false;
       console.log('null');
@@ -224,6 +229,7 @@ export class BatchMedicineListComponent implements OnInit {
   }
 
   maxPriceChange(price: string) {
+    console.log("max price change");
     if (price == null) {
       this.priceSelected = false;
       console.log('null');
@@ -239,6 +245,7 @@ export class BatchMedicineListComponent implements OnInit {
   }
 
   quantityChange(quantity: string) {
+    console.log("quantity change");
     this.quantity = quantity;
     if (quantity != '') {
       this.quantitySelected = true;
@@ -264,10 +271,8 @@ export class BatchMedicineListComponent implements OnInit {
     this.dateSelected = false;
     this.priceSelected = false;
     this.quantitySelected = false;
-    this.priceForm.setValue({
-      minPrice: '',
-      maxPrice: ''
-    })
+    this.minPrice = null;
+    this.maxPrice = null;
     this.dateRange = [];
     this.date = null;
     this.quantity = null;
