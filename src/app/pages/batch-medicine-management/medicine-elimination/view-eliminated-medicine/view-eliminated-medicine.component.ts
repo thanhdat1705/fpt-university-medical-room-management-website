@@ -160,9 +160,10 @@ export class ViewEliminatedMedicineComponent implements OnInit {
     } else if (sortOrder == "descend") {
       this.sortOrder = 0;
     }
-
+    this.pageSize = params.pageSize
     this.medicineInInventorySearchRequest.page = params.pageIndex;
     this.medicineInInventorySearchRequest.sortField = this.sortField;
+    this.medicineInInventorySearchRequest.limit = this.pageSize;
     this.medicineInInventorySearchRequest.sortOrder = this.sortOrder;
     this.searchEliminatedMedicine();
   }

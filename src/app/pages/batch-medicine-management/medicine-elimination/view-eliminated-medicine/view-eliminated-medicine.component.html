@@ -32,7 +32,7 @@
   </div>
   <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="eliminatedMedicineList" nzTableLayout="fixed" [nzLoading]="loading"
     [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false"
-    (nzQueryParams)="onQueryParamsChange($event)">
+    (nzQueryParams)="onQueryParamsChange($event)" nzShowSizeChanger>
     <thead>
       <tr>
         <th nzWidth="150px" nzColumnKey="medicine.name" [nzSortFn]="true">Tên thuốc</th>

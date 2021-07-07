@@ -1,1 +1,68 @@
-<p>view-patient-list works!</p>
+ <div class="inner-content">
+    <div class="search-filter">
+  
+      <nz-input-group nzSize="large" nzCompact [nzAddOnAfter]="searchIconButton">
+        <nz-select class="select-search" nzPlaceHolder="Tìm theo" nzAllowClear nzSize="large" style="width: 30%;"
+          [(ngModel)]="selectedSearchAttribute" >
+          <nz-option *ngFor="let attribute of searchAttributelist" [nzLabel]="attribute.name"
+            [nzValue]="attribute.id">
+          </nz-option>
+        </nz-select>
+        <input type="text" class="input" nz-input [(ngModel)]="searchPatientValue"
+          style="width:70%;" />
+      </nz-input-group>
+  
+      <ng-template #searchIconButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="search()">
+          <i nz-icon nzType="search" nzTheme="outline"></i>
+        </button>
+      </ng-template>
+  
+      <br><br>
+      <div class="select-wrap">
+         <div class="filter">
+                <span class="label">Giới tính: </span>
+                <nz-select class="select-w" nzPlaceHolder="Giới tính" nzAllowClear [(ngModel)]="genderFilterValue"
+                    (ngModelChange)="onSearchGender()">
+                    <nz-option *ngFor="let option of gender" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+            <div class="filter">
+                <span class="label">Phòng ban: </span>
+                <nz-select class="select-w" nzPlaceHolder="Phòng bang" nzAllowClear [(ngModel)]="departmentFilterValue"
+                    (ngModelChange)="onSearchDepartment()">
+                    <nz-option *ngFor="let option of departmentList" [nzLabel]="option.name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+        <br><br>
+      </div>
+    </div>
+    <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="patientList" nzTableLayout="fixed" [nzLoading]="loading"
+      [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)"
+      [nzFrontPagination]="false" nzShowSizeChanger>
+      <thead>
+        <tr>
+          <th nzColumnKey="InternalCode" [nzSortFn]="true">Mã số</th>
+          <th nzColumnKey="DisplayName" [nzSortFn]="true">Tên</th>
+          <th nzColumnKey="RoleID" [nzSortFn]="true">Giới tính</th>
+          <th nzColumnKey="Active" [nzSortFn]="true">Phòng ban</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patientList">
+          <td>{{ patient.internalCode }}</td>
+          <td>{{ patient.name }}</td>
+          <td>{{ generalService.getGender(patient.gender) }}</td>
+        
+          <td>{{ patient.department.name }}</td>
+         
+          <td> <a nzAlign="center" style="color: #1890ff"
+          (click)="getPatientTreatment(patient.id)"
+           >Lịch sử khám</a></td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div> 

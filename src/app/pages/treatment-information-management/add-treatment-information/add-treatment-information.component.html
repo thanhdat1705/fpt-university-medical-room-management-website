@@ -1,10 +1,9 @@
 <div class="container d-flex flex-wrap justify-content-between h-100">
     <div class="container-left col-md-12 col-lg-6">
-
-
         <div class="bg-white m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
             <span class="text-teal-green font-size-18 font-weight-semibold">Thông tin người khám</span>
             <dividing-line></dividing-line>
+            <p style="font-size: 15px; color: grey; float: right;">Ngày khám: {{curDate | date:'dd-MM-yyyy'}}</p>
             <form nz-form nzLayout="horizontal" *ngIf="insertTreatmentInformationForm"
                 [formGroup]="insertTreatmentInformationForm" class="form"
                 (ngSubmit)="addTreatmentInformation(insertTreatmentInformationForm.value)">

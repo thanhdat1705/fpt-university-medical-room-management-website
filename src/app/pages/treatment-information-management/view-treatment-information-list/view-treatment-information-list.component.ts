@@ -225,13 +225,6 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     console.log(this.treatmentList);
   }
 
-  getGender(acronyms: any) {
-    if (acronyms == 'F') {
-      return 'Nữ'
-    } else {
-      return 'Nam'
-    }
-  }
 
   onDateRangeChange(result: Date[]): void {
     if (result.length > 0) {
@@ -334,6 +327,8 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
   onQueryParamsChange(params: NzTableQueryParams) {
     this.treatmentSearchRequest.page = params.pageIndex;
+    this.treatmentSearchRequest.limit = params.pageSize;
+
     console.log(this.treatmentSearchRequest.page);
 
     console.log(params.pageIndex);

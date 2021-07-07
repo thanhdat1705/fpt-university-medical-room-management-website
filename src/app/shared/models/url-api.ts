@@ -1,6 +1,6 @@
 export const UrlServer = "https://fhcs-backend.online";
 // export const UrlServer = "http://10.1.64.81:9000";
-// export const UrlServer = "http://192.168.43.45:9000";
+// export const UrlServer = "http://192.168.64.61:9000";
 // export const UrlServer = "http://10.1.64.71:9000";
 
 // export const UrlServer = "https://fptuhcm-clinic-support-backend.azurewebsites.net";
@@ -66,7 +66,7 @@ export const UrlServerApiUpdateTreatment = UrlServer + "/api/v{version}/Treatmen
 
 export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';
 
-export const UrlServerAPISearchMedicineInInventory = UrlServer + '/api/v1.0/MedicineInInventories/Searching';
+export const UrlServerAPISearchMedicineInInventory = UrlServer + '/api/v1.0/MedicineInInventoryDetails/Searching';
 export const UrlServerAPIGetMedicineInInventoryDetails = UrlServer + '/api/v1.0/MedicineInInventoryDetails';
 //Import Batch
 export const UrlServerAPISearchImportBatch = UrlServer + '/api/v1.0/ImportBatches/Searching';

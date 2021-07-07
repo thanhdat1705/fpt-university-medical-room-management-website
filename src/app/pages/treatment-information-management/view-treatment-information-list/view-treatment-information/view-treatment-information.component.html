@@ -5,6 +5,8 @@
         <div class="bg-white  m-b-20 p-10 d-flex flex-column p-h-20 p-v-10">
             <span class="text-teal-green font-size-18 font-weight-semibold">Thông tin người khám</span>
             <dividing-line></dividing-line>
+            <p style="font-size: 15px; color: grey; float: right;">Ngày tạo: {{ generalService.getDate(treatment.createAt)}}</p>
+
             <form nz-form nzLayout="horizontal" 
              *ngIf="treatmentForm" [formGroup]="treatmentForm" class="form"
                 (ngSubmit)="updateTreatment(treatmentForm.value)">
@@ -273,7 +275,7 @@
                 </div>
                 <nz-form-item>
                     <nz-form-control>
-                        <img *ngIf="isEditing && url" class="signature-img" [src]="url">
+                        <img *ngIf="url" class="signature-img" [src]="url">
                         <div *ngIf="isEditing">
                             <input *ngIf="!treatment.isdelivered" type="file" (change)="onFileSelected($event)" />
                         </div>

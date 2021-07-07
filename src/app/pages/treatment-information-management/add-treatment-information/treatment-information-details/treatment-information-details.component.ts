@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Data } from '@angular/router';
 import { NzModalRef } from 'ng-zorro-antd/modal';
@@ -6,7 +6,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { TreatmentInformation } from 'src/app/shared/models/treatment-information';
 import { TreatmentInformationDetail } from 'src/app/shared/models/treatment-information-details';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequestWithGroupByAndInclude, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineInInventoryDetailsResponse } from 'src/app/shared/responses/medicine-in-inventory-details/medicine-in-inventory-details';
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
@@ -35,7 +35,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   setOfCheckedId = new Set<string>();
   expandSet = new Set<string>();
   tempUnCheckedId = new Set<string>();
-
+  value: any;
   listOfCurrentPageData: ReadonlyArray<Data> = [];
   checked = false;
   indeterminate = false;
@@ -71,8 +71,12 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   //   sortField: "",
   //   sortOrder: 0
   // }
+  medicineInInventoryGroupBys = ['Medicine', 'PeriodicInventory'];
+  medicineInInventoryIncludes = ['Medicine.MedicineUnit', 'PeriodicInventory'];
 
-  medicineInInventorySearchRequest = new SearchRequest(this.pageSize, this.pageIndex, "", 0, this.MedicineInInventorySearchValueMap, 'medicineId,medicine.Name,quantity, medicine.medicineUnit');
+
+  medicineInInventorySearchRequest = new SearchRequestWithGroupByAndInclude(this.pageSize, this.pageIndex, "", 0, this.MedicineInInventorySearchValueMap, 'Medicine,PeriodicInventory,Sum(Quantity) as Quantity', this.medicineInInventoryIncludes, this.medicineInInventoryGroupBys);
+  medicineInInventoryDetailsSearchRequest = new SearchRequestWithGroupByAndInclude(1, 0, "importMedicine.ExpirationDate", 0, this.MedicineInInventoryDetailsSearchValueMap, 'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate', null, null);
 
 
   // medicineInInventoryDetailsSearchRequest: SearchRequest = {
@@ -84,7 +88,6 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   //   sortOrder: 0
   // }
 
-  medicineInInventoryDetailsSearchRequest = new SearchRequest(1, 0, "importMedicine.ExpirationDate", 0, this.MedicineInInventoryDetailsSearchValueMap, 'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate');
 
 
   medicineIdValueCompare: ValueCompare = {
@@ -102,7 +105,12 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     compare: '='
   }
 
-  periodicMedicineInInventoryDetatilsValueCompare: ValueCompare = {
+  periodicMonthMedicineInInventoryDetatilsValueCompare: ValueCompare = {
+    value: '',
+    compare: '='
+  }
+
+  periodicYearMedicineInInventoryDetatilsValueCompare: ValueCompare = {
     value: '',
     compare: '='
   }
@@ -125,6 +133,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     compare: '>'
   }
 
+  @ViewChild('inputValue', { static: false }) inputValue?: ElementRef;
 
   chkTreatmentDetail: TreatmentInformationDetail[] = [];
 
@@ -159,6 +168,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.treatmentDetailsForm = this.formBuilder.group({
       quantity: ['',
         [
@@ -218,16 +228,19 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     var month = this.dateObj.getUTCMonth() + 1; //months from 1-12
     var year = this.dateObj.getFullYear();
     this.generalService.setValueCompare(id, this.medicineIdValueCompare, 'medicineId', this.MedicineInInventoryDetailsSearchValueMap);
-    this.generalService.setValueCompare(month, this.periodicMedicineInInventoryDetatilsValueCompare, 'periodicInventory.month', this.MedicineInInventoryDetailsSearchValueMap);
+    this.generalService.setValueCompare(month, this.periodicMonthMedicineInInventoryDetatilsValueCompare, 'periodicInventory.month', this.MedicineInInventoryDetailsSearchValueMap);
+    this.generalService.setValueCompare(year, this.periodicYearMedicineInInventoryDetatilsValueCompare, 'periodicInventory.year', this.MedicineInInventoryDetailsSearchValueMap);
 
     this.summaryService.searchMedicineInInventoryDetails(this.medicineInInventoryDetailsSearchRequest).subscribe(
       (response) => {
         this.medicineInInventoryDetails = response.data.data;
         console.log('treatmentdetails', this.medicineInInventoryDetails)
         for (let i = 0; i < this.treatmentDetailsTableData.length; i++) {
-          if (this.treatmentDetailsTableData[i].medicineInInventory.medicineId == id) {
+          if (this.treatmentDetailsTableData[i].medicineInInventory.medicine.id == id) {
             console.log("trùng");
             this.treatmentDetailsTableData[i].medicineInInventoryDetails = this.medicineInInventoryDetails;
+        console.log(this.treatmentDetailsTableData[i].medicineInInventoryDetails);
+
             break;
           }
         }
@@ -304,64 +317,70 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     );
   }
 
-  createTreatmentDetails(id: string, quantity: any, medicineId: string, medicineName: string, unitName: string, expiredDate: string) {
+  createTreatmentDetails(id: string, quantity: number, medicineId: string, medicineName: string, unitName: string, expiredDate: string, maxValue: number) {
 
-    this.isExistInDetails = false;
-    if (this.setOfCheckedId.has(id)) {
-      if (this.treatmentDetaisList.length == 0) {
+    if (this.inputValue.nativeElement.value > maxValue) {
+      this.value = maxValue;
+    } else if (this.inputValue.nativeElement.value <= 0) {
+      this.value = 1;
+    } else {
 
-        let treatmentDetailsObj = new TreatmentInformationDetail();
-        treatmentDetailsObj.quantity = quantity;
-        treatmentDetailsObj.medicineInInventoryDetailId = id;
-        treatmentDetailsObj.medicineId = medicineId;
-        treatmentDetailsObj.medicineName = medicineName;
-        treatmentDetailsObj.unitName = unitName;
-        treatmentDetailsObj.expiredDate = expiredDate;
-        console.log(treatmentDetailsObj.medicineId);
-        this.treatmentDetaisList.push(treatmentDetailsObj);
-        this.isExistInDetails = true;
-      } else {
+      this.isExistInDetails = false;
+      if (this.setOfCheckedId.has(id)) {
+        if (this.treatmentDetaisList.length == 0) {
 
-        for (let i = 0; i < this.treatmentDetaisList.length; i++) {
-          if (this.treatmentDetaisList[i].medicineInInventoryDetailId == id) {
-            this.treatmentDetaisList[i].quantity = quantity;
+          let treatmentDetailsObj = new TreatmentInformationDetail();
+          treatmentDetailsObj.quantity = quantity;
+          treatmentDetailsObj.medicineInInventoryDetailId = id;
+          treatmentDetailsObj.medicineId = medicineId;
+          treatmentDetailsObj.medicineName = medicineName;
+          treatmentDetailsObj.unitName = unitName;
+          treatmentDetailsObj.expiredDate = expiredDate;
+          console.log(treatmentDetailsObj.medicineId);
+          this.treatmentDetaisList.push(treatmentDetailsObj);
+          this.isExistInDetails = true;
+        } else {
 
-            this.isExistInDetails = true;
-            break;
-          } else {
-            // sai
-            this.isExistInDetails = false;
+          for (let i = 0; i < this.treatmentDetaisList.length; i++) {
+            if (this.treatmentDetaisList[i].medicineInInventoryDetailId == id) {
+              this.treatmentDetaisList[i].quantity = quantity;
+
+              this.isExistInDetails = true;
+              break;
+            } else {
+              // sai
+              this.isExistInDetails = false;
+            }
           }
-        }
-      } if (!this.isExistInDetails) {
-        let treatmentObj = new TreatmentInformationDetail();
-        treatmentObj.medicineId = medicineId;
-        treatmentObj.medicineName = medicineName;
-        treatmentObj.quantity = quantity;
-        treatmentObj.medicineInInventoryDetailId = id;
-        treatmentObj.unitName = unitName;
-        treatmentObj.expiredDate = expiredDate;
+        } if (!this.isExistInDetails) {
+          let treatmentObj = new TreatmentInformationDetail();
+          treatmentObj.medicineId = medicineId;
+          treatmentObj.medicineName = medicineName;
+          treatmentObj.quantity = quantity;
+          treatmentObj.medicineInInventoryDetailId = id;
+          treatmentObj.unitName = unitName;
+          treatmentObj.expiredDate = expiredDate;
 
-        this.treatmentDetaisList.push(treatmentObj);
+          this.treatmentDetaisList.push(treatmentObj);
+        }
+        this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
+
       }
-      this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
+      this.isExistInDetails = false;
+      console.log(this.treatmentDetaisList.length);
+
+      console.log(this.treatmentDetaisList);
 
     }
-    this.isExistInDetails = false;
-    console.log(this.treatmentDetaisList.length);
-
-    console.log(this.treatmentDetaisList);
-
-
   }
 
   destroyModal(): void {
     if (this.treatmentDetaisList.length == 0) {
       return;
     } else {
-    for (var id of Array.from(this.tempUnCheckedId.values())) {
-      this.setOfCheckedId.add(id);
-    }
+      for (var id of Array.from(this.tempUnCheckedId.values())) {
+        this.setOfCheckedId.add(id);
+      }
       this.treatmentService.setTreatmentDetails(this.treatmentDetaisList);
     }
     this.modal.destroy();
@@ -456,6 +475,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
       return;
     }
     this.medicineInInventoryList = response.data;
+    console.log(this.medicineInInventoryList);
     this.total = response.info.totalRecord;
     console.log(this.total);
     let treatmentDetailsRowData;

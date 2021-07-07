@@ -86,8 +86,12 @@ export class AuthService {
 
     SignOut() {
         return this.firebaseAuth.signOut().then(() => {
-            localStorage.removeItem('user');
+            localStorage.removeItem('photoUrl');
+            localStorage.removeItem('displayName');
+            localStorage.removeItem('roleName');
             localStorage.removeItem("token");
+            localStorage.removeItem("accountId");
+
             this.router.navigate(['authentication/login']);
         })
     }
@@ -97,7 +101,11 @@ export class AuthService {
         localStorage.setItem('displayName', name);
         localStorage.setItem('roleName', role);
 
-        console.log(avatarUrl, name, role)
+        console.log(avatarUrl, name, role);
+        this.headerService.setName(name);
+        this.headerService.setAvatar(avatarUrl);
+        this.headerService.setRole(role);
+
     }
 
     login() {
@@ -136,7 +144,6 @@ export class AuthService {
                 localStorage.setItem("token", response.data.token);
                 this.summaryService.setTokenHeader();
                 console.log(localStorage.getItem("token"));
-                this.summaryService.setTokenHeader();
                 this.generalService.closeWaitingPopupNz();
                 this.ngZone.run(() => {
                     // this.router.navigate(['account/profile']);
@@ -157,6 +164,7 @@ export class AuthService {
             (response) => {
                 this.account = response.data;
 
+                localStorage.setItem("accountId", response.data.accountId);
 
                 localStorage.setItem("token", response.data.token);
                 this.setUserInforToLocalStorage(this.account.photoUrl, this.account.displayName, this.account.role.roleName)

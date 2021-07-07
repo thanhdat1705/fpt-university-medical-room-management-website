@@ -38,9 +38,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.generalService.openWaitingPopupNz();
-    if (this.loginForm.invalid) {
-      return;
-    }
+    this.authService.loginWithUsernameAccount(data);
     console.log(data);
 
     this.generalService.closeWaitingPopupNz();

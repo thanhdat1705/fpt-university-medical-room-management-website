@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequestWithGroupByAndInclude, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineInInventoryDetailsResponse } from 'src/app/shared/responses/medicine-in-inventory-details/medicine-in-inventory-details';
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
 import { MedicineResponse } from 'src/app/shared/responses/medicine/medicine';
@@ -41,7 +41,7 @@ export class MedicineInInventoryDetailsList implements OnInit {
   //   sortOrder: this.sortOrder
   // }
 
-  medicineInInventoryDetailsSearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.MedicineInInventoryDetailsSearchValueMap, "id, quantity, importMedicine,importMedicine.importBatch , medicine.medicineUnit");
+  medicineInInventoryDetailsSearchRequest = new SearchRequestWithGroupByAndInclude(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.MedicineInInventoryDetailsSearchValueMap, "id, quantity, importMedicine,importMedicine.importBatch , medicine.medicineUnit", null,null);
 
 
   MedicineIdValueCompare: ValueCompare = {
@@ -58,7 +58,7 @@ export class MedicineInInventoryDetailsList implements OnInit {
   //   sortOrder: 0,
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest(1, 0, '', 0, this.MedicineInInventorySearchValueMap, "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit");
+  medicineInInventorySearchRequest = new SearchRequestWithGroupByAndInclude(1, 0, '', 0, this.MedicineInInventorySearchValueMap, "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit", null, null);
 
 
   medicineIdValueCompare: ValueCompare = {
@@ -157,6 +157,8 @@ export class MedicineInInventoryDetailsList implements OnInit {
       this.sortOrder = 0;
     }
 
+    this.pageSize = params.pageSize;
+    this.medicineInInventoryDetailsSearchRequest.limit = this.pageSize;
     this.medicineInInventoryDetailsSearchRequest.page = params.pageIndex;
     this.medicineInInventoryDetailsSearchRequest.sortField = this.sortField;
     this.medicineInInventoryDetailsSearchRequest.sortOrder = this.sortOrder;

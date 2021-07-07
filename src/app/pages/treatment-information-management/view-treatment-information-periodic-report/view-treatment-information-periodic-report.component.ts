@@ -154,11 +154,20 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
       treatmentReportInfo.departmentName = this.treatmentList[i].department.name;
       treatmentReportInfo.patientGender = this.treatmentList[i].patient.gender;
 
+      for (let j = 0; j < this.treatmentList[i].diseaseStatusInTreatments.length; j++) {
+        if (j == this.treatmentList[i].diseaseStatusInTreatments.length - 1) {
+          treatmentReportInfo.diseaseStatusName += this.treatmentList[i].diseaseStatusInTreatments[j].diseaseStatus.name
+        } else {
+          treatmentReportInfo.diseaseStatusName += this.treatmentList[i].diseaseStatusInTreatments[j].diseaseStatus.name + ", ";
+        }
+      }
 
-    
+
       console.log('treatmentInformation: ', this.treatmentList[i].treatmentInformations.length);
 
       for (let j = 0; j < this.treatmentList[i].treatmentInformations.length; j++) {
+
+
         if (j == this.treatmentList[i].treatmentInformations.length - 1) {
           treatmentReportInfo.treatmentDirection += this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails[0].medicine.name + " " +
             this.treatmentList[i].treatmentInformations[j].indicationToDrink;
@@ -176,8 +185,8 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
             this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails[0].medicine.medicineUnit.name + ", ";
         }
         // for (let k = 0; k < this.treatmentList[i].treatmentInformations[j].treatmentInformationDetails.length; k++) {
-          
-          
+
+
         // }
 
       }
@@ -218,68 +227,68 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
 
     var month = result.getUTCMonth() + 1; //months from 1-12
     var year = result.getFullYear();
-    
+
     this.generalService.setValueCompare(month, this.periodicMonthValueCompare, 'periodicInventory.month', this.searchRecordMap);
     this.generalService.setValueCompare(year, this.periodicYearValueCompare, 'periodicInventory.year', this.searchRecordMap);
     this.searchTreatment();
-    console.log('date',result)
+    console.log('date', result)
   }
 
   exportExcel() {
-  //   this.treatmentTableData = this.convertList();
-  //   let sheet = this.generalService.getLocalMonthYear(this.requestDetail.updateDate);
-  //   let workbook = new Workbook();
-  //   let worksheet = workbook.addWorksheet(sheet);
+    //   this.treatmentTableData = this.convertList();
+    //   let sheet = this.generalService.getLocalMonthYear(this.requestDetail.updateDate);
+    //   let workbook = new Workbook();
+    //   let worksheet = workbook.addWorksheet(sheet);
 
-  //   worksheet.columns = this.headers;
+    //   worksheet.columns = this.headers;
 
-  //   var headerRow = worksheet.getRow(1);
-  //   headerRow.height = 65;
-  //   headerRow.eachCell((cell) => {
-  //     cell.fill = {
-  //       type: 'pattern',
-  //       pattern: 'solid',
-  //       fgColor: { argb: 'C5D9F1' },
-  //       bgColor: { argb: 'C5D9F1' }
-  //     }
-  //     cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } }
-  //     cell.font = { name: 'Times New Roman', size: 13, bold: true }
-  //     cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' }
-  //   });
+    //   var headerRow = worksheet.getRow(1);
+    //   headerRow.height = 65;
+    //   headerRow.eachCell((cell) => {
+    //     cell.fill = {
+    //       type: 'pattern',
+    //       pattern: 'solid',
+    //       fgColor: { argb: 'C5D9F1' },
+    //       bgColor: { argb: 'C5D9F1' }
+    //     }
+    //     cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } }
+    //     cell.font = { name: 'Times New Roman', size: 13, bold: true }
+    //     cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' }
+    //   });
 
-  //   this.treatmentTableData.forEach((b, index) => {
-  //     let row = worksheet.addRow({ stt: index + 1, name: b.medicineName, unit: b.medicineUnitName, quantity: b.quantity, note: b.note });
-  //     let stt = row.getCell('stt');
-  //     let unit = row.getCell('unit');
-  //     let quantity = row.getCell('quantity');
-  //     let color = 'FF99FF99';
-  //     stt.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-  //     unit.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-  //     quantity.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+    //   this.treatmentTableData.forEach((b, index) => {
+    //     let row = worksheet.addRow({ stt: index + 1, name: b.medicineName, unit: b.medicineUnitName, quantity: b.quantity, note: b.note });
+    //     let stt = row.getCell('stt');
+    //     let unit = row.getCell('unit');
+    //     let quantity = row.getCell('quantity');
+    //     let color = 'FF99FF99';
+    //     stt.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+    //     unit.alignment = { horizontal: 'center', readingOrder: 'ltr' }
+    //     quantity.alignment = { horizontal: 'center', readingOrder: 'ltr' }
 
-  //     row.font = {
-  //       color: {
-  //         argb: '00000000',
-  //       },
-  //       name: 'Times New Roman', size: 13,
-  //       bold: false
-  //     }
-  //     row.eachCell(cell => {
-  //       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
-  //     })
-  //     row.height = 30;
-  //   })
+    //     row.font = {
+    //       color: {
+    //         argb: '00000000',
+    //       },
+    //       name: 'Times New Roman', size: 13,
+    //       bold: false
+    //     }
+    //     row.eachCell(cell => {
+    //       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+    //     })
+    //     row.height = 30;
+    //   })
 
-  //   worksheet.columns.forEach((col, index) => {
-  //     let strLength = this.getLength(index);
-  //     col.width = strLength;
-  //   })
+    //   worksheet.columns.forEach((col, index) => {
+    //     let strLength = this.getLength(index);
+    //     col.width = strLength;
+    //   })
 
 
-  //   workbook.xlsx.writeBuffer().then((data) => {
-  //     let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  //     fs.saveAs(blob, 'ĐỀ-XUẤT-MUA-THUỐC.xlsx');
-  //   })
+    //   workbook.xlsx.writeBuffer().then((data) => {
+    //     let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //     fs.saveAs(blob, 'ĐỀ-XUẤT-MUA-THUỐC.xlsx');
+    //   })
 
   }
 

@@ -74,6 +74,13 @@ export class GeneralHelperService {
         return fieldName + " không được chứa kí tự đặc biệt";
     }
 
+    getGender(gender: string){
+        if(gender == "M"){
+            return 'Nam'
+        }else{
+            return "Nữ"
+        }
+    }
 
     getValueCompare(value: any, valueCompare: ValueCompare, searchRecordAttribute: string, searchRecord: Record<string, ValueCompare> = {}) {
         if (value != null) {

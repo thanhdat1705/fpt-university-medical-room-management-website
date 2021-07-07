@@ -38,7 +38,7 @@
   </div>
   <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="medicineInInventoryList" nzTableLayout="fixed" [nzLoading]="loading"
     [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false"
-    (nzQueryParams)="onQueryParamsChange($event)">
+    (nzQueryParams)="onQueryParamsChange($event)" nzShowSizeChanger>
     <thead>
       <tr>
         <!-- <th nzWidth="40px" nzColumnKey="InternalCode" [nzSortFn]="true">Stt</th> -->
