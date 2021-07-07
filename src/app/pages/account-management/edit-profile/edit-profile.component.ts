@@ -132,6 +132,9 @@ export class EditProfileComponent implements OnInit {
         console.log(response);
         console.log('response avatar: ' + response.data.photoUrl);
         this.headerService.setAvatar(response.data.photoUrl);
+        this.headerService.setName(response.data.displayName);
+        localStorage.setItem('photoUrl', response.data.photoUrl);
+        localStorage.setItem('displayName', response.data.displayName);
         this.generalService.closeWaitingPopupNz();
         this.generalService.messageNz('success', `Thông tin đã được cập nhật`);
         this.router.navigate(['/account/profile']);

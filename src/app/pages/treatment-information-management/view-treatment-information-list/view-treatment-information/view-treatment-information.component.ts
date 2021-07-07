@@ -47,7 +47,6 @@ export class ViewTreatmentInformationComponent implements OnInit {
   patientInternalCodeList: PatientInternalCodeResponse[];
   isExistInDetails: boolean;
   expandSet = new Set<string>();
-
   file: File;
   confirmModal!: NzModalRef;
   patientAllegryDescription: string;

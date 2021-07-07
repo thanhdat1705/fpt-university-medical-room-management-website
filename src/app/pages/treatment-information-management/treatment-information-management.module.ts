@@ -9,10 +9,11 @@ import { ViewTreatmentInformationListComponent } from './view-treatment-informat
 import { ViewTreatmentInformationComponent } from './view-treatment-information-list/view-treatment-information/view-treatment-information.component';
 import { ViewTreatmentInformationPeriodicReportComponent } from './view-treatment-information-periodic-report/view-treatment-information-periodic-report.component';
 import { CheckoutUpdateTreatmentGuard } from 'src/app/shared/guards/checkout-update-treatment.guard';
+import { ViewTreatmentInformationHistoryComponent } from './view-treatment-information-history/view-treatment-information-history.component';
 
 
 @NgModule({
-  declarations: [AddTreatmentInformationComponent, TreatmentInformationDetailsComponent, ViewTreatmentInformationListComponent, ViewTreatmentInformationComponent, ViewTreatmentInformationPeriodicReportComponent],
+  declarations: [AddTreatmentInformationComponent, TreatmentInformationDetailsComponent, ViewTreatmentInformationListComponent, ViewTreatmentInformationComponent, ViewTreatmentInformationPeriodicReportComponent, ViewTreatmentInformationHistoryComponent],
   
   imports: [
     CommonModule,

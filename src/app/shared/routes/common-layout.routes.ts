@@ -107,4 +107,18 @@ export const CommonLayout_ROUTES: Routes = [
         ],
         
     },
+
+    {
+        path: 'patient-manangement',
+        data: {
+            title: 'Quản lí người đến khám'
+        },
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('../../pages/patient-management/patient-management.module').then(m => m.PatientManagementModule)
+            }
+        ],
+        
+    },
 ];

@@ -82,7 +82,7 @@ export class SearchAccountComponent implements OnInit {
   selectedSearchAttribute: string;
   accountList: Account[];
   loading = true;
-  pageSize = 2;
+  pageSize = 10;
   pageIndex = 1;
   total = 0;
   activeStatus = null;
@@ -203,6 +203,9 @@ export class SearchAccountComponent implements OnInit {
     }
 
     this.accountSearchRequest.page = params.pageIndex;
+    this.accountSearchRequest.limit = params.pageSize;
+    this.pageSize = params.pageSize
+
     this.pageIndex = this.accountSearchRequest.page;
     this.searchAccount();
   }

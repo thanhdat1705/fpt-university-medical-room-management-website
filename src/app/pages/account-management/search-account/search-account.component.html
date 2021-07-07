@@ -36,7 +36,7 @@
   </div>
   <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="accountList" nzTableLayout="fixed" [nzLoading]="loading"
     [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)"
-    [nzFrontPagination]="false">
+    [nzFrontPagination]="false" nzShowSizeChanger>
     <thead>
       <tr>
         <th nzColumnKey="InternalCode" [nzSortFn]="true">Mã số</th>

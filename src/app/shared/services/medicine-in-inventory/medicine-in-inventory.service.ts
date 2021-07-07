@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SearchRequest, ValueCompare } from '../../requests/search-request';
+import { SearchRequest, SearchRequestWithGroupByAndInclude, ValueCompare } from '../../requests/search-request';
 import { GeneralHelperService } from '../general-helper.service';
 import { SummaryService } from '../summary.service';
 
@@ -15,7 +15,7 @@ export class MedicineInInventoryService {
     compare: 'Equals'
   }
  
-  medicineInInventorySearchRequest = new SearchRequest(1,0,'',0,this.MedicineInInventorySearchValueMap, "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit");
+  medicineInInventorySearchRequest = new SearchRequestWithGroupByAndInclude(1,0,'',0,this.MedicineInInventorySearchValueMap, "quantity, medicine.name, medicine.medicineClassification, medicine.medicineSubgroup, medicine.medicineUnit", null, null);
 
   constructor(
     private summaryService: SummaryService,

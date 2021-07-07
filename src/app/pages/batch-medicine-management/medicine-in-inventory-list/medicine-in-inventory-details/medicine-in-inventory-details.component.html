@@ -91,8 +91,7 @@
             </nz-form-label>
             <nz-form-control [nzErrorTip]="reasonTpl">
                 <nz-textarea-count [nzMaxCharacterCount]="500">
-                    <textarea [disabled]="true" nz-input rows="4" style="font-size: 18px;">
-                    {{ medicineInInventoryDetails.importMedicine.description}}
+                    <textarea [disabled]="true" nz-input rows="4" style="font-size: 18px;">{{ medicineInInventoryDetails.importMedicine.description}}
                 </textarea>
                     <ng-template #reasonTpl let-control>
                         <!-- <ng-container *ngIf="f.reason.hasError('minlength') || f.reason.hasError('maxlength')">

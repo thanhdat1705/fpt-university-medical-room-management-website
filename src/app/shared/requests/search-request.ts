@@ -20,7 +20,7 @@ export class SearchRequestWithGroupByAndInclude {
   searchValue: Map<string, ValueCompare>;
   selectFields: string;
   includes: string[];
-  groupBys: string;
+  groupBys: string[];
 
   constructor(limit: number,
     page: number,
@@ -29,7 +29,7 @@ export class SearchRequestWithGroupByAndInclude {
     searchValue: Map<string, ValueCompare>,
     selectFields: string,
     includes: string[],
-    groupBys: string,
+    groupBys: string[],
   ) {
     this.limit = limit;
     this.page = page;
@@ -50,14 +50,15 @@ export class SearchRequestWithGroupByAndInclude {
         includeString += "&Includes[" + i + "]=" + this.includes[i];
       }
     }
-    if (this.groupBys == null) {
-      this.groupBys = "&GroupBys=" + this.groupBys;
-    }else{
-      
+    var groupBysString ="";
+    if (this.groupBys != null) {
+      for (let i = 0; i < this.includes.length; i++) {
+        groupBysString += "&GroupBys[" + i + "]=" + this.groupBys[i];
+      }
     }
 
     return "Limit=" + this.limit + "&Page=" + this.page + "&SortField=" +
-      this.sortField + "&SortOrder=" + this.sortOrder + "&SelectFields=" + this.selectFields + includeString + this.getSearchValueString();
+      this.sortField + "&SortOrder=" + this.sortOrder + "&SelectFields=" + this.selectFields + includeString + groupBysString + this.getSearchValueString();
   }
 
   private getSearchValueString(): string {

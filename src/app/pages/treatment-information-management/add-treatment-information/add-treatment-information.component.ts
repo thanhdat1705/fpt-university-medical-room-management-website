@@ -23,6 +23,7 @@ import { PatientInternalCodeResponse } from 'src/app/shared/responses/patient/pa
   templateUrl: './add-treatment-information.component.html',
   styleUrls: ['./add-treatment-information.component.scss']
 })
+
 export class AddTreatmentInformationComponent implements OnInit {
 
   insertTreatmentInformationForm: FormGroup;
@@ -38,6 +39,8 @@ export class AddTreatmentInformationComponent implements OnInit {
   patient: Patient;
   medicalStaff: Account = JSON.parse(localStorage.getItem("user"));
   selectedInternalCode: string;
+  curDate=new Date();
+
 
   insertDepartmentRequest: Department = {
     name: '',
@@ -163,7 +166,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   getPatientDetails(value: any) {
     console.log(this.selectedInternalCode);
-    if(this.selectedInternalCode != null || this.selectedInternalCode != ''){
+    if(this.selectedInternalCode == null || this.selectedInternalCode == ''){
       return;
     }
     this.patientSearchRequest.selectFields = this.selectPatientDetails;

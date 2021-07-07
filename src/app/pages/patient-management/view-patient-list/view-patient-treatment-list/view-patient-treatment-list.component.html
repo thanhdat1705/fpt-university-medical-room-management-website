@@ -1,0 +1,34 @@
+<div class="inner-content">
+    <nz-table nzShowSizeChanger class="medicine-table" #colSpanTable [nzData]="treatmentList" nzTableLayout="fixed"
+        nzBordered [nzFrontPagination]="false" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
+        [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)">
+        <thead>
+            <tr>
+                <th nzWidth="7%" nzColumnKey="InternalCode">Ngày</th>
+                <th nzWidth="15%" nzColumnKey="Active">Người tạo</th>
+                <th nzWidth="20%" nzColumnKey="Active">Tình trạng bệnh</th>
+                <th nzWidth="10%" nzColumnKey="Active">Trạng thái đơn</th>
+                <th nzWidth="10%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let data of treatmentTableData">
+                <tr>
+                    <td [attr.rowspan]="data.treatmentInfor.length + 1">{{data.date}}</td>
+                </tr>
+                <tr *ngFor="let treatment of data.treatmentInfor; index as i">
+
+                    <!-- <td>{{ i+1 }}</td> -->
+                    <td>Bs. {{ treatment.accountCreateBy.displayName }}</td>
+                    <td>{{ treatment.diseaseStatusName }}</td>
+                    <td *ngIf="treatment.confirmSignature == null; else confirmed">Chưa xác nhận</td>
+                    <ng-template #confirmed>
+                        <td>Đã xác nhận</td>
+                    </ng-template>
+                    <td> <a nzAlign="center" style="color: #1890ff" (click)="getTreatment(treatment.id)">Chi
+                            tiết</a></td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </nz-table>
+</div>

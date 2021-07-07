@@ -335,7 +335,7 @@ export class SummaryService {
 
   // Medicine in inventory
 
-  public searchMedicineInInventory(data: SearchRequest) {
+  public searchMedicineInInventory(data: SearchRequestWithGroupByAndInclude) {
     return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory + '?' + data.getParamsString());
   }
 
@@ -345,7 +345,7 @@ export class SummaryService {
   }
   // Medicine in inventory
 
-  public searchMedicineInInventoryDetails(data: SearchRequest) {
+  public searchMedicineInInventoryDetails(data: SearchRequestWithGroupByAndInclude) {
     return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryDetails + '?' + data.getParamsString());
 
   }

@@ -3,7 +3,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ResponseSearch } from 'src/app/shared/models/response-search';
 import { ResponseServer } from 'src/app/shared/models/response-server';
-import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-request';
+import { SearchRequest, SearchRequestWithGroupByAndInclude, ValueCompare } from 'src/app/shared/requests/search-request';
 import { MedicineClassificationResponse } from 'src/app/shared/responses/medicine-classification/medicine-classification-response';
 import { MedicineInInventoryResponse } from 'src/app/shared/responses/medicine-in-inventory/medicine-in-inventory';
 import { MedicineSubgroupResponse } from 'src/app/shared/responses/medicine-subgroup/medicine-subgroup-response';
@@ -27,7 +27,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   medicineSubGroupList: MedicineSubgroupResponse[];
   medicineInInventoryList: MedicineInInventoryResponse[];
   loading = false;
-  pageSize = 3;
+  pageSize = 10;
   searchMapValue: Map<string, ValueCompare> = new Map;
   total: number;
   pageIndex = 1;
@@ -49,7 +49,7 @@ export class MedicineInInventoryListComponent implements OnInit {
   //   sortOrder: this.sortOrder,
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchMapValue, this.selectFields);
+  medicineInInventorySearchRequest = new SearchRequestWithGroupByAndInclude(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchMapValue, this.selectFields, null, null);
 
   periodicMonthValueCompare: ValueCompare = {
     value: '',
@@ -205,7 +205,8 @@ export class MedicineInInventoryListComponent implements OnInit {
     } else if (sortOrder == "descend") {
       this.sortOrder = 0;
     }
-
+    this.pageSize = params.pageSize;
+    this.medicineInInventorySearchRequest.limit = this.pageSize;
     this.medicineInInventorySearchRequest.page = params.pageIndex;
     this.medicineInInventorySearchRequest.sortField = this.sortField;
     this.medicineInInventorySearchRequest.sortOrder = this.sortOrder;

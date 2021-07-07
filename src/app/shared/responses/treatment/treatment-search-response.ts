@@ -10,7 +10,8 @@ export interface TreatmentSearchResponse {
     confirmSignature: string,
     isDelivered: boolean,
     displayName: string,
-    patient: Patient
+    patient: Patient,
+    diseaseStatusName?: string
 }
 
 export interface TreatmentReportSearchResponse {
