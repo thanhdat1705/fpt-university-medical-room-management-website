@@ -77,12 +77,14 @@
 
                         </tbody>
                     </nz-table>
-                    <div style="margin: 10px; width: 200px;">
-                        <button nz-button nzType="primary" nzBlock nzSize="large"
-                            (click)="addImportMedicine(importBatchDetail.id)">
-                            <span>Thêm dược phẩm</span>
-                        </button>
-                    </div>
+                    <ng-container *ngIf="generalService.isMedicalStaff()">
+                        <div style="margin: 10px; width: 200px;">
+                            <button nz-button nzType="primary" nzBlock nzSize="large"
+                                (click)="addImportMedicine(importBatchDetail.id)">
+                                <span>Thêm dược phẩm</span>
+                            </button>
+                        </div>
+                    </ng-container>
                 </div>
             </nz-spin>
         </nz-spin>

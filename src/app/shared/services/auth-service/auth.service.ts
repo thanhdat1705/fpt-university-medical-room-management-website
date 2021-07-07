@@ -86,9 +86,9 @@ export class AuthService {
 
     SignOut() {
         return this.firebaseAuth.signOut().then(() => {
-            // localStorage.removeItem('user');
-            // localStorage.removeItem("token");
+            let roleId = localStorage.getItem('roleId');
             localStorage.clear();
+            localStorage.setItem('roleId', roleId);
             this.router.navigate(['authentication/login']);
         })
     }

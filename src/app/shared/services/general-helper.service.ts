@@ -141,7 +141,9 @@ export class GeneralHelperService {
 
     sessionTimeout() {
         return this.firebaseAuth.signOut().then(() => {
+            let roleId = localStorage.getItem('roleId');
             localStorage.clear();
+            localStorage.setItem('roleId', roleId);
             this.router.navigate(['authentication/login']);
         })
     }

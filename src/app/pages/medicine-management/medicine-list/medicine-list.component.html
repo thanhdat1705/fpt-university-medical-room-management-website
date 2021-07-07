@@ -1,107 +1,139 @@
-<div class="inner-content">
-    <div class="search-filter">
-        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
-            <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchValue"
-                (input)="inputChange(inputValue.value)" #inputValue />
-        </nz-input-group>
-        <ng-template #searchIconButton>
-            <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicine()">
-                <i nz-icon nzType="search" nzTheme="outline"></i>
-            </button>
-        </ng-template>
-        <br><br>
-        <div class="d-flex flex-row flex-wrap align-items-center justify-content-between">
-            <div class="select-wrap">
-                <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
-                <nz-select class="select-w" nzPlaceHolder="Đơn vị" nzAllowClear [(ngModel)]="unitValue"
+<div class="d-flex flex-row flex-wrap padding-content">
+    <div class="col-sm-6 col-md-5 col-lg-5 col-xl-3 padding-left">
+        <div class="d-flex flex-column content">
+            <!-- <div class="select-filter"> -->
+            <div class="d-flex flex-row justify-content-between">
+                <span class="text-teal-green m-r-10 font-weight-semibold font-size-18">Bộ lọc tím kiếm</span>
+                <button nz-button nzType="primary" (click)="setToDefaultFilter()">
+                    <span>Mặc định</span>
+                </button>
+            </div>
+
+            <!-- <nz-divider></nz-divider> -->
+            <dividing-line></dividing-line>
+            <div class="select-filter">
+                <span>Đơn vị</span>
+                <nz-select class="select-w" nzPlaceHolder="Nhập tên đơn vị" nzAllowClear [(ngModel)]="unitValue"
                     (ngModelChange)="onSearchUnit($event)" [ngClass]="{'ant-select-selection': unitSelected}">
                     <nz-option *ngFor="let option of filterUnit" [nzLabel]="option.name" [nzValue]="option.id">
                     </nz-option>
                 </nz-select>
-                <nz-select class="select-w" nzPlaceHolder="Loại" nzAllowClear [(ngModel)]="classValue"
+            </div>
+            <div class="select-filter">
+                <span>Loại</span>
+                <nz-select class="select-w" nzPlaceHolder="Nhập tên loại" nzAllowClear [(ngModel)]="classValue"
                     (ngModelChange)="onSearchClass($event)" [ngClass]="{'ant-select-selection': classSelected}">
                     <nz-option *ngFor="let option of filterClass" [nzLabel]="option.name" [nzValue]="option.id">
                     </nz-option>
                 </nz-select>
-                <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="subgroupValue"
+            </div>
+            <div class="select-filter">
+                <span>Nhóm</span>
+                <nz-select class="select-w" nzPlaceHolder="Nhập tên nhóm" nzAllowClear [(ngModel)]="subgroupValue"
                     (ngModelChange)="onSearchSubgroup($event)" [ngClass]="{'ant-select-selection': subgroupSelected}">
                     <nz-option *ngFor="let option of filterSubgroup" [nzLabel]="option.name" [nzValue]="option.id">
                     </nz-option>
                 </nz-select>
             </div>
-            <ng-container *ngIf="generalService.isMedicalStaff()">
-                <div style="width: 150px;">
-                    <button nz-button nzType="primary" nzBlock nzSize="large"
+
+            <!-- </div> -->
+
+
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-7 col-lg-7 col-xl-9 padding-right">
+        <div class="d-flex flex-column justify-content-between content">
+            <div class="d-inline-flex align-items-center m-b-10">
+                <nz-input-group nzSearch nzSize="large" [nzSuffix]="searchIconButton">
+                    <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchValue"
+                        (input)="inputChange(inputValue.value)" #inputValue />
+                </nz-input-group>
+                <ng-template #searchIconButton>
+                    <!-- <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton"
+                        (click)="searchMedicine()">
+                        <i nz-icon nzType="search" nzTheme="outline"></i>
+                    </button> -->
+                    <i nz-icon nzType="search"></i>
+                </ng-template>
+                <ng-container *ngIf="generalService.isMedicalStaff()">
+                    <button nz-button nzType="primary" nzBlock nzSize="large" class="m-l-10" style="width: 130px;"
                         [routerLink]="'/medicine-management/medicine-list/add-medicine'">
                         <span>Thêm thuốc</span>
                     </button>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
+
+            <nz-spin [nzSpinning]="tableLoading" nzTip="Đang xủ lý...">
+                <nz-table #nzTable nzShowSizeChanger [nzPageSizeOptions]="[5, 10, 20, 30, 40]"
+                    [nzFrontPagination]="false" [nzData]="medicineList" [nzScroll]="{ x: '800px' }"
+                    [nzTotal]="totalRecord" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+                    (nzQueryParams)="onQueryParamsChange($event)">
+                    <thead>
+                        <tr>
+                            <th nzWidth="8%" nzAlign='left'>No.</th>
+                            <th nzWidth="23%" nzAlign='center' nzColumnKey="Name" [nzSortFn]="true">Tên thuốc</th>
+                            <th nzWidth="13%" nzAlign='center' nzColumnKey="MedicineUnit" [nzSortFn]="true">Đơn vị</th>
+                            <th nzWidth="15%" nzAlign='center' nzColumnKey="MedicineClassification" [nzSortFn]="true">
+                                Loại thuốc
+                            </th>
+                            <th nzWidth="21%" nzAlign='center' nzColumnKey="MedicineSubgroup" [nzSortFn]="true">Nhóm
+                            </th>
+                            <th nzWidth="15%" nzAlign='center' nzColumnKey="CreatedDate" [nzSortFn]="true">Ngày thêm
+                            </th>
+                            <ng-container *ngIf="generalService.isMedicalStaff()">
+                                <th nzWidth="5%" nzAlign='right'></th>
+                            </ng-container>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of medicineList; index as i">
+                            <td nzAlign='left'>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
+                            <td nzAlign='center'>
+                                <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
+                                <span *ngIf="!generalService.isMedicalStaff()"
+                                    class="text-primary font-weight-semibold">
+                                    {{ data.name }}
+                                </span>
+                                <ng-container *ngIf="generalService.isMedicalStaff()">
+                                    <span
+                                        [routerLink]="['/medicine-management/medicine-list/details-medicine', data.id]"
+                                        class="text-link font-weight-semibold">
+                                        {{ data.name }}
+                                    </span>
+                                </ng-container>
+
+                            </td>
+                            <td nzAlign='center'>{{ data.medicineUnit.name }}</td>
+                            <td nzAlign='center'>{{ data.medicineClassification.name }}</td>
+                            <td nzAlign='center'>{{ data.medicineSubgroup.name }}</td>
+                            <td nzAlign='center'>{{ getCreateTime(data.createDate) }}</td>
+                            <!-- <td>
+                            <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
+                            <a style="color: #1890ff"
+                                [routerLink]="['/medicine-management/medicine-list/details-medicine', data.id]">
+                                Chi tiết
+                            </a>
+                        </td> -->
+                            <ng-container *ngIf="generalService.isMedicalStaff()">
+                                <td nzAlign='right'>
+                                    <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
+                                        (nzOnConfirm)="deleteMedicine(data.id)">
+                                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                    </a>
+                                </td>
+                            </ng-container>
+
+                        </tr>
+                    </tbody>
+                </nz-table>
+
+            </nz-spin>
 
         </div>
     </div>
 
-    <br>
-
-    <nz-spin [nzSpinning]="tableLoading" nzTip="Đang xủ lý...">
-        <nz-table #nzTable nzShowSizeChanger [nzPageSizeOptions]="[5, 10, 20, 30, 40]" [nzFrontPagination]="false"
-            [nzData]="medicineList" [nzScroll]="{ x: '800px' }" [nzTotal]="totalRecord"
-            [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
-            <thead>
-                <tr>
-                    <th nzWidth="5%" nzAlign='left'>No.</th>
-                    <th nzWidth="25%" nzAlign='center' nzColumnKey="Name" [nzSortFn]="true">Tên thuốc</th>
-                    <th nzWidth="10%" nzAlign='center' nzColumnKey="MedicineUnit" [nzSortFn]="true">Đơn vị</th>
-                    <th nzWidth="15%" nzAlign='center' nzColumnKey="MedicineClassification" [nzSortFn]="true">Loại thuốc
-                    </th>
-                    <th nzWidth="25%" nzAlign='center' nzColumnKey="MedicineSubgroup" [nzSortFn]="true">Nhóm</th>
-                    <th nzWidth="15%" nzAlign='center' nzColumnKey="CreatedDate" [nzSortFn]="true">Ngày thêm</th>
-                    <ng-container *ngIf="generalService.isMedicalStaff()">
-                        <th nzWidth="5%" nzAlign='right'></th>
-                    </ng-container>
 
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let data of medicineList; index as i">
-                    <td nzAlign='left'>{{ i+(page*pageLimit)-(pageLimit-1) }}</td>
-                    <td nzAlign='center'>
-                        <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
-                        <span *ngIf="!generalService.isMedicalStaff()" class="text-primary font-weight-semibold" >
-                            {{ data.name }}
-                        </span>
-                        <ng-container *ngIf="generalService.isMedicalStaff()">
-                            <span [routerLink]="['/medicine-management/medicine-list/details-medicine', data.id]"
-                                class="text-link font-weight-semibold">
-                                {{ data.name }}
-                            </span>
-                        </ng-container>
-
-                    </td>
-                    <td nzAlign='center'>{{ data.medicineUnit.name }}</td>
-                    <td nzAlign='center'>{{ data.medicineClassification.name }}</td>
-                    <td nzAlign='center'>{{ data.medicineSubgroup.name }}</td>
-                    <td nzAlign='center'>{{ getCreateTime(data.createDate) }}</td>
-                    <!-- <td>
-                        <input type="hidden" nz-input [(ngModel)]="data.id" #medicineId>
-                        <a style="color: #1890ff"
-                            [routerLink]="['/medicine-management/medicine-list/details-medicine', data.id]">
-                            Chi tiết
-                        </a>
-                    </td> -->
-                    <ng-container *ngIf="generalService.isMedicalStaff()">
-                        <td nzAlign='right'>
-                            <a nz-popconfirm nzPopconfirmTitle="Chắc chắn xóa chứ?" style="color: #1890ff"
-                                (nzOnConfirm)="deleteMedicine(data.id)">
-                                <i nz-icon nzType="delete" nzTheme="outline"></i>
-                            </a>
-                        </td>
-                    </ng-container>
-
-                </tr>
-            </tbody>
-        </nz-table>
-
-    </nz-spin>
 </div>

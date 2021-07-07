@@ -154,8 +154,8 @@ export class MedicineClassificationListComponent implements OnInit {
     this.classList[index].edit = true;
   }
 
-  saveEdit(id: string, index: number, updateValue: string) {
-    let name = updateValue;
+  saveEdit(id: string, index: number, inputValue: string) {
+    let name = inputValue;
     this.updateClass = {
       Name: name,
       Description: "",

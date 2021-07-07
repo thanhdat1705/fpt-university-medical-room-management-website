@@ -177,8 +177,8 @@ export class MedicineSubgroupListComponent implements OnInit {
     this.subgroupList[index].edit = true;
   }
 
-  saveEdit(id: string, index: number, updateValue: string) {
-    let name = updateValue;
+  saveEdit(id: string, index: number, inputValue: string) {
+    let name = inputValue;
     this.updateSubgroup = {
       Name: name,
     }

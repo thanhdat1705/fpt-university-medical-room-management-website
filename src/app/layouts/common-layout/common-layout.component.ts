@@ -29,7 +29,7 @@ export class CommonLayoutComponent {
         private activatedRoute: ActivatedRoute,
         public generalService: GeneralHelperService,
     ) {
-        this.getScreenSize();
+        // this.getScreenSize();
     }
 
     ngOnInit() {

@@ -50,7 +50,7 @@ export class BuyMedicineListComponent implements OnInit {
   ranges = { 'Hôm nay': [new Date(), new Date()], 'Tháng này': [startOfMonth(new Date()), endOfMonth(new Date())] };
   constructor(
     private medicineService: MedicineService,
-    private generalService: GeneralHelperService,
+    public generalService: GeneralHelperService,
     private service: RequestBuyMedicineService,
     private router: Router,
     private i18n: NzI18nService,
@@ -101,7 +101,7 @@ export class BuyMedicineListComponent implements OnInit {
           this.generalService.createErrorNotification(error);
         }
       )
-    }, 1000)
+    }, 250)
 
   }
 

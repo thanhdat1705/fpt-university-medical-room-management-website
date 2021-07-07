@@ -1,4 +1,4 @@
-<div class="inner-content">
+<div class="inner-content bg-white">
     <div class="d-flex flex-row align-items-center justify-content-between m-b-10">
         <nz-input-group nzSearch nzSize="large" [nzSuffix]="searchIconButton">
             <input placeholder="Nhập tên nhóm" nz-input [(ngModel)]="searchValue"
@@ -57,7 +57,7 @@
                         <td *ngIf="generalService.isMedicalStaff()" nzAlign='right'><a (click)="startEdit(i)" class="a-button">Chỉnh sửa</a></td>
                     </ng-container>
                     <ng-template #editTemplate>
-                        <td><input type="text" nz-input [(ngModel)]="updateValue" #inputValue /></td>
+                        <td><input type="text" nz-input [(ngModel)]="subgroupList[i].name" #inputValue /></td>
                         <td nzAlign='right'>
                             <a (click)="saveEdit(data.id, i, inputValue.value)" class="m-r-10 a-button">Lưu</a>
                             <a nz-popconfirm nzPopconfirmTitle="Bạn chắc chứ?" (nzOnConfirm)="cancelEdit(i)"

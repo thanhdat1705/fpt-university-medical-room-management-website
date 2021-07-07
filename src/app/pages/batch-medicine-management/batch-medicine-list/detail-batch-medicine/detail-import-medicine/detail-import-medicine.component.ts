@@ -92,7 +92,7 @@ export class DetailImportMedicineComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private pb: FormBuilder,
     private medicineService: MedicineService,
-    private generalService: GeneralHelperService,
+    public generalService: GeneralHelperService,
     private router: Router,
     private currency: CurrencyPipe,
     private i18n: NzI18nService,

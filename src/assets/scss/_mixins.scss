@@ -22,6 +22,12 @@
     }
 }
 
+@mixin screen-575 {
+    @media screen and (max-width: 575px) {
+        @content;
+    }
+}
+
 @mixin transition($transition) {
     transition: $transition;
     -webkit-transition: $transition;

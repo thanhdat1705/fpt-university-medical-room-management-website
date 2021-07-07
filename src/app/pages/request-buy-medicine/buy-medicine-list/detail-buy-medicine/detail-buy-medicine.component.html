@@ -59,16 +59,18 @@
 
                         </tbody>
                     </nz-table>
-                    <div class="d-flex flex-row align-items-center justify-content-between" style="width: 280px;">
-                        <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
-                            (click)="exportExcel()">
-                            <span>Xuất ra Excel</span>
-                        </button>
-                        <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
-                            (click)="goToUpdateScreen()">
-                            <span>Cập nhật đơn</span>
-                        </button>
-                    </div>
+                    <ng-container *ngIf="generalService.isMedicalStaff()">
+                        <div class="d-flex flex-row align-items-center justify-content-between" style="width: 280px;">
+                            <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
+                                (click)="exportExcel()">
+                                <span>Xuất ra Excel</span>
+                            </button>
+                            <button style="width: 130px;" nz-button nzType="primary" nzBlock nzSize="large"
+                                (click)="goToUpdateScreen()">
+                                <span>Cập nhật đơn</span>
+                            </button>
+                        </div>
+                    </ng-container>
                 </div>
             </nz-spin>
         </nz-spin>

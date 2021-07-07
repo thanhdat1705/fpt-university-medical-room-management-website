@@ -55,7 +55,7 @@ export class DetailBuyMedicineComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private medicineService: MedicineService,
-    private generalService: GeneralHelperService,
+    public generalService: GeneralHelperService,
     public service: RequestBuyMedicineService,
     private router: Router,
     private activatedRoute: ActivatedRoute,

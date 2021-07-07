@@ -63,7 +63,7 @@ export class DetailBatchMedicineComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private service: ImportBatchService,
     private router: Router,
-    private generalService: GeneralHelperService,
+    public generalService: GeneralHelperService,
     private modalAdd: NzModalService,
     private modalDetail: NzModalService,) {
 

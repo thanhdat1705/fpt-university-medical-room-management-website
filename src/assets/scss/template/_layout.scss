@@ -22,7 +22,7 @@
     background: #fff;
     // position: fixed;
     top: 0px;
-    border-bottom: 1px solid #eaf8fa;
+    border-bottom: 1px solid #edf8fa;
     display: flex;
 
     height: 70px;
@@ -46,14 +46,12 @@
 .main-content {
     margin: 10px 25px;
     margin-top: 25px;
-    // .inner-content {
-    //     margin: 15px 0px;
-    //     padding: 24px;
-    //     background: #ffffff;
-    //     min-height: 500px;
-    // }
+
+    @include screen-mobile {
+        margin: 10px 5px !important;
+    }
     .main-content-header {
-        padding-left: 20px; 
+        padding-left: 20px;
         margin-bottom: 20px;
         .page-title {
             margin-top: 5px;
@@ -61,18 +59,19 @@
             color: #5f5f5f;
             font-size: 19px;
             line-height: 1;
-
         }
     }
 }
-
-
 
 .inner-content {
     margin: 20px 20px;
     padding: 24px;
     background: #ffffff;
     min-height: 300px;
+    @include screen-mobile {
+        margin: 0px !important;
+        padding: 20px !important;
+    }
 }
 
 nz-breadcrumb {
@@ -95,7 +94,7 @@ nz-breadcrumb {
     line-height: 64px;
     background: #fff;
     transition: all 0.3s;
-    border-bottom: 1px solid #eaf8fa;
+    border-bottom: 1px solid #edf8fa;
 
     img {
         display: inline-block;
@@ -116,7 +115,7 @@ nz-breadcrumb {
 }
 
 .menu-sidebar {
-    border-right: 1px solid #eaf8fa;
+    border-right: 1px solid #edf8fa;
     .sider-menu {
         height: 90%;
         border-right: 0;
@@ -135,3 +134,34 @@ li {
     align-items: baseline;
 }
 
+.padding-content {
+    padding-left: 20px;
+    padding-right: 20px;
+    @include screen-mobile {
+        padding: 0px !important;
+    }
+}
+
+.padding-left {
+    padding: 5px 5px 5px 0px;
+    @include screen-575 {
+        padding: 5px 0px 5px 0px !important;
+    }
+}
+
+.padding-right {
+    padding: 5px 0px 5px 5px;
+    @include screen-575 {
+        padding: 5px 0px 5px 0px !important;
+    }
+}
+
+.content {
+    background: #ffffff;
+    padding: 20px;
+    min-height: 300px;
+    @include screen-mobile {
+        margin: 0px !important;
+        padding: 20px !important;
+    }
+}
