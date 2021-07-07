@@ -295,21 +295,10 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
         worksheet.getCell('E' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
         worksheet.getCell('F' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].diseaseStatusName;
         worksheet.getCell('F' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'left' };
-        // if (this.treatmentTableData[i].treatmentReportInfo[j].diseaseStatusName.length / 28 > 1) {
-        //   worksheet.getRow(contentRow).height = 15 * (Math.ceil(this.treatmentTableData[i].treatmentReportInfo[j].diseaseStatusName.length / 28) + 1);
-        //   worksheet.getRow(contentRow).alignment = { vertical: 'top', horizontal: 'left' };
-        // }
         worksheet.getCell('G' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].treatmentDirection;
         worksheet.getCell('G' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'left' };
-
-        // if (this.treatmentTableData[i].treatmentReportInfo[j].treatmentDirection.length / 38 > 1) {
-        //   worksheet.getRow(contentRow).height = 15 * (Math.ceil(this.treatmentTableData[i].treatmentReportInfo[j].treatmentDirection.length / 38) + 1);
-        //   worksheet.getRow(contentRow).alignment = { vertical: 'top', horizontal: 'left' };
-
-        // }
         worksheet.getCell('H' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].numberOfMedicine;
         worksheet.getCell('H' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
-
         worksheet.getCell('I' + contentRow).value = this.getIsDelivered(this.treatmentTableData[i].treatmentReportInfo[j].isConfirmed);
         worksheet.getCell('I' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
         
