@@ -59,6 +59,21 @@
                     </li>
                 </ul>
             </li>
+<<<<<<< HEAD
+=======
+            <ng-container *ngIf="!generalService.isMedicalStaff()">
+                <li nz-submenu nzTitle="Quản lý tài khoản" nzIcon="dollar">
+                    <ul>
+                        <li nz-menu-item>
+                            <a [routerLink]="'account/insert-account'">Tạo tài khoản mới</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a [routerLink]="'account/account-list'">Danh sách tài khoản hiện có</a>
+                        </li>
+                    </ul>
+                </li>
+            </ng-container>
+>>>>>>> tan
             <li nz-submenu nzTitle="Quản lý bệnh nhân" nzIcon="dollar">
                 <ul>
                     <li nz-menu-item>

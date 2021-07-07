@@ -10,8 +10,9 @@ import { TreatmentInformationService } from 'src/app/shared/services/treatment-i
 import { treatmentSearchTable } from '../view-treatment-information-list/view-treatment-information-list.component';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Patient } from 'src/app/shared/models/patient';
+import { Column, Workbook } from 'exceljs';
 
-export interface treatmentReportTableRowData {
+export interface TreatmentReportTableRowData {
   date: string;
   treatmentReportInfo: TreatmentReportInfo[];
 }
@@ -34,7 +35,7 @@ export interface TreatmentReportInfo {
 export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
 
   treatmentList: TreatmentReportSearchResponse[] = [];
-  treatmentTableData: treatmentReportTableRowData[];
+  treatmentTableData: TreatmentReportTableRowData[];
   pageSize = 10;
   pageIndex = 1;
   searchRecordMap: Map<string, ValueCompare> = new Map;
@@ -50,10 +51,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
   searchTreatmentValue;
   selectedSearchRole = '';
 
-  // convertList(): TreatmentReportExcel[] {
-  //   const newArray = this.treatmentTableData.map(({date,treatmentReportInfo,...keepAttrs }) => keepAttrs)
-  //   return newArray;
-  // }
+ 
 
   sortField = "createAt";
   sortOrder = 1;
@@ -233,63 +231,23 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     this.searchTreatment();
     console.log('date', result)
   }
+  headers: Partial<Column>[] = [
+    { header: 'Ngày', key: 'date', width: 3 },
+    { header: 'STT', key: 'stt', width: 9 },
+    { header: 'Tên nhân viên', key: 'name', width: 11 },
+    { header: 'Giới tính', key: 'gender', width: 8 },
+    { header: 'Bộ phận', key: 'department', width: 7 },
+    { header: 'Tình trạng bệnh', key: 'diseaseStatusName', width: 7 },
+    { header: 'Hướng điều trị', key: 'treatmentDirection', width: 7 },
+    { header: 'Số thuốc cấp', key: 'numberOfMedicine', width: 7 },
+    { header: 'Kí nhận', key: 'isDeilivered', width: 7 },
+
+  ]
+
 
   exportExcel() {
-    //   this.treatmentTableData = this.convertList();
-    //   let sheet = this.generalService.getLocalMonthYear(this.requestDetail.updateDate);
-    //   let workbook = new Workbook();
-    //   let worksheet = workbook.addWorksheet(sheet);
-
-    //   worksheet.columns = this.headers;
-
-    //   var headerRow = worksheet.getRow(1);
-    //   headerRow.height = 65;
-    //   headerRow.eachCell((cell) => {
-    //     cell.fill = {
-    //       type: 'pattern',
-    //       pattern: 'solid',
-    //       fgColor: { argb: 'C5D9F1' },
-    //       bgColor: { argb: 'C5D9F1' }
-    //     }
-    //     cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } }
-    //     cell.font = { name: 'Times New Roman', size: 13, bold: true }
-    //     cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' }
-    //   });
-
-    //   this.treatmentTableData.forEach((b, index) => {
-    //     let row = worksheet.addRow({ stt: index + 1, name: b.medicineName, unit: b.medicineUnitName, quantity: b.quantity, note: b.note });
-    //     let stt = row.getCell('stt');
-    //     let unit = row.getCell('unit');
-    //     let quantity = row.getCell('quantity');
-    //     let color = 'FF99FF99';
-    //     stt.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-    //     unit.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-    //     quantity.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-
-    //     row.font = {
-    //       color: {
-    //         argb: '00000000',
-    //       },
-    //       name: 'Times New Roman', size: 13,
-    //       bold: false
-    //     }
-    //     row.eachCell(cell => {
-    //       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
-    //     })
-    //     row.height = 30;
-    //   })
-
-    //   worksheet.columns.forEach((col, index) => {
-    //     let strLength = this.getLength(index);
-    //     col.width = strLength;
-    //   })
-
-
-    //   workbook.xlsx.writeBuffer().then((data) => {
-    //     let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    //     fs.saveAs(blob, 'ĐỀ-XUẤT-MUA-THUỐC.xlsx');
-    //   })
-
+ 
   }
+
 
 }

@@ -21,7 +21,7 @@ export class ViewPatientTreatmentListComponent implements OnInit {
 
   id: string
   treatmentList: TreatmentResponse[];
-  params = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
+  params = "id, patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
   includes = ['DiseaseStatusInTreatments.DiseaseStatus']
   pageSize = 10;
   pageIndex = 1;
@@ -156,6 +156,7 @@ export class ViewPatientTreatmentListComponent implements OnInit {
   }
 
   getTreatment(id: any) {
+    console.log(id)
     this.treatmentInformationService.getTreatment(id, this.paramsGetDetails);
   }
 
