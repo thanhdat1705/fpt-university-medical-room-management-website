@@ -2,7 +2,7 @@
 
 
 
-<div class="search-filter" *ngIf="treatmentDetailsForm">
+<div  class="search-filter" *ngIf="treatmentDetailsForm">
   <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
     <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchNameValue" />
   </nz-input-group>
@@ -31,16 +31,16 @@
   </div>
 </div>
 
-<nz-table *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize" [nzScroll]="{ y: '400px' }"
+<nz-table style="overflow-y: hidden" *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize" [nzScroll]="{ x: '200px', y: '280px' }"
   [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false" 
   (nzQueryParams)="onQueryParamsChange($event)">
 
   <thead>
     <tr>
       <th nzWidth="60px"></th>
-      <th>Thuốc</th>
-      <th>Số lượng</th>
-      <th>Ngày hết hạn</th>
+      <th nzWidth="150px">Thuốc</th>
+      <th nzWidth="120px">Số lượng</th>
+      <th nzWidth="140px">Ngày hết hạn</th>
     </tr>
   </thead>
   <tbody>
@@ -56,7 +56,7 @@
         <tr [nzExpand]="expandSet.has(data.medicineInInventory.medicine.id)">
 
           <td [nzChecked]="setOfCheckedId.has(item.id)" (nzCheckedChange)="onItemChecked(item.id, $event)"></td>
-          <td style="padding-left: 30px; width: 40%;">
+          <td style="padding-left: 30px; width: 35%;">
             {{item.name}}
           </td>
           <td style=" width: 30%">

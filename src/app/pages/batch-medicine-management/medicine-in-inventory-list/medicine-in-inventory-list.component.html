@@ -1,68 +1,88 @@
-<div class="inner-content">
-  <div class="search-filter">
-    <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
-      <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchMedicineNameValue"/>
-  </nz-input-group>
-  <ng-template #searchIconButton>
-      <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicineName()">
-          <i nz-icon nzType="search" nzTheme="outline"></i>
-      </button>
-  </ng-template>
-    <!-- <input class="search-field" placeholder="Tìm tên thuốc" nz-input [(ngModel)]="searchMedicineNameValue" />
+<div class="d-flex flex-row flex-wrap padding-content">
+  <div class="col-sm-6 col-md-5 col-lg-5 col-xl-3 padding-left">
+    <div class="d-flex flex-column content">
+      <div class="d-flex flex-row justify-content-between">
+        <span class="text-teal-green m-r-10 font-weight-semibold font-size-18">Bộ lọc tím kiếm</span>
+
+        <button nz-button nzType="primary" (click)="setToDefaultFilter()">
+          <span>Mặc định</span>
+        </button>
+      </div>
+      <div class="search-filter">
+
+        <!-- <input class="search-field" placeholder="Tìm tên thuốc" nz-input [(ngModel)]="searchMedicineNameValue" />
     <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton"
       (click)="searchEliminatedMedicineName()">
       <i nz-icon nzType="search" nzTheme="outline"></i>
     </button> -->
-    <br><br>
+        <br><br>
 
 
-    <div *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList" class="select-wrap">
-      <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
-      <nz-select class="select-w" nzPlaceHolder="Đơn vị" [(ngModel)]="filterUnitValue" nzAllowClear
-        (ngModelChange)="onSearchUnit()">
-        <nz-option *ngFor="let option of medicineUnitList" [nzLabel]="option.name" [nzValue]="option.id">
-        </nz-option>
-      </nz-select>
-      <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
-        (ngModelChange)="onSearchClassification()">
-        <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
-        </nz-option>
-      </nz-select>
-      <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
-        (ngModelChange)="onSearchSubGroup()">
-        <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
-        </nz-option>
-      </nz-select>
-      <br><br>
+        <div *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList" class="select-wrap">
+          <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
+          <nz-select class="select-w" nzPlaceHolder="Đơn vị" [(ngModel)]="filterUnitValue" nzAllowClear
+            (ngModelChange)="onSearchUnit()">
+            <nz-option *ngFor="let option of medicineUnitList" [nzLabel]="option.name" [nzValue]="option.id">
+            </nz-option>
+          </nz-select>
+          <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
+            (ngModelChange)="onSearchClassification()">
+            <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
+            </nz-option>
+          </nz-select>
+          <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
+            (ngModelChange)="onSearchSubGroup()">
+            <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
+            </nz-option>
+          </nz-select>
+          <br><br>
+        </div>
+      </div>
     </div>
   </div>
-  <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="medicineInInventoryList" nzTableLayout="fixed" [nzLoading]="loading"
-    [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false"
-    (nzQueryParams)="onQueryParamsChange($event)" nzShowSizeChanger>
-    <thead>
-      <tr>
-        <!-- <th nzWidth="40px" nzColumnKey="InternalCode" [nzSortFn]="true">Stt</th> -->
-        <th nzWidth="20%" nzColumnKey="Medicine.Name" [nzSortFn]="true">Tên thuốc</th>
-        <th nzWidth="10%" nzColumnKey="Quantity" [nzSortFn]="true">Số lượng</th>
-        <th nzWidth="10%" nzColumnKey="Medicine.MedicineClassification.Id" [nzSortFn]="true">Đơn vị</th>
-        <th nzWidth="10%" nzColumnKey="Medicine.MedicineClassification.Name" [nzSortFn]="true">Loại thuốc</th>
-        <th nzWidth="25%" nzColumnKey="Medicine.MedicineSubgroup.Name" [nzSortFn]="true">Nhóm</th>
-        <th nzWidth="10%"></th>
-        <!-- <th>Thuộc lô</th> -->
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let medicineInInventory of medicineInInventoryList">
-        <td>{{ medicineInInventory.medicine.name }}</td>
-        <td>{{ medicineInInventory.quantity }}</td>
-        <td>{{ medicineInInventory.medicineUnit.name }}</td>
-        <td>{{ medicineInInventory.medicineClassification.name }}</td>
-        <td>{{ medicineInInventory.medicineSubgroup.name }}</td>
-        <td>
-          <a style="color: #1890ff;" (click)="GetBatchOfmedicine(medicineInInventory.medicine.id)"
-            [routerLink]="['/batch-medicine-management/batch-of-medicine', medicineInInventory.medicine.id]">Xem lô thuốc</a>
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
+  <div class="col-sm-6 col-md-7 col-lg-7 col-xl-9 padding-right">
+    <div class="d-flex flex-column justify-content-between content">
+      <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
+        <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchMedicineNameValue" />
+      </nz-input-group>
+      <ng-template #searchIconButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="searchMedicineName()">
+          <i nz-icon nzType="search" nzTheme="outline"></i>
+        </button>
+      </ng-template>
+      <br>
+      <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="medicineInInventoryList" nzTableLayout="fixed"
+        [nzLoading]="loading" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
+        [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)" nzShowSizeChanger>
+        <thead>
+          <tr>
+            <!-- <th nzWidth="40px" nzColumnKey="InternalCode" [nzSortFn]="true">Stt</th> -->
+            <th nzWidth="14%" nzColumnKey="Medicine.Name" [nzSortFn]="true">Tên thuốc</th>
+            <th nzWidth="10%" nzColumnKey="Quantity" [nzSortFn]="true">Số lượng</th>
+            <th nzWidth="10%" nzColumnKey="Medicine.MedicineClassification.Id" [nzSortFn]="true">Đơn vị</th>
+            <th nzWidth="10%" nzColumnKey="Medicine.MedicineClassification.Name" [nzSortFn]="true">Loại thuốc</th>
+            <th nzWidth="10%" nzColumnKey="Medicine.MedicineSubgroup.Name" [nzSortFn]="true">Nhóm</th>
+            <th nzWidth="10%"></th>
+            <!-- <th>Thuộc lô</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medicineInInventory of medicineInInventoryList" (click)="GetBatchOfmedicine(medicineInInventory.medicine.id)"s>
+            <td>{{ medicineInInventory.medicine.name }}</td>
+            <td>{{ medicineInInventory.quantity }}</td>
+            <td>{{ medicineInInventory.medicine.medicineUnit.name }}</td>
+            <td>Trả classification</td>
+            <td>Trả subgroup</td>
+            <!-- <td>{{ medicineInInventory.medicineClassification.name }}</td>
+        <td>{{ medicineInInventory.medicineSubgroup.name }}</td> -->
+            <td>
+              <a style="color: #1890ff;" (click)="GetBatchOfmedicine(medicineInInventory.medicine.id)"
+                >Xem lô
+                thuốc</a>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
 </div>

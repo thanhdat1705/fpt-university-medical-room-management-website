@@ -396,7 +396,9 @@ export class AddTreatmentInformationComponent implements OnInit {
   showMedicineModal(): void {
     this.modalService.create({
       nzTitle: 'Danh sách thuốc',
-      nzContent: TreatmentInformationDetailsComponent
+      nzContent: TreatmentInformationDetailsComponent,
+      nzStyle:{  top: '20px' },
+      nzWidth: 650
     });
   }
 

@@ -245,7 +245,7 @@ export class ViewTreatmentInformationListComponent implements OnInit {
     // }
   }
 
-  onSearchTreatmentStatus(){
+  onSearchTreatmentStatus() {
     this.generalService.setValueCompare(this.treatmentStatusFilterValue, this.isDeliveryValueCompare, 'isDelivered', this.searchRecord);
     this.searchTreatment();
   }
@@ -338,6 +338,18 @@ export class ViewTreatmentInformationListComponent implements OnInit {
 
   getTreatment(id: any) {
     this.treatmentInformationService.getTreatment(id, this.paramsGetDetails);
+  }
+
+  setToDefaultFilter() {
+    this.dateRange = [];
+    this.genderFilterValue = null;
+    this.departmentFilterValue = null;
+    this.treatmentStatusFilterValue = null;
+    this.selectedSearchAttribute = '';
+    this.searchTreatmentValue = '';
+    this.selectedSearchRole = '';
+    this.searchRecord = new Map;
+    this.searchTreatment();
   }
 
 }

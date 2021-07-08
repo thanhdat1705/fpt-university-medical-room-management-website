@@ -222,7 +222,7 @@
         <div class="bg-white d-flex flex-column p-h-20 p-v-10 w-100">
             <span class="text-teal-green font-size-18 font-weight-semibold">Cấp phát thuốc</span>
             <dividing-line></dividing-line>
-            <a nz-button nzType="default" [disabled]="!isEditing" style="margin: 30px; float: right;"
+            <a *ngIf="!treatment.isDelivered" nz-button nzType="default" [disabled]="!isEditing" style="margin: 30px; float: right;"
                 (click)="showMedicineModal()">Thêm
                 thuốc</a>
 

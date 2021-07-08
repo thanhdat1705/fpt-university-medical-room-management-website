@@ -47,7 +47,7 @@ export class ViewPatientListComponent implements OnInit {
       name: "Nữ"
     }
   ]
-  
+
   searchAttributelist = [
     {
       id: 'name',
@@ -74,7 +74,7 @@ export class ViewPatientListComponent implements OnInit {
   total = 0;
   activeStatus = null;
   role = null;
-  selectField = "id, internalCode, name, gender, department";
+  selectField = "id, internalCode, name, gender, department, recentTimeGetTreatment";
 
   constructor(
     private summaryService: SummaryService,
@@ -109,9 +109,11 @@ export class ViewPatientListComponent implements OnInit {
     } else if (sortOrder == "descend") {
       this.sortOrder = 0;
     }
+
     this.pageSize = params.pageSize;
     this.patientSearchRequest.limit = params.pageSize;
-
+    this.patientSearchRequest.sortField = this.sortColumn;
+    this.patientSearchRequest.sortOrder = this.sortOrder;
     this.patientSearchRequest.page = params.pageIndex;
     this.pageIndex = this.patientSearchRequest.page;
     this.searchPatient();

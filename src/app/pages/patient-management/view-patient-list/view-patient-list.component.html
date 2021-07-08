@@ -44,10 +44,12 @@
       [nzFrontPagination]="false" nzShowSizeChanger>
       <thead>
         <tr>
-          <th nzColumnKey="InternalCode" [nzSortFn]="true">Mã số</th>
-          <th nzColumnKey="DisplayName" [nzSortFn]="true">Tên</th>
-          <th nzColumnKey="RoleID" [nzSortFn]="true">Giới tính</th>
-          <th nzColumnKey="Active" [nzSortFn]="true">Phòng ban</th>
+          <th nzColumnKey="internalCode" [nzSortFn]="true">Mã số</th>
+          <th nzColumnKey="name" [nzSortFn]="true">Tên</th>
+          <th nzColumnKey="gender" [nzSortFn]="true">Giới tính</th>
+          <th nzColumnKey="department.name" [nzSortFn]="true">Phòng ban</th>
+          <th nzColumnKey="recentTimeGetTreatment" [nzSortFn]="true">Ngày khám gần nhất</th>
+
           <th></th>
         </tr>
       </thead>
@@ -58,6 +60,7 @@
           <td>{{ generalService.getGender(patient.gender) }}</td>
         
           <td>{{ patient.department.name }}</td>
+          <td>{{ patient.recentTimeGetTreatment }}</td>
          
           <td> <a nzAlign="center" style="color: #1890ff"
           (click)="getPatientTreatment(patient.id)"

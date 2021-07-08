@@ -300,7 +300,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     this.generalService.setValueCompare(month, this.periodicMonthMedicineInInventoryValueCompare, 'periodicInventory.month', this.MedicineInInventorySearchValueMap);
     this.generalService.setValueCompare(year, this.periodicYearMedicineInInventoryValueCompare, 'periodicInventory.year', this.MedicineInInventorySearchValueMap);
 
-    this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest).subscribe(
+    this.summaryService.searchMedicineInInventoryGroupBy(this.medicineInInventorySearchRequest).subscribe(
       (response) => {
         console.log(response.data);
         this.getData(response.data);

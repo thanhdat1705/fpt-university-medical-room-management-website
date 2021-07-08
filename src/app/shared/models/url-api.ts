@@ -78,6 +78,8 @@ export const UrlServerApiUpdateTreatment = UrlServer + "/api/v{version}/Treatmen
 export const UrlServerAPIImportBatchMedicine = UrlServer + '/api/v1.0/ImportBatchMedicine/Searching';
 
 export const UrlServerAPISearchMedicineInInventory = UrlServer + '/api/v1.0/MedicineInInventoryDetails/Searching';
+export const UrlServerAPISearchMedicineInInventoryGroupBy = UrlServer + '/api/v1.0/MedicineInInventoryDetails/SearchingGroupByMedicine';
+
 export const UrlServerAPIGetMedicineInInventoryDetails = UrlServer + '/api/v1.0/MedicineInInventoryDetails';
 //Import Batch
 export const UrlServerAPISearchImportBatch = UrlServer + '/api/v1.0/ImportBatches/Searching';

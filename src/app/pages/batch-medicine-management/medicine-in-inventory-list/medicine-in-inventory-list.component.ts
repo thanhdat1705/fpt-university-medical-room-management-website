@@ -169,8 +169,8 @@ export class MedicineInInventoryListComponent implements OnInit {
 
     this.generalService.setValueCompare(month, this.periodicMonthValueCompare, 'periodicInventory.month', this.searchMapValue)
     this.generalService.setValueCompare(year, this.periodicYearValueCompare, 'periodicInventory.year', this.searchMapValue);
-  
-    this.summaryService.searchMedicineInInventory(this.medicineInInventorySearchRequest).subscribe(
+    this.medicineInInventorySearchRequest.searchValue = this.searchMapValue;
+    this.summaryService.searchMedicineInInventoryGroupBy(this.medicineInInventorySearchRequest).subscribe(
       (response) => {
         console.log(response.data);
         this.getData(response.data);
@@ -215,5 +215,14 @@ export class MedicineInInventoryListComponent implements OnInit {
 
   GetBatchOfmedicine(id: any) {
     this.medicineInInventoryService.getMedicineInInventory(id);
+  }
+
+  setToDefaultFilter() {
+    this.searchMapValue = new Map;
+    this.searchMedicineNameValue = '';
+    this.filterUnitValue = '';
+    this.filterClassificationValue = '';
+    this.filterSubgroupValue = '';
+    this.searchMedicineInInventory();
   }
 }

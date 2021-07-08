@@ -108,7 +108,7 @@ export class TreatmentInformationService {
     var treatment = this.treatmentInformationDetails.filter(treatment => treatment.medicineId.includes(id));
     var tip = [];
     for (let i = 0; i < treatment.length; i++) {
-      tip.push(treatment[i].quantity + ' ' + treatment[i].unitName + ' có hạn sử dụng ' + treatment[i].expiredDate + " \n ");
+      tip.push(treatment[i].quantity + ' ' + treatment[i].unitName + ' ' + treatment[i].medicineName + ' có hạn sử dụng ' + treatment[i].expiredDate + " \n ");
 
     }
     return tip;

@@ -34,7 +34,7 @@ export interface TreatmentReportInfo {
   styleUrls: ['./view-treatment-information-periodic-report.component.scss']
 })
 export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
-
+  curDate: Date;
   treatmentList: TreatmentReportSearchResponse[] = [];
   treatmentTableData: TreatmentReportTableRowData[];
   pageSize = 10;
@@ -51,7 +51,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
   selectedSearchAttribute = '';
   searchTreatmentValue;
   selectedSearchRole = '';
-
+  dateSelect: Date
 
 
   sortField = "createAt";
@@ -85,7 +85,8 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+    this.dateSelect = new Date;
+    console.log('this.dateSelect',this.dateSelect);
     this.treatmentSearchRequest.searchValue = this.searchRecordMap;
     this.searchTreatment();
   }
@@ -223,7 +224,7 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
   }
 
   onDateChange(result: Date): void {
-
+    console.log(this.dateSelect);
     var month = result.getUTCMonth() + 1; //months from 1-12
     var year = result.getFullYear();
 
@@ -232,11 +233,12 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     this.searchTreatment();
     console.log('date', result)
   }
+
   headers: Partial<Column>[] = [
-    { header: 'Ngày', key: 'date', width: 20 },
-    { header: 'STT', key: 'stt', width: 10 },
-    { header: 'Tên nhân viên', key: 'name', width: 20 },
-    { header: 'Giới tính', key: 'gender', width: 12 },
+    { header: 'Ngày-tháng', key: 'date', width: 20 },
+    { header: 'STT', key: 'stt', width: 6 },
+    { header: 'Họ và tên NV', key: 'name', width: 20 },
+    { header: 'Giới tính', key: 'gender', width: 8, alignment: { wrapText: true } },
     { header: 'Bộ phận', key: 'department', width: 15 },
     { header: 'Tình trạng bệnh', key: 'diseaseStatusName', width: 25 },
     { header: 'Hướng điều trị', key: 'treatmentDirection', width: 35 },
@@ -281,27 +283,27 @@ export class ViewTreatmentInformationPeriodicReportComponent implements OnInit {
     for (let i = 0; i < this.treatmentTableData.length; i++) {
       worksheet.mergeCells('A' + mergeRowNumber + ':A' + (mergeRowNumber + this.treatmentTableData[i].treatmentReportInfo.length - 1));
       worksheet.getCell('A' + contentRow).value = this.treatmentTableData[i].date;
-      worksheet.getCell('A' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+      worksheet.getCell('A' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'center' };
 
       for (let j = 0; j < this.treatmentTableData[i].treatmentReportInfo.length; j++) {
         let num = j
         worksheet.getCell('B' + contentRow).value = ++num;
-        worksheet.getCell('B' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('B' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'center' };
         worksheet.getCell('C' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].patientName;
-        worksheet.getCell('C' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('C' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'left' };
         worksheet.getCell('D' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].patientGender
-        worksheet.getCell('D' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('D' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'center' };
         worksheet.getCell('E' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].departmentName;
-        worksheet.getCell('E' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('E' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'center' };
         worksheet.getCell('F' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].diseaseStatusName;
-        worksheet.getCell('F' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'left' };
+        worksheet.getCell('F' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'left' };
         worksheet.getCell('G' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].treatmentDirection;
-        worksheet.getCell('G' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'left' };
+        worksheet.getCell('G' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'left' };
         worksheet.getCell('H' + contentRow).value = this.treatmentTableData[i].treatmentReportInfo[j].numberOfMedicine;
-        worksheet.getCell('H' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
+        worksheet.getCell('H' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'center' };
         worksheet.getCell('I' + contentRow).value = this.getIsDelivered(this.treatmentTableData[i].treatmentReportInfo[j].isConfirmed);
-        worksheet.getCell('I' + contentRow).alignment = { wrapText: true,  vertical: 'middle', horizontal: 'center' };
-        
+        worksheet.getCell('I' + contentRow).alignment = { wrapText: true, vertical: 'middle', horizontal: 'center' };
+
         contentRow++;
 
       }

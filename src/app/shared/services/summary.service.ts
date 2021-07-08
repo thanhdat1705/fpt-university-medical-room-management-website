@@ -68,7 +68,8 @@ import {
   UrlServerAPIDeleteMedicineSubgroup,
   UrlServerAPIUpdateMedicineSubgroup,
   UrlServerAPIDeleteMedicineClassification,
-  UrlServerAPIUpdateMedicineClassification
+  UrlServerAPIUpdateMedicineClassification,
+  UrlServerAPISearchMedicineInInventoryGroupBy
 } from '../models/url-api';
 import { SearchMedicineUnitRequest } from '../requests/medicine-unit/search-request';
 import { SearchMedicineSubgroupRequest } from '../requests/medicine-subgroup/search-request';
@@ -335,9 +336,14 @@ export class SummaryService {
 
   // Medicine in inventory
 
+  public searchMedicineInInventoryGroupBy(data: SearchRequestWithGroupByAndInclude) {
+    return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventoryGroupBy + '?' + data.getParamsString());
+  }
+
   public searchMedicineInInventory(data: SearchRequestWithGroupByAndInclude) {
     return this.http.get<ResponseServer>(UrlServerAPISearchMedicineInInventory + '?' + data.getParamsString());
   }
+
 
   public getMedicineInInventoryDetails(id: string, param: string) {
     return this.http.get<ResponseServer>(UrlServerAPIGetMedicineInInventoryDetails + "/" + id + "?selectFields=" + param);

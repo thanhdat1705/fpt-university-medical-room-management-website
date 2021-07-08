@@ -6,6 +6,8 @@ export interface Patient{
     name: string;
     gender: string;
     department?: Department;
+    createAt?: Date;
     departmentId: string;
     allergyDescription: string;
+    recentTimeGetTreatment?: Date
 }
