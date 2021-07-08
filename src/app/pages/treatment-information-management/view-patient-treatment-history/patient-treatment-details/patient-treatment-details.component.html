@@ -1,0 +1,41 @@
+<div class="inner-content">
+    <span class="text-teal-green font-size-18 font-weight-semibold">Bác sĩ</span>
+    <dividing-line></dividing-line>
+
+    <div class="info-wrapper">
+        <div class="header-info">
+            <span class="font-weight-semibold font-size-16 text-teal-green">Tên</span>
+            <span>{{ treatment.accountCreateBy.displayName }}</span>
+        </div>
+        <div class="header-info">
+            <span class="font-weight-semibold font-size-16 text-teal-green">Mã số</span>
+            <span>{{ treatment.accountCreateBy.internalCode }}</span>
+        </div>
+    </div>
+
+    Ngày Khám: {{ createDate }}
+    <br>
+    <br>
+
+    Tình trạng bệnh: {{ deseaseStatusNames }}
+    <br>
+    <br>
+    Đơn thuốc
+    <nz-table nzShowSizeChanger class="medicine-table" #colSpanTable [nzData]="treatment" nzTableLayout="fixed"
+        nzBordered>
+        <thead>
+            <tr>
+                <th nzWidth="7%" nzColumnKey="InternalCode">Thuốc</th>
+                <th nzWidth="15%" nzColumnKey="Active">Số lượng</th>
+                <th nzWidth="20%" nzColumnKey="Active">Sử dụng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let details of treatment.treatmentInformations">
+                <td>{{ details.medicine.name }}</td>
+                <td>{{ details.quantity }} {{ details.medicine.medicineUnit.name }}</td>
+                <td>{{ details.indicationToDrink }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>

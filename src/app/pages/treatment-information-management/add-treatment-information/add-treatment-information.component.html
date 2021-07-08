@@ -20,12 +20,13 @@
                                 #inputInternalCode [nzAutocomplete]="autoInternalCode" />
                             <nz-autocomplete #autoInternalCode>
                                 <ng-container *ngFor="let option of patientInternalCodeList">
-                                  
-                                        <nz-auto-option (click)='getPatientDetails(option.internalCode)' *ngIf="!isLoading" class="global-search-item"
-                                            [nzValue]="option.internalCode" [nzLabel]="option.internalCode">
-                                            <a >{{option.internalCode}}</a>
-                                        </nz-auto-option>
-                              
+
+                                    <nz-auto-option (click)='getPatientDetails(option.internalCode)' *ngIf="!isLoading"
+                                        class="global-search-item" [nzValue]="option.internalCode"
+                                        [nzLabel]="option.internalCode">
+                                        <a>{{option.internalCode}}</a>
+                                    </nz-auto-option>
+
 
 
                                 </ng-container>
@@ -171,8 +172,14 @@
 
                     </nz-form-control>
                 </nz-form-item>
-
-                <br><br>
+                <nz-form-item>
+                    <!-- <nz-form-label class="text-label" [nzSpan]="7">
+                        <span class="font-size-16 m-l-11">Xác nhận đơn</span>
+                    </nz-form-label> -->
+                    <nz-form-control [nzErrorTip]="allergyDescriptionTpl">
+                        <label style="float: right;" nz-checkbox [(ngModel)]="isDeliver">Xác nhận đơn</label>
+                    </nz-form-control>
+                </nz-form-item>
                 <nz-form-item>
                     <nz-form-control>
                         <button class="font-size-16" nz-button nzType="primary"
@@ -182,6 +189,7 @@
                     </nz-form-control>
                 </nz-form-item>
             </form>
+
         </div>
         <div class="bg-white d-flex flex-column p-h-20 p-v-10" *ngIf="profile">
             <span class="text-teal-green font-size-18 font-weight-semibold">Bác sĩ</span>

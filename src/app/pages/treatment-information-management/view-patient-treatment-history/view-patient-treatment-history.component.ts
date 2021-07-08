@@ -13,11 +13,11 @@ import { ActivatedRoute } from '@angular/router';
 import { TreatmentResponse } from 'src/app/shared/responses/treatment/treatment-details-response';
 
 @Component({
-  selector: 'app-view-patient-treatment-list',
-  templateUrl: './view-patient-treatment-list.component.html',
-  styleUrls: ['./view-patient-treatment-list.component.scss']
+  selector: 'app-view-patient-treatment-history',
+  templateUrl: './view-patient-treatment-history.component.html',
+  styleUrls: ['./view-patient-treatment-history.component.scss']
 })
-export class ViewPatientTreatmentListComponent implements OnInit {
+export class ViewPatientTreatmentHistoryComponent implements OnInit {
 
   id: string
   treatmentList: TreatmentResponse[];
@@ -49,7 +49,7 @@ export class ViewPatientTreatmentListComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
     if(this.id == null){
-      
+      this.id = localStorage.getItem("accountId");
     }
     // this.getAllDepartment();
     this.activatedroute.fragment.subscribe(

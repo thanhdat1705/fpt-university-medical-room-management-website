@@ -9,6 +9,7 @@ import { SearchRequest, ValueCompare } from 'src/app/shared/requests/search-requ
 import { GeneralHelperService } from 'src/app/shared/services/general-helper.service';
 import { PatientService } from 'src/app/shared/services/patient-service/patient.service';
 import { SummaryService } from 'src/app/shared/services/summary.service';
+import { TreatmentInformationService } from 'src/app/shared/services/treatment-information/treatment-information.service';
 
 @Component({
   selector: 'app-view-patient-list',
@@ -78,7 +79,7 @@ export class ViewPatientListComponent implements OnInit {
   constructor(
     private summaryService: SummaryService,
     private generalService: GeneralHelperService,
-    private patientService: PatientService
+    private treatmentInformationService: TreatmentInformationService
   ) { }
 
   ngOnInit(): void {
@@ -89,7 +90,7 @@ export class ViewPatientListComponent implements OnInit {
   }
 
   getPatientTreatment(patientId: string) {
-    this.patientService.getPatientTreatment(patientId);
+    this.treatmentInformationService.getPatientTreatment(patientId);
   }
 
   patientSearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortColumn, this.sortOrder, this.searchValueMap, this.selectField);
@@ -165,9 +166,6 @@ export class ViewPatientListComponent implements OnInit {
       });
   }
 
-  getAccountDetails(id: any) {
-    // this.accountService.getAccountDetails(id);
-  }
 
   search() {
 

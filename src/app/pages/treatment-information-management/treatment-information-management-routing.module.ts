@@ -4,6 +4,8 @@ import { CheckoutInsertTreatmentGuard } from 'src/app/shared/guards/checkout-ins
 import { CheckoutUpdateTreatmentGuard } from 'src/app/shared/guards/checkout-update-treatment.guard';
 import { AddBatchMedicineComponent } from '../batch-medicine-management/batch-medicine-list/add-batch-medicine/add-batch-medicine.component';
 import { AddTreatmentInformationComponent } from './add-treatment-information/add-treatment-information.component';
+import { PatientTreatmentDetailsComponent } from './view-patient-treatment-history/patient-treatment-details/patient-treatment-details.component';
+import { ViewPatientTreatmentHistoryComponent } from './view-patient-treatment-history/view-patient-treatment-history.component';
 import { ViewTreatmentInformationListComponent } from './view-treatment-information-list/view-treatment-information-list.component';
 import { ViewTreatmentInformationComponent } from './view-treatment-information-list/view-treatment-information/view-treatment-information.component';
 import { ViewTreatmentInformationPeriodicReportComponent } from './view-treatment-information-periodic-report/view-treatment-information-periodic-report.component';
@@ -41,7 +43,31 @@ const routes: Routes = [
     data: {
       title: "Báo cáo cấp phát thuốc"
     }
-  }
+  },  {
+    //admin
+    path: 'patient-treatment-list/:id',
+    component: ViewPatientTreatmentHistoryComponent,
+    data: {
+      title: "Lịch sử khám"
+    },
+
+  },
+  {
+    path: 'treatment-history',
+    component: ViewPatientTreatmentHistoryComponent,
+    data: {
+      title: "Lịch sử khám"
+    },
+
+  },
+  {
+    path: 'treatment-detatils/:id',
+    component: PatientTreatmentDetailsComponent,
+    data: {
+      title: "Chi tiết đơn"
+    },
+
+  },
 ];
 
 @NgModule({

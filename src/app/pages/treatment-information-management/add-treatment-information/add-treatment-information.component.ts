@@ -39,8 +39,8 @@ export class AddTreatmentInformationComponent implements OnInit {
   patient: Patient;
   medicalStaff: Account = JSON.parse(localStorage.getItem("user"));
   selectedInternalCode: string;
-  curDate=new Date();
-
+  curDate = new Date();
+  isDeliver = true;
 
   insertDepartmentRequest: Department = {
     name: '',
@@ -131,6 +131,8 @@ export class AddTreatmentInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isDeliver = true;
+
     this.treatmentService.currentComponentServeName = 'addTreatmentComponent';
     this.getAllDepartment();
     this.treatmentService.setTreatmentDetails([]);
@@ -166,7 +168,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   getPatientDetails(value: any) {
     console.log(this.selectedInternalCode);
-    if(this.selectedInternalCode == null || this.selectedInternalCode == ''){
+    if (this.selectedInternalCode == null || this.selectedInternalCode == '') {
       return;
     }
     this.patientSearchRequest.selectFields = this.selectPatientDetails;
@@ -428,15 +430,15 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   }
 
-   displayTipTreatmentInformationDetails(id: any) {
+  displayTipTreatmentInformationDetails(id: any) {
     return this.treatmentService.getTipTreatmentInformationDetails(id);
-}
+  }
 
- onExpandChange(id: string, checked: boolean): void {
-  if (checked) {
-    this.expandSet.add(id);
- } else {
-   this.expandSet.delete(id);
+  onExpandChange(id: string, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+    } else {
+      this.expandSet.delete(id);
     }
   }
 
