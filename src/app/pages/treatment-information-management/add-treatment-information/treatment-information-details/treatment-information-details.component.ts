@@ -56,10 +56,17 @@ export class TreatmentInformationDetailsComponent implements OnInit {
   searchNameValue: string;
   filterSubgroupValue: string;
   filterClassificationValue: string;
-  medicineClassificationList: MedicineClassificationResponse[];
+  medicineClassificationList: MedicineClassificationResponse[] = [];
+
   medicineSubGroupList: MedicineSubgroupResponse[] = [];
   treatmentInformation: TreatmentInformation[] = [];
   dateObj = new Date();
+  medicineClassificationPageSize = 10;
+  medicineClassificationPageIndex = 1;
+  medicineClassificationTotal = 0;
+  medicineSubGroupPageSize = 10;
+  medicineSubGroupPageIndex = 1;
+  medicineSubGroupTotal = 0;
 
   componentName: string;
 
@@ -77,6 +84,8 @@ export class TreatmentInformationDetailsComponent implements OnInit {
 
   medicineInInventorySearchRequest = new SearchRequestWithGroupByAndInclude(this.pageSize, this.pageIndex, "", 0, this.MedicineInInventorySearchValueMap, 'Medicine,PeriodicInventory,Sum(Quantity) as Quantity', this.medicineInInventoryIncludes, this.medicineInInventoryGroupBys);
   medicineInInventoryDetailsSearchRequest = new SearchRequestWithGroupByAndInclude(1, 0, "importMedicine.ExpirationDate", 0, this.MedicineInInventoryDetailsSearchValueMap, 'id, medicineId,medicine.Name,quantity,importMedicine.ExpirationDate', null, null);
+  medicineClassificationSearchRequest = new SearchRequest(this.medicineClassificationPageSize, this.medicineClassificationPageIndex, "", 0, null, 'id, name');
+  medicineSubGroupSearchRequest = new SearchRequest(this.medicineSubGroupPageSize, this.medicineSubGroupPageIndex, "", 0, null, 'id, name');
 
 
   // medicineInInventoryDetailsSearchRequest: SearchRequest = {
@@ -186,14 +195,15 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     // })
     this.treatmentService.getTreatmentInformationDetails();
     this.treatmentService.getTreatmentInformation();
-    this.getAllMedicineClassification();
-    this.getAllMedicineSubgroup();
+    this.getMedicineClassification();
+    this.getMedicineSubgroup();
     this.autoCheckMedicine();
 
     console.log('data luc init', this.chkTreatmentDetail);
     this.searchMedicineInInventory();
     this.autoExpandSelectedMedicineInInventory();
   }
+
 
   autoExpandSelectedMedicineInInventory() {
 
@@ -239,7 +249,7 @@ export class TreatmentInformationDetailsComponent implements OnInit {
           if (this.treatmentDetailsTableData[i].medicineInInventory.medicine.id == id) {
             console.log("trùng");
             this.treatmentDetailsTableData[i].medicineInInventoryDetails = this.medicineInInventoryDetails;
-        console.log(this.treatmentDetailsTableData[i].medicineInInventoryDetails);
+            console.log(this.treatmentDetailsTableData[i].medicineInInventoryDetails);
 
             break;
           }
@@ -254,22 +264,51 @@ export class TreatmentInformationDetailsComponent implements OnInit {
     );
   }
 
-  getAllMedicineSubgroup() {
-    this.summaryService.getAllMedicineSubgroup().subscribe(
+  getMedicineSubgroup() {
+    this.summaryService.searchMedicineSubgroup(this.medicineSubGroupSearchRequest).subscribe(
       (response) => {
-        this.medicineSubGroupList = response.data;
+        this.medicineSubGroupTotal = response.data.info.totalRecord
+        response.data.data.forEach(medicineSubGroup => {
+          this.medicineSubGroupList = [...this.medicineSubGroupList, medicineSubGroup];
+          });
+        console.log('subGroup', this.medicineSubGroupList);
+
       }, (error) => {
         this.generalService.createErrorNotification(error);
       }
     );
   }
 
+  loadMoreSubGroup(){
+    if (this.medicineSubGroupList.length == this.medicineSubGroupTotal) {
+      return;
+    } else {
+      this.medicineClassificationPageIndex += 1;
+      this.medicineSubGroupSearchRequest.page =  this.medicineClassificationPageIndex;
+      this.getMedicineSubgroup();
+    }
+  }
 
+  loadMoreClassification() {
+    if (this.medicineClassificationList.length == this.medicineClassificationTotal) {
+      return;
+    } else {
+      this.medicineClassificationPageIndex += 1;
+      this.medicineClassificationSearchRequest.page =  this.medicineClassificationPageIndex;
 
-  getAllMedicineClassification() {
-    this.summaryService.getAllMedicineClassification().subscribe(
+      this.getMedicineClassification();
+    }
+  }
+
+  getMedicineClassification() {
+    this.summaryService.searchClassification(this.medicineClassificationSearchRequest).subscribe(
       (response) => {
-        this.medicineClassificationList = response.data;
+        this.medicineClassificationTotal = response.data.info.totalRecord
+        response.data.data.forEach(medicineClassification => {
+        this.medicineClassificationList = [...this.medicineClassificationList, medicineClassification];
+          
+        });
+        console.log('class',  this.medicineClassificationList);
       }, (error) => {
         this.generalService.createErrorNotification(error);
       }

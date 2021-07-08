@@ -109,7 +109,8 @@
                     <nz-form-control [nzErrorTip]="departmentTpl">
                         <nz-select nzShowSearch nzAllowClear formControlName="departmentId"
                             [nzDropdownRender]="renderDepartment" [nzSize]="'large'" nzPlaceHolder="Phòng bang"
-                            style="display: flex; align-items: center; font-size: 16px;">
+                            style="display: flex; align-items: center; font-size: 16px;"
+                            (nzScrollToBottom)="loadMoreDepartment()">
                             <nz-option *ngFor="let item of departmentList" [nzLabel]="item.name" [nzValue]="item.id"
                                 nzCustomContent>
                                 <span style="font-size: 16px;">{{ item.name }}</span>
@@ -141,17 +142,15 @@
                     <nz-form-control>
                         <nz-select nzPlaceHolder="Tình trạng bệnh" nzSize="large" nzMode="tags"
                             [(ngModel)]="patientDeseaseStatusList" (nzOnSearch)="onSearchDeseaseStatus($event)"
-                            [ngModelOptions]="{standalone: true}" nzAllowClear nzShowSearch nzServerSearch>
+                            [ngModelOptions]="{standalone: true}" nzAllowClear [nzDropdownRender]="renderTemplate"
+                            (nzScrollToBottom)="loadMoreDiseaseStatusName()">
                             <ng-container *ngFor="let o of diseaseStatusList">
                                 <nz-option [nzValue]="o.name" [nzLabel]="o.name"></nz-option>
                             </ng-container>
-                            <nz-option nzDisabled nzCustomContent>
-                                <i nz-icon></i> Loading Data...
-                            </nz-option>
                         </nz-select>
-                        <!-- <nz-select  formControlName="diseaseStatusNames" [nzSize]="'large'" nzMode="tags"
-                    nzPlaceHolder="Please select">
-                </nz-select> -->
+                        <ng-template #renderTemplate>
+                            <nz-spin *ngIf="isLoading"></nz-spin>
+                        </ng-template>
                     </nz-form-control>
                 </nz-form-item>
 
@@ -161,27 +160,27 @@
                     </nz-form-label>
                     <nz-form-control [nzErrorTip]="allergyDescriptionTpl">
                         <nz-textarea-count [nzMaxCharacterCount]="500">
-                            <textarea nz-input placeholder="Bệnh nhân dị ứng với các thuốc" rows="4"
+                            <textarea nz-input placeholder="Bệnh nhân dị ứng với các thuốc" rows='2'
                                 formControlName="allergyDescription" style="font-size: 16px;"></textarea>
-                            <!-- <ng-template #descriptionErrorTpl let-control>
-                  <ng-container *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
-                    <span class="error-text">Nhập độ dài từ 1 tới 500</span>
-                  </ng-container>
-                </ng-template> -->
+                          
                         </nz-textarea-count>
 
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <!-- <nz-form-label class="text-label" [nzSpan]="7">
+                    <nz-form-label class="text-label" [nzSpan]="7">
                         <span class="font-size-16 m-l-11">Xác nhận đơn</span>
-                    </nz-form-label> -->
+                    </nz-form-label>
                     <nz-form-control [nzErrorTip]="allergyDescriptionTpl">
-                        <label style="float: right;" nz-checkbox [(ngModel)]="isDeliver">Xác nhận đơn</label>
+                        <label nz-checkbox [nzDisabled]='url' formControlName="isDelivered">
+                            {{ this.insertTreatmentInformationForm.get('isDelivered').value
+                            ? 'Đơn được xác nhận' : 'Đơn chưa xác nhận' }}
+                        </label>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-control>
+
                         <button class="font-size-16" nz-button nzType="primary"
                             [disabled]="treatmentInformation.length == 0"
                             style=" float: right; padding: 20px; width: 150px; display: flex; align-items: center; justify-content: center;">Tạo

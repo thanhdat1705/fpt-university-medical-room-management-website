@@ -2,7 +2,7 @@
 
 
 
-<div  class="search-filter" *ngIf="treatmentDetailsForm">
+<div class="search-filter" *ngIf="treatmentDetailsForm">
   <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchIconButton">
     <input class="input" placeholder="Nhập tên dược phẩm" nz-input [(ngModel)]="searchNameValue" />
   </nz-input-group>
@@ -19,21 +19,29 @@
             <nz-option *ngFor="let option of filterUnit" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
         </nz-select>-->
     <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
-      (ngModelChange)="onSearchClassification()">
+      (ngModelChange)="onSearchClassification()" (nzScrollToBottom)="loadMoreClassification()"
+      [nzDropdownRender]="renderTemplate">
       <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
       </nz-option>
     </nz-select>
+    <ng-template #renderTemplate>
+      <nz-spin *ngIf="isLoading"></nz-spin>
+    </ng-template>
     <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
-      (ngModelChange)="onSearchSubGroup()">
+      (ngModelChange)="onSearchSubGroup()" (nzScrollToBottom)="loadMoreSubGroup()"
+      [nzDropdownRender]="renderTemplate">
       <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
       </nz-option>
     </nz-select>
+    <ng-template #renderTemplate>
+      <nz-spin *ngIf="isLoading"></nz-spin>
+    </ng-template>
   </div>
 </div>
 
-<nz-table style="overflow-y: hidden" *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList" [nzPageSize]="pageSize" [nzScroll]="{ x: '200px', y: '280px' }"
-  [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false" 
-  (nzQueryParams)="onQueryParamsChange($event)">
+<nz-table style="overflow-y: hidden" *ngIf="treatmentDetailsTableData" [nzData]="medicineInInventoryList"
+  [nzPageSize]="pageSize" [nzScroll]="{ x: '200px', y: '280px' }" [nzPageIndex]="pageIndex" [nzTotal]="total"
+  [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)">
 
   <thead>
     <tr>
@@ -69,14 +77,13 @@
             <!-- <form [formGroup]="treatmentDetailsForm">
               <nz-form-item style="margin-bottom: 0px;">
                 <nz-form-control> -->
-                  <input [nzErrorTip]="quantityTpl" [nzMax]="item.quantity" style=" margin-left: 10px;width: 35%;" 
-                  nz-input #inputValue type="number" nz-input-number 
-                  [nzMin]="0" [nzMax]="item.quantity"
-                    (input)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicine.id, data.medicineInInventory.medicine.name, data.medicineInInventory.medicine.medicineUnit.name, generalService.getDate(item.expirationDate ),item.quantity)"
-                    [disabled]="!setOfCheckedId.has(item.id)"
-                    [value]="!setOfCheckedId.has(item.id) ? item.quantity : getTreatmentDetailsQuantity(item.id)" />
-                  <span *ngIf="setOfCheckedId.has(item.id)"> /{{item.quantity}}</span>
-                  <!-- <ng-template #quantityTpl let-control>
+            <input [nzErrorTip]="quantityTpl" [nzMax]="item.quantity" style=" margin-left: 10px;width: 35%;" nz-input
+              #inputValue type="number" nz-input-number [nzMin]="0" [nzMax]="item.quantity"
+              (input)="createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicine.id, data.medicineInInventory.medicine.name, data.medicineInInventory.medicine.medicineUnit.name, generalService.getDate(item.expirationDate ),item.quantity)"
+              [disabled]="!setOfCheckedId.has(item.id)"
+              [value]="!setOfCheckedId.has(item.id) ? item.quantity : getTreatmentDetailsQuantity(item.id)" />
+            <span *ngIf="setOfCheckedId.has(item.id)"> /{{item.quantity}}</span>
+            <!-- <ng-template #quantityTpl let-control>
                     <ng-container *ngIf="f.quantity.hasError('required')">
                       <span> {{ generalService.showRequiredError("Số lượng") }}
                       </span>

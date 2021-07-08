@@ -108,7 +108,7 @@
                     <nz-form-control [nzErrorTip]="departmentTpl">
                         <nz-select nzDisabled="isEditing" nzShowSearch nzAllowClear formControlName="departmentId"
                             [nzDropdownRender]="renderDepartment" [nzSize]="'large'" nzPlaceHolder="Phòng bang"
-                            style="display: flex; align-items: center; font-size: 16px;">
+                            style="display: flex; align-items: center; font-size: 16px;" (nzScrollToBottom)="loadMoreDepartment()">
                             <nz-option *ngFor="let item of departmentList" [nzLabel]="item.name" [nzValue]="item.id"
                                 nzCustomContent>
                                 <span style="font-size: 16px;">{{ item.name }}</span>
@@ -141,14 +141,15 @@
                         <nz-select [nzDisabled]="!isEditing" nzPlaceHolder="Tình trạng bệnh" nzSize="large"
                             nzMode="tags" [(ngModel)]="patientDeseaseStatusList"
                             (nzOnSearch)="onSearchDeseaseStatus($event)" [ngModelOptions]="{standalone: true}"
-                            nzAllowClear nzShowSearch nzServerSearch>
+                            [nzDropdownRender]="renderTemplate"
+                            (nzScrollToBottom)="loadMoreDiseaseStatusName()">
                             <ng-container *ngFor="let o of diseaseStatusList">
                                 <nz-option [nzValue]="o.name" [nzLabel]="o.name"></nz-option>
                             </ng-container>
-                            <nz-option nzDisabled nzCustomContent>
-                                <i nz-icon></i> Loading Data...
-                            </nz-option>
                         </nz-select>
+                        <ng-template #renderTemplate>
+                            <nz-spin *ngIf="isLoading"></nz-spin>
+                        </ng-template>
                         <!-- <nz-select  formControlName="diseaseStatusNames" [nzSize]="'large'" nzMode="tags"
                     nzPlaceHolder="Please select">
                 </nz-select> -->
@@ -161,7 +162,7 @@
                     </nz-form-label>
                     <nz-form-control [nzErrorTip]="allergyDescriptionTpl">
                         <nz-textarea-count [nzMaxCharacterCount]="500">
-                            <textarea nz-input placeholder="Bệnh nhân dị ứng với các thuốc" rows="4"
+                            <textarea nz-input placeholder="Bệnh nhân dị ứng với các thuốc" rows="2" 
                                 formControlName="allergyDescription" style="font-size: 16px;"></textarea>
                             <!-- <ng-template #descriptionErrorTpl let-control>
                   <ng-container *ngIf="f.description.hasError('minlength') || f.description.hasError('maxlength')">
@@ -172,7 +173,17 @@
 
                     </nz-form-control>
                 </nz-form-item>
-
+                <nz-form-item>
+                    <nz-form-label class="text-label" [nzSpan]="7">
+                        <span class="font-size-16 m-l-11">Xác nhận đơn</span>
+                    </nz-form-label>
+                    <nz-form-control [nzErrorTip]="allergyDescriptionTpl">
+                        <label nz-checkbox [nzDisabled]='url' formControlName="isDelivered">
+                            {{ this.treatmentForm.get('isDelivered').value
+                            ? 'Đơn được xác nhận' : 'Đơn chưa xác nhận' }}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
                 <br><br>
                 <nz-form-item *ngIf="!treatment.isDelivered">
                     <nz-form-control>

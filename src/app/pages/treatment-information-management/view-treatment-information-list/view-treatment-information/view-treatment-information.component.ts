@@ -53,7 +53,13 @@ export class ViewTreatmentInformationComponent implements OnInit {
   departmentSearchRequest = new SearchRequest(1, 0, '', 0, null, 'id, name');
   deseaseStatusSearchRequest = new SearchRequest(1, 0, '', 0, this.deseaseStatusSearchRecord, 'name');
   selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
+  totalDepartment = 0;
+  departmentPageIndex = 1;
+  departmentPageSize = 10;
 
+  totalDiseaseStatusName = 0;
+  diseaseStatusNamePageIndex = 1;
+  diseaseStatusNamePageSize = 10;
   isEditing = true;
 
   patientInternalCodeSearchValueCompare: ValueCompare = {
@@ -94,6 +100,11 @@ export class ViewTreatmentInformationComponent implements OnInit {
       this.getTreatmentInformationDetails();
     })
   }
+
+  departmentnSearchRequest = new SearchRequest(this.departmentPageSize, this.departmentPageIndex, '', 0, null, 'id,name');
+
+  diseaseStatusSearchRequest = new SearchRequest(this.diseaseStatusNamePageSize, this.diseaseStatusNamePageIndex, '', 0, null, 'id,name');
+
 
   getTreatmentInformationDetails() {
     this.treatmentInformationDetails = this.treatmentService.getTreatmentInformationDetails();
@@ -139,7 +150,10 @@ export class ViewTreatmentInformationComponent implements OnInit {
       diseaseStatusNames: [[],
       [
         Validators.required,
-      ]]
+      ]], isDelivered: [
+        false
+
+      ]
     });
     this.getAllDepartment();
     this.searchDeseaseStatus();
@@ -187,22 +201,17 @@ export class ViewTreatmentInformationComponent implements OnInit {
     });
   }
 
-  searchDeseaseStatus() {
-    this.summaryService.searchDeseaseStatus(this.deseaseStatusSearchRequest).subscribe(
-      (response) => {
-        this.diseaseStatusList = response.data.data;
-        console.log('diseaseStatusList', this.diseaseStatusList);
-      }, (error) => {
-        console.log(error);
-      }
-    )
-  }
+
 
   //createTreatmentDetails(item.id, inputValue.value, data.medicineInInventory.medicineId,
   //  data.medicineInInventory.name, data.medicineInInventory.medicineUnit.name, 
   // generalService.getDate(item.expirationDate ))
 
   async setTreatmentServiceData() {
+    if(this.treatment.isDelivered){
+      this.treatmentForm.get('isDelivered').setValue(true);
+
+    }
     if (this.treatment.confirmSignature != null) {
       this.url = this.treatment.confirmSignature;
     }
@@ -249,7 +258,9 @@ export class ViewTreatmentInformationComponent implements OnInit {
       gender: this.treatment.patient.gender,
       departmentId: this.treatment.department.id,
       allergyDescription: this.patientAllegryDescription,
-      diseaseStatusNames: []
+      diseaseStatusNames: [],
+      isDelivered: this.treatmentForm.get('isDelivered').value
+
     });
     this.sygnatureUrl = this.treatment.confirmSignature
     this.treatmentService.returnTreatmentDataComponent();
@@ -273,12 +284,6 @@ export class ViewTreatmentInformationComponent implements OnInit {
 
       }
     )
-  }
-  onSearchDeseaseStatus(value: any) {
-    console.log(value);
-    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.deseaseStatusSearchRecord);
-    this.searchDeseaseStatus();
-
   }
 
   sendRequest(): void {
@@ -340,7 +345,9 @@ export class ViewTreatmentInformationComponent implements OnInit {
             gender: this.patient.gender,
             departmentId: this.patient.departmentId,
             allergyDescription: this.patient.allergyDescription,
-            diseaseStatusNames: this.diseaseStatusList
+            diseaseStatusNames: this.diseaseStatusList,
+            isDelivered: this.treatmentForm.get('isDelivered').value
+
           });
         } else {
           this.treatmentForm.setValue({
@@ -349,7 +356,9 @@ export class ViewTreatmentInformationComponent implements OnInit {
             gender: '',
             departmentId: '',
             allergyDescription: '',
-            diseaseStatusNames: this.diseaseStatusList
+            diseaseStatusNames: this.diseaseStatusList,
+            isDelivered: this.treatmentForm.get('isDelivered').value
+
           });
           this.generalService.createErrorNotification('Mã số không có sẵn trông hệ thống');
         }
@@ -476,6 +485,8 @@ export class ViewTreatmentInformationComponent implements OnInit {
         this.url = this.reader.result;
       }
       this.fileName = this.file.name;
+      this.treatmentForm.get('isDelivered').setValue(true);
+
     }
   }
 
@@ -503,6 +514,7 @@ export class ViewTreatmentInformationComponent implements OnInit {
       treatmentInformationForm.append('TreatmentInformationDetails[' + i + '].quantity', this.treatmentInformationDetails[i].quantity.toString());
 
     }
+    treatmentInformationForm.append('IsDelivered', this.treatmentForm.get('isDelivered').value);
 
     treatmentInformationForm.append('ConfirmSignatureImg', this.file);
     console.log('patientDeseaseStatusList: ', this.patientDeseaseStatusList);
@@ -528,5 +540,59 @@ export class ViewTreatmentInformationComponent implements OnInit {
     } else {
       this.expandSet.delete(id);
     }
+  }
+
+  searchDeseaseStatus() {
+    this.summaryService.searchDeseaseStatus(this.diseaseStatusSearchRequest).subscribe(
+      (response) => {
+        this.totalDiseaseStatusName = response.data.info.totalRecord
+        response.data.data.forEach(diseaseStatusName => {
+          this.diseaseStatusList = [...this.diseaseStatusList, diseaseStatusName];
+        });
+      }, (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+  onSearchDeseaseStatus(value: any) {
+    console.log(value);
+    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.deseaseStatusSearchRecord);
+    this.searchDeseaseStatus();
+
+  }
+
+  loadMoreDiseaseStatusName() {
+    if (this.diseaseStatusList.length >= this.totalDiseaseStatusName) {
+      return;
+    } else {
+      this.diseaseStatusNamePageIndex += 1;
+      this.diseaseStatusSearchRequest.page = this.diseaseStatusNamePageIndex
+      this.searchDeseaseStatus();
+    }
+  }
+
+  loadMoreDepartment() {
+    if (this.departmentList.length == this.totalDepartment) {
+      return;
+    } else {
+      this.departmentPageIndex += 1;
+      this.departmentnSearchRequest.page = this.departmentPageIndex
+      this.searchDepartment();
+    }
+  }
+
+  searchDepartment() {
+    this.summaryService.searchDepartment(this.departmentnSearchRequest).subscribe(
+      (response) => {
+        this.totalDepartment = response.data.info.totalRecord
+        response.data.data.forEach(department => {
+          this.departmentList = [...this.departmentList, department];
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }

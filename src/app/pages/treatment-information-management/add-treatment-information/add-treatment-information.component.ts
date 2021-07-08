@@ -42,6 +42,16 @@ export class AddTreatmentInformationComponent implements OnInit {
   curDate = new Date();
   isDeliver = true;
 
+  totalDepartment = 0;
+  departmentPageIndex = 1;
+  departmentPageSize = 10;
+
+  totalDiseaseStatusName = 0;
+  diseaseStatusNamePageIndex = 1;
+  diseaseStatusNamePageSize = 10;
+
+  isImgExist = false;
+
   insertDepartmentRequest: Department = {
     name: '',
     description: '',
@@ -49,7 +59,6 @@ export class AddTreatmentInformationComponent implements OnInit {
   paramsGetDetails = "patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
 
   getPatientButtonStatus = true;
-
   selectPatientInternalCode = "id, internalCode";
   selectPatientDetails = "id, internalCode, name, gender, departmentId, allergyDescription";
   patientSearchRequest = new SearchRequest(1, 0, '', 0, this.searchRecord, '');
@@ -101,9 +110,9 @@ export class AddTreatmentInformationComponent implements OnInit {
     }
   ]
 
-  departmentnSearchRequest = new SearchRequest(1, 0, '', 0, this.searchRecord, 'id,name');
+  departmentnSearchRequest = new SearchRequest(this.departmentPageSize, this.departmentPageIndex, '', 0, null, 'id,name');
 
-  deseaseStatusSearchRequest = new SearchRequest(1, 0, '', 0, this.deseaseStatusSearchRecord, 'id,name');
+  diseaseStatusSearchRequest = new SearchRequest(this.diseaseStatusNamePageSize, this.diseaseStatusNamePageIndex, '', 0, null, 'id,name');
 
   // searchDeseaseStatusRequest: SearchRequest = {
 
@@ -134,7 +143,7 @@ export class AddTreatmentInformationComponent implements OnInit {
     this.isDeliver = true;
 
     this.treatmentService.currentComponentServeName = 'addTreatmentComponent';
-    this.getAllDepartment();
+    this.searchDepartment();
     this.treatmentService.setTreatmentDetails([]);
     this.treatmentService.setTreatmentInformation([]);
     this.getTreatmentInformationDetails();
@@ -160,7 +169,11 @@ export class AddTreatmentInformationComponent implements OnInit {
       ],
       diseaseStatusNames: [[],
       [
-      ]]
+      ]
+      ],
+      isDelivered: [
+        false
+      ]
     });
     console.log(this.treatmentInformation);
 
@@ -188,7 +201,8 @@ export class AddTreatmentInformationComponent implements OnInit {
             gender: this.patient.gender,
             departmentId: this.patient.departmentId,
             allergyDescription: this.patient.allergyDescription,
-            diseaseStatusNames: this.diseaseStatusList
+            diseaseStatusNames: this.diseaseStatusList,
+            isDelivered: this.insertTreatmentInformationForm.get('isDelivered').value
           });
         } else {
           this.insertTreatmentInformationForm.setValue({
@@ -197,7 +211,8 @@ export class AddTreatmentInformationComponent implements OnInit {
             gender: '',
             departmentId: '',
             allergyDescription: '',
-            diseaseStatusNames: this.diseaseStatusList
+            diseaseStatusNames: this.diseaseStatusList,
+            isDelivered: this.insertTreatmentInformationForm.get('isDelivered').value
           });
         }
       },
@@ -223,24 +238,7 @@ export class AddTreatmentInformationComponent implements OnInit {
     )
   }
 
-  searchDeseaseStatus() {
-    this.summaryService.searchDeseaseStatus(this.deseaseStatusSearchRequest).subscribe(
-      (response) => {
-        this.diseaseStatusList = response.data.data;
-        console.log('diseaseStatusList', this.diseaseStatusList);
-        console.log('patient desease: ' + this.patientDeseaseStatusList)
-      }, (error) => {
-        console.log(error);
-      }
-    )
-  }
 
-  onSearchDeseaseStatus(value: any) {
-    console.log(value);
-    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.deseaseStatusSearchRecord);
-    this.searchDeseaseStatus();
-
-  }
 
   patientIntetrnalCodeInputChange(value: string) {
     console.log('value: ' + value)
@@ -340,6 +338,7 @@ export class AddTreatmentInformationComponent implements OnInit {
 
       // treatmentInformationForm.append('TreatmentInformations', JSON.stringify(this.treatmentInformation));
       treatmentInformationForm.append('ConfirmSignatureImg', this.file);
+      treatmentInformationForm.append('IsDelivered', this.insertTreatmentInformationForm.get('isDelivered').value);
       console.log("code" + treatmentInformationForm.get('Patient.InternalCode'));
       console.log("department" + treatmentInformationForm.get('Patient.DepartmentId'));
 
@@ -379,13 +378,53 @@ export class AddTreatmentInformationComponent implements OnInit {
 
   }
 
+  searchDeseaseStatus() {
+    this.summaryService.searchDeseaseStatus(this.diseaseStatusSearchRequest).subscribe(
+      (response) => {
+        this.totalDiseaseStatusName = response.data.info.totalRecord
+        response.data.data.forEach(diseaseStatusName => {
+          this.diseaseStatusList = [...this.diseaseStatusList, diseaseStatusName];
+        });
+      }, (error) => {
+        console.log(error);
+      }
+    )
+  }
 
+  onSearchDeseaseStatus(value: any) {
+    console.log(value);
+    this.generalService.setValueCompare(value, this.deseaseStatusValueCompare, 'name', this.deseaseStatusSearchRecord);
+    this.searchDeseaseStatus();
 
-  getAllDepartment() {
+  }
+
+  loadMoreDiseaseStatusName() {
+    if (this.diseaseStatusList.length >= this.totalDiseaseStatusName) {
+      return;
+    } else {
+      this.diseaseStatusNamePageIndex += 1;
+      this.diseaseStatusSearchRequest.page = this.diseaseStatusNamePageIndex
+      this.searchDeseaseStatus();
+    }
+  }
+
+  loadMoreDepartment() {
+    if (this.departmentList.length == this.totalDepartment) {
+      return;
+    } else {
+      this.departmentPageIndex += 1;
+      this.departmentnSearchRequest.page = this.departmentPageIndex
+      this.searchDepartment();
+    }
+  }
+
+  searchDepartment() {
     this.summaryService.searchDepartment(this.departmentnSearchRequest).subscribe(
       (response) => {
-        this.departmentList = response.data.data;
-        console.log(this.departmentList);
+        this.totalDepartment = response.data.info.totalRecord
+        response.data.data.forEach(department => {
+          this.departmentList = [...this.departmentList, department];
+        });
       },
       (error) => {
         console.log(error);
@@ -397,7 +436,7 @@ export class AddTreatmentInformationComponent implements OnInit {
     this.modalService.create({
       nzTitle: 'Danh sách thuốc',
       nzContent: TreatmentInformationDetailsComponent,
-      nzStyle:{  top: '20px' },
+      nzStyle: { top: '20px' },
       nzWidth: 650
     });
   }
@@ -406,7 +445,7 @@ export class AddTreatmentInformationComponent implements OnInit {
     this.insertDepartmentRequest.name = data.value;
     this.summaryService.addDepartment(this.insertDepartmentRequest).subscribe(
       (response) => {
-        this.getAllDepartment();
+        this.searchDepartment();
         console.log(response);
       }, (error) => {
         console.log(error);
@@ -428,7 +467,9 @@ export class AddTreatmentInformationComponent implements OnInit {
       this.reader.onload = (_event) => {
         this.url = this.reader.result;
       }
+      this.isImgExist = true;
       this.fileName = this.file.name;
+      this.insertTreatmentInformationForm.get('isDelivered').setValue(true);
     }
   }
 

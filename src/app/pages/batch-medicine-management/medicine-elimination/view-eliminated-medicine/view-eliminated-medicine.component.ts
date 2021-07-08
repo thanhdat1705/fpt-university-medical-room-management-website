@@ -23,7 +23,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   selectFields = "id, quantity, createDate, medicine.name, medicine.medicineUnit, medicineInInventoryDetail, medicine.medicineClassification, medicine.medicineSubgroup";
   eliminatedMedicineList: EliminatedMedicineResponse[];
   loading = false;
-  pageSize = 3;
+  pageSize = 10;
   pageIndex = 1;
   total = 0;
   searchValueMap: Map<string, ValueCompare> = new Map;

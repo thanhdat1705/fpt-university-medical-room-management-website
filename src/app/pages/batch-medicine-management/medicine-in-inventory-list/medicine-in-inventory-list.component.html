@@ -16,10 +16,7 @@
       <i nz-icon nzType="search" nzTheme="outline"></i>
     </button> -->
         <br><br>
-
-
         <div *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList" class="select-wrap">
-          <span style="font-weight: 500; margin-right: 10px;">Bộ lọc tím kiếm:</span>
           <nz-select class="select-w" nzPlaceHolder="Đơn vị" [(ngModel)]="filterUnitValue" nzAllowClear
             (ngModelChange)="onSearchUnit()">
             <nz-option *ngFor="let option of medicineUnitList" [nzLabel]="option.name" [nzValue]="option.id">
@@ -51,18 +48,18 @@
         </button>
       </ng-template>
       <br>
-      <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="medicineInInventoryList" nzTableLayout="fixed"
+      <nz-table [nzScroll]="{ x: '790' }" [nzData]="medicineInInventoryList" nzTableLayout="fixed"
         [nzLoading]="loading" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
         [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)" nzShowSizeChanger>
         <thead>
           <tr>
             <!-- <th nzWidth="40px" nzColumnKey="InternalCode" [nzSortFn]="true">Stt</th> -->
-            <th nzWidth="14%" nzColumnKey="Medicine.Name" [nzSortFn]="true">Tên thuốc</th>
+            <th nzWidth="20%" nzColumnKey="Medicine.Name" [nzSortFn]="true">Tên thuốc</th>
             <th nzWidth="10%" nzColumnKey="Quantity" [nzSortFn]="true">Số lượng</th>
             <th nzWidth="10%" nzColumnKey="Medicine.MedicineClassification.Id" [nzSortFn]="true">Đơn vị</th>
             <th nzWidth="10%" nzColumnKey="Medicine.MedicineClassification.Name" [nzSortFn]="true">Loại thuốc</th>
             <th nzWidth="10%" nzColumnKey="Medicine.MedicineSubgroup.Name" [nzSortFn]="true">Nhóm</th>
-            <th nzWidth="10%"></th>
+            <!-- <th nzWidth="10%"></th> -->
             <!-- <th>Thuộc lô</th> -->
           </tr>
         </thead>
@@ -75,11 +72,11 @@
             <td>Trả subgroup</td>
             <!-- <td>{{ medicineInInventory.medicineClassification.name }}</td>
         <td>{{ medicineInInventory.medicineSubgroup.name }}</td> -->
-            <td>
+            <!-- <td>
               <a style="color: #1890ff;" (click)="GetBatchOfmedicine(medicineInInventory.medicine.id)"
                 >Xem lô
                 thuốc</a>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </nz-table>

@@ -101,9 +101,9 @@
                             <td>{{ treatment.patient.name }}</td>
                             <td>{{ generalService.getGender(treatment.patient.gender) }}</td>
                             <td>{{ treatment.department.name }}</td>
-                            <td *ngIf="treatment.confirmSignature == null; else confirmed">Chưa xác nhận</td>
-                            <ng-template #confirmed>
-                                <td>Đã xác nhận</td>
+                            <td *ngIf="treatment.isDelivered; else notDelivered">Đã xác nhận</td>
+                            <ng-template #notDelivered>
+                                <td>Chưa xác nhận</td>
                             </ng-template>
                             <!-- <td> <a nzAlign="center" style="color: #1890ff" (click)="getTreatment(treatment.id)">Chi
                                     tiết</a></td> -->

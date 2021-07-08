@@ -262,4 +262,8 @@ export class SearchAccountComponent implements OnInit {
   getAccountDetails(id: any) {
     this.accountService.getAccountDetails(id);
   }
+
+  setToDefaultFilter(){
+    
+  }
 }
