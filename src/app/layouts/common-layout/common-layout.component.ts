@@ -20,7 +20,7 @@ export class CommonLayoutComponent {
     screenHeight: number;
     screenWidth: number;
     breadcrumbs$: Observable<IBreadcrumb[]>;
-
+    roleId = localStorage.getItem("roleId");
     isCollapsed: boolean;
     isVisible = false;
     constructor(
