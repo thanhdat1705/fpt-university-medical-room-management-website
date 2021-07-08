@@ -25,8 +25,15 @@
                     <ng-template #confirmed>
                         <td>Đã xác nhận</td>
                     </ng-template>
-                    <td> <a nzAlign="center" style="color: #1890ff" (click)="getTreatment(treatment.id)">Chi
-                            tiết</a></td>
+                    <ng-container *ngIf="roleId !== '3'">
+                        <td> <a nzAlign="center" style="color: #1890ff" (click)="getTreatment(treatment.id)">Chi
+                                tiết</a></td>
+                    </ng-container>
+                    <ng-container *ngIf="roleId === '3'">
+                        <td> <a nzAlign="center" style="color: #1890ff" (click)="getPatientTreatmentDetails(treatment.id)">Chi
+                                tiết</a></td>
+                    </ng-container>
+
                 </tr>
             </ng-container>
         </tbody>

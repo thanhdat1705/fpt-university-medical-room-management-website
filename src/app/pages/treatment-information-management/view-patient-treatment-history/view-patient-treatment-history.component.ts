@@ -159,5 +159,9 @@ export class ViewPatientTreatmentHistoryComponent implements OnInit {
     console.log(id)
     this.treatmentInformationService.getTreatment(id, this.paramsGetDetails);
   }
+  getPatientTreatmentDetails(id: any) {
+    console.log(id)
+    this.treatmentInformationService.getPatientTreatmentDetails(id, this.paramsGetDetails);
 
-}
+  }
+  }
