@@ -1,8 +1,8 @@
 <nz-layout class="app-layout">
     <nz-sider class="menu-sidebar" nzBreakpoint="lg" [(nzCollapsed)]="isCollapsed" nzWidth="17%" nzTheme="light">
         <div class="sidebar-logo">
-            <a href="/medicine-management/medicine-list">
-                <img src="/assets/images/logo/logo-browser.png" alt="logo" />
+            <a [routerLink]="'medicine-management/medicine-list'">
+                <img [src]="logoApp" alt="logo" />
                 <h1>FHCS</h1>
             </a>
         </div>
@@ -73,16 +73,18 @@
                     </li> -->
                     </ul>
                 </li>
-                <li nz-submenu nzTitle="Quản lý tài khoản" nzIcon="dollar">
-                    <ul>
-                        <li nz-menu-item>
-                            <a [routerLink]="'account/insert-account'">Tạo tài khoản mới</a>
-                        </li>
-                        <li nz-menu-item>
-                            <a [routerLink]="'account/account-list'">Danh sách tài khoản hiện có</a>
-                        </li>
-                    </ul>
-                </li>
+                <ng-container *ngIf="!generalService.isMedicalStaff()">
+                    <li nz-submenu nzTitle="Quản lý tài khoản" nzIcon="dollar">
+                        <ul>
+                            <li nz-menu-item>
+                                <a [routerLink]="'account/insert-account'">Tạo tài khoản mới</a>
+                            </li>
+                            <li nz-menu-item>
+                                <a [routerLink]="'account/account-list'">Danh sách tài khoản hiện có</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ng-container>
                 <li nz-menu-item>
                     <a [routerLink]="'request-buy-medicine/buy-medicine-list'">
                         <i nz-icon nzType="form"></i>
@@ -110,9 +112,7 @@
         <app-header></app-header>
         <nz-content class="main-content">
             <div class="main-content-header ">
-
                 <nz-breadcrumb nzSeparator=">">
-                    <!-- <i class="m-r-5 text-gray" nz-icon nzType="home"></i> -->
                     <nz-breadcrumb-item *ngFor="let breadcrumb of breadcrumbs$ | async">
                         <a style="text-decoration: none;" [routerLink]="breadcrumb.url">
                             {{ breadcrumb.label }}

@@ -104,7 +104,7 @@ export interface MedicineInInventoryDetail {
     importMedicine: ImportMedicine;
     beginInventories: BeginInventory[];
     exportMedicines: ExportMedicine[];
-    
+
 }
 
 export interface Medicine {
@@ -113,3 +113,4 @@ export interface Medicine {
     medicineUnit: Unit;
     medicineInInventoryDetails: MedicineInInventoryDetail[];
 }
+

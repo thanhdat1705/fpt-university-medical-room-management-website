@@ -1,0 +1,2 @@
+export const LOGINBACKGROUND = "https://firebasestorage.googleapis.com/v0/b/fucs-1ee4c.appspot.com/o/FUCS%2FImages%2FOthers%2Flogin-background.png?alt=media&token=d63c6895-cf32-4848-8cb2-3981747fa26c";
+export const ERROR404 = "https://firebasestorage.googleapis.com/v0/b/fucs-1ee4c.appspot.com/o/FUCS%2FImages%2FOthers%2F404.png?alt=media&token=c58dc7e3-22ce-4cf0-be04-4cd954b3d775";

@@ -1,6 +1,8 @@
 // import { BeginInventory, ExportMedicineInventory, ImportBatchInventory, Medicine, MedicineInInventory } from "../../models/inventory";
 
 import { Medicine } from "../../models/inventory";
+import { ExportImportInventoryMedicine } from "../../models/periodic-inventory";
+import { Subgroup } from "../../models/subgroup";
 
 
 
@@ -20,7 +22,6 @@ import { Medicine } from "../../models/inventory";
 // }
 
 export interface PeriodicInventoryResponse {
-    id: string;
-    name: string;
-    medicines: Medicine[];
+    medicineSubgroup: Subgroup;
+    exportImportInventoryMedicines: ExportImportInventoryMedicine[];
 }

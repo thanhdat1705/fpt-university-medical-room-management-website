@@ -1,7 +1,7 @@
 <div class="container-fluid p-h-0 p-v-20 h-100">
     <div class="d-flex flex-column justify-content-between h-100">
         <div class="d-none d-md-block p-h-40">
-            <img class="img-fuild" src="assets/images/logo/logo.png" alt="logo" width="250px">
+            <img class="img-fuild" [src]="errorLogo" alt="logo" width="250px">
         </div>
         <div class="container">
             <div class="row align-items-center">
@@ -16,7 +16,7 @@
                     </button>
                 </div>
                 <div class="col-md-6 d-flex justify-content-center">
-                    <img src="/assets/others/404.png" alt="" width="490px">
+                    <img [src]="errorBackground" alt="" width="490px">
                 </div>
             </div>
         </div>

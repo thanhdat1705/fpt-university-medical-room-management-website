@@ -41,7 +41,7 @@ export class BatchMedicineListComponent implements OnInit {
   pageLimit: number;
 
   totalRecord!: number;
-  pageSize = 10;
+  pageSize = 5;
   pageIndex = 1;
   sortOrderList = 1;
   sortFieldList = "CreateDate";
@@ -80,7 +80,7 @@ export class BatchMedicineListComponent implements OnInit {
   selectFields = "id, numberOfSpecificMedicine, totalPrice, createDate, periodicInventory";
   searchImportBatchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortFieldList, this.sortOrderList, this.searchValueMap, this.selectFields)
   // searchImportBatchRequest: SearchRequest = {
-  //   limit: 10,
+  //   limit: 5,
   //   page: 1,
   //   sortField: "Createdate",
   //   sortOrder: 0,
@@ -259,7 +259,7 @@ export class BatchMedicineListComponent implements OnInit {
   }
 
   resetTable() {
-    this.searchImportBatchRequest.limit = 10;
+    this.searchImportBatchRequest.limit = 5;
     this.searchImportBatchRequest.page = 1;
     this.searchImportBatchRequest.sortOrder = 1;
     this.searchImportBatchRequest.sortField = "CreateDate";

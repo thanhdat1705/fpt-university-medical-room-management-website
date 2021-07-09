@@ -1,37 +1,39 @@
 <div class="d-flex flex-row flex-wrap padding-content">
   <div class="col-sm-6 col-md-5 col-lg-5 col-xl-3 padding-left">
     <div class="d-flex flex-column content">
-      <div class="d-flex flex-row justify-content-between">
-        <span class="text-teal-green m-r-10 font-weight-semibold font-size-18">Bộ lọc tím kiếm</span>
-        <button nz-button nzType="primary" (click)="setToDefaultFilter()">
-          <span>Mặc định</span>
-        </button>
-      </div>
-      <div class="search-filter">
-       
-
-        <div *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList" class="select-wrap">
-          <br>
-          <br>
-
-          <nz-select class="select-w" nzPlaceHolder="Đơn vị" [(ngModel)]="filterUnitValue" nzAllowClear
+      <ng-container *ngIf="medicineUnitList && medicineClassificationList && medicineSubGroupList">
+        <div class="d-flex flex-row justify-content-between">
+          <span class="text-teal-green m-r-10 font-weight-semibold font-size-18">Bộ lọc tím kiếm</span>
+          <button nz-button nzType="primary" (click)="setToDefaultFilter()">
+            <span>Mặc định</span>
+          </button>
+        </div>
+        <dividing-line></dividing-line>
+        <div class="select-filter">
+          <span>Đơn vị</span>
+          <nz-select class="select-w" nzPlaceHolder="Nhập tên đơn vị" [(ngModel)]="filterUnitValue" nzAllowClear
             (ngModelChange)="onSearchUnit()">
             <nz-option *ngFor="let option of medicineUnitList" [nzLabel]="option.name" [nzValue]="option.id">
             </nz-option>
           </nz-select>
-          <nz-select class="select-w" nzPlaceHolder="Phân loại" nzAllowClear [(ngModel)]="filterClassificationValue"
-            (ngModelChange)="onSearchClassification($event)">
+        </div>
+        <div class="select-filter">
+          <span>Phân loại</span>
+          <nz-select class="select-w" nzPlaceHolder="Nhập tên loại" nzAllowClear [(ngModel)]="filterClassificationValue"
+            (ngModelChange)="onSearchClassification()">
             <nz-option *ngFor="let option of medicineClassificationList" [nzLabel]="option.name" [nzValue]="option.id">
             </nz-option>
           </nz-select>
-          <nz-select class="select-w" nzPlaceHolder="Nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
-            (ngModelChange)="onSearchSubGroup($event)">
+        </div>
+        <div class="select-filter">
+          <span>Nhóm</span>
+          <nz-select class="select-w" nzPlaceHolder="Nhập tên nhóm" nzAllowClear [(ngModel)]="filterSubgroupValue"
+            (ngModelChange)="onSearchSubGroup()">
             <nz-option *ngFor="let option of medicineSubGroupList" [nzLabel]="option.name" [nzValue]="option.id">
             </nz-option>
           </nz-select>
-          <br><br>
         </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 

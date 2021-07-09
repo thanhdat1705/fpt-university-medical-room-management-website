@@ -15,7 +15,7 @@
                 </nz-range-picker>
             </div>
             <div class="filter">
-                <span>Kỳ nhập: </span>
+                <span>Kỳ nhập (tháng - năm): </span>
                 <nz-date-picker class="m-t-5" [ngClass]="{'border-selected': dateSelected}" nzMode="month"
                     nzPlaceHolder="Tháng - Năm" nzFormat="MM-yyyy" [(ngModel)]="date"
                     (ngModelChange)="onDateChange($event)">
@@ -61,9 +61,10 @@
                 </ng-container>
             </div>
             <nz-spin [nzSpinning]="importBatchLoading" nzTip="Đang xử lý...">
-                <nz-table #nzTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="importBatchList"
-                    [nzScroll]="{ x: '750px' }" [nzTotal]="totalRecord" [nzPageSize]="pageSize"
-                    [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
+                <nz-table #nzTable nzShowSizeChanger [nzFrontPagination]="false"
+                    [nzPageSizeOptions]="[5, 10, 20, 30, 40]" [nzData]="importBatchList" [nzScroll]="{ x: '750px' }"
+                    [nzTotal]="totalRecord" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+                    (nzQueryParams)="onQueryParamsChange($event)">
                     <thead>
                         <tr>
                             <th nzAlign='left' nzWidth='10%'>No.</th>

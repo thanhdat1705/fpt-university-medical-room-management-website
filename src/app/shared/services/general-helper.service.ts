@@ -333,6 +333,23 @@ export class GeneralHelperService {
         }
         return result;
     }
+
+    getDateSlice(time: string) {
+        var subs = time.split('-');
+        var result = '';
+        for (var i = subs.length - 1; i >= 0; i--) {
+            if (subs[i].toString().includes('T')) {
+                var tmp = subs[i].toString().split('T');
+                result = result + tmp[0];
+            } else {
+                result = result + '/' + subs[i].toString();
+            }
+
+
+        }
+        return result;
+    }
+
     getLocalMonthYear(date: string) {
         var dt = new Date(date);
         var newDate = '';

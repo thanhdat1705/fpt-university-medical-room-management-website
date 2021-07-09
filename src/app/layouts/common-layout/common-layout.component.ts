@@ -9,6 +9,7 @@ import { GeneralHelperService } from 'src/app/shared/services/general-helper.ser
 import { SideNavService } from 'src/app/shared/services/side-nav.service';
 import { IBreadcrumb } from "../../shared/interfaces/breadcrumb.type";
 import { HostListener } from "@angular/core";
+import { LOGOAPP } from 'src/assets/images/logo/logo';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { HostListener } from "@angular/core";
 })
 
 export class CommonLayoutComponent {
+    logoApp = LOGOAPP;
     screenHeight: number;
     screenWidth: number;
     breadcrumbs$: Observable<IBreadcrumb[]>;
