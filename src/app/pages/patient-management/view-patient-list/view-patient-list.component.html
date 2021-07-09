@@ -1,71 +1,85 @@
- <div class="inner-content">
-    <div class="search-filter">
-  
+<div class="d-flex flex-row flex-wrap padding-content">
+  <div class="col-sm-6 col-md-5 col-lg-5 col-xl-3 padding-left">
+    <div class="d-flex flex-column content">
+      <div class="d-flex flex-row justify-content-between">
+        <span class="text-teal-green m-r-10 font-weight-semibold font-size-18">Bộ lọc tím kiếm</span>
+        <button nz-button nzType="primary" (click)="setToDefaultFilter()">
+          <span>Mặc định</span>
+        </button>
+      </div>
+      <div class="search-filter">
+
+
+        <br><br>
+        <div class="select-wrap">
+          <div class="filter">
+            <span class="label">Giới tính: </span>
+            <nz-select class="select-w" nzPlaceHolder="Giới tính" nzAllowClear [(ngModel)]="genderFilterValue"
+              (ngModelChange)="onSearchGender()">
+              <nz-option *ngFor="let option of gender" [nzLabel]="option.name" [nzValue]="option.id">
+              </nz-option>
+            </nz-select>
+          </div>
+          <div class="filter">
+            <span class="label">Phòng ban: </span>
+            <nz-select class="select-w" nzPlaceHolder="Phòng bang" nzAllowClear [(ngModel)]="departmentFilterValue"
+              (ngModelChange)="onSearchDepartment()">
+              <nz-option *ngFor="let option of departmentList" [nzLabel]="option.name" [nzValue]="option.id">
+              </nz-option>
+            </nz-select>
+          </div>
+          <br><br>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-7 col-lg-7 col-xl-9 padding-right">
+    <div class="d-flex flex-column justify-content-between content">
+      
       <nz-input-group nzSize="large" nzCompact [nzAddOnAfter]="searchIconButton">
         <nz-select class="select-search" nzPlaceHolder="Tìm theo" nzAllowClear nzSize="large" style="width: 30%;"
-          [(ngModel)]="selectedSearchAttribute" >
+          [(ngModel)]="selectedSearchAttribute">
           <nz-option *ngFor="let attribute of searchAttributelist" [nzLabel]="attribute.name"
             [nzValue]="attribute.id">
           </nz-option>
         </nz-select>
-        <input type="text" class="input" nz-input [(ngModel)]="searchPatientValue"
-          style="width:70%;" />
+        <input type="text" class="input" nz-input [(ngModel)]="searchPatientValue" style="width:70%;" />
       </nz-input-group>
-  
+
       <ng-template #searchIconButton>
         <button nz-button nzType="primary" nzSize="large" nzSearch class="iconButton" (click)="search()">
           <i nz-icon nzType="search" nzTheme="outline"></i>
         </button>
       </ng-template>
-  
-      <br><br>
-      <div class="select-wrap">
-         <div class="filter">
-                <span class="label">Giới tính: </span>
-                <nz-select class="select-w" nzPlaceHolder="Giới tính" nzAllowClear [(ngModel)]="genderFilterValue"
-                    (ngModelChange)="onSearchGender()">
-                    <nz-option *ngFor="let option of gender" [nzLabel]="option.name" [nzValue]="option.id">
-                    </nz-option>
-                </nz-select>
-            </div>
-            <div class="filter">
-                <span class="label">Phòng ban: </span>
-                <nz-select class="select-w" nzPlaceHolder="Phòng bang" nzAllowClear [(ngModel)]="departmentFilterValue"
-                    (ngModelChange)="onSearchDepartment()">
-                    <nz-option *ngFor="let option of departmentList" [nzLabel]="option.name" [nzValue]="option.id">
-                    </nz-option>
-                </nz-select>
-            </div>
-        <br><br>
-      </div>
-    </div>
-    <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="patientList" nzTableLayout="fixed" [nzLoading]="loading"
-      [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total" (nzQueryParams)="onQueryParamsChange($event)"
-      [nzFrontPagination]="false" nzShowSizeChanger>
-      <thead>
-        <tr>
-          <th nzColumnKey="internalCode" [nzSortFn]="true">Mã số</th>
-          <th nzColumnKey="name" [nzSortFn]="true">Tên</th>
-          <th nzColumnKey="gender" [nzSortFn]="true">Giới tính</th>
-          <th nzColumnKey="department.name" [nzSortFn]="true">Phòng ban</th>
-          <th nzColumnKey="recentTimeGetTreatment" [nzSortFn]="true">Ngày khám gần nhất</th>
+      <br>
+      <nz-table [nzScroll]="{ x: '1000px' }" [nzData]="patientList" nzTableLayout="fixed" [nzLoading]="loading"
+        [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
+        (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false" nzShowSizeChanger>
+        <thead>
+          <tr>
+            <th nzColumnKey="internalCode" [nzSortFn]="true">Mã số</th>
+            <th nzColumnKey="name" [nzSortFn]="true">Tên</th>
+            <th nzColumnKey="gender" [nzSortFn]="true">Giới tính</th>
+            <th nzColumnKey="department.name" [nzSortFn]="true">Phòng ban</th>
+            <th nzColumnKey="recentTimeGetTreatment" [nzSortFn]="true">Ngày khám gần nhất</th>
 
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let patient of patientList">
-          <td>{{ patient.internalCode }}</td>
-          <td>{{ patient.name }}</td>
-          <td>{{ generalService.getGender(patient.gender) }}</td>
-        
-          <td>{{ patient.department.name }}</td>
-          <td>{{ patient.recentTimeGetTreatment }}</td>
-         
-          <td> <a nzAlign="center" style="color: #1890ff"
-          (click)="getPatientTreatment(patient.id)"
-           >Lịch sử khám</a></td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </div> 
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let patient of patientList">
+            <td>{{ patient.internalCode }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ generalService.getGender(patient.gender) }}</td>
+
+            <td>{{ patient.department.name }}</td>
+            <td>{{ generalService.getDate(patient.recentTimeGetTreatment) }}</td>
+
+            <td> <a nzAlign="center" style="color: #1890ff" (click)="getPatientTreatment(patient.id)">Lịch sử khám</a>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</div>

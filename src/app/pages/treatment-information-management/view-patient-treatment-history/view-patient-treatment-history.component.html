@@ -1,41 +1,54 @@
-<div class="inner-content">
-    <nz-table nzShowSizeChanger class="medicine-table" #colSpanTable [nzData]="treatmentList" nzTableLayout="fixed"
-        nzBordered [nzFrontPagination]="false" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzTotal]="total"
-        [nzFrontPagination]="false" (nzQueryParams)="onQueryParamsChange($event)">
-        <thead>
-            <tr>
-                <th nzWidth="7%" nzColumnKey="InternalCode">Ngày</th>
-                <th nzWidth="15%" nzColumnKey="Active">Người tạo</th>
-                <th nzWidth="20%" nzColumnKey="Active">Tình trạng bệnh</th>
-                <th nzWidth="10%" nzColumnKey="Active">Trạng thái đơn</th>
-                <th nzWidth="10%"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let data of treatmentTableData">
-                <tr>
-                    <td [attr.rowspan]="data.treatmentInfor.length + 1">{{data.date}}</td>
-                </tr>
-                <tr *ngFor="let treatment of data.treatmentInfor; index as i">
+<div class="d-flex flex-row flex-wrap padding-content">
+    <div class="col-sm-6 col-md-5 col-lg-5 col-xl-3 padding-left">
+        <div class="d-flex flex-column content">
+            <div class="d-flex flex-row justify-content-between">
+                <span class="text-teal-green m-r-10 font-weight-semibold font-size-18">Thông tin bệnh nhân</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-7 col-lg-7 col-xl-9 padding-right">
+        <div class="d-flex flex-column justify-content-between content">
+            <nz-table nzShowSizeChanger class="medicine-table" #colSpanTable [nzData]="treatmentTableData"
+                nzTableLayout="fixed" nzBordered [nzFrontPagination]="false" [nzPageSize]="pageSize"
+                [nzPageIndex]="pageIndex" [nzTotal]="total" [nzFrontPagination]="false"
+                (nzQueryParams)="onQueryParamsChange($event)">
+                <thead>
+                    <tr>
+                        <th nzWidth="7%" nzColumnKey="InternalCode">Ngày</th>
+                        <th nzWidth="15%" nzColumnKey="Active">Người tạo</th>
+                        <th nzWidth="20%" nzColumnKey="Active">Tình trạng bệnh</th>
+                        <th nzWidth="10%" nzColumnKey="Active">Trạng thái đơn</th>
+                        <th nzWidth="10%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let data of treatmentTableData">
+                        <tr>
+                            <td [attr.rowspan]="data.treatmentInfor.length + 1">{{data.date}}</td>
+                        </tr>
+                        <tr *ngFor="let treatment of data.treatmentInfor; index as i">
 
-                    <!-- <td>{{ i+1 }}</td> -->
-                    <td>Bs. {{ treatment.accountCreateBy.displayName }}</td>
-                    <td>{{ treatment.diseaseStatusName }}</td>
-                    <td *ngIf="treatment.confirmSignature == null; else confirmed">Chưa xác nhận</td>
-                    <ng-template #confirmed>
-                        <td>Đã xác nhận</td>
-                    </ng-template>
-                    <ng-container *ngIf="roleId !== '3'">
-                        <td> <a nzAlign="center" style="color: #1890ff" (click)="getTreatment(treatment.id)">Chi
-                                tiết</a></td>
-                    </ng-container>
-                    <ng-container *ngIf="roleId === '3'">
-                        <td> <a nzAlign="center" style="color: #1890ff" (click)="getPatientTreatmentDetails(treatment.id)">Chi
-                                tiết</a></td>
-                    </ng-container>
+                            <!-- <td>{{ i+1 }}</td> -->
+                            <td>Bs. {{ treatment.accountCreateBy.displayName }}</td>
+                            <td>{{ treatment.diseaseStatusName }}</td>
+                            <td *ngIf="treatment.confirmSignature == null; else confirmed">Chưa xác nhận</td>
+                            <ng-template #confirmed>
+                                <td>Đã xác nhận</td>
+                            </ng-template>
+                            <ng-container *ngIf="roleId !== '3'">
+                                <td> <a nzAlign="center" style="color: #1890ff" (click)="getTreatment(treatment.id)">Chi
+                                        tiết</a></td>
+                            </ng-container>
+                            <ng-container *ngIf="roleId === '3'">
+                                <td> <a nzAlign="center" style="color: #1890ff"
+                                        (click)="getPatientTreatmentDetails(treatment.id)">Chi
+                                        tiết</a></td>
+                            </ng-container>
 
-                </tr>
-            </ng-container>
-        </tbody>
-    </nz-table>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
 </div>

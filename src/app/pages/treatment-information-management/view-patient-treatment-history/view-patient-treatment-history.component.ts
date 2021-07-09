@@ -21,7 +21,7 @@ export class ViewPatientTreatmentHistoryComponent implements OnInit {
 
   id: string
   treatmentList: TreatmentResponse[];
-  params = "id, patient,patient.department, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
+  params = "id, confirmSignature, accountCreateBy, periodicInventory.month, periodicInventory.year,TreatmentInformations,DiseaseStatusInTreatments,isDelivered,createAt";
   includes = ['DiseaseStatusInTreatments.DiseaseStatus']
   pageSize = 10;
   pageIndex = 1;
@@ -48,7 +48,7 @@ export class ViewPatientTreatmentHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedroute.snapshot.paramMap.get('id');
-    if(this.id == null){
+    if (this.id == null) {
       this.id = localStorage.getItem("accountId");
     }
     // this.getAllDepartment();
@@ -162,6 +162,5 @@ export class ViewPatientTreatmentHistoryComponent implements OnInit {
   getPatientTreatmentDetails(id: any) {
     console.log(id)
     this.treatmentInformationService.getPatientTreatmentDetails(id, this.paramsGetDetails);
-
   }
-  }
+}

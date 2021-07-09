@@ -319,6 +319,9 @@ export class GeneralHelperService {
     }
 
     getDate(time: string) {
+        if(time == null){
+            return '';
+        }
         var subs = time.split('-');
         var result = '';
         for (var i = subs.length - 1; i >= 0; i--) {
