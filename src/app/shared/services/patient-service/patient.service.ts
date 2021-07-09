@@ -26,6 +26,11 @@ export class PatientService {
 
   treatmentSearchRequest = new SearchRequestWithGroupByAndInclude(10, 1, 'createAt', 0, this.searchRecord, this.params, null, null);
 
+  getpatientDetails(patientId: string){
+    // this.summaryService.getPat
+
+  }
+
   getPatientTreatment(patientId: string) {
     this.generalService.setValueCompare(patientId, this.patientValueCompare, "patient.id", this.searchRecord);
     console.log('searchMap', this.searchRecord);

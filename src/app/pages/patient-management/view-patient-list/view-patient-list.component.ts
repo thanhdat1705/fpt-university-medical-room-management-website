@@ -184,4 +184,16 @@ export class ViewPatientListComponent implements OnInit {
     }
   }
 
+  setToDefaultFilter() {
+    this.searchAccountValue = null;
+    this.genderFilterValue =null;
+    this.departmentFilterValue = null;
+    this.searchPatientValue = null;
+    this.selectedSearchAttribute = null;
+
+    this.searchValueMap = new Map;
+    this.patientSearchRequest.searchValue = this.searchValueMap;
+    this.searchPatient();
+  }
+
 }
