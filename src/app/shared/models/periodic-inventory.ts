@@ -66,3 +66,79 @@ export class PeriodicInventoryExport {
     }
 
 }
+
+// export class ExportImportInventoryMedicine {
+//     medicineId: string;
+//     medicineName: string;
+//     medicineUnit: string;
+//     importPrice: number;
+//     numberMedicineAtBeginPeriodic: number;
+//     numberMedicineImportInPeriodic: number;
+//     numberMedicineExportInPeriodic: number;
+//     numberMedicineAtEndPeriodic: number;
+//     expirationDate: string;
+//     note: string;
+
+//     constructor(
+//         medicineId: string,
+//         medicineName: string,
+//         medicineUnit: string,
+//         importPrice: number,
+//         numberMedicineAtBeginPeriodic: number,
+//         numberMedicineImportInPeriodic: number,
+//         numberMedicineExportInPeriodic: number,
+//         numberMedicineAtEndPeriodic: number,
+//         expirationDate: string,
+//         note: string
+//     ) {
+
+//         this.medicineId = medicineId,
+//             this.medicineName = medicineName,
+//             this.medicineUnit = medicineUnit,
+//             this.importPrice = importPrice,
+//             this.numberMedicineAtBeginPeriodic = numberMedicineAtBeginPeriodic,
+//             this.numberMedicineImportInPeriodic = numberMedicineImportInPeriodic,
+//             this.numberMedicineExportInPeriodic = numberMedicineExportInPeriodic,
+//             this.numberMedicineAtEndPeriodic = numberMedicineAtEndPeriodic,
+//             this.expirationDate = expirationDate,
+//             this.note = note
+//     }
+
+//     public getTotalExportPrice(): number {
+//         console.log(this.importPrice);
+//         let total;
+//         total = this.numberMedicineExportInPeriodic * this.importPrice;
+//         console.log(total);
+//         if (total != 0) {
+//             return total;
+//         }
+//         return null;
+//     }
+
+//     public hideZeroNumber(value: number) {
+//         let number = value;
+//         if (number == 0) {
+//             return null;
+//         }
+//         return number.toLocaleString('vi');
+//     }
+
+//     public toLocaleStringImportPrice() {
+//         return this.importPrice.toLocaleString('vi');
+//     }
+
+// }
+
+export interface ExportImportInventoryMedicine {
+    medicineId: string;
+    medicineName: string;
+    medicineUnit: string;
+    importPrice: number;
+    numberMedicineAtBeginPeriodic: number;
+    numberMedicineImportInPeriodic: number;
+    numberMedicineExportInPeriodic: number;
+    numberMedicineAtEndPeriodic: number;
+    expirationDate: string;
+    exportNote: string;
+
+}

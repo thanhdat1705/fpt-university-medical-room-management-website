@@ -20,7 +20,7 @@
                 </nz-select>
             </div>
             <div class="select-filter">
-                <span>Loại</span>
+                <span>Phân loại</span>
                 <nz-select class="select-w" nzPlaceHolder="Nhập tên loại" nzAllowClear [(ngModel)]="classValue"
                     (ngModelChange)="onSearchClass($event)" [ngClass]="{'ant-select-selection': classSelected}">
                     <nz-option *ngFor="let option of filterClass" [nzLabel]="option.name" [nzValue]="option.id">

@@ -139,26 +139,12 @@ export class DetailBuyMedicineComponent implements OnInit {
   }
 
   exportToExcel() {
-    // let element = document.getElementById('requestTable'); 
-    // const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
-    // const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    // XLSX.writeFile(wb, this.fileName);
 
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.TABLE.nativeElement);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'SheetJS.xlsx');
   }
-
-  // headers = ["Stt", "Tên thuốc", "Đơn vị tính", "Số lượng", "Ghi chú"];
-  // headers: Header[] = [
-  //   { headerName: "Stt", key: "stt" },
-  //   { headerName: "Tên thuốc", key: "name" },
-  //   { headerName: "Đơn vị tính", key: "unit" },
-  //   { headerName: "Số lượng", key: "quantity" },
-  //   { headerName: "Ghi chú", key: "note" }
-  // ]
 
   headers: Partial<Column>[] = [
     { header: 'Stt', key: 'stt', width: 3 },
@@ -169,14 +155,6 @@ export class DetailBuyMedicineComponent implements OnInit {
   ]
 
   colLenght = [];
-
-  // getListStringHeaderName(headers: Header[]): string[] {
-  //   let result: string[] = [];
-  //   headers.forEach(h => {
-  //     result.push(h.headerName);
-  //   })
-  //   return result;
-  // }
   buyMedicineListToExcel: RequestBuyMedicineToExcel[] = [];
 
   convertList(): RequestBuyMedicineToExcel[] {
@@ -201,46 +179,10 @@ export class DetailBuyMedicineComponent implements OnInit {
         fgColor: { argb: 'C5D9F1' },
         bgColor: { argb: 'C5D9F1' }
       }
-      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } }
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thick' }, right: { style: 'thin' } }
       cell.font = { name: 'Times New Roman', size: 13, bold: true }
       cell.alignment = { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' }
     });
-
-
-    // worksheet.columns = [];
-    // this.headers.forEach((header, index) => {
-    //   console.log(index);
-    //   worksheet.columns[index].header = header.headerName;
-    //   worksheet.columns[index].width = header.headerName.toString().length + 10;
-    //   worksheet.columns[index].style = {
-    //     font: { name: 'Times New Roman', size: 13, bold: true },
-    //     alignment: { horizontal: 'center', vertical: 'middle', readingOrder: 'ltr' },
-    //     border: { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } },
-    //     fill: {
-    //       type: 'pattern',
-    //       pattern: 'solid',
-    //       fgColor: { argb: 'C5D9F1' },
-    //       bgColor: { argb: 'FF0000FF' }
-    //     }
-    //   }
-    // })
-    // worksheet.columns = [];
-    // this.headers.forEach((header, index) => {
-    //   console.log(index);
-    //   worksheet.columns.push({
-    //     header: header.headerName,
-    //     key: header.key,
-    //     font: { name: 'Times New Roman', size: 13 },
-    //     border: { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'medium' }, right: { style: 'thin' } },
-    //     fill: {
-    //       type: 'pattern',
-    //       pattern: 'solid',
-    //       fgColor: { argb: 'C5D9F1' },
-    //       bgColor: { argb: 'FF0000FF' }
-    //     }
-    //   });
-    // });
-    // console.log(worksheet.columns);
 
 
     this.buyMedicineListDisplay.forEach((b, index) => {
@@ -248,11 +190,11 @@ export class DetailBuyMedicineComponent implements OnInit {
       let stt = row.getCell('stt');
       let unit = row.getCell('unit');
       let quantity = row.getCell('quantity');
-      let color = 'FF99FF99';
-      stt.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-      unit.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-      quantity.alignment = { horizontal: 'center', readingOrder: 'ltr' }
-
+      let note = row.getCell('note');
+      stt.alignment = { horizontal: 'center', readingOrder: 'ltr' };
+      unit.alignment = { horizontal: 'center', readingOrder: 'ltr' };
+      quantity.alignment = { horizontal: 'center', readingOrder: 'ltr' };
+      note.alignment = { wrapText: true };
       row.font = {
         color: {
           argb: '00000000',
@@ -263,18 +205,23 @@ export class DetailBuyMedicineComponent implements OnInit {
       row.eachCell(cell => {
         cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
       })
-      row.height = 30;
+      row.height = 38;
     })
 
     worksheet.columns.forEach((col, index) => {
       let strLength = this.getLength(index);
       col.width = strLength;
     })
-    // this.buyMedicineListDisplay.forEach((e, index) => {
-    //   worksheet.addRow({ stt: index + 1, name: e.medicineName, unit: e.medicineUnitName, quantity: e.quantity, note: e.note }, "n");
-    // });
 
-    // this.getLength(4);
+    worksheet.getColumn('note').width = 40;
+
+    worksheet.getRow(worksheet.rowCount).eachCell(cell => {
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'double' }, right: { style: 'thin' } }
+    })
+
+    for (let i = 1; i <= worksheet.rowCount; i++) {
+      worksheet.getCell('F' + i).border = { left: { style: 'double' } }
+    }
 
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -282,10 +229,6 @@ export class DetailBuyMedicineComponent implements OnInit {
     })
 
   }
-
-  // convertObjToList(data: RequestBuyMedicineDisplay): string[] {
-  //   return Object.getOwnPropertyNames(data);
-  // }
 
   getColLength(data: RequestBuyMedicineToExcel[], index: number): number {
     let length = 0;
@@ -317,12 +260,6 @@ export class DetailBuyMedicineComponent implements OnInit {
     let lengthData = this.getColLength(this.buyMedicineListToExcel, index);
     console.log(lengthHeader);
     console.log(lengthData);
-    // this.buyMedicineListDisplay[index].
-
-    // this.convertObjToList(this.buyMedicineListDisplay[index])[index];
-
-    // console.log(this.buyMedicineListDisplay[index][Object.getOwnPropertyNames(this.buyMedicineListDisplay[index])[index]]);
-    // console.log(Object.getOwnPropertyNames(this.buyMedicineListDisplay[index])[index]);
     if (lengthData > lengthHeader) {
       length = lengthData;
     } else {

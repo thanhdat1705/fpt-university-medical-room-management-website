@@ -47,7 +47,7 @@ export class ViewEliminatedMedicineComponent implements OnInit {
   //   selectFields: this.selectFields,
   // }
 
-  medicineInInventorySearchRequest = new SearchRequest(this.pageSize,this.pageIndex,this.sortField,this.sortOrder,this.searchValueMap,this.selectFields);
+  medicineInInventorySearchRequest = new SearchRequest(this.pageSize, this.pageIndex, this.sortField, this.sortOrder, this.searchValueMap, this.selectFields);
 
 
   constructor(
@@ -71,12 +71,12 @@ export class ViewEliminatedMedicineComponent implements OnInit {
 
     if (this.searchMedicineValue != null) {
       // this.searchNameValue.value = this.searchMedicineValue;
-    this.generalService.setValueCompare(this.searchMedicineValue, this.searchNameValueCompare, 'medicine.Name', this.searchValueMap);
+      this.generalService.setValueCompare(this.searchMedicineValue, this.searchNameValueCompare, 'medicine.Name', this.searchValueMap);
 
       // this.searchRecord['Medicine.Name'] = this.searchNameValue;
       // console.log(this.searchEliminatedMedicineRequest);
     } else {
-    this.generalService.setValueCompare(null, this.searchNameValueCompare, 'medicine.Name', this.searchValueMap);
+      this.generalService.setValueCompare(null, this.searchNameValueCompare, 'medicine.Name', this.searchValueMap);
 
       // this.searchRecord['Medicine.Name'] = null;
     }
@@ -214,8 +214,11 @@ export class ViewEliminatedMedicineComponent implements OnInit {
     console.log('total: ' + this.total);
   }
 
-  getEliminatedMedicineDetails(id: any){
+  getEliminatedMedicineDetails(id: any) {
     this.medicineEliminationService.getEliminatedMedicineDetails(id);
   }
 
+  setToDefaultFilter() {
+
+  }
 }

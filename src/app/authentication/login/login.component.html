@@ -1,4 +1,5 @@
-<div class="container-fluid p-h-0 p-v-20 h-100 bg" style="background-image: url('assets/others/login-background.png');">
+<div class="container-fluid p-h-0 p-v-20 h-100 bg"
+    style="background-image: url(https://firebasestorage.googleapis.com/v0/b/fucs-1ee4c.appspot.com/o/FUCS%2FImages%2FOthers%2Flogin-background.png?alt=media&token=d63c6895-cf32-4848-8cb2-3981747fa26c);">
     <div class="d-flex flex-column justify-content-between h-100">
         <div class="d-none d-md-block"></div>
         <div class="container">
@@ -6,30 +7,31 @@
                 <div class="col-sm-10 col-md-9 col-lg-6 col-xl-5 m-h-auto">
                     <nz-card class="m-b-100 shadow-lg">
                         <div class="d-flex align-items-center justify-content-between m-b-40">
-                            <img class="img-fuild" src="assets/images/logo/logo.png" alt="logo" width="250px">
-                            <h2 class="font-size-24 m-b-0 p-l-15 font">Sign In</h2>
+                            <img class="img-fuild" [src]="loginLogo" alt="logo" width="250px">
+                            <h2 class="font-size-24 m-b-0 p-l-15 text-teal-green">ĐĂNG NHẬP</h2>
                         </div>
                         <form nz-form [formGroup]="loginForm" nzLayout="vertical" class="login-form"
                             (ngSubmit)="submitForm(loginForm.value)">
                             <nz-form-item class="m-b-20">
-                                <nz-form-label nzRequired nzFor="userName" style="font-weight: 500;">Username
+                                <nz-form-label nzRequired nzFor="userName" style="font-weight: 500;">Tên người dùng
                                 </nz-form-label>
-                                <nz-form-control nzErrorTip="Please input your username!">
+                                <nz-form-control nzErrorTip="Hãy nhập tên người dùng!">
                                     <nz-input-group class="p-10 rounded" nzPrefixIcon="user">
-                                        <input type="text" nz-input formControlName="userName" placeholder="Username" />
+                                        <input type="text" nz-input formControlName="userName"
+                                            placeholder="Người dùng" />
                                     </nz-input-group>
                                 </nz-form-control>
                             </nz-form-item>
                             <nz-form-item class="m-b-20 relative">
-                                <nz-form-label nzRequired nzFor="password" style="font-weight: 500;">Password
+                                <nz-form-label nzRequired nzFor="password" style="font-weight: 500;">Mật khẩu
                                 </nz-form-label>
                                 <a [routerLink]="['/authentication/forgot-password/verify-username']"
                                     class="text-link-forget font-size-14 text-muted"
-                                    style="position: absolute; right: 0;">Forget password?</a>
-                                <nz-form-control nzErrorTip="Please input your Password!">
+                                    style="position: absolute; right: 0;">Quên mật khẩu?</a>
+                                <nz-form-control nzErrorTip="Hãy nhập mật khẩu!">
                                     <nz-input-group class="p-10 rounded" nzPrefixIcon="lock">
                                         <input type="password" nz-input formControlName="password"
-                                            placeholder="Password" />
+                                            placeholder="Mật khẩu" />
                                     </nz-input-group>
                                 </nz-form-control>
                             </nz-form-item>
@@ -39,7 +41,7 @@
                                         <a class="col-sm-7 col-md-7 col-lg- col-xl-7 p-2c5 btn border-radius button-link mb"
                                             (click)="authService.GoogleAuth()" style="background-color: #1397B6;">
                                             <div class="d-flex align-items-center justify-content-start">
-                                                <img src="/assets/others/google.svg" alt="Google" width="40px">
+                                                <img [src]="googleSvg" alt="Google" width="40px">
                                                 <h2 class="font-size-15 m-b-0 flex-grow-1 text-center"
                                                     style="color: white;">Login email @fpt.edu.vn</h2>
                                             </div>
@@ -48,7 +50,7 @@
                                             class="button-link btn border-radius font-size-15 p-v-10 col-sm-3 col-md-3 col-lg-3"
                                             style="background-color: #1397B6; color: white; font-weight: 500;"
                                             type="submit">
-                                            Log in
+                                            Đăng nhập
                                         </button>
                                     </div>
                                 </nz-form-control>
